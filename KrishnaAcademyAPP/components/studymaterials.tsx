@@ -99,11 +99,13 @@ const closePdfModal = () => {
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.item}
-
-          // onPress={() => router.push({
-          //   pathname: '(routes)/pdfviewer',
-          //   params: { pdfUri: item.description },
-          // })}
+            onPress={() => {
+              console.log("🚀 ~ PDFViewerScreen ~ pdfUri:", item);
+              router.push({
+                pathname: '(routes)/pdfviewer',
+                params: { pdfUri: item.fileUrl },
+              });
+            }}
           >
             <View style={{
                 flexDirection: 'column',

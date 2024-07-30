@@ -22,6 +22,12 @@
       },
       "package": "com.harsh10021.lms"
     },
+    "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.DOWNLOAD_WITHOUT_NOTIFICATION",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ],
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -30,6 +36,8 @@
     "plugins": [
       "expo-router",
       "expo-video"
+
+   
     ],
     "experiments": {
       "typedRoutes": true
