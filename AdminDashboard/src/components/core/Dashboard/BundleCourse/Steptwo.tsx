@@ -63,12 +63,14 @@ const Step2 = ({ register, errors,setValue  ,getValues, courseBundleId,...props 
 //yeh wali
     return (
         <div className="flex-1 h-full">
-            <h2>Select Courses and Quizzes</h2>
+            <h2 className="text-richblack-25">Select Courses and Quizzes</h2>
         <div className="flex flex-col gap-20 justify-center items-center">
             <div>
-                <h3>Courses</h3>
+                <h3 className="text-richblack-25">StudyMaterial </h3>
+                <i>coming soon</i>
 
-                {studyMaterials.length > 0  && studyMaterials?.map(material => (
+
+                {/* {studyMaterials.length > 0  && studyMaterials?.map(material => (
                     <div key={material._id}>
                         <input
                             type="checkbox"
@@ -77,11 +79,11 @@ const Step2 = ({ register, errors,setValue  ,getValues, courseBundleId,...props 
                         />
                         <label htmlFor={`course-${material.id}?`}>{material.title}</label>
                     </div>
-                ))}
+                ))} */}
             </div>
 
             <div>
-                <h3>Courses</h3>
+                {/* <h3>Courses</h3> */}
 
                 {/* {courses.map(course => (
                     <div key={course.id}>
@@ -95,21 +97,26 @@ const Step2 = ({ register, errors,setValue  ,getValues, courseBundleId,...props 
                 ))} */}
             </div>
 
-            <div>
-                <h3>Quizzes</h3>
+            <div className="border-1 border-white w-full flex  flex-col  items-center justify-center gap-5">
+                <h3 className="text-white font-semibold text-4xl">Quizzes</h3>
+                    <div
+                    className="flex flex-col gap-2 w-full "
+                    >
+                        
                 {quizzes.length > 0  && quizzes?.map(quiz => (
-                    <div key={quiz?._id}>
+                    <div key={quiz?._id} className="flex gap-5 text-xl">
                         <input
                             type="checkbox"
                             id={`quiz-${quiz._id}`}
                             onChange={(e) => handleCheckboxChange(e, quiz)}
-                        />
-                        <label htmlFor={`quiz-${quiz._id}`}>{quiz.name}</label>
+                            />
+                        <label className="text-richblack-25" htmlFor={`quiz-${quiz._id}`}>{quiz.name}</label>
                     </div>
                 ))}
+                </div>
             </div>
             {errors.selectedItems && (
-                <span className="ml-2 text-xs tracking-wide text-pink-200">
+                <span className="ml-2 text-xs tracking-wide  text-white">
                     Please select at least one item
                 </span>
             )}
