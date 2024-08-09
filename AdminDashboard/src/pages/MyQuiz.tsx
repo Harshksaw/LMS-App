@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react"
+
+import React,{ useEffect, useState } from "react"
 import { VscAdd } from "react-icons/vsc"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
 // import { fetchInstructorCourses } from "../../../services/operations/courseDetailsAPI"
 import IconBtn from "../components/common/IconBtn"
-import CoursesTable from "../components/tables/quizTable"
 import axios from "axios"
 import { BASE_URL } from "../services/apis"
 import toast from "react-hot-toast"
+import QuizTable from "../components/tables/quizTable"
 
 
 
@@ -57,7 +58,7 @@ export default function MyCourses() {
       </div>
 
       {/* course Table */}
-      {courses && <CoursesTable courses={courses} setCourses={setCourses} loading={loading} setLoading={setLoading} />}
+      {courses && <QuizTable courses={courses} setCourses={setCourses} loading={loading} setLoading={setLoading} />}
     </div>
   )
 }

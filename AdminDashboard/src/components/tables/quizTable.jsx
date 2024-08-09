@@ -21,7 +21,7 @@ import toast from 'react-hot-toast'
 
 
 
-export default function CoursesTable({ courses, setCourses, loading, setLoading }) {
+export default function QuizTable({ courses, setCourses, loading, setLoading }) {
 console.log(courses)
   const navigate = useNavigate()
   const { token } = useSelector((state) => state.auth)
@@ -71,11 +71,10 @@ console.log(courses)
         <Thead>
           <Tr className="flex gap-x-10 rounded-t-3xl border-b border-b-richblack-800 px-6 py-2">
             <Th className="flex-1 text-left text-sm font-medium uppercase text-richblack-100">
-              Qui
+              Quiz name
             </Th>
-         
             <Th className="text-left text-sm font-medium uppercase text-richblack-100">
-              Price
+              Questions count
             </Th>
             <Th className="text-left text-sm font-medium uppercase text-richblack-100">
               Actions
@@ -109,15 +108,21 @@ console.log(courses)
                   <Td className="flex flex-1 gap-x-4 relative">
                     {/* course Thumbnail */}
                     <Img
-                      src={course?.image}
-                      alt={course?.bundleName}
+                      src={course?.image ? course?.image : 'https://img.freepik.com/free-photo/abstract-autumn-beauty-multi-colored-leaf-vein-pattern-generated-by-ai_188544-9871.jpg'}
+                      alt={course?.name}
                       className="h-[148px] min-w-[270px] max-w-[270px] rounded-lg object-cover"
                     />
 
                     <div className="flex flex-col">
-                      <p className="text-lg font-semibold text-richblack-5 capitalize">{course.courseName}</p>
-                      <p className="text-xl text-richblack-300 ">
-                        {course.bundleName}
+                      <p className="text-lg font-semibold text-richblack-5 capitalize">{course.name}</p>
+                      <p className="text-sm text-richblack-300 ">
+                        {
+                          course.shortDescription.length >= 32 ? (
+                            `${course.shortDescription.slice(0,30)}...`
+                          ) : (
+                            `${course.shortDescription.slice(0,30)}...`
+                        )
+                        }
                       </p>
 
                       {/* created At */}
@@ -131,6 +136,7 @@ console.log(courses)
                       </p>
 
                       {/* course status */}
+
                       {course.status === COURSE_STATUS.DRAFT ? (
                         <p className="mt-2 flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-pink-100">
                           <HiClock size={14} />
@@ -148,7 +154,7 @@ console.log(courses)
                   </Td>
 
                   {/* course duration */}
-                  <Td className="text-sm font-medium text-richblack-100">₹{course.price}</Td>
+                  <Td className="text-sm text-center pr-16 font-medium text-richblack-100">{course.questions.length}</Td>
 
                   <Td className="text-sm font-medium text-richblack-100 ">
                     {/* Edit button */}
