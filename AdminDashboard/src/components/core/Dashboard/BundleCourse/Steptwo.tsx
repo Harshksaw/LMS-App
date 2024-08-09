@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { BASE_URL } from "../../../../services/apis";
-import { useForm } from "react-hook-form";
+
 
 const Step2 = ({ register, errors,setValue  ,getValues, courseBundleId,...props }: any) => {
     // const { setValue,getValues} = useForm();

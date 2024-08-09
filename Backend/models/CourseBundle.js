@@ -42,7 +42,7 @@ const bundleSchema = new mongoose.Schema({
 		type: String,
 		enum: ["Draft", "Published"],
 	},
-});
+}, {timestamps: true});
 
 const Bundle = mongoose.model('Bundle', bundleSchema);
 

@@ -1,3 +1,5 @@
+import React from "react";
+
 const Step1 = ({ register, errors, setValue, handleImageChange }) => (
     <div>
         <h2>Step 1: Initial Data Collection</h2>

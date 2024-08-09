@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux"
 
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table'
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css'
-
 import { useState } from "react"
 import { FaCheck } from "react-icons/fa"
 import { FiEdit2 } from "react-icons/fi"
@@ -11,11 +10,11 @@ import { HiClock } from "react-icons/hi"
 import { RiDeleteBin6Line } from "react-icons/ri"
 import { useNavigate } from "react-router-dom"
 
-import { formatDate } from "../../../../services/formatDate"
-import { deleteCourse, fetchInstructorCourses, } from "../../../../services/operations/courseDetailsAPI"
-import { COURSE_STATUS } from "../../../../utils/constants"
-import ConfirmationModal from "../../../common/ConfirmationModal"
-import Img from '../../../common/Img';
+import { formatDate } from "../../services/formatDate"
+// import { deleteCourse, fetchInstructorCourses, } from "../../../services/operations/courseDetailsAPI"
+import { COURSE_STATUS } from "../../utils/constants"
+import ConfirmationModal from "../common/ConfirmationModal"
+import Img from '../common/Img';
 import toast from 'react-hot-toast'
 
 
@@ -72,7 +71,7 @@ console.log(courses)
         <Thead>
           <Tr className="flex gap-x-10 rounded-t-3xl border-b border-b-richblack-800 px-6 py-2">
             <Th className="flex-1 text-left text-sm font-medium uppercase text-richblack-100">
-              Bundle Courses
+              Qui
             </Th>
          
             <Th className="text-left text-sm font-medium uppercase text-richblack-100">

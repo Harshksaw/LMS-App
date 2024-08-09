@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom"
 import { fetchInstructorCourses } from "../../../services/operations/courseDetailsAPI"
 import IconBtn from "../../common/IconBtn"
 import CoursesTable from "./InstructorCourses/CoursesTable"
+import axios from "axios"
+import { BASE_URL } from "../../../services/apis"
 
 
 
@@ -18,7 +20,15 @@ export default function MyCourses() {
   useEffect(() => {
     const fetchCourses = async () => {
       setLoading(true);
-      const result = await fetchInstructorCourses(token)
+      const res = await axios.get(`${BASE_URL}/api/v1/bundle/get-all-course-bundle`);
+      console.log(res.data);
+
+      if (res.status != 200){
+        toast.dismiss();
+        toast.error("something went wront");
+        return;
+      }
+      setCourses(res?.data?.data)
       // console.log('Instructors all courses  ', result);
       setLoading(false);
       if (result) {

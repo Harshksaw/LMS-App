@@ -96,13 +96,12 @@ export default function LoginScreen() {
   };
 
   const handleSignIn = async () => {
-    setButtonSpinner(true)
+    setButtonSpinner(true);
     const deviceData = await collectDeviceData();
 
     if (!deviceData) {
       Toast.show("Error in collecting device data", {
         type: "danger",
-        message: "Error in collecting device data",
       });
     }
 
@@ -120,13 +119,13 @@ export default function LoginScreen() {
         router.push("/(tabs)");
       })
       .catch((error) => {
-        setButtonSpinner(false)
+        setButtonSpinner(false);
         console.log(error);
         Toast.show("Email or password is not correct!", {
           type: "danger",
         });
       });
-      setButtonSpinner(false)
+    setButtonSpinner(false);
   };
 
   return (
