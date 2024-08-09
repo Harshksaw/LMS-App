@@ -161,10 +161,9 @@ exports.getQuizbyId = async (req, res) => {
 exports.getAllQuiz = async (req, res) => {
     try{
         const quiz = await Quiz.find();
-            return res.status(201).json({
+            return res.status(200).json({
                 success:true,
                 message:"All quizz are here!!",
-                
                 data: quiz,
             });
 

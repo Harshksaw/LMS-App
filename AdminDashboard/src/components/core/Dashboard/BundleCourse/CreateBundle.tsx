@@ -6,7 +6,7 @@ import IconBtn from "../../../common/IconBtn";
 import axios from "axios";
 import { BASE_URL } from "../../../../services/apis";
 
-import { Link, Router } from "react-router-dom";
+import { Link, Router, useNavigate } from "react-router-dom";
 import Step1 from "./StepOne.tsx";
 import Step2 from "./Steptwo.tsx";
 
@@ -30,7 +30,7 @@ const Step3 = ({ register, setValue, errors, courseBundleId }) => {
   }, [startDate, isListed]);
   return (
     <div>
-      <form className="space-y-8">
+      <div className="space-y-8">
         <div className="flex gap-3">
           <label className="text-white">Publish Date:</label>
           <input
@@ -54,12 +54,15 @@ const Step3 = ({ register, setValue, errors, courseBundleId }) => {
             <div className="error">{errors.isListed.message}</div>
           )}
         </div>
-      </form>
+      </div>
     </div>
   );
 };
 
 export default function CourseBundleForm() {
+
+  const navigate = useNavigate();
+
   const [step, setStep] = useState(1);
   const [bundleImage, setBundleImage] = useState(null);
   const {
@@ -148,14 +151,17 @@ export default function CourseBundleForm() {
       );
       console.log(res);
 
-      if (res.status != 200)
+      if (res.status != 200){
+        toast.dismiss();
+        toast.error("Update failed");
+        return;
+      }
         console.log("🚀 ~ handleStep2Submit ~ res:", res?.data?._id);
       setCourseBundleId(res?.data?._id);
-
       toast.dismiss();
       toast.success("Step 3 completed successfully");
 
-      Router.apply("/dashboard");
+      navigate("/dashboard/my-courses");
     } catch (error) {
       toast.dismiss();
       toast.error("Failed to complete Step 2", {

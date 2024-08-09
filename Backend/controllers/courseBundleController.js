@@ -80,7 +80,7 @@ console.log(req.params.id, "----60")
 
   exports.updateTimenListing = async (req, res) => {
     try {
-      console.log(req.params)
+      console.log(req.params.id)
 const dateObject = new Date(req.body.date);
       console.log(dateObject)
       const bundle = await Bundle.findByIdAndUpdate({_id: req.params.id},{
@@ -138,6 +138,20 @@ const dateObject = new Date(req.body.date);
       res.status(200).json({
         success:true,
         message:'Cours ebundles',
+        data: bundles || [],
+      });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  exports.getAllCourseBundle = async(req, res) => {
+    try {
+      const bundles = await Bundle.find().sort({createdAt:-1})
+      // const bundles = await Bundle.find({status:"Published"}).sort({created:-1}).populate('quizes').populate('studyMaterials');
+      res.status(200).json({
+        success:true,
+        message:'Course bundles',
         data: bundles || [],
       });
     } catch (error) {
