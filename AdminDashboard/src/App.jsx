@@ -72,7 +72,7 @@ function App() {
       window.removeEventListener("scroll", handleArrow);
     };
   }, [showArrow]);
-
+console.log(user.accountType === ACCOUNT_TYPE.ADMIN)
   return (
     <div className="w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
       <Navbar />
