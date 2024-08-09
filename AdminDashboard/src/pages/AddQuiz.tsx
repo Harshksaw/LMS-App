@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {BASE_URL} from "../services/apis"
+import { BASE_URL } from "../services/apis";
 import { toast } from "react-hot-toast";
 
 // const quizsample = {
@@ -288,8 +288,6 @@ import { toast } from "react-hot-toast";
 //   ],
 // };
 
-
-
 type Props = {};
 
 const AddQuiz = (props: Props) => {
@@ -302,9 +300,9 @@ const AddQuiz = (props: Props) => {
     image: null,
     isPaid: false,
     price: 0,
-    testSeries:"",
-    isListed:false,
-    isPartOfBundle:false,
+    testSeries: "",
+    isListed: false,
+    isPartOfBundle: true,
     questions: [
       {
         question: { en: "", hin: "" },
@@ -352,7 +350,6 @@ const AddQuiz = (props: Props) => {
   };
 
   const SubmitQuiz = async () => {
-    
     setisLoading(true);
     const formData = new FormData();
     formData.append("name", quiz.name);
@@ -363,7 +360,6 @@ const AddQuiz = (props: Props) => {
     formData.append("price", quiz.price);
 
     formData.append("quizData", JSON.stringify(quiz.questions));
-
 
     try {
       const response = await axios.post(
@@ -391,12 +387,11 @@ const AddQuiz = (props: Props) => {
     subField?: string,
     lang?: string
   ) => {
-    console.log(e.target.files)
+    console.log(e.target.files);
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setQuiz({ ...quiz, [field]: file });
       // Update state with file information
-     
     } else {
       // Handle non-file inputs as before
       if (index !== undefined && subField && lang) {
@@ -415,10 +410,14 @@ const AddQuiz = (props: Props) => {
     console.log(quiz);
   };
   useEffect(() => {
-    console.log("🚀 ~ useEffect ~ quiz:", quiz)
-
+    console.log("🚀 ~ useEffect ~ quiz:", quiz);
   }, [quiz]);
 
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleAccordion = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
 
   return (
     <div className="flex flex-col overflow-auto justify-center">
@@ -427,77 +426,74 @@ const AddQuiz = (props: Props) => {
           Add Quiz in both English and Hindi
         </h1>
       </div>
-      <div className="flex flex-1 items-center justify-between rounded-2xl border-[1px] border-richblack-700 bg-richblack-800 p-8 px-3 sm:px-12">
+      <div className="flex flex-1 items-center justify-between rounded-2xl border-[1px] border-richblack-700 bg-richblack-800 p-6 px-0 sm:px-8">
         <form
           onSubmit={handleSubmit}
           className="flex flex-col space-y-6 py-6 w-full bg-richblack-800 rounded-md shadow-md justify-center items-center  "
         >
           <div className="flex flex-row w-full  justify-start items-start bg-richblack-800  gap-10 rounded-md ">
+            <div className="w-full">
+              <div className="flex   flex-col  items-start  mt-5 space-y-2">
+                <label className="text-richblack-5">Enter the quiz name</label>
+                <input
+                  type="text"
+                  placeholder="Quiz Name"
+                  value={quiz.name}
+                  onChange={(e) => handleChange(e, "name")}
+                  className="p-2 w-full border border-yellow-25 rounded-md"
+                />
+              </div>
 
+              <div className="flex  flex-col items-start  mt-5 space-y-2">
+                <label className="text-richblack-5">
+                  Add short Description
+                </label>
+                <textarea
+                  placeholder="Short Description"
+                  value={quiz.shortDescription}
+                  onChange={(e) => handleChange(e, "shortDescription")}
+                  className="p-2 border  w-full border-yellow-25 rounded-md"
+                />
+              </div>
+            </div>
+            <div>
+              {/* <div className="flex  flex-col items-start mt-5 space-y-2">
+                <label className="text-richblack-5">Select the Category</label>
+                <input
+                  type="text"
+                  placeholder="Category"
+                  value={quiz.category}
+                  onChange={(e) => handleChange(e, "category")}
+                  className="p-2 border  w-full border-yellow-25 rounded-md"
+                />
+              </div> */}
 
-          <div className="w-full">
+              <div className="flex  flex-col items-start mt-5 space-y-2">
+                <label className="text-richblack-5">Image URL</label>
+                <input
+                  type="file"
+                  name="image"
+                  placeholder="Image URL"
+                  onChange={(e) => handleChange(e, "image")}
+                  className="p-2 border  w-full border-yellow-25 rounded-md"
+                />
+              </div>
 
-          <div className="flex   flex-col  items-start  mt-5 space-y-2">
-            <label className="text-richblack-5">Enter the quiz name</label>
-            <input
-              type="text"
-              placeholder="Quiz Name"
-              value={quiz.name}
-              onChange={(e) => handleChange(e, "name")}
-              className="p-2 w-full border border-yellow-25 rounded-md"
-            />
+              {/* <div className="flex  flex-row  items-start gap-10 mt-5 space-x-5 ">
+                <label className="text-richblack-5 flex items-center">
+                  Paid:
+                  <input
+                    type="checkbox"
+                    checked={quiz.isPaid}
+                    onChange={(e) =>
+                      setQuiz({ ...quiz, isPaid: e.target.checked })
+                    }
+                    className="ml-2"
+                  />
+                </label>
+              </div> */}
+            </div>
           </div>
-
-          <div className="flex  flex-col items-start  mt-5 space-y-2">
-            <label className="text-richblack-5">Add short Description</label>
-            <textarea
-              placeholder="Short Description"
-              value={quiz.shortDescription}
-              onChange={(e) => handleChange(e, "shortDescription")}
-              className="p-2 border  w-full border-yellow-25 rounded-md"
-            />
-          </div>
-          </div>
-          <div>
-          <div className="flex  flex-col items-start mt-5 space-y-2">
-            <label className="text-richblack-5">Select the Category</label>
-            <input
-              type="text"
-              placeholder="Category"
-              value={quiz.category}
-              onChange={(e) => handleChange(e, "category")}
-              className="p-2 border  w-full border-yellow-25 rounded-md"
-            />
-          </div>
-
-          <div className="flex  flex-col items-start mt-5 space-y-2">
-            <label className="text-richblack-5">Image URL</label>
-            <input
-              type="file"
-              name="image"
-              
-              placeholder="Image URL"
-              onChange={(e) => handleChange(e, "image")}
-              className="p-2 border  w-full border-yellow-25 rounded-md"
-            />
-          </div>
-
-          <div className="flex  flex-row  items-start gap-10 mt-5 space-x-5 ">
-            <label className="text-richblack-5 flex items-center">
-              Paid:
-              <input
-                type="checkbox"
-                checked={quiz.isPaid}
-                onChange={(e) => setQuiz({ ...quiz, isPaid: e.target.checked })}
-                className="ml-2"
-              />
-            </label>
-          </div>
-          </div>
-          </div>
-      
-
-        
 
           {quiz.isPaid && (
             <div className="flex flex-col space-y-2 mt-5">
@@ -513,134 +509,183 @@ const AddQuiz = (props: Props) => {
           )}
           {/* adding test series
            */}
-           <div className="flex flex-row  items-start gap-10 mt-5 space-x-5">
-            <label htmlFor="" className="text-richblack-5 flex items-center">TestSeries</label>
+          {/* <div className="flex flex-row  items-start gap-10 mt-5 space-x-2">
+            <label htmlFor="" className="text-richblack-5 flex items-center">
+              TestSeries
+            </label>
             <input
-            type="text"
-            placeholder="Test Series"
-            value={quiz.testSeries}
-            onChange={(e)=>handleChange(e,"testSeries")}
-            className="ml-2"
+              type="text"
+              placeholder="Test Series"
+              value={quiz.testSeries}
+              onChange={(e) => handleChange(e, "testSeries")}
+              className="ml-2"
             />
-           </div>
-           {/* isListed */}
-           <div className="flex flex-row  items-start gap-10 mt-5 space-x-5">
-            <label htmlFor="" className="text-richblack-5 flex items-center">isListed</label>
-            <input
-            type="checkbox"
-            placeholder="isListed"
-            className="ml-2"
-            checked={quiz.isListed}
-            onChange={(e)=>setQuiz({...quiz,isListed:e.target.checked})}
-            />
-           </div>
-           {/* ispartofBundle */}
-           <div className="flex flex-row  items-start gap-10 mt-5 space-x-5">
-            <label htmlFor="" className="text-richblack-5 flex items-center">isPartOfBundle</label>
-            <input
-            type="checkbox"
-            placeholder="isPartOfBundle"
-            className="ml-2"
-            checked={quiz.isPartOfBundle}
-            onChange={(e)=>setQuiz({...quiz,isPartOfBundle:e.target.checked})}
-            />
-           </div>
-           <div className="flex flex-col"></div>
-          {quiz.questions.map((question, index) => (
-            <div
-              key={index}
-              className="flex flex-col space-y-4 p-4 bg-richblack-400 rounded-md shadow-sm w-[80%]"
-            >
-              <div className="flex flex-col space-y-2">
-                <label className="text-richblack-5">Question (English)</label>
-                <input
-                  type="text"
-                  placeholder="Question (English)"
-                  value={question.question.en}
-                  onChange={(e) => handleChangeQues(e, "question", index, "en")}
-                  className="p-2 border border-yellow-25 rounded-md"
-                />
-              </div>
+          </div> */}
+          {/* isListed */}
+          <div className="flex flex-col space-y-5 mt-5">
+            {/* <div className="flex flex-row items-center gap-5 p-4 bg-richblack-700 border border-yellow-25 rounded-md">
+              <label
+                htmlFor="isListed"
+                className="text-richblack-5 flex items-center"
+              >
+                isListed
+              </label>
+              <input
+                id="isListed"
+                type="checkbox"
+                placeholder="isListed"
+                className="ml-2"
+                checked={quiz.isListed}
+                onChange={(e) =>
+                  setQuiz({ ...quiz, isListed: e.target.checked })
+                }
+              />
+            </div> */}
 
-              <div className="flex flex-col space-y-2">
-                <label className="text-richblack-5">Question (Hindi)</label>
-                <input
-                  type="text"
-                  placeholder="Question (Hindi)"
-                  value={question.question.hin}
-                  onChange={(e) =>
-                    handleChangeQues(e, "question", index, "hin")
-                  }
-                  className="p-2 border border-yellow-25 rounded-md"
-                />
-              </div>
-
-              {["A", "B", "C", "D"].map((option) => (
-                <div key={option} className="flex flex-col space-y-2">
-                  <label className="text-richblack-5">
-                    Option {option} (English)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder={`Option ${option} (English)`}
-                    value={question.options[`option${option}`].en}
-                    onChange={(e) =>
-                      handleChange(e, "options", index, `option${option}`, "en")
-                    }
-                    className="p-2 border border-yellow-25 rounded-md"
-                  />
-                  <label className="text-richblack-5">
-                    Option {option} (Hindi)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder={`Option ${option} (Hindi)`}
-                    value={question.options[`option${option}`].hin}
-                    onChange={(e) =>
-                      handleChange(
-                        e,
-                        "options",
-                        index,
-                        `option${option}`,
-                        "hin"
-                      )
-                    }
-                    className="p-2 border border-yellow-25 rounded-md"
-                  />
-                </div>
-              ))}
-
-              <div className="flex flex-col space-y-2">
-                <label className="text-richblack-5">
-                  Correct Answer (English)
-                </label>
-                <input
-                  type="text"
-                  placeholder="Correct Answer (English)"
-                  value={question.correctAnswer.en}
-                  onChange={(e) =>
-                    handleChangeQues(e, "correctAnswer", index, "en")
-                  }
-                  className="p-2 border border-yellow-25 rounded-md"
-                />
-              </div>
-
-              <div className="flex flex-col space-y-2">
-                <label className="text-richblack-5">
-                  Correct Answer (Hindi)
-                </label>
-                <input
-                  type="text"
-                  placeholder="Correct Answer (Hindi)"
-                  value={question.correctAnswer.hin}
-                  onChange={(e) =>
-                    handleChangeQues(e, "correctAnswer", index, "hin")
-                  }
-                  className="p-2 border border-yellow-25 rounded-md"
-                />
-              </div>
+            <div className="flex flex-row items-center gap-5 p-4 bg-richblack-700 border border-yellow-25 rounded-md">
+              <label
+                htmlFor="isPartOfBundle"
+                className="text-richblack-5 flex items-center"
+              >
+                isPartOfBundle
+              </label>
+              <input
+                id="isPartOfBundle"
+                type="checkbox"
+                placeholder="isPartOfBundle"
+                className="ml-2"
+                checked={quiz.isPartOfBundle}
+                onChange={(e) =>
+                  setQuiz({ ...quiz, isPartOfBundle: e.target.checked })
+                }
+              />
             </div>
-          ))}
+          </div>
+
+          <div className="flex flex-col bg-white text-brown-50 h-2"></div>
+
+          <div>
+            {quiz.questions.map((question, index) => (
+              <div key={index} className="mb-4 flex flex-col gap-5 ">
+                <div
+                  className="flex justify-between items-center p-4 bg-richblack-400    rounded-md shadow-sm cursor-pointer"
+                  onClick={() => toggleAccordion(index)}
+                >
+                  <h3 className="text-richblack-5">Quiz {index + 1}</h3>
+                  <span>{openIndex === index ? "-" : "+"}</span>
+                </div>
+                {openIndex === index && (
+                  <div className="flex flex-col space-y-4 p-4 bg-richblack-400 rounded-md shadow-sm w-[100%]">
+                    <div className="flex flex-col space-y-2">
+                      <label className="text-richblack-5">
+                        Question (English)
+                      </label>
+                      <textarea
+                        placeholder="Question (English)"
+                        value={question.question.en}
+                        onChange={(e) =>
+                          handleChangeQues(e, "question", index, "en")
+                        }
+                        className="p-2 border border-yellow-25 rounded-md resize-y"
+                        rows={4}
+                      />
+                    </div>
+
+                    <div className="flex flex-col space-y-2">
+                      <label className="text-richblack-5">
+                        Question (Hindi)
+                      </label>
+                      <textarea
+                        placeholder="Question (Hindi)"
+                        value={question.question.hin}
+                        onChange={(e) =>
+                          handleChangeQues(e, "question", index, "hin")
+                        }
+                        className="p-2 border border-yellow-25 rounded-md resize-y"
+                      />
+                    </div>
+
+                    {["A", "B", "C", "D"].map((option) => (
+                      <div
+                        key={option}
+                        className="flex flex-row space-y-2 gap-10 justify-around items-center  border-2 border-blue-5"
+                      >
+                        <div className="flex  flex-col gap-5">
+                          <label className="text-richblack-5">
+                            Option {option} (English)
+                          </label>
+                          <input
+                            type="text"
+                            placeholder={`Option ${option} (English)`}
+                            value={question.options[`option${option}`].en}
+                            onChange={(e) =>
+                              handleChange(
+                                e,
+                                "options",
+                                index,
+                                `option${option}`,
+                                "en"
+                              )
+                            }
+                            className="p-2 border border-yellow-25 rounded-md"
+                          />
+                        </div>
+                        <div className=" flex  flex-col gap-5">
+                          <label className="text-richblack-5">
+                            Option {option} (Hindi)
+                          </label>
+                          <input
+                            type="text"
+                            placeholder={`Option ${option} (Hindi)`}
+                            value={question.options[`option${option}`].hin}
+                            onChange={(e) =>
+                              handleChange(
+                                e,
+                                "options",
+                                index,
+                                `option${option}`,
+                                "hin"
+                              )
+                            }
+                            className="p-2 border border-yellow-25 rounded-md"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <div className="flex flex-col space-y-2">
+                      <label className="text-richblack-5">
+                        Correct Answer (English)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Correct Answer (English)"
+                        value={question.correctAnswer.en}
+                        onChange={(e) =>
+                          handleChangeQues(e, "correctAnswer", index, "en")
+                        }
+                        className="p-2 border border-yellow-25 rounded-md"
+                      />
+                    </div>
+
+                    <div className="flex flex-col space-y-2">
+                      <label className="text-richblack-5">
+                        Correct Answer (Hindi)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Correct Answer (Hindi)"
+                        value={question.correctAnswer.hin}
+                        onChange={(e) =>
+                          handleChangeQues(e, "correctAnswer", index, "hin")
+                        }
+                        className="p-2 border border-yellow-25 rounded-md"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
           <button
             onClick={addQuestion}
             className="mt-4 p-2 bg-caribbeangreen-400 text-richblack-5 rounded-md"
