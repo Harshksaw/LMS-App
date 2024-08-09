@@ -101,6 +101,8 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+
+
 exports.updateUserById = async (req, res) => {
   try {
     const {
@@ -141,6 +143,46 @@ exports.updateUserById = async (req, res) => {
   }
 };
 
+
+exports.signupAdmin = async (req, res) => {
+  try {
+    // Destructure fields from the request body
+    const { email, password, phoneNumber , name} = req.body;
+
+    // Check if All Details are there or not
+    if (!email || !password || !phoneNumber) {
+      return res.status(403).send({
+        success: false,
+        message: "Email, password, and phone number are required",
+      });
+    }
+
+ 
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({
+      name,
+      email,
+      phoneNumber,
+      password: hashedPassword,
+      accountType: "Admin",
+      image: `https://api.dicebear.com/5.x/initials/svg?seed=Admin`,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: newUser,
+      message: "Admin user registered successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Admin user cannot be registered. Please try again.",
+    });
+  }
+};
 //login
 exports.signup = async (req, res) => {
   try {

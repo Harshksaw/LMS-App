@@ -63,7 +63,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <div className="sm:hidden text-white absolute left-7 top-3 cursor-pointer " onClick={() => dispatch(setOpenSideMenu(!openSideMenu))}>
+      <div className="sm:hidden text-white absolute left-4 top-3 cursor-pointer " onClick={() => dispatch(setOpenSideMenu(!openSideMenu))}>
         {
           openSideMenu ? <IoMdClose size={33} /> : <HiMenuAlt1 size={33} />
         }
@@ -72,7 +72,7 @@ export default function Sidebar() {
 
       {
         openSideMenu &&
-        <div className="flex h-[calc(100vh-3.5rem)] min-w-[220px] flex-col border-r-[1px] border-r-richblack-700 bg-richblack-800 py-10 ">
+        <div className="flex h-[calc(100vh-3.5rem)] min-w-[100px] flex-col border-r-[1px] border-r-richblack-700 bg-richblack-800 py-10 ">
           <div className="flex flex-col mt-6">
             {sidebarLinks.map((link) => {
               if (link.type && user?.accountType !== link.type) return null
