@@ -21,3 +21,6 @@
 
 # Miscellaneous
 .DS_Store
+
+**/*.png
+**/*.jpg

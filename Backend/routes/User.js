@@ -13,6 +13,7 @@ const {
   updateAdditionalDetails,
   userLogin,
   adminLogin,
+  signupAdmin,
 } = require("../controllers/Auth")
 const {
   resetPasswordToken,
@@ -33,6 +34,7 @@ router.post("/login", userLogin)
 router.post("/adminlogin", adminLogin)
 
 // Route for user signup
+router.post("/adminsignup",signupAdmin)
 router.post("/signup", signup)
 
 // Route for sending OTP to the user's email
