@@ -4,7 +4,7 @@ import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 
 import { useState } from "react";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaTrashAlt } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
 import { HiClock } from "react-icons/hi";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -65,6 +65,23 @@ export default function CoursesTable({
         </div>
       </div>
     );
+  };
+
+  //bundle COurses
+  
+  const deleteCourse = async ({id}) => {
+    toast.loading("Deleting course...");
+    try {
+      await axios.delete(`${BASE_URL}/api/v1/course//${id}`);
+      // Handle successful deletion, e.g., refresh the list or remove the item from state
+      toast.dismiss();
+      toast.success("Course deleted successfully");
+
+    } catch (error) {
+      toast.dismiss();
+      console.error("Error deleting course:", error);
+    }
+    toast.dismiss();
   };
 
   return (
@@ -134,6 +151,7 @@ export default function CoursesTable({
                       Updated: {formatDate(course?.updatedAt)}
                     </p>
 
+
                     {/* course status */}
                     {course.status === "Draft" ? (
                       <p className="mt-2 flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-pink-100">
@@ -155,9 +173,13 @@ export default function CoursesTable({
                 <Td className="text-sm font-medium text-richblack-100">
                   ₹{course.price}
                 </Td>
-                <Td className="text-sm font-medium text-richblack-100">
-                  Actions
-                </Td>
+               
+                <Td className="text-left text-sm text-richblack-100">
+              <FaTrashAlt
+                className="cursor-pointer text-red-500"
+                onClick={() => deleteCourse(course._id)}
+              />
+            </Td>
               </Tr>
             ))
           )}
@@ -166,6 +188,8 @@ export default function CoursesTable({
 
       {/* Confirmation Modal */}
       {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
+
+     
     </>
   );
 }

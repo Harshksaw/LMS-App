@@ -78,6 +78,36 @@ console.log(req.params.id, "----60")
     }
   };
 
+  exports.deleteCourseBundle = async (req, res) => {
+    try {
+      console.log(req.params.id)
+      const bundle = await Bundle.findByIdAndDelete(req.params.id);
+      console.log(bundle)
+      if (!bundle) {
+        return res.status(404).json({ error: 'Course bundle not found' });
+      }
+
+        // Delete related quizzes
+    await Quiz.deleteMany({ _id: { $in: bundle.quizes } });
+
+    // Delete related study materials
+    await StudyMaterial.deleteMany({ _id: { $in: bundle.studyMaterials } });
+
+    // Delete the related course
+    await Course.findByIdAndDelete(bundle.course);
+
+    // Delete the bundle itself
+    await bundle.remove();
+    
+      res.status(200).json({
+        message: 'Course bundle deleted successfully',
+        data: bundle,
+      });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
   exports.updateTimenListing = async (req, res) => {
     try {
       console.log(req.params.id)
