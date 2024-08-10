@@ -552,7 +552,7 @@ exports.updateAdditionalDetails = async (req, res) => {
 // all user--
 exports.findAllUsers=async(req,res)=>{
   try{
-    const users=await User.find().sort({createdAt:-1});
+    const users=await User.find({accountType:"Student"}).sort({createdAt:-1});
   res.status(200).json({
     success:true,
     data:users
