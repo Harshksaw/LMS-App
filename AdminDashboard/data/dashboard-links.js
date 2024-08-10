@@ -46,9 +46,9 @@ export const sidebarLinks = [
   {
     id: 7,
     name: "All Quiz",
-    path: "/dashboard/all-quiz",
+    path: "/dashboard/my-quiz",
     type: ACCOUNT_TYPE.ADMIN,
-    icon: "VscAdd",
+    icon: "VscLibrary",
   },
   {
     id: 8,
