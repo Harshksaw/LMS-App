@@ -55,14 +55,15 @@ export const sidebarLinks = [
     name: "Study Materials",
     path: "/dashboard/studymaterials",
     type: ACCOUNT_TYPE.ADMIN,
-    icon: "VscAdd",
+    icon: "VscNotebook",
   },
   {
     id: 9,
     name: "Create Study Materials",
     path: "/dashboard/create-studymaterials",
     type: ACCOUNT_TYPE.ADMIN,
-    icon: "VscNotebook",
+     icon: "VscAdd",
+    
   },
   {
     id: 10,

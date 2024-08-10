@@ -21,9 +21,9 @@ const User: React.FC<UserProps> = () => {
                 toast.error("Something went wrong");
                 return;
             }
-            console.log("🚀 ~ fetchData ~ response:", response.data)
+            console.log("🚀 ~ fetchData ~ response:", response.data.user)
 
-            setUser(response.data.data);
+            setUser(response.data.user);
         }
 
         fetchData();

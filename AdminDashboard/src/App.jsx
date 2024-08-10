@@ -175,7 +175,7 @@ console.log(user.accountType === ACCOUNT_TYPE.ADMIN)
               <Route path="dashboard/user/:id" element={<User />} />
               <Route path="dashboard/my-quiz" element={<MyQuiz />} />
               <Route path="/dashboard/quiz/:id" element={<EditQuiz/>} />
-              <Route path="dashboard/studymaterials" element={<StudyMaterials />} />
+              <Route path="dashboard/create-studymaterials" element={<StudyMaterials />} />
               
               <Route path="dashboard/Settings" element={<Settings />} />
             </>
