@@ -39,6 +39,8 @@ import AddQuiz from "./pages/AddQuiz";
 import StudyMaterials from "./pages/StudyMaterials";
 import MyQuiz from "./pages/MyQuiz";
 import CourseBundleForm from "./components/core/Dashboard/BundleCourse/CreateBundle";
+import EditQuiz from "./pages/EditQuiz";
+
 
 function App() {
   const { user } = useSelector((state) => state.profile);
@@ -167,6 +169,7 @@ console.log(user.accountType === ACCOUNT_TYPE.ADMIN)
               <Route path="dashboard/my-profile" element={<MyProfile />} />
               <Route path="dashboard/add-quiz" element={<AddQuiz />} />
               <Route path="dashboard/my-quiz" element={<MyQuiz />} />
+              <Route path="/dashboard/quiz/:id" element={<EditQuiz/>} />
               <Route path="dashboard/studymaterials" element={<StudyMaterials />} />
               
               <Route path="dashboard/Settings" element={<Settings />} />
