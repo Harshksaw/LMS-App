@@ -421,6 +421,32 @@ exports.updateQuestionOptions = async (req, res) => {
   }
 };
 
+
+exports.deleteQuizById = async (req, res) => {
+  try {
+    const quizId = req.params.id;
+
+    // Find the quiz by ID
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+
+    // Delete associated questions
+    await Questions.deleteMany({ _id: { $in: quiz.questions } });
+
+    // Delete the quiz
+    await Quiz.findByIdAndDelete(quizId);
+
+    res.status(200).json({
+      success: true,
+      message: "Quiz and associated questions deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+}
+
+
 // const req = {
 //   body: {
 //     name: "Sample Quiz",

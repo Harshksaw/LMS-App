@@ -124,11 +124,11 @@ export default function SignUpScreen() {
     if (!deviceData) {
       Toast.show("Error in collecting device data", {
         type: "danger",
-        message: "Error in collecting device data",
+
       });
     }
 
-    console.log(userInfo, "----")
+
 
     try {
       const response = await axios.post(`${SERVER_URI}/api/v1/auth/signup`, {

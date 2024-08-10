@@ -43,7 +43,7 @@ export default function MyCourses() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [])
-
+console.log(courses)
   return (
     <div>
       <div className="mb-14 flex justify-between">

@@ -9,6 +9,7 @@ const bundleSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  
   quizes: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Quiz'
@@ -20,7 +21,6 @@ const bundleSchema = new mongoose.Schema({
   course: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Course',
-
   },
   price: {
     type: Number,

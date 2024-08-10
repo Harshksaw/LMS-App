@@ -29,7 +29,11 @@ const courseBundleController = require('../controllers/courseBundleController');
 router.post('/course-bundle', upload.single('image'), courseBundleController.createCourseBundle);
 
 // // Route to update an existing course bundle
+router.get('/course-bundle/:id', courseBundleController.getCourseBundleById);
 router.post('/course-bundle/update/:id', courseBundleController.addQuizzesToBundle);
+
+//delete
+router.post('/course-bundle/:id', courseBundleController.addQuizzesToBundle);
 
 // /step3
 router.post('/course-bundle/updateTime/:id', courseBundleController.updateTimenListing);
@@ -38,7 +42,6 @@ router.post('/course-bundle/updateTime/:id', courseBundleController.updateTimenL
 router.post('/course-bundle/:id', courseBundleController.addStudyMaterialsToBundle);
 router.get('/course-bundle', courseBundleController.getCourseBundle);
 router.get('/get-all-course-bundle', courseBundleController.getAllCourseBundle);
-router.get('/course-bundle/:id', courseBundleController.getCourseBundleById);
 // // Route to add study materials to a course bundle
 // router.post('/course-bundle/:id/study-materials', courseBundleController.addStudyMaterialsToBundle);
 
