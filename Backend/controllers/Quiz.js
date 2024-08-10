@@ -250,7 +250,7 @@ exports.getQuizbyId = async (req, res) => {
 };
 exports.getAllQuiz = async (req, res) => {
   try {
-    const quiz = await Quiz.find();
+    const quiz = await Quiz.find().sort({ createdAt: -1 }); 
     return res.status(200).json({
       success: true,
       message: "All quizz are here!!",

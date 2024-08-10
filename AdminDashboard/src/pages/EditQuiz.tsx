@@ -52,7 +52,7 @@ const EditQuiz = () => {
 
     fetchQuiz();
   }, [id]);
-  
+
   const handleChange = (e, field, index, option, lang) => {
     const updatedQuestions = [...quiz.questions];
     updatedQuestions[index][field][option][lang] = e.target.value;
@@ -93,7 +93,7 @@ const EditQuiz = () => {
 
 
 
- 
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setQuiz({
@@ -138,7 +138,7 @@ const EditQuiz = () => {
   };
 
 
-  console.log("Quiz:",  quiz.questions);
+  console.log("Quiz:", quiz.questions);
 
   return (
     <div className="flex flex-col overflow-auto justify-center">
@@ -155,28 +155,28 @@ const EditQuiz = () => {
             />
           </div>
           <div className="flex  justify-between items-center">
-          <div className="flex  flex-col items-start mt-5 space-y-2">
-            <label className="text-richblack-5">Image URL</label>
-            <input
-              type="file"
-              name="image"
-              placeholder="Image URL"
-              onChange={(e) => handleChange(e, "image")}
-              className="p-2 border  w-full border-yellow-25 rounded-md"
-            />
-          </div>
+            <div className="flex  flex-col items-start mt-5 space-y-2">
+              <label className="text-richblack-5">Image URL</label>
+              <input
+                type="file"
+                name="image"
+                placeholder="Image URL"
+                onChange={(e) => handleChange(e, "image")}
+                className="p-2 border  w-full border-yellow-25 rounded-md"
+              />
+            </div>
 
-          <div className="flex  flex-row items-start mt-5 space-y-2 bg-richblack-50 ">
-            <label>Is Part of Bundle:</label>
+            <div className="flex  flex-row items-start mt-5 space-y-2 bg-richblack-50 ">
+              <label>Is Part of Bundle:</label>
 
-            <input
-              type="checkbox"
-              name="isPartOfBundle"
-              checked={quiz.isPartOfBundle}
-              onChange={handleInputChange}
-              className="p-2 border  w-full border-yellow-25 rounded-md"
-            />
-          </div>
+              <input
+                type="checkbox"
+                name="isPartOfBundle"
+                checked={quiz.isPartOfBundle}
+                onChange={handleInputChange}
+                className="p-2 border  w-full border-yellow-25 rounded-md"
+              />
+            </div>
 
           </div>
 
@@ -191,13 +191,14 @@ const EditQuiz = () => {
           </div>
         </div>
         <div>
-        
+
         </div>
       </div>
 
       <div className="flex flex-col bg-brown-25 mt-10 text-brown-100 h-2"></div>
       <div>
-      {quiz.questions && Array.isArray(quiz.questions) ? (
+        {quiz.questions && Array.isArray(quiz.questions) ? (
+          
           quiz.questions.map((question, index) => (
             <div key={index} className="mb-4 flex flex-col gap-5">
               <div
@@ -257,7 +258,7 @@ const EditQuiz = () => {
                       </div>
                     </div>
                   ))}
-      <div className="flex flex-col space-y-2">
+                  <div className="flex flex-col space-y-2">
                     <label className="text-richblack-5">Correct Answer (English)</label>
                     <input
                       type="text"
@@ -286,13 +287,24 @@ const EditQuiz = () => {
                   </button>
                 </div>
               )}
+
             </div>
           ))
+
         ) : (
           <p>No questions available</p>
         )}
       </div>
       <button onClick={handleSaveQuiz}>Save Quiz</button>
+
+      {/* {quiz.questions && Array.isArray(quiz.questions) && (
+           <button
+          //  onClick={addQuestion}
+           className="mt-4 p-2 bg-caribbeangreen-400 text-richblack-5 rounded-md"
+         >
+           Add Question
+         </button>
+      )} */}
     </div>
   );
 };
