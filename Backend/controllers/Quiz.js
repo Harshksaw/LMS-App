@@ -2,7 +2,62 @@ const Quiz = require("../models/Quiz");
 const Questions = require("../models/Questions");
 const User = require("../models/User");
 
-exports.createQuiz = async (req, res) => {
+exports.intialize = async (req, res) => {
+  const {
+    name,
+    shortDescription,
+    category,
+    isPaid,
+    price,
+
+    testSeries,
+    isListed,
+    isPartOfBundle,
+    time,
+  } = req.body;
+  const Quizimage = req.file ? req.file.path : "https://picsum.photos/200";
+  try {
+
+    if (!name || !shortDescription || !time) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required !!",
+      });
+    }
+
+
+    // Create the quiz with references to created questions
+    const newQuiz = new Quiz({
+      name: name,
+      shortDescription: shortDescription,
+      category,
+      isPaid,
+      price,
+      image: Quizimage,
+
+      testSeries,
+      isListed,
+      timer: time,
+      isPartOfBundle,
+    });
+
+    const savedQuiz = await newQuiz.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "worked",
+      data: savedQuiz,
+    });
+  } catch (error) {
+    console.log(error.message);
+
+    return res.status(401).json({
+      success: false,
+      message: "Canno create Quiz in, try again ",
+    });
+  }
+};
+exports.UpdateQuiz = async (req, res) => {
   const {
     name,
     shortDescription,
@@ -13,7 +68,7 @@ exports.createQuiz = async (req, res) => {
     testSeries,
     isListed,
     isPartOfBundle,
-    time
+    time,
   } = req.body;
   const Quizimage = req.file ? req.file.path : "https://picsum.photos/200";
 
@@ -122,6 +177,57 @@ exports.createQuiz = async (req, res) => {
   }
 };
 
+exports.createQuestion = async (req, res) => {
+  try {
+    const { quizId, questionData } = req.body;
+
+    // Create a new question
+
+    const newQuestion = new Questions(questionData);
+    await newQuestion.save();
+
+    // Find the quiz and update its questions array
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+
+    quiz.questions.push(newQuestion._id);
+    await quiz.save();
+
+    res
+      .status(201)
+      .json({ message: "Question added successfully", question: newQuestion });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+exports.updateQuestion = async (req, res) => {
+  try {
+    const { questionId, questionData } = req.body;
+
+    // Find the question by ID and update it
+    const updatedQuestion = await Questions.findByIdAndUpdate(
+      questionId,
+      questionData,
+      { new: true }
+    );
+    if (!updatedQuestion) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    res
+      .status(200)
+      .json({
+        message: "Question updated successfully",
+        question: updatedQuestion,
+      });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
 exports.getQuizbyId = async (req, res) => {
   try {
     const { id } = req.params;
@@ -143,22 +249,21 @@ exports.getQuizbyId = async (req, res) => {
   }
 };
 exports.getAllQuiz = async (req, res) => {
-    try{
-        const quiz = await Quiz.find();
-            return res.status(200).json({
-                success:true,
-                message:"All quizz are here!!",
-                data: quiz,
-            });
-
-    } catch(error){
-        console.log(error);
-        return res.status(500).json({
-            success:false,
-            message:"user cannot LOGGED in, try again ",
-        }) 
-    }
-} 
+  try {
+    const quiz = await Quiz.find();
+    return res.status(200).json({
+      success: true,
+      message: "All quizz are here!!",
+      data: quiz,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "user cannot LOGGED in, try again ",
+    });
+  }
+};
 exports.getAllBundleQuiz = async (req, res) => {
   try {
     const quiz = await Quiz.find({ isPartOfBundle: true }).sort({
