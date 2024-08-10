@@ -1,6 +1,6 @@
 // Import the required modules
 const express = require("express")
-const {  getQuizbyId, getAllQuiz, editQuizbyId, ping, updateQuestionOptions, getAllBundleQuiz,  createQuestion,  UpdateQuiz, intialize } = require("../controllers/Quiz")
+const {  getQuizbyId, getAllQuiz, editQuizbyId, ping, updateQuestionOptions, getAllBundleQuiz,  createQuestion,  UpdateQuiz, intialize, deleteQuizById } = require("../controllers/Quiz")
 const router = express.Router()
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
@@ -46,6 +46,8 @@ router.get("/getQuizById/:id",getQuizbyId )
 router.post("/editQuiz/:id",editQuizbyId )
 router.get("/ping", ping)
 router.get("/update", updateQuestionOptions)
+
+router.delete("/deleteQuiz/:id", deleteQuizById)
 
 router.get("/getAllisBundleMaterials", getIsBundledMaterials)
 
