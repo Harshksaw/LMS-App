@@ -70,7 +70,7 @@ exports.sendotp = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     // Destructure fields from the request body
-    const { id } = req.body;
+    const { id } = req.body ;
     // Check if All Details are there or not
     if (!id) {
       return res.status(403).send({
@@ -548,3 +548,17 @@ exports.updateAdditionalDetails = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// all user--
+exports.findAllUsers=async(req,res)=>{
+  try{
+    const users=await User.find().sort({createdAt:-1});
+  res.status(200).json({
+    success:true,
+    data:users
+  })}catch(error){
+    console.error(error);
+    res.status(500).json({message:"Internal server error"})
+  }
+}
+

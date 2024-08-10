@@ -181,7 +181,7 @@ exports.createQuestion = async (req, res) => {
   try {
     const { quizId, questionData } = req.body;
 
-    // Create a new question
+
 
     const newQuestion = new Questions(questionData);
     await newQuestion.save();

@@ -32,6 +32,27 @@ const EditQuiz = () => {
     ],
   });
 
+
+  const addQuestion = () => {
+    const newQuestion = {
+      question: { en: ", hin: " },
+      options: {
+        optionA: { en: "", hin: "" },
+        optionC: { en: "", hin: "" },
+        optionB: { en: "", hin: "" },
+        optionD: { en: "", hin: "" },
+      },
+      correctAnswer: { en: "", hin: "" },
+    };
+
+    setQuiz((prevQuiz) => ({
+      ...prevQuiz,
+      questions: [...prevQuiz.questions, newQuestion],
+    }));
+
+    console.log("Quiz:", quiz);
+  };
+
   useEffect(() => {
     // Fetch the quiz data from the server using the quiz ID
     const fetchQuiz = async () => {
@@ -60,6 +81,7 @@ const EditQuiz = () => {
   };
 
   const handleSaveQuestion = async (question) => {
+    console.log("🚀 ~ handleSaveQuestion ~ question:", question)
     // Check if all fields are entered
     const isQuestionValid =
       question.question.en &&
@@ -81,9 +103,11 @@ const EditQuiz = () => {
     }
 
     try {
-      const response = await axios.put(
-        `/api/question/${question.id}`,
-        question
+      const response = await axios.post(`${BASE_URL}/api/v1/quiz/createQuestion`,
+        {quizId :id , questionData : question
+
+        }
+
       );
       console.log("Question updated:", response.data);
     } catch (error) {
@@ -196,6 +220,8 @@ const EditQuiz = () => {
       </div>
 
       <div className="flex flex-col bg-brown-25 mt-10 text-brown-100 h-2"></div>
+
+
       <div>
         {quiz.questions && Array.isArray(quiz.questions) ? (
           
@@ -296,15 +322,14 @@ const EditQuiz = () => {
         )}
       </div>
       <button onClick={handleSaveQuiz}>Save Quiz</button>
+        <div>
+      <button  
+className="text-2xl text-white text-bold bg-blue-400 p-2 rounded-md"
+onClick={addQuestion}>Add Question</button>
+</div>
 
-      {/* {quiz.questions && Array.isArray(quiz.questions) && (
-           <button
-          //  onClick={addQuestion}
-           className="mt-4 p-2 bg-caribbeangreen-400 text-richblack-5 rounded-md"
-         >
-           Add Question
-         </button>
-      )} */}
+
+
     </div>
   );
 };
