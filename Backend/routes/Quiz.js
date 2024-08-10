@@ -30,7 +30,11 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.post("/createQuiz",upload.single('image'), createQuiz);
 router.get("/getAllQuiz", getAllQuiz)
 router.get("/getAllisBundleQuizes", getAllBundleQuiz)
-router.post("/getQuizById/:id",getQuizbyId )
+
+
+router.get("/getQuizById/:id",getQuizbyId )
+
+
 router.post("/editQuiz/:id",editQuizbyId )
 router.get("/ping", ping)
 router.get("/update", updateQuestionOptions)

@@ -2,7 +2,7 @@
 import React,{ useEffect, useState } from "react"
 import { VscAdd } from "react-icons/vsc"
 import { useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 // import { fetchInstructorCourses } from "../../../services/operations/courseDetailsAPI"
 import IconBtn from "../components/common/IconBtn"
@@ -45,7 +45,7 @@ export default function MyCourses() {
   }, [])
 
   return (
-    <div>
+  <div>
       <div className="mb-14 flex justify-between">
         {/* <div className="mb-14 flex items-center justify-between"> */}
         <h1 className="text-4xl font-medium text-richblack-5 font-boogaloo text-center lg:text-left">My Courses</h1>

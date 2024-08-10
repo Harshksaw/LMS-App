@@ -8,7 +8,7 @@ import { FaCheck } from "react-icons/fa"
 import { FiEdit2 } from "react-icons/fi"
 import { HiClock } from "react-icons/hi"
 import { RiDeleteBin6Line } from "react-icons/ri"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 import { formatDate } from "../../services/formatDate"
 // import { deleteCourse, fetchInstructorCourses, } from "../../../services/operations/courseDetailsAPI"
@@ -105,6 +105,8 @@ console.log(courses)
                   key={course._id}
                   className="flex gap-x-10 border-b border-richblack-800 px-6 py-8"
                 >
+
+                  <Link to={`/dashboard/edit-course/${course._id}`} className="flex-1">
                   <Td className="flex flex-1 gap-x-4 relative">
                     {/* course Thumbnail */}
                     <Img
@@ -156,13 +158,13 @@ console.log(courses)
                   {/* course duration */}
                   <Td className="text-sm text-center pr-16 font-medium text-richblack-100">{course.questions.length}</Td>
 
-                
+                        </Link>
                 </Tr>
               ))
             )}
         </Tbody>
       </Table>
-
+  
       {/* Confirmation Modal */}
       {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
     </>

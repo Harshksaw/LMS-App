@@ -22,7 +22,7 @@ const AddQuiz = (props: Props) => {
     testSeries: "",
     isListed: false,
     isPartOfBundle: true,
-    time:0,
+    time: 0,
     questions: [
       {
         question: { en: "", hin: "" },
@@ -148,7 +148,32 @@ const AddQuiz = (props: Props) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
- 
+  const handleSaveQuestion = async (question) => {
+    // Check if all fields are entered
+    const isQuestionValid = question.question.en && question.question.hin &&
+    question.options.optionA.en && question.options.optionA.hin &&
+    question.options.optionB.en && question.options.optionB.hin &&
+    question.options.optionC.en && question.options.optionC.hin &&
+    question.options.optionD.en && question.options.optionD.hin &&
+    question.correctAnswer.en && question.correctAnswer.hin;
+
+    if (!isQuestionValid) {
+      toast.error('Please fill in all fields before saving.');
+      // alert('Please fill in all fields before saving.');
+      return;
+    }
+
+    try {
+      toast.loading('Saving question...');
+      const response = await axios.post('/api/saveQuestion', question);
+      toast.dismiss();
+      toast.success('Question saved successfully.');
+      console.log('Question saved:', response.data);
+    } catch (error) {
+      console.error('Error saving question:', error);
+    }
+  };
+
 
   return (
     <div className="flex flex-col overflow-auto justify-center">
@@ -209,7 +234,7 @@ const AddQuiz = (props: Props) => {
                   className="p-2 border  w-full border-yellow-25 rounded-md"
                 />
               </div>
-       
+
 
               {/* <div className="flex  flex-row  items-start gap-10 mt-5 space-x-5 ">
                 <label className="text-richblack-5 flex items-center">
@@ -413,18 +438,22 @@ const AddQuiz = (props: Props) => {
                         className="p-2 border border-yellow-25 rounded-md"
                       />
                     </div>
+                    <button
+                    className="p-2 bg-blue-400 text-white rounded-md"
+                    onClick={() => handleSaveQuestion(question)}>Save</button>
                   </div>
 
-                  
+
                 )}
+                
               </div>
             ))}
-              <div className="p-4 bg-richblack-100 rounded-md w-60">
+            <div className="p-4 bg-richblack-100 rounded-md w-60">
 
-{/* Add the TimeInput component here */}
-<TimeInput onTimeChange={handleTimeChange} />
+              {/* Add the TimeInput component here */}
+              <TimeInput onTimeChange={handleTimeChange} />
 
-</div>
+            </div>
 
           </div>
           <button
@@ -441,11 +470,11 @@ const AddQuiz = (props: Props) => {
           >
             Submit
           </button>
-        
-        
+
+
         </form>
       </div>
-     
+
     </div>
   );
 };
