@@ -22,7 +22,8 @@ export default function QuizTable({
   loading,
   setLoading,
 }) {
-  console.log(courses);
+  console.log("🚀 ~ courses:", courses);
+
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
 
@@ -62,6 +63,14 @@ export default function QuizTable({
       </div>
     );
   };
+  const formatTime = (seconds) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h}h ${m}m ${s}s`;
+  };
+
+
 
   return (
     <>
@@ -70,14 +79,23 @@ export default function QuizTable({
         <Thead>
           <Tr className="flex gap-x-10 rounded-t-3xl border-b border-b-richblack-800 px-6 py-2">
             <Th className="flex-1 text-left text-sm font-medium uppercase text-richblack-100">
-              Quiz name
-            </Th>
-            <Th className="text-left text-sm font-medium uppercase text-richblack-100">
-              Questions count
+              Quiz Name
             </Th>
             {/* <Th className="text-left text-sm font-medium uppercase text-richblack-100">
-              Actions
+              Short Description
             </Th> */}
+            <Th className="text-left text-sm font-medium uppercase text-richblack-100">
+              Timer (seconds)
+            </Th>
+            <Th className="text-left text-sm font-medium uppercase text-richblack-100">
+              Questions Count
+            </Th>
+            <Th className="text-left text-sm font-medium uppercase text-richblack-100">
+              Created At
+            </Th>
+            <Th className="text-left text-sm font-medium uppercase text-richblack-100">
+              Status
+            </Th>
           </Tr>
         </Thead>
 
@@ -99,67 +117,65 @@ export default function QuizTable({
             </Tr>
           ) : (
             courses?.map((course) => (
+               <Link to={`/dashboard/quiz/${course._id}`} className="flex-1">
               <Tr
                 key={course._id}
                 className="flex gap-x-10 border-b border-richblack-800 px-6 py-8"
               >
-                <Link to={`/dashboard/quiz/${course._id}`} className="flex-1">
-                  <Td className="flex flex-1 gap-x-4 relative">
-                    {/* course Thumbnail */}
-                    <Img
-                      src={
-                        course?.image
-                          ? course?.image
-                          : "https://img.freepik.com/free-photo/abstract-autumn-beauty-multi-colored-leaf-vein-pattern-generated-by-ai_188544-9871.jpg"
-                      }
-                      alt={course?.name}
-                      className="h-[148px] min-w-[270px] max-w-[270px] rounded-lg object-cover"
-                    />
 
-                    <div className="flex flex-col">
-                      <p className="text-lg font-semibold text-richblack-5 capitalize">
-                        {course.name}
-                      </p>
+                <Td className="flex-1 text-left text-sm font-medium text-richblack-100">
+                  <p className="text-lg font-semibold text-richblack-5 capitalize">
+                    {course.name}
+                  </p>
+                </Td>
+
+                {/* <Td className="text-left text-sm font-medium text-richblack-100">
                       <p className="text-sm text-richblack-300 ">
                         {course.shortDescription.length >= 32
                           ? `${course.shortDescription.slice(0, 30)}...`
                           : `${course.shortDescription.slice(0, 30)}...`}
                       </p>
 
-                      {/* created At */}
-                      <p className="text-[12px] text-richblack-100 mt-4">
-                        Created: {formatDate(course?.createdAt)}
-                      </p>
 
-                      {/* updated At */}
-                      <p className="text-[12px] text-richblack-100 ">
-                        updated: {formatDate(course?.updatedAt)}
-                      </p>
+                    </Td> */}
+                <Td className="flex flex-1 gap-x-4 relative">
+                  <p className="text-lg font-semibold text-richblack-5 capitalize">
+                  {formatTime(course.timer)}
+                  </p>
+                </Td>
 
-                      {/* course status */}
-
-                      {course.status === COURSE_STATUS.DRAFT ? (
-                        <p className="mt-2 flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-pink-100">
-                          <HiClock size={14} />
-                          Drafted
-                        </p>
-                      ) : (
-                        <div className="mt-2 flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-yellow-100">
-                          <p className="flex h-3 w-3 items-center justify-center rounded-full bg-yellow-100 text-richblack-700">
-                            <FaCheck size={8} />
-                          </p>
-                          Published
-                        </div>
-                      )}
-                    </div>
-                  </Td>
-
-                  {/* course duration */}
-                  <Td className="text-sm text-center pr-16 font-medium text-richblack-100">
+                <Td className="flex flex-1 gap-x-4 relative">
+                  <p className="text-lg font-semibold text-richblack-5 capitalize">
                     {course.questions.length}
-                  </Td>
-                </Link>
+                  </p>
+                </Td>
+
+                <Td className="text-left text-sm font-medium text-richblack-100">
+                  {new Date(course.createdAt).toLocaleDateString()}
+                </Td>
+
+                <Td>
+                  {course.status === COURSE_STATUS.DRAFT ? (
+                    <p className="mt-2 flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-pink-100">
+                      <HiClock size={14} />
+                      Drafted
+                    </p>
+                  ) : (
+                    <div className="mt-2 flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-yellow-100">
+                      <p className="flex h-3 w-3 items-center justify-center rounded-full bg-yellow-100 text-richblack-700">
+                        <FaCheck size={8} />
+                      </p>
+                      Published
+                    </div>
+                  )}
+                </Td>
+
+                {/* course duration */}
+                {/* <Td className="text-sm text-center pr-16 font-medium text-richblack-100">
+                    {course.questions.length}
+                  </Td> */}
               </Tr>
+          </Link>
             ))
           )}
         </Tbody>
