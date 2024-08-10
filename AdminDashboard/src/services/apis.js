@@ -1,10 +1,11 @@
-// export const BASE_URL ="https://lms-app-wqwt.onrender.com"
+export const BASE_URL ="https://lms-app-wqwt.onrender.com"
 // export const BASE_URL = "https://bookish-fiesta-5pw7j94v67g3pvpw-4000.app.github.dev"
 // export const BASE_URL = "https://lrzp6q-4000.csb.app"
+// export const BASE_URL = "https://127.0.0.1:3000"
 
 ///prod url
 
-export const BASE_URL = "https://lms-app-1-eoim.onrender.com";
+// export const BASE_URL = "https://lms-app-1-eoim.onrender.com";
 
 export const endpoints = {
   SENDOTP_API: BASE_URL + "api/v1/auth/sendotp",

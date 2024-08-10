@@ -2,296 +2,15 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../services/apis";
 import { toast } from "react-hot-toast";
+import moment from 'moment';
 
-// const quizsample = {
-//   questions: [
-//     {
-//       question: {
-//         en: "What is the capital of France?",
-//         hin: "फ्रांस की राजधानी क्या है?",
-//       },
-//       options: {
-//         optionA: {
-//           en: "Paris",
-//           hin: "पेरिस",
-//         },
-//         optionB: {
-//           en: "London",
-//           hin: "लंदन",
-//         },
-//         optionC: {
-//           en: "Berlin",
-//           hin: "बर्लिन",
-//         },
-//         optionD: {
-//           en: "Madrid",
-//           hin: "मैड्रिड",
-//         },
-//       },
-//       correctAnswer: {
-//         en: "Paris",
-//         hin: "पेरिस",
-//       },
-//     },
-//     {
-//       question: {
-//         en: "What is the largest planet in our solar system?",
-//         hin: "हमारे सौर मंडल का सबसे बड़ा ग्रह कौन सा है?",
-//       },
-//       options: {
-//         optionA: {
-//           en: "Earth",
-//           hin: "पृथ्वी",
-//         },
-//         optionB: {
-//           en: "Jupiter",
-//           hin: "बृहस्पति",
-//         },
-//         optionC: {
-//           en: "Saturn",
-//           hin: "शनि",
-//         },
-//         optionD: {
-//           en: "Mars",
-//           hin: "मंगल",
-//         },
-//       },
-//       correctAnswer: {
-//         en: "Jupiter",
-//         hin: "बृहस्पति",
-//       },
-//     },
-//     {
-//       question: {
-//         en: "Who wrote 'To Kill a Mockingbird'?",
-//         hin: "'टू किल अ मॉकिंगबर्ड' किसने लिखा?",
-//       },
-//       options: {
-//         optionA: {
-//           en: "Harper Lee",
-//           hin: "हार्पर ली",
-//         },
-//         optionB: {
-//           en: "Mark Twain",
-//           hin: "मार्क ट्वेन",
-//         },
-//         optionC: {
-//           en: "Ernest Hemingway",
-//           hin: "अर्नेस्ट हेमिंग्वे",
-//         },
-//         optionD: {
-//           en: "F. Scott Fitzgerald",
-//           hin: "एफ. स्कॉट फिट्जगेराल्ड",
-//         },
-//       },
-//       correctAnswer: {
-//         en: "Harper Lee",
-//         hin: "हार्पर ली",
-//       },
-//     },
-//     {
-//       question: {
-//         en: "What is the chemical symbol for water?",
-//         hin: "पानी का रासायनिक प्रतीक क्या है?",
-//       },
-//       options: {
-//         optionA: {
-//           en: "H2O",
-//           hin: "एच2ओ",
-//         },
-//         optionB: {
-//           en: "O2",
-//           hin: "ओ2",
-//         },
-//         optionC: {
-//           en: "CO2",
-//           hin: "सीओ2",
-//         },
-//         optionD: {
-//           en: "H2",
-//           hin: "एच2",
-//         },
-//       },
-//       correctAnswer: {
-//         en: "H2O",
-//         hin: "एच2ओ",
-//       },
-//     },
-//     {
-//       question: {
-//         en: "What is the speed of light?",
-//         hin: "प्रकाश की गति क्या है?",
-//       },
-//       options: {
-//         optionA: {
-//           en: "300,000 km/s",
-//           hin: "300,000 किमी/से",
-//         },
-//         optionB: {
-//           en: "150,000 km/s",
-//           hin: "150,000 किमी/से",
-//         },
-//         optionC: {
-//           en: "450,000 km/s",
-//           hin: "450,000 किमी/से",
-//         },
-//         optionD: {
-//           en: "600,000 km/s",
-//           hin: "600,000 किमी/से",
-//         },
-//       },
-//       correctAnswer: {
-//         en: "300,000 km/s",
-//         hin: "300,000 किमी/से",
-//       },
-//     },
-//     {
-//       question: {
-//         en: "Who painted the Mona Lisa?",
-//         hin: "मोना लिसा किसने चित्रित की?",
-//       },
-//       options: {
-//         optionA: {
-//           en: "Leonardo da Vinci",
-//           hin: "लियोनार्डो दा विंची",
-//         },
-//         optionB: {
-//           en: "Vincent van Gogh",
-//           hin: "विंसेंट वैन गॉग",
-//         },
-//         optionC: {
-//           en: "Pablo Picasso",
-//           hin: "पाब्लो पिकासो",
-//         },
-//         optionD: {
-//           en: "Claude Monet",
-//           hin: "क्लाउड मोनेट",
-//         },
-//       },
-//       correctAnswer: {
-//         en: "Leonardo da Vinci",
-//         hin: "लियोनार्डो दा विंची",
-//       },
-//     },
-//     {
-//       question: {
-//         en: "What is the smallest prime number?",
-//         hin: "सबसे छोटा अभाज्य संख्या कौन सी है?",
-//       },
-//       options: {
-//         optionA: {
-//           en: "1",
-//           hin: "1",
-//         },
-//         optionB: {
-//           en: "2",
-//           hin: "2",
-//         },
-//         optionC: {
-//           en: "3",
-//           hin: "3",
-//         },
-//         optionD: {
-//           en: "5",
-//           hin: "5",
-//         },
-//       },
-//       correctAnswer: {
-//         en: "2",
-//         hin: "2",
-//       },
-//     },
-//     {
-//       question: {
-//         en: "What is the capital of Japan?",
-//         hin: "जापान की राजधानी क्या है?",
-//       },
-//       options: {
-//         optionA: {
-//           en: "Tokyo",
-//           hin: "टोक्यो",
-//         },
-//         optionB: {
-//           en: "Kyoto",
-//           hin: "क्योटो",
-//         },
-//         optionC: {
-//           en: "Osaka",
-//           hin: "ओसाका",
-//         },
-//         optionD: {
-//           en: "Nagoya",
-//           hin: "नागोया",
-//         },
-//       },
-//       correctAnswer: {
-//         en: "Tokyo",
-//         hin: "टोक्यो",
-//       },
-//     },
-//     {
-//       question: {
-//         en: "What is the powerhouse of the cell?",
-//         hin: "कोशिका का पावरहाउस क्या है?",
-//       },
-//       options: {
-//         optionA: {
-//           en: "Nucleus",
-//           hin: "नाभिक",
-//         },
-//         optionB: {
-//           en: "Mitochondria",
-//           hin: "माइटोकॉन्ड्रिया",
-//         },
-//         optionC: {
-//           en: "Ribosome",
-//           hin: "राइबोसोम",
-//         },
-//         optionD: {
-//           en: "Golgi apparatus",
-//           hin: "गोल्जी तंत्र",
-//         },
-//       },
-//       correctAnswer: {
-//         en: "Mitochondria",
-//         hin: "माइटोकॉन्ड्रिया",
-//       },
-//     },
-//     {
-//       question: {
-//         en: "What is the boiling point of water?",
-//         hin: "पानी का क्वथनांक क्या है?",
-//       },
-//       options: {
-//         optionA: {
-//           en: "100°C",
-//           hin: "100°C",
-//         },
-//         optionB: {
-//           en: "0°C",
-//           hin: "0°C",
-//         },
-//         optionC: {
-//           en: "50°C",
-//           hin: "50°C",
-//         },
-//         optionD: {
-//           en: "150°C",
-//           hin: "150°C",
-//         },
-//       },
-//       correctAnswer: {
-//         en: "100°C",
-//         hin: "100°C",
-//       },
-//     },
-//   ],
-// };
-
+import TimePicker from "react-time-picker";
+import TimeInput from "../components/core/Quiz/timer";
 type Props = {};
 
 const AddQuiz = (props: Props) => {
   const [loading, setisLoading] = useState(false);
+  const [time, setTime] = useState('10:00:00');
 
   const [quiz, setQuiz] = useState({
     name: "",
@@ -303,6 +22,7 @@ const AddQuiz = (props: Props) => {
     testSeries: "",
     isListed: false,
     isPartOfBundle: true,
+    time:0,
     questions: [
       {
         question: { en: "", hin: "" },
@@ -316,6 +36,13 @@ const AddQuiz = (props: Props) => {
       },
     ],
   });
+
+  const handleTimeChange = (totalSeconds) => {
+    setQuiz((prevQuiz) => ({
+      ...prevQuiz,
+      time: totalSeconds,
+    }));
+  };
   const handleChangeQues = (e, field, index, lang) => {
     const { value } = e.target;
     const newQuestions = [...quiz.questions];
@@ -357,7 +84,9 @@ const AddQuiz = (props: Props) => {
     formData.append("category", quiz.category);
     formData.append("image", quiz.image);
     formData.append("isPaid", quiz.isPaid);
+    formData.append("time", quiz.time);
     formData.append("price", quiz.price);
+
 
     formData.append("quizData", JSON.stringify(quiz.questions));
 
@@ -419,6 +148,8 @@ const AddQuiz = (props: Props) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
+ 
+
   return (
     <div className="flex flex-col overflow-auto justify-center">
       <div className="flex flex-row space-x-10 justify-center items-center">
@@ -478,6 +209,7 @@ const AddQuiz = (props: Props) => {
                   className="p-2 border  w-full border-yellow-25 rounded-md"
                 />
               </div>
+       
 
               {/* <div className="flex  flex-row  items-start gap-10 mt-5 space-x-5 ">
                 <label className="text-richblack-5 flex items-center">
@@ -682,9 +414,18 @@ const AddQuiz = (props: Props) => {
                       />
                     </div>
                   </div>
+
+                  
                 )}
               </div>
             ))}
+              <div className="p-4 bg-richblack-100 rounded-md w-60">
+
+{/* Add the TimeInput component here */}
+<TimeInput onTimeChange={handleTimeChange} />
+
+</div>
+
           </div>
           <button
             onClick={addQuestion}
@@ -700,10 +441,15 @@ const AddQuiz = (props: Props) => {
           >
             Submit
           </button>
+        
+        
         </form>
       </div>
+     
     </div>
   );
 };
 
 export default AddQuiz;
+
+

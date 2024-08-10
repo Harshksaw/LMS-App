@@ -13,12 +13,13 @@ exports.createQuiz = async (req, res) => {
     testSeries,
     isListed,
     isPartOfBundle,
+    time
   } = req.body;
   const Quizimage = req.file ? req.file.path : "https://picsum.photos/200";
 
-  console.log("first :", Quizimage);
-  console.log("first :", name, category, shortDescription);
-  if (!name || !shortDescription || !quizData) {
+  // console.log("first :", Quizimage);
+  // console.log("first :", name, category, shortDescription);
+  if (!name || !shortDescription || !quizData || !time) {
     return res.status(400).json({
       success: false,
       message: "All fields are required !!",
@@ -99,6 +100,7 @@ exports.createQuiz = async (req, res) => {
     questions: questionIds,
     testSeries,
     isListed,
+    timer: time,
     isPartOfBundle,
   });
 
