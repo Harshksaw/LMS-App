@@ -70,7 +70,7 @@ exports.sendotp = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     // Destructure fields from the request body
-    const { id } = req.body ;
+    const { id } = req.params ;
     // Check if All Details are there or not
     if (!id) {
       return res.status(403).send({
