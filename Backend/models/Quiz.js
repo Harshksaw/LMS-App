@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const cloudinary = require("../config/cloudinaryConfig"); // Adjust the import path as needed
 
 const Quiz = new mongoose.Schema({
   name: {
@@ -42,4 +43,17 @@ const Quiz = new mongoose.Schema({
   
 },{ timestamps: true });
 
+
+QuizSchema.pre("remove", async function (next) {
+  try {
+    if (this.image) {
+      // Extract the public ID from the image URL
+      const publicId = this.image.split('/').pop().split('.')[0];
+      await cloudinary.uploader.destroy(publicId);
+    }
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 module.exports = mongoose.model("Quiz", Quiz);

@@ -445,6 +445,8 @@ exports.deleteQuizById = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 }
+
+
 // const req = {
 //   body: {
 //     name: "Sample Quiz",
