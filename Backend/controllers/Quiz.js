@@ -203,30 +203,30 @@ exports.createQuestion = async (req, res) => {
   }
 };
 
-exports.updateQuestion = async (req, res) => {
-  try {
-    const { questionId, questionData } = req.body;
+// exports.updateQuestion = async (req, res) => {
+//   try {
+//     const { questionId, questionData } = req.body;
 
-    // Find the question by ID and update it
-    const updatedQuestion = await Questions.findByIdAndUpdate(
-      questionId,
-      questionData,
-      { new: true }
-    );
-    if (!updatedQuestion) {
-      return res.status(404).json({ message: "Question not found" });
-    }
+//     // Find the question by ID and update it
+//     const updatedQuestion = await Questions.findByIdAndUpdate(
+//       questionId,
+//       questionData,
+//       { new: true }
+//     );
+//     if (!updatedQuestion) {
+//       return res.status(404).json({ message: "Question not found" });
+//     }
 
-    res
-      .status(200)
-      .json({
-        message: "Question updated successfully",
-        question: updatedQuestion,
-      });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-};
+//     res
+//       .status(200)
+//       .json({
+//         message: "Question updated successfully",
+//         question: updatedQuestion,
+//       });
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error", error });
+//   }
+// };
 
 exports.getQuizbyId = async (req, res) => {
   try {

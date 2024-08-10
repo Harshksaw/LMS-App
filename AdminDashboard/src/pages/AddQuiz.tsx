@@ -13,9 +13,11 @@ const AddQuiz = (props: Props) => {
   const [time, setTime] = useState('10:00:00');
 
 
-  const [isQuizId, setIsQuizId] = useState(false);
+  const [isQuizId, setIsQuizId] = useState(null);
+  console.log("🚀 ~ AddQuiz ~ isQuizId:", isQuizId)
 
   const [quiz, setQuiz] = useState({
+
     name: "",
     shortDescription: "",
     category: "",
@@ -120,6 +122,8 @@ const AddQuiz = (props: Props) => {
   };
 
   const handleSaveQuestion = async (question) => {
+  console.log("🚀 ~ handleSaveQuestion ~ question:", question)
+
     // Check if all fields are entered
     const isQuestionValid = question.question.en && question.question.hin &&
       question.options.optionA.en && question.options.optionA.hin &&
@@ -128,7 +132,7 @@ const AddQuiz = (props: Props) => {
       question.options.optionD.en && question.options.optionD.hin &&
       question.correctAnswer.en && question.correctAnswer.hin;
 
-    if (!isQuestionValid) {
+    if (!isQuestionValid || !isQuizId) {
       toast.error('Please fill in all fields before saving.');
       // alert('Please fill in all fields before saving.');
       return;
@@ -137,7 +141,11 @@ const AddQuiz = (props: Props) => {
     try {
       toast.loading('Saving question...');
 
-      const response = await axios.post(`${BASE_URL}/api/v1/quiz/createQuestion`, question);
+      const response = await axios.post(`${BASE_URL}/api/v1/quiz/createQuestion`, {questionData :question
+
+        ,quizId : isQuizId
+      });
+      console.log("🚀 ~ handleSaveQuestion ~ response:", response)
       toast.dismiss();
       toast.success('Question saved successfully.');
       console.log('Question saved:', response.data);
@@ -163,7 +171,7 @@ const AddQuiz = (props: Props) => {
 
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/v1/quiz/intializeQuiz`,
+        `${BASE_URL}/api/v1/quiz/initializeQuiz`,
         formData,
         {
           headers: {
@@ -196,6 +204,7 @@ const AddQuiz = (props: Props) => {
     formData.append("price", quiz.price);
 
 
+
     formData.append("quizData", JSON.stringify(quiz.questions));
 
     try {
@@ -221,14 +230,11 @@ const AddQuiz = (props: Props) => {
   }
 
   const handleClick = () => {
-    if (!isQuizId) {
+    if (isQuizId === null) {
 
       IntializeQuiz();
-    } else {
-    UpdateQuiz()
-
-      // sendCreateProp();
     }
+
   }
 
   return (
@@ -374,12 +380,18 @@ const AddQuiz = (props: Props) => {
               />
             </div>
           </div>
+          <div className="p-4 bg-richblack-100 rounded-md w-60 self-center">
+
+{/* Add the TimeInput component here */}
+<TimeInput onTimeChange={handleTimeChange} />
+
+</div>
 
           <div className="flex flex-col bg-white text-brown-50 h-2"></div>
 
 
           {
-            isQuizId ? (
+            isQuizId !== null ? (
 
               <>
               <div className="flex flex-col  w-full ">
@@ -509,12 +521,7 @@ const AddQuiz = (props: Props) => {
 
                   </div>
                 ))}
-                <div className="p-4 bg-richblack-100 rounded-md w-60 self-center">
-
-                  {/* Add the TimeInput component here */}
-                  <TimeInput onTimeChange={handleTimeChange} />
-
-                </div>
+               
 
               </div>
               <button
@@ -537,11 +544,12 @@ const AddQuiz = (props: Props) => {
 
           <button
             type="submit"
-            className="p-2 bg-blue-500 text-white rounded-md"
+            className= {`p-2 bg-blue-500 text-white rounded-md  ${isQuizId ? "hidden": "block"} `}
+            
 
             onClick={handleClick}
             >
-            {isQuizId ? "Update Quiz" : "Initializ  Quiz"}
+        Initializ  Quiz
           </button>
 
 
