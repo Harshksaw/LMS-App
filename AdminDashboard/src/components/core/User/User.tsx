@@ -59,7 +59,7 @@ const User: React.FC<UserProps> = () => {
             </div>
             <div className="flex justify-between border-b pb-2 ">
               <div className="font-medium text-gray-700">Account Type</div>
-              <div className="">{user.accountType}</div>
+              <div className="">{user?.accountType}</div>
             </div>
             <div className="flex justify-between border-b pb-2">
               <div className="font-medium text-gray-700">Created At</div>

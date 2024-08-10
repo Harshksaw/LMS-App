@@ -16,7 +16,7 @@ function SignupForm() {
   const dispatch = useDispatch();
 
   // student or instructor
-  const [accountType, setAccountType] = useState(ACCOUNT_TYPE.STUDENT);
+  const [accountType, setAccountType] = useState(ACCOUNT_TYPE.ADMIN);
 
   const [formData, setFormData] = useState({
     firstName: "",

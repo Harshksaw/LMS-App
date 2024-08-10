@@ -72,7 +72,7 @@ function App() {
       window.removeEventListener("scroll", handleArrow);
     };
   }, [showArrow]);
-  // console.log(user.accountType === ACCOUNT_TYPE.ADMIN)
+
   return (
     <div className="w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
       <Navbar />
@@ -188,12 +188,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          {/* {user?.accountType === ACCOUNT_TYPE.STUDENT && (
-            <Route
-              path="view-course/:courseId/section/:sectionId/sub-section/:subSectionId"
-              element={<VideoDetails />}
-            />
-          )} */}
+     
         </Route>
 
         {/* Page Not Found (404 Page ) */}

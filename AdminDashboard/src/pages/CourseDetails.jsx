@@ -10,7 +10,7 @@ import ConfirmationModal from "../components/common/ConfirmationModal"
 import Footer from "../components/common/Footer"
 import RatingStars from "../components/common/RatingStars"
 import CourseAccordionBar from "../components/core/Course/CourseAccordionBar"
-import CourseDetailsCard from "../components/core/Course/CourseDetailsCard"
+// import CourseDetailsCard from "../components/core/Course/CourseDetailsCard"
 import { formatDate } from "../services/formatDate"
 import { fetchCourseDetails } from "../services/operations/courseDetailsAPI"
 import { buyCourse } from "../services/operations/studentFeaturesAPI"
@@ -227,11 +227,11 @@ function CourseDetails() {
 
           {/* Floating Courses Card */}
           <div className="right-[1.5rem] top-[60px] mx-auto hidden lg:block lg:absolute min-h-[600px] w-1/3 max-w-[410px] translate-y-24 md:translate-y-0">
-            <CourseDetailsCard
+            {/* <CourseDetailsCard
               course={response?.data?.courseDetails}
               setConfirmationModal={setConfirmationModal}
               handleBuyCourse={handleBuyCourse}
-            />
+            /> */}
           </div>
         </div>
       </div>
