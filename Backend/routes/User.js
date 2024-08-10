@@ -14,6 +14,8 @@ const {
   userLogin,
   adminLogin,
   signupAdmin,
+  findAllUsers,
+  findUserById
 } = require("../controllers/Auth")
 const {
   resetPasswordToken,
@@ -60,6 +62,11 @@ router.post("/additionalDetails/:id",updateAdditionalDetails)
 
 router.post("/buyQuiz/:id", buyQuiz)
 router.post("/buyMaterials/:id", buyMaterials)
+/* ****************************************************************************************************** */
+// Route for finding all users
+router.get("/getAllUsers",findAllUsers);
+// route for finding user by id
+
 
 // Export the router for use in the main application
 module.exports = router
