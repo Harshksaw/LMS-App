@@ -70,7 +70,7 @@ exports.sendotp = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     // Destructure fields from the request body
-    const { id } = req.params ;
+    const { id } = req.params;
     // Check if All Details are there or not
     if (!id) {
       return res.status(403).send({
@@ -80,7 +80,9 @@ exports.getUserById = async (req, res) => {
     }
 
     // Check if user already exists
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id }).populate(
+      "courses ,quizes,studyMaterials"
+    );
     if (!user) {
       return res.status(400).json({
         success: false,
@@ -100,8 +102,6 @@ exports.getUserById = async (req, res) => {
     });
   }
 };
-
-
 
 exports.updateUserById = async (req, res) => {
   try {
@@ -143,11 +143,10 @@ exports.updateUserById = async (req, res) => {
   }
 };
 
-
 exports.signupAdmin = async (req, res) => {
   try {
     // Destructure fields from the request body
-    const { email, password, phoneNumber , name} = req.body;
+    const { email, password, phoneNumber, name } = req.body;
 
     // Check if All Details are there or not
     if (!email || !password || !phoneNumber) {
@@ -157,7 +156,6 @@ exports.signupAdmin = async (req, res) => {
       });
     }
 
- 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -550,15 +548,17 @@ exports.updateAdditionalDetails = async (req, res) => {
 };
 
 // all user--
-exports.findAllUsers=async(req,res)=>{
-  try{
-    const users=await User.find({accountType:"Student"}).sort({createdAt:-1});
-  res.status(200).json({
-    success:true,
-    data:users
-  })}catch(error){
+exports.findAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({ accountType: "Student" }).sort({
+      createdAt: -1,
+    });
+    res.status(200).json({
+      success: true,
+      data: users,
+    });
+  } catch (error) {
     console.error(error);
-    res.status(500).json({message:"Internal server error"})
+    res.status(500).json({ message: "Internal server error" });
   }
-}
-
+};
