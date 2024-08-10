@@ -35,14 +35,14 @@ const EditQuiz = () => {
 
   const addQuestion = () => {
     const newQuestion = {
-      question: { en: "a", hin: "a" },
+      question: { en: ", hin: " },
       options: {
-        optionA: { en: "a", hin: "a" },
-        optionC: { en: "a", hin: "aa" },
-        optionB: { en: "a", hin: "aa" },
-        optionD: { en: "a", hin: "a" },
+        optionA: { en: "", hin: "" },
+        optionC: { en: "", hin: "" },
+        optionB: { en: "", hin: "" },
+        optionD: { en: "", hin: "" },
       },
-      correctAnswer: { en: "aa", hin: "aaa" },
+      correctAnswer: { en: "", hin: "" },
     };
 
     setQuiz((prevQuiz) => ({
@@ -103,7 +103,7 @@ const EditQuiz = () => {
     }
 
     try {
-      const response = await axios.post(`${BASE_URL}/api/v1/quiz/${question.id}`,
+      const response = await axios.post(`${BASE_URL}/api/v1/quiz/createQuestion`,
         {quizId :id , questionData : question
 
         }
