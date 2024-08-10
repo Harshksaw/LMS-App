@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,9 @@ import { courseData } from "@/screens/search/quiz.screen";
 import { Ionicons } from "@expo/vector-icons";
 import QuizCard from "@/components/quiz/quiz.bundlecard";
 import StudyMaterialCard from "@/components/quiz/studymaterial";
+import { useRoute } from "@react-navigation/native";
+import { SERVER_URI } from "@/utils/uri";
+import axios from "axios";
 
 const { height, width } = Dimensions.get("window");
 
@@ -41,7 +44,7 @@ By the end of the course, students will have a comprehensive understanding of In
 By the end of the course, students will have a comprehensive understanding of Indian law and will be well-prepared to pursue further studies or careers in the legal field.
 By the end of the course, students will have a comprehensive understanding of Indian law and will be well-prepared to pursue further studies or careers in the legal field.
 `;
-const InfoScreen = () => (
+const InfoScreen = ({data}:any) => (
   <ScrollView style={styles.tabContent}>
     <View
       style={{
@@ -52,7 +55,9 @@ const InfoScreen = () => (
         paddingVertical: 20,
       }}
     >
-      <Text style={styles.sectionTitle}>What is in this course</Text>
+
+{console.log(data, "______")}
+      <Text style={styles.sectionTitle}>{data?.bundleName}</Text>
 
       <View
         style={{
@@ -86,7 +91,7 @@ const InfoScreen = () => (
       <Text style={styles.sectionTitle}>About</Text>
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>
-          {description.split("\n").map((paragraph, index) => {
+          {data?.aboutDescription?.split("\n").map((paragraph, index) => {
             const isBulletPoint = paragraph.trim().startsWith("-");
             return (
               <Text
@@ -111,8 +116,8 @@ const ContentsScreen = () => (
 
     <View>
 
-    <QuizCard quizzes={courseData[0].quizzes} />
-    <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} />
+      <QuizCard quizzes={courseData[0].quizzes} />
+      <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} />
 
 
 
@@ -125,6 +130,36 @@ const ContentsScreen = () => (
 const Tab = createMaterialTopTabNavigator();
 
 export default function index() {
+
+  const [BundleData, setBundleData] = React.useState(courseData[0]);
+  const route = useRoute();
+  const { BundleId } = route.params;
+
+  console.log("🚀 ~ index ~ BundleId:", BundleId)
+
+
+  const fetchBundleData = async () => {
+    try {
+      const response = await axios.get(`${SERVER_URI}/api/v1/Bundle/course-bundle/${BundleId}`);
+      console.log("🚀 ~ file: index.tsx ~ line 136 ~ fetchBundleData ~ response", response.data.data);
+
+      if (response.status === 200 && response.data.success) {
+        setBundleData(response.data.data);
+        
+      } else {
+        console.error("Failed to fetch bundle data");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+
+    fetchBundleData();
+
+
+  }, [BundleId]);
   return (
     <SafeAreaView
       style={{
@@ -142,7 +177,7 @@ export default function index() {
           justifyContent: "flex-start",
         }}
       >
-        <Image source={{ uri: courseData[0].image }} style={styles.image} />
+        <Image source={{ uri: BundleData?.image }} style={styles.image} />
         <View style={styles.nameContainer}>
           <Text style={styles.name}>Quiz Bundle Name</Text>
         </View>
@@ -172,8 +207,8 @@ export default function index() {
             },
           }}
         >
-          <Tab.Screen name="About" component={InfoScreen} />
-          <Tab.Screen name="Content" component={ContentsScreen} />
+          <Tab.Screen name="About"  component={() => <InfoScreen data={BundleData} />}  />
+          <Tab.Screen name="Content" component={() => <ContentsScreen  data={BundleData}/>} />
         </Tab.Navigator>
       </View>
     </SafeAreaView>
@@ -269,3 +304,5 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
+
+

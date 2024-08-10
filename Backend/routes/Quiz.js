@@ -47,7 +47,7 @@ router.post("/editQuiz/:id",editQuizbyId )
 router.get("/ping", ping)
 router.get("/update", updateQuestionOptions)
 
-router.get("/getAllisBundleQuizes", getIsBundledMaterials)
+router.get("/getAllisBundleMaterials", getIsBundledMaterials)
 
 
 

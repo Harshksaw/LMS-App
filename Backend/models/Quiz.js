@@ -31,7 +31,7 @@ const Quiz = new mongoose.Schema({
   },
   isPartOfBundle: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   questions: [
     {

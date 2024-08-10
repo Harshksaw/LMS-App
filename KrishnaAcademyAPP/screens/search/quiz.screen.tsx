@@ -199,7 +199,7 @@ const renderItem = ({ item }) => {
             textAlign: "left", // Align text to the left
           }}
         >
-          R100
+          R1001
         </Text>
       </View>
 
@@ -284,7 +284,7 @@ const renderItem = ({ item }) => {
             textAlign: "left",
           }}
         >
-          {item.shortDescription.slice(0,10)}
+          {/* {item.shortDescription.slice(0,10)} */}
         </Text>
       </View>
     </TouchableOpacity>
@@ -318,7 +318,7 @@ const renderCources = ({ item }) => {
     onPress={() =>
       router.push({
         pathname: "/(routes)/quiz-bundle",
-        params: { quizId: item._id },
+        params: { BundleId: item._id },
       })
     }
   >
@@ -339,12 +339,12 @@ const renderCources = ({ item }) => {
       <Text
         style={{
           color: "white", // White text color
-          fontSize: 14,
+          fontSize: 12,
           // fontWeight: "bold",
           textAlign: "left", // Align text to the left
         }}
       >
-        R100
+      ₹{item?.price}
       </Text>
     </View>
 
@@ -360,9 +360,11 @@ const renderCources = ({ item }) => {
         marginTop: 48,
       }}
     >
+
+     
       {!item.image ? (
         <ImageBackground
-          source={{ uri: "https://picsum.photos/seed/picsum/200/300" }}
+          source={{ uri: item.image }}
           style={{
             width: "100%",
             height: "100%", // Adjusted to fill the TouchableOpacity
@@ -418,7 +420,7 @@ const renderCources = ({ item }) => {
           textAlign: "left",
         }}
       >
-        {item.name}
+        {item.bundleName}
 
       </Text>
       <Text
@@ -429,7 +431,7 @@ const renderCources = ({ item }) => {
           textAlign: "left",
         }}
       >
-        {/* {item.shortDescription.slice(0,10)} */}
+        {item.aboutDescription.slice(0,15)}
       </Text>
     </View>
   </TouchableOpacity>
@@ -445,10 +447,10 @@ export default function QuizScreen() {
   useEffect(() => {
     const getQuizzes = async () => {
       try {
-        const res = await axios.get(`${SERVER_URI}/api/v1/quiz/getAllQuiz`);
+        const res = await axios.get(`${SERVER_URI}/api/v1/Bundle/course-bundle`);
         setQuizzes(res.data.data);
 
-        // console.log(res.data.data,'get all quizes');
+        console.log(res.data.data,'get all quizes');
       } catch (error) {
         console.log(error);
       }
@@ -492,7 +494,7 @@ export default function QuizScreen() {
           // height: "100%",
         }}
       >
-        <FlatList
+        {/* <FlatList
           data={quizzes}
           renderItem={renderItem}
           contentContainerStyle={{ width: "100%", gap: 10,  }}
@@ -503,9 +505,9 @@ export default function QuizScreen() {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-        />
+        /> */}
         <FlatList
-          data={courseData}
+            data={quizzes}
           renderItem={renderCources}
           contentContainerStyle={{ width: "100%", gap: 10, backgroundColor:'lightgray' }}
           columnWrapperStyle={{ gap: 10 }}

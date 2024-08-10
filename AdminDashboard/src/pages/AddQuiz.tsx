@@ -176,6 +176,7 @@ const AddQuiz = (props: Props) => {
     formData.append("isPaid", quiz.isPaid);
     formData.append("time", quiz.time);
     formData.append("price", quiz.price);
+    formData.append("isPartOfBundle", quiz.isPartOfBundle);
 
     try {
       const response = await axios.post(
