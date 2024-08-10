@@ -13,8 +13,8 @@ console.log(
     process.env.CLOUD_NAME,
     process.env.API_KEY,
     process.env.API_SECRET
-
 )
+
 cloudinary.config({
     // cloud_name: process.env.CLOUD_NAME,
      cloud_name: 'dbnnlqq5v', 
