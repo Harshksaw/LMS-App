@@ -82,6 +82,7 @@ const EditQuiz = () => {
 
   const handleSaveQuestion = async (question) => {
     console.log("🚀 ~ handleSaveQuestion ~ question:", question)
+    toast.loading("Saving question...");
     // Check if all fields are entered
     const isQuestionValid =
       question.question.en &&
@@ -109,10 +110,17 @@ const EditQuiz = () => {
         }
 
       );
+
+      if(response.status === 201){
+        toast.dismiss();
+        toast.success("Question created successfully.");
+      }
       console.log("Question updated:", response.data);
     } catch (error) {
+      toast.dismiss();
       console.error("Error updating question:", error);
     }
+    toast.dismiss();
   };
 
 
