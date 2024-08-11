@@ -12,7 +12,7 @@ const bundleSchema = new mongoose.Schema({
   
   quizes: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Bundle'
+    ref: 'Quiz'
   }],
   studyMaterials: [{
     type: mongoose.Schema.Types.ObjectId,
