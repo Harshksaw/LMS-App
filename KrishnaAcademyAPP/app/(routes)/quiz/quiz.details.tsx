@@ -378,7 +378,7 @@ export default function QuizScreen() {
     isCorrect: userAnswers[index] === question.correctAnswer.en || userAnswers[index] === question.correctAnswer.hin,
   }))
       };
-      console.log("🚀 ~ handleSubmitQuiz ~ attemptData:", attemptData)
+      // console.log("🚀 ~ handleSubmitQuiz ~ attemptData:", attemptData)
 
       
       try {
@@ -391,11 +391,13 @@ export default function QuizScreen() {
 
       // Handle the response
       if (response.status === 201) {
-        console.log('Attempt submitted successfully:', response.data);
+        console.log('Attempt submitted successfully:', response.data._id);
 
         router.push({
-          pathname: "/(routes)/quiz/quiz.result",
-          // params: { quizId: item._id },
+          // pathname: "/(routes)/quiz/quiz.result",
+          pathname: "/(routes)/quiz/quiz.solution",
+          // params: { quizId: quizId },
+          params: { attemptId: response.data._id },
         })
 
       } else {

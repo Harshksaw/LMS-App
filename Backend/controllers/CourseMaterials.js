@@ -266,17 +266,84 @@ exports.attemptQuiz = async (req, res) => {
 
 exports.getAttemptById = async (req, res) => {
   try {
-    const { userId, quizId } = req.params;
+    const { id} = req.params
+    console.log("🚀 ~ exports.getAttemptById= ~ id:", id)
 
     // Find the attempt by user and quiz
-    const attempt = await Attempt.findOne({ user: userId, quiz: quizId }).populate('questions.question');
+    const attempt = await Attempt.findById(id)
+    console.log("🚀 ~ exports.getAttemptById= ~ attempt:", attempt)
 
     if (!attempt) {
       return res.status(404).json({ message: 'Attempt not found' });
     }
 
-    res.status(200).json(attempt);
+    res.status(200).json({
+      success: true,
+      data: attempt
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 }
+
+//TODO be reviewed
+exports.getQuizAndMarkAttempt = async (req, res) => {
+  try {
+    const { quizId, attemptId } = req.params;
+    console.log("🚀 ~ exports.getQuizAndMarkAttempt= ~ quizId:", quizId, "attemptId:", attemptId);
+
+    // Fetch the quiz details
+    const quiz = await Quiz.findById(quizId);
+    console.log("🚀 ~ exports.getQuizAndMarkAttempt= ~ quiz:", quiz);
+
+    // Fetch the attempt details and populate the questions.question field
+    const attempt = await Attempt.findById(attemptId).populate('questions.question');
+    console.log("🚀 ~ exports.getQuizAndMarkAttempt= ~ attempt:", attempt);
+
+    if (!quiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
+    }
+
+    if (!attempt) {
+      return res.status(404).json({ message: 'Attempt not found' });
+    }
+
+    // Match the questions in the quiz with the questions in the attempt
+    const markedQuestions = quiz.questions.map(quizQuestion => {
+      const attemptQuestion = attempt.questions.find(aq => aq.question._id.toString() === quizQuestion._id.toString());
+      return {
+        question: quizQuestion,
+        answer: attemptQuestion ? attemptQuestion.answer : null
+      };
+    });
+
+    // Return the updated attempt details
+    res.status(200).json({
+      success: true,
+      data: {
+        attemptId: attempt._id,
+        user: attempt.user,
+        quiz: quiz,
+        questions: markedQuestions
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+// exports.getAttemptById = async (req, res) => {
+//   try {
+//     const { userId, quizId } = req.body;
+
+//     // Find the attempt by user and quiz
+//     const attempt = await Attempt.findOne({ user: userId, quiz: quizId }).populate('questions.question');
+
+//     if (!attempt) {
+//       return res.status(404).json({ message: 'Attempt not found' });
+//     }
+
+//     res.status(200).json(attempt);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// }
