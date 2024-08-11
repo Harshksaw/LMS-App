@@ -4,7 +4,7 @@ const router = express.Router()
 
 // Import the required controllers and middleware functions
 const {
-  login,
+
   signup,
   sendotp,
   changePassword,
@@ -17,7 +17,7 @@ const {
   findAllUsers,
   findUserById,
   getAllUserCources,
-  assignCourseBundle
+
 } = require("../controllers/Auth")
 const {
   resetPasswordToken,
@@ -70,7 +70,6 @@ router.get("/getAllUsers",findAllUsers);
 router.get("/getAllUserCourses/:id",getAllUserCources);
 
 
-router.post("/assignCourseBundle",assignCourseBundle);
 // route for finding user by id
 
 
