@@ -11,6 +11,10 @@
     "server": "cd server && npm run dev"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^5.16.7",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@ramonak/react-progress-bar": "^5.0.3",
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.5.0",
@@ -36,6 +40,7 @@
     "react-super-responsive-table": "^5.2.2",
     "react-time-picker": "^7.0.0",
     "react-type-animation": "^3.1.0",
+    "styled-components": "^6.1.12",
     "swiper": "^11.0.4",
     "video-react": "^0.16.0"
   },

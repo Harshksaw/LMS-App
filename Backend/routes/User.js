@@ -15,7 +15,9 @@ const {
   adminLogin,
   signupAdmin,
   findAllUsers,
-  findUserById
+  findUserById,
+  getAllUserCources,
+  assignCourseBundle
 } = require("../controllers/Auth")
 const {
   resetPasswordToken,
@@ -65,6 +67,10 @@ router.post("/buyMaterials/:id", buyMaterials)
 /* ****************************************************************************************************** */
 // Route for finding all users
 router.get("/getAllUsers",findAllUsers);
+router.get("/getAllUserCourses/:id",getAllUserCources);
+
+
+router.post("/assignCourseBundle",assignCourseBundle);
 // route for finding user by id
 
 
