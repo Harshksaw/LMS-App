@@ -35,7 +35,7 @@ const EditQuiz = () => {
 
   const addQuestion = () => {
     const newQuestion = {
-      question: { en: ", hin: " },
+      question: { en: "", hin: ""},
       options: {
         optionA: { en: "", hin: "" },
         optionC: { en: "", hin: "" },
@@ -50,7 +50,7 @@ const EditQuiz = () => {
       questions: [...prevQuiz.questions, newQuestion],
     }));
 
-    console.log("Quiz:", quiz);
+    // console.log("Quiz:", quiz);
   };
 
   useEffect(() => {
