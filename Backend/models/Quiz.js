@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const cloudinary = require("../config/cloudinaryConfig"); // Adjust the import path as needed
 
-const Quiz = new mongoose.Schema({
+const cloudinary = require("cloudinary").v2;
+const QuizSchema = new mongoose.Schema({
   name: {
     type: String,
   },
@@ -56,4 +56,4 @@ QuizSchema.pre("remove", async function (next) {
     next(err);
   }
 });
-module.exports = mongoose.model("Quiz", Quiz);
+module.exports = mongoose.model("Quiz", QuizSchema);
