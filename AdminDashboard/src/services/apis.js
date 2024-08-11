@@ -5,7 +5,8 @@
 
 ///prod url
 
-export const BASE_URL = "https://lms-app-1-eoim.onrender.com"
+// export const BASE_URL = "https://lms-app-wqwt.onrender.com"
+export const BASE_URL = "http://127.0.0.1:3000"
 
 export const endpoints = {
   SENDOTP_API: BASE_URL + "api/v1/auth/sendotp",

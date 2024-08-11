@@ -79,7 +79,7 @@ const [refresh, setRefresh] = useState(false);
 
     toast.loading("Adding course to user");
     const addCourseToUser = async () => {
-      const res = await axios.post(`${BASE_URL}/api/v1/auth/assignCourseBundler`, {
+      const res = await axios.post(`${BASE_URL}/api/v1/Bundle/assignCourseBundle`, {
         userId: id,
         courseId: selectedCourseId,
 
