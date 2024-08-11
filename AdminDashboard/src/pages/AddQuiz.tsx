@@ -38,8 +38,6 @@ const AddQuiz = (props: Props) => {
     ],
   });
 
-  
-
   const handleTimeChange = (totalSeconds) => {
     setQuiz((prevQuiz) => ({
       ...prevQuiz,
@@ -118,7 +116,6 @@ const AddQuiz = (props: Props) => {
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
-
 
   const handleSaveQuestion = async (question, index) => {
     console.log("🚀 ~ handleSaveQuestion ~ question:", question);
@@ -246,14 +243,16 @@ const AddQuiz = (props: Props) => {
           Add Quiz in both English and Hindi
         </h1>
       </div>
-      <div className="flex flex-1 items-center justify-between rounded-2xl border-[1px] border-richblack-700 bg-richblack-800 p-6 px-0 sm:px-8">
+      <div className="flex flex-1 flex-col w-full items-center justify-between rounded-2xl border-[1px] border-richblack-700 bg-richblack-800 p-6 px-0 sm:px-8">
         <form
           onSubmit={handleSubmit}
           className="flex flex-col space-y-6 py-6 w-full bg-richblack-800 rounded-md shadow-md justify-center items-center  "
         >
-          <div className="flex flex-row w-full  justify-start items-start bg-richblack-800  gap-10 rounded-md ">
-            <div className="w-full">
-              <div className="flex   flex-col  items-start  mt-5 space-y-2">
+          <div className="flex flex-col w-full  justify-center  items-center   gap-10 rounded-md ">
+
+
+
+              <div className="flex   w-full px-10 flex-col  items-start  mt-5 space-y-2">
                 <label className="text-richblack-5">Enter the quiz name</label>
                 <input
                   type="text"
@@ -264,55 +263,35 @@ const AddQuiz = (props: Props) => {
                 />
               </div>
 
-              <div className="flex  flex-col items-start  mt-5 space-y-2">
+              <div className="flex  w-full px-10 flex-col items-start  mt-5 space-y-2">
                 <label className="text-richblack-5">
                   Add short Description
                 </label>
                 <textarea
                   placeholder="Short Description"
                   value={quiz.shortDescription}
+                  rows={10}
+                  cols={150}
                   onChange={(e) => handleChange(e, "shortDescription")}
-                  className="p-2 border  w-full border-yellow-25 rounded-md"
-                />
-              </div>
-            </div>
-            <div>
-              {/* <div className="flex  flex-col items-start mt-5 space-y-2">
-                <label className="text-richblack-5">Select the Category</label>
-                <input
-                  type="text"
-                  placeholder="Category"
-                  value={quiz.category}
-                  onChange={(e) => handleChange(e, "category")}
-                  className="p-2 border  w-full border-yellow-25 rounded-md"
-                />
-              </div> */}
-
-              <div className="flex  flex-col items-start mt-5 space-y-2">
-                <label className="text-richblack-5">Image URL</label>
-                <input
-                  type="file"
-                  name="image"
-                  placeholder="Image URL"
-                  onChange={(e) => handleChange(e, "image")}
-                  className="p-2 border  w-full border-yellow-25 rounded-md"
+                  className="p-5 border  w-full border-yellow-25 rounded-md"
                 />
               </div>
 
-              {/* <div className="flex  flex-row  items-start gap-10 mt-5 space-x-5 ">
-                <label className="text-richblack-5 flex items-center">
-                  Paid:
-                  <input
-                    type="checkbox"
-                    checked={quiz.isPaid}
-                    onChange={(e) =>
-                      setQuiz({ ...quiz, isPaid: e.target.checked })
-                    }
-                    className="ml-2"
-                  />
-                </label>
-              </div> */}
+
+
+            <div className="flex  flex-col items-start mt-5 space-y-2">
+              <label className="text-richblack-5">Image URL</label>
+              <input
+                type="file"
+                name="image"
+                placeholder="Image URL"
+                onChange={(e) => handleChange(e, "image")}
+                className="p-2 border  w-full border-yellow-25 rounded-md"
+              />
             </div>
+
+
+
           </div>
 
           {quiz.isPaid && (
@@ -327,10 +306,8 @@ const AddQuiz = (props: Props) => {
               />
             </div>
           )}
-        
-          <div className="flex flex-col space-y-5 mt-5">
-          
 
+          <div className="flex flex-col space-y-5 mt-5">
             <div className="flex flex-row items-center gap-5 p-4 bg-richblack-700 border border-yellow-25 rounded-md">
               <label
                 htmlFor="isPartOfBundle"
@@ -350,6 +327,7 @@ const AddQuiz = (props: Props) => {
               />
             </div>
           </div>
+
           <div className="p-4 bg-richblack-100 rounded-md w-60 self-center">
             {/* Add the TimeInput component here */}
             <TimeInput onTimeChange={handleTimeChange} />
@@ -480,8 +458,10 @@ const AddQuiz = (props: Props) => {
                           {/* Other question details */}
                           {!savedQuestions.includes(index) && (
                             <button
-                            className="p-2 bg-caribbeangreen-400 text-richblack-5 rounded-md self-center"
-                              onClick={() => handleSaveQuestion(question, index)}
+                              className="p-2 bg-caribbeangreen-400 text-richblack-5 rounded-md self-center"
+                              onClick={() =>
+                                handleSaveQuestion(question, index)
+                              }
                             >
                               Save Question
                             </button>
@@ -513,13 +493,13 @@ const AddQuiz = (props: Props) => {
 
           <button
             type="submit"
-            className={`p-2 bg-blue-500 text-white rounded-md  ${
-              isQuizId ? "hidden" : "block"
-            } `}
+            className={`p-2 bg-blue-500 text-white rounded-md  ${isQuizId ? "hidden" : "block"
+              } `}
             onClick={handleClick}
           >
             Initializ Quiz
           </button>
+
         </form>
       </div>
     </div>

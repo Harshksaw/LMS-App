@@ -20,7 +20,7 @@ export default function MyCourses() {
   useEffect(() => {
     const fetchCourses = async () => {
       setLoading(true);
-      const res = await axios.get(`${BASE_URL}/api/v1/bundle/get-all-course-bundle`);
+      const res = await axios.get(`${BASE_URL}/api/v1/bundle/course-bundle`);
       console.log(res.data);
 
       if (res.status != 200){

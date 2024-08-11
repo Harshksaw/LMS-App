@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../../../services/apis";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import UserCourses from "./UserCourses";
 
 interface UserProps {
   name: string;
@@ -37,12 +38,12 @@ const User: React.FC<UserProps> = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md bg-richblack-50">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+    <div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md ">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center bg-richblack-50">
         User Profile
       </h2>
       {user && (
-        <div>
+        <div className="bg-richblack-50 px-10"> 
           <div className="text-center mb-6">
             <img
               src={user.image}
@@ -80,6 +81,9 @@ const User: React.FC<UserProps> = () => {
           </div>
         </div>
       )}
+      <div>
+        <UserCourses id={id} />
+      </div>
     </div>
   );
 };

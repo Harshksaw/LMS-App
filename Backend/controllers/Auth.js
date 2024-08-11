@@ -562,3 +562,44 @@ exports.findAllUsers = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+exports.getAllUserCources = async (req, res) => { 
+  try {
+
+    const { id } = req.params;
+
+    const users = await User.findById(id).populate("courses");
+    res.status(200).json({
+      success: true,
+      data: users,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+exports.assignCourseBundle = async (req, res) => {
+  try {
+   const { userId, courseId } = req.body;
+
+    const user = await User.findByIdAndUpdate({ _id: userId }, {
+      $push: { courses: courseId }
+
+    })
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    await user.save();
+    
+    res.status(200).json({ message: "Course assigned successfully ",data: user });
+
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+    
+  }
+}
