@@ -70,6 +70,8 @@ router.get("/getAllUsers",findAllUsers);
 router.get("/getAllUserCourses/:id",getAllUserCources);
 
 
+
+
 // route for finding user by id
 
 

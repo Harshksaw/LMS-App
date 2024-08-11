@@ -20,6 +20,7 @@ import { useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomLoader from "@/components/CustomLoader";
 import { Toast } from "react-native-toast-notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const renderItem = ({ item }) => {
   console.log(item, "item");
@@ -180,11 +181,11 @@ export default function QuizScreen() {
   console.log("🚀 ~ index ~ BundleData:", quizId)
   const [language, setLanguage] = useState<"en" | "hin">("en");
   const [quizDetails, setQuizDetails] = React.useState<any>(null);
-  
+
   const [count, setCount] = useState<number>(0);
 
 
-  
+
   const [questions, setQuestions] = useState<any[]>([]);
 
   const [userScore, setUserScore] = useState<number>(0);
@@ -197,13 +198,13 @@ export default function QuizScreen() {
   const [isOpen, setIsOpen] = useState(false);
   const translateX = useRef(new Animated.Value(280)).current;
   const [timeUp, setTimeUp] = useState(false);
-  
+
   const toggleLanguage = () => {
     setLanguage(language === "en" ? "hin" : "en");
   };
   const [quizzes, setQuizzes] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  
+
   const [loading, setLoading] = useState(true);
   console.log(quizId)
   console.log("hello");
@@ -215,32 +216,32 @@ export default function QuizScreen() {
           `${SERVER_URI}/api/v1/quiz/getQuizById/${quizId}`
         );
         console.log("🚀 ~ getQuizDetails ~ res:", res)
-  
+
         const quizData = res?.data?.data;
         setQuizDetails(quizData);
-        
-        
+
+
         setRemainingTime(quizData.timer);
-        
-        
+
+
         setQuestions(quizData.questions);
-        
+
         setLoading(false);
       } catch (error) {
         console.log(error)
       }
-     
-      
+
+
       // console.log(quizData);
-      
+
     };
-    
+
     getQuizDetails();
   }, [quizId]);
-  console.log(questions,"questions --------------------")
-  
+  // console.log(questions, "questions --------------------")
+
   const handleSave = () => {
-  
+
     if (count < questions.length - 1) {
       if (questions[count].correctAnswer[language] === userAnswer) {
         setUserScore((userScore) => userScore + 1);
@@ -256,24 +257,31 @@ export default function QuizScreen() {
     console.log("userScore", userScore, count);
   };
 
+  const [userAnswers, setUserAnswers] = useState<string[]>([]);
+
+
   const toggleColor = (index: number | null) => {
     const optionsArray = Object.values(questions[count]?.options);
     console.log(optionsArray[index][language], "----l", index);
     if (index === null) return;
     setSelectedBox(index);
+    console.log(optionsArray[index][language], "----l");
     setUserAnswer(optionsArray[index][language]);
+     setUserAnswers(prevAnswers => [...prevAnswers, optionsArray[index][language]]);
+
   };
 
 
- 
+  // console.log(userAnswers, "--userAnswer");
+
   const handleSkip = () => {
-      console.log("skip", count);
-      if (count > 1) {
-        setCount((count) => count - 1);
-        setSelectedBox(null);
-        // setTime(15);
-      }
-   
+    console.log("skip", count);
+    if (count > 1) {
+      setCount((count) => count - 1);
+      setSelectedBox(null);
+      // setTime(15);
+    }
+
   };
 
 
@@ -287,15 +295,15 @@ export default function QuizScreen() {
     }));
   };
 
-  console.log(questions[count + 1]?.question[language], "quizDetails", quizDetails?.questions[0].options);
+  // console.log(questions[count + 1]?.question[language], "quizDetails", quizDetails?.questions[0].options);
   // return (<></>)correctAnswer[language]
   const currentQuestion = questions[count]?.question[language]
   const currentOptions = getOptionsArray(quizDetails?.questions[count], language);
 
-  console.log("currentOptions", currentOptions);
+  // console.log("currentOptions", currentOptions);
 
 
- 
+
   const handleMenuPress = () => {
     setIsOpen((prev) => !prev);
     Animated.timing(translateX, {
@@ -333,7 +341,80 @@ export default function QuizScreen() {
     }
   };
 
-console.log(String('\tjsbdubidusvbdsiduvi').replace(/[\t]/g, ""))
+
+
+  const calculateScore = () => {
+    return questions.reduce((score, question) => {
+      return score + (userAnswer === question.correctAnswer.en || userAnswer === question.correctAnswer.hin  ? 1 : 0);
+    }, 0);
+  };
+
+
+
+  const handleSubmitQuiz = async () => {
+
+
+
+      const userI = await AsyncStorage.getItem("user");
+      const isUser = JSON.parse(userI);
+      // console.log("🚀 ~ QuizScreen ~ isUser:", isUser)
+
+
+      Toast.show("Submitting attempt...",{
+        type: "success",
+        duration: 3000,
+
+      });
+      // console.log(userAnswers, "userAnswers")
+
+      const attemptData = {
+        user: isUser._id, // Assuming you have the current user's ID
+        quiz: quizId , // Assuming you have the current quiz's ID
+        score: calculateScore(), // Function to calculate the score
+        questions: questions.map((question, index) => ({
+    question: question._id,
+    userAnswer: userAnswers[index], // Get the user answer for the current question
+    correctAnswer: question.correctAnswer.en,
+    isCorrect: userAnswers[index] === question.correctAnswer.en || userAnswers[index] === question.correctAnswer.hin,
+  }))
+      };
+      console.log("🚀 ~ handleSubmitQuiz ~ attemptData:", attemptData)
+
+      
+      try {
+      // Make the API call to submit the attempt
+
+      // Make the API call to submit the attempt using axios
+      const response = await axios.post(`${SERVER_URI}/api/v1/quiz/attempt-quiz`, attemptData
+       );
+      // console.log("🚀 ~ handleSubmitQuiz ~ response:", response)
+
+      // Handle the response
+      if (response.status === 201) {
+        console.log('Attempt submitted successfully:', response.data);
+
+        router.push({
+          pathname: "/(routes)/quiz/quiz.result",
+          // params: { quizId: item._id },
+        })
+
+      } else {
+        console.error('Error submitting attempt:', response.data);
+        // Optionally, show an error message to the user
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      // Optionally, show an error message to the user
+    }
+
+
+
+
+
+
+   
+
+  }
 
   return (
     <SafeAreaView
@@ -343,10 +424,10 @@ console.log(String('\tjsbdubidusvbdsiduvi').replace(/[\t]/g, ""))
         padding: 12,
       }}
     >
-      <View 
-      style={{
-        //  backgroundColor:'red',
-      }}
+      <View
+        style={{
+          //  backgroundColor:'red',
+        }}
       >
         {/* {  -- top part including timer, submit, toggle and hambuger  --} */}
         <View
@@ -426,7 +507,8 @@ console.log(String('\tjsbdubidusvbdsiduvi').replace(/[\t]/g, ""))
       {/* {  -- Questions mapping  --} */}
       <View
         // stickyHeaderIndices={[0]}
-        style={{ flex: 1, marginTop: 12 
+        style={{
+          flex: 1, marginTop: 12
 
           // justifyContent: "flex-end",
         }}
@@ -509,7 +591,8 @@ console.log(String('\tjsbdubidusvbdsiduvi').replace(/[\t]/g, ""))
           </View>
         </View>
 
-        <View style={{ marginTop: 20, flex: 1 , 
+        <View style={{
+          marginTop: 20, flex: 1,
 
 
           flexDirection: "column",
@@ -545,13 +628,13 @@ console.log(String('\tjsbdubidusvbdsiduvi').replace(/[\t]/g, ""))
           </View>
 
           <View
-          style={{
-            flex:1,
-            // backgroundColor:'red',
-            flexDirection: "column",  
-            justifyContent: "space-between",
-            paddingBottom: 15,
-          }}
+            style={{
+              flex: 1,
+              // backgroundColor:'red',
+              flexDirection: "column",
+              justifyContent: "space-between",
+              paddingBottom: 15,
+            }}
           >
 
             <ScrollView
@@ -575,174 +658,174 @@ console.log(String('\tjsbdubidusvbdsiduvi').replace(/[\t]/g, ""))
 
                 {/* {currentQuestion.replace(/[\t\n]/g, " ")} */}
                 {String(currentQuestion).replace(/[\t]/g, "")}
-               {/* {console.log(      {String(currentQuestion).replace(/[\t]/g, " ")})} */}
+                {/* {console.log(      {String(currentQuestion).replace(/[\t]/g, " ")})} */}
               </Text>
             </ScrollView>
 
-                <View
-                style={{
+            <View
+              style={{
 
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                }}
-                >
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
 
-                
-            <View style={{ alignItems: "center", marginTop: 12, padding: 12, }}>
-              {currentOptions.map((option, index) => (
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: 5,
-                    backgroundColor: "#ffffff",
-                    paddingVertical: 12,
-                    paddingHorizontal: 12,
-                    borderRadius: 8,
-                    marginBottom: 8,
-                    borderWidth: 1,
-                    borderColor: selectedBox === index ? "#f97316" : "#e2e2e2",
-                    width: "100%",
-                  }}
-                  key={index}
-                  onPress={() => toggleColor(index)}
-                >
-                  <Text
+
+              <View style={{ alignItems: "center", marginTop: 12, padding: 12, }}>
+                {currentOptions.map((option, index) => (
+                  <TouchableOpacity
                     style={{
-                      fontWeight: "500",
-                      fontSize: 16,
-                      textAlign: "left",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: 5,
+                      backgroundColor: "#ffffff",
+                      paddingVertical: 12,
+                      paddingHorizontal: 12,
+                      borderRadius: 8,
+                      marginBottom: 8,
+                      borderWidth: 1,
+                      borderColor: selectedBox === index ? "#f97316" : "#e2e2e2",
+                      width: "100%",
                     }}
+                    key={index}
+                    onPress={() => toggleColor(index)}
                   >
-                    {option.value}
-                  </Text>
+                    <Text
+                      style={{
+                        fontWeight: "500",
+                        fontSize: 16,
+                        textAlign: "left",
+                      }}
+                    >
+                      {option.value}
+                    </Text>
+                    <View
+                      style={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: 12,
+                        borderWidth: 2,
+                        borderColor: selectedBox === index ? "black" : "gray",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {selectedBox === index ? (
+                        <View
+                          style={{
+                            width: 10,
+                            height: 10,
+                            borderRadius: 6,
+                            backgroundColor: "black",
+                          }}
+                        />
+                      ) : null}
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <View
+                style={{
+                  // flex: 1, justifyContent: 'flex-end', marginTop: 50
+                }}
+              >
+                {getResultClicked ? (
                   <View
                     style={{
-                      width: 16,
-                      height: 16,
-                      borderRadius: 12,
-                      borderWidth: 2,
-                      borderColor: selectedBox === index ? "black" : "gray",
+                      flexDirection: "row",
                       alignItems: "center",
                       justifyContent: "center",
                     }}
                   >
-                    {selectedBox === index ? (
-                      <View
+                    <TouchableOpacity
+                      onPress={() => setScoreModalVisible(true)}
+                      // disabled={true}
+                      style={{
+                        backgroundColor: "#d1d5db",
+                        padding: 16,
+                        borderRadius: 20,
+                        width: "66%",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Text
                         style={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: 6,
-                          backgroundColor: "black",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                          textAlign: "center",
                         }}
-                      />
-                    ) : null}
+                      >
+                        Your score: {userScore}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          color: "green",
+                          textAlign: "right",
+                        }}
+                      >
+                        View Result
+                      </Text>
+                    </TouchableOpacity>
                   </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <View
-              style={{
-                // flex: 1, justifyContent: 'flex-end', marginTop: 50
-              }}
-            >
-              {getResultClicked ? (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => setScoreModalVisible(true)}
-                    // disabled={true}
+                ) : (
+                  <View
                     style={{
-                      backgroundColor: "#d1d5db",
-                      padding: 16,
-                      borderRadius: 20,
-                      width: "66%",
-                      flexDirection: "column",
+                      marginTop: 12,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      // position: "absolute",
+                      // bottom: 20,
                     }}
                   >
-                    <Text
+                    <TouchableOpacity
+                      onPress={handleSkip}
                       style={{
-                        fontWeight: "bold",
-                        fontSize: 20,
-                        textAlign: "center",
+                        backgroundColor: "white",
+                        paddingVertical: 12,
+                        paddingHorizontal: 18,
+                        borderRadius: 8,
+                        width: "auto",
                       }}
                     >
-                      Your score: {userScore}
-                    </Text>
-                    <Text
+                      <Text
+                        style={{
+                          fontWeight: "800",
+                          fontSize: 14,
+                          color: "black",
+                          textAlign: "center",
+                        }}
+                      >
+                        {" << PREVIOUS"}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleSave}
                       style={{
-                        fontSize: 15,
-                        color: "green",
-                        textAlign: "right",
+                        backgroundColor: "red",
+                        paddingVertical: 12,
+                        paddingHorizontal: 18,
+                        borderRadius: 8,
+                        width: "33%",
                       }}
                     >
-                      View Result
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                <View
-                  style={{
-                    marginTop: 12,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    // position: "absolute",
-                    // bottom: 20,
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={handleSkip}
-                    style={{
-                      backgroundColor: "white",
-                      paddingVertical: 12,
-                      paddingHorizontal: 18,
-                      borderRadius: 8,
-                      width: "auto",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontWeight: "800",
-                        fontSize: 14,
-                        color: "black",
-                        textAlign: "center",
-                      }}
-                    >
-                      {" << PREVIOUS"}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleSave}
-                    style={{
-                      backgroundColor: "red",
-                      paddingVertical: 12,
-                      paddingHorizontal: 18,
-                      borderRadius: 8,
-                      width: "33%",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontWeight: "800",
-                        fontSize: 14,
-                        color: "white",
-                        textAlign: "center",
-                      }}
-                    >
-                      {count === questions.length - 1 ? "Get Result" : "NEXT >>"}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
+                      <Text
+                        style={{
+                          fontWeight: "800",
+                          fontSize: 14,
+                          color: "white",
+                          textAlign: "center",
+                        }}
+                      >
+                        {count === questions.length - 1 ? "Get Result" : "NEXT >>"}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
             </View>
 
 
@@ -908,12 +991,7 @@ console.log(String('\tjsbdubidusvbdsiduvi').replace(/[\t]/g, ""))
                   padding: 10,
                   borderRadius: 4,
                 }}
-                onPress={() =>
-                  router.push({
-                    pathname: "/(routes)/quiz/quiz.result",
-                    // params: { quizId: item._id },
-                  })
-                }
+                onPress={() => handleSubmitQuiz()}
               >
                 <Text
                   style={{
