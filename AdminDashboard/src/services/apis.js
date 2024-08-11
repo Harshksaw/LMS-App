@@ -5,7 +5,7 @@
 
 ///prod url
 
-export const BASE_URL = import.meta.env.BACKEND 
+export const BASE_URL = "https://lms-app-1-eoim.onrender.com"
 
 export const endpoints = {
   SENDOTP_API: BASE_URL + "api/v1/auth/sendotp",
