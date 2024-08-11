@@ -52,8 +52,8 @@ export const styles = StyleSheet.create({
       // justifyContent: "flex-start",
       // alignItems: "center",
       paddingHorizontal: 20,
-      paddingBottom: 40,
-      marginBottom: 50,
+      paddingBottom: 10,
+      marginBottom: 0,
       // backgroundColor: "lightblue",
   
     },

@@ -19,6 +19,8 @@ const attemptSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+
+
     questions: [
         {
             question: {
@@ -28,7 +30,7 @@ const attemptSchema = new mongoose.Schema({
             },
             userAnswer: {
                 type: String, // Assuming answers are strings, adjust if necessary
-                required: true,
+                required:false,
             },
             correctAnswer: {
                 type: String, // Assuming correct answers are strings, adjust if necessary
@@ -37,9 +39,26 @@ const attemptSchema = new mongoose.Schema({
             isCorrect: {
                 type: Boolean,
                 default: false,
-            }
+            },
+            unanswered: {
+                type: Boolean,
+                default: false,
+            },
         }
     ],
 }, { timestamps: true });
+
+attemptSchema.pre('save', function(next) {
+    this.questions.forEach(question => {
+        if (!question.userAnswer) {
+            question.unanswered = true;
+            question.isCorrect = false;
+        } else {
+            question.unanswered = false;
+            question.isCorrect = question.userAnswer === question.correctAnswer;
+        }
+    });
+    next();
+});
 
 module.exports = mongoose.model("QuizAttempt", attemptSchema);

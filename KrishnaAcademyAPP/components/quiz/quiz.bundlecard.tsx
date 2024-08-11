@@ -1,54 +1,108 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { router } from "expo-router";
+import React from "react";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+
+
+  TouchableOpacity,
+} from "react-native";
 
 const QuizBundleCard = ({ quizzes }) => {
+  console.log(
+    "🚀 ~ file: quiz.bundlecard.tsx ~ line 10 ~ QuizBundleCard ~ quizzes",
+    quizzes
+  );
+
+  const convertSecondsToTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
+  };
+
+
+
+
+    // router.push(
+    //   {
+
+    //     pathname: "/(routes)/quiz/quiz.details",
+    //     params:{quizId :quizzes._ }
+    //   }
+
+    // )
+
+
+
   return (
     <View style={styles.container}>
       <Text
-      style={{
-        textAlign: 'left',
-        fontSize: 20,
-        fontWeight: 'bold',
-      }}
+        style={{
+          textAlign: "left",
+          fontSize: 20,
+          fontWeight: "bold",
+        }}
       >
         Quizzes
       </Text>
-      {quizzes.map((quiz) => (
-        <View key={quiz.id} style={styles.quizCard}>
+      {quizzes?.map((quiz) => (
+        <TouchableOpacity
+          key={quiz.id}
+          style={styles.quizCard}
+          onPress={() => {
+            router.push(
+              {
+        
+                pathname: "/(routes)/quiz/quiz.details",
+                params:{quizId :quiz._id }
+              }
+        
+            )
+          }}
+        >
           <Image
             source={{
-              uri: "https://img.freepik.com/free-vector/realistic-wooden-brown-judge-gavel_88138-139.jpg?size=626&ext=jpg&ga=GA1.1.1387862008.1722622005&semt=sph",
-
+              uri:
+                quiz.image ||
+                "https://img.freepik.com/free-vector/realistic-wooden-brown-judge-gavel_88138-139.jpg?size=626&ext=jpg&ga=GA1.1.1387862008.1722622005&semt=sph",
             }}
             style={styles.quizImage}
           />
           <View style={styles.quizInfo}>
             <Text style={styles.itemTitle}>{quiz.name}</Text>
-            <Text style={{
+            <Text
+              style={{
                 fontSize: 14,
-                color: '#666',
+                color: "#666",
                 // width: '100%',
                 height: 50,
-                
-                overflow: 'hidden',
-                textAlign: 'justify'
-            }}> Lorem, ipsum dolor sit amet consectetur  </Text>
-            <View
-            style={{
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-                width: '100%',
-            }}
+
+                overflow: "hidden",
+                textAlign: "justify",
+              }}
             >
-
-
-
-            <Text style={styles.itemTitle}>time 1 Hr</Text>
-            <Text style={styles.itemSubtitle}>Questions: {quiz.questions}</Text>
+              {" "}
+              Lorem, ipsum dolor sit amet consectetur{" "}
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <Text style={styles.itemTitle}>
+                {convertSecondsToTime(quiz.timer)}
+              </Text>
+              <Text style={styles.itemSubtitle}>
+                Questions: {quiz.questions.length}
+              </Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       ))}
     </View>
   );
@@ -56,56 +110,57 @@ const QuizBundleCard = ({ quizzes }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop:20,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    paddingTop: 20,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
     gap: 10,
   },
   quizCard: {
     // backgroundColor: '#fff',
-    backgroundColor: '#f2eded',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    backgroundColor: "#f2eded",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     borderRadius: 20,
     height: 120,
-    width: '100%',
+    width: "100%",
     paddingHorizontal: 20,
     marginVertical: 10,
     borderWidth: 1,
-    borderColor: 'lightgray',
-    shadowColor: '#000',
+    borderColor: "lightgray",
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 2,
   },
   quizImage: {
-    width: '20%',
+    width: "20%",
     height: 70,
     borderRadius: 50,
   },
   quizInfo: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     padding: 10,
-    height: '95%',
+    height: "95%",
 
-    
     marginVertical: 10,
     borderRadius: 10,
-    width: '85%',
+    width: "85%",
   },
   itemTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   itemSubtitle: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
 });
 
 export default QuizBundleCard;
+
+// [{"__v": 4, "_id": "66b865553676f9484bc9e7f7", "category": "", "createdAt": "2024-08-11T07:16:37.667Z", "isListed": false, "isPaid": false, "isPartOfBundle": true, "name": "arhshs", "price": 0, "questions": ["66b865683676f9484bc9e7f9", "66b88dc42be8db03b3158219", "66b88f332be8db03b315822e", "66b88ff72be8db03b315823c"], "shortDescription": "1.\\tCriminal Law (Amendment) Act 2013, came into force\",1.\\tCriminal Law (Amendment) Act 2013, came into force\",1.\\tCriminal Law (Amendment) Act 2013, came into force\",1.\\tCriminal Law (Amendment) Act 2013, came into force\",1.\\tCriminal Law (Amendment) Act 2013, came into force\",1.\\tCriminal Law (Amendment) Act 2013, came into force\",1.\\tCriminal Law (Amendment) Act 2013, came into force\",1.\\tCriminal Law (Amendment) Act 2013, came into force\",1.\\tCriminal Law (Amendment) Act 2013, came into force\",1.\\tCriminal Law (Amendment) Act 2013, came into force\",1.\\tCriminal Law (Amendment) Act 2013, came into force\",1.\\tCriminal Law (Amendment) Act 2013, came into force\",", "timer": 182, "updatedAt": "2024-08-11T10:18:31.426Z"}, {"__v": 0, "_id": "66b82c6bce2a4ad6216b943b", "category": "", "createdAt": "2024-08-11T03:13:47.325Z", "image": "https://picsum.photos/200", "isListed": false, "isPaid": false, "isPartOfBundle": true, "name": "krishna", "price": 0, "questions": [], "shortDescription": "ipc", "timer": 7200, "updatedAt": "2024-08-11T03:13:47.325Z"}, {"__v": 1, "_id": "66b7b3f739e79b74b2aaa64e", "category": "", "createdAt": "2024-08-10T18:39:51.378Z", "isListed": false, "isPaid": false, "isPartOfBundle": true, "name": "Test Quize", "price": 0, "questions": ["66b7b44239e79b74b2aaa650"], "shortDescription": "Test Quiz Description", "timer": 61, "updatedAt": "2024-08-10T18:41:07.122Z"}, {"__v": 1, "_id": "66b7a24d5e0917b922872180", "category": "", "createdAt": "2024-08-10T17:24:29.413Z", "isListed": false, "isPaid": false, "isPartOfBundle": true, "name": "ghhbciduw", "price": 0, "questions": ["66b7a2635e0917b922872182"], "shortDescription": "bjdeiuwco", "timer": 13200, "updatedAt": "2024-08-10T17:24:51.731Z"}]

@@ -5,6 +5,7 @@ import {
   ScrollView,
   Animated,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
@@ -12,11 +13,9 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { SERVER_URI } from "@/utils/uri";
 import React from "react";
-
 import { ImageBackground } from "expo-image";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-
 import { useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomLoader from "@/components/CustomLoader";
@@ -173,17 +172,21 @@ function secondsToHms(seconds) {
   return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(secondsLeft, 2)}`;
 }
 export default function QuizScreen() {
+  const route = useRoute();
+  const { quizId } = route.params;
+
+
+
+  console.log("🚀 ~ index ~ BundleData:", quizId)
   const [language, setLanguage] = useState<"en" | "hin">("en");
   const [quizDetails, setQuizDetails] = React.useState<any>(null);
-  const route = useRoute();
-
+  
   const [count, setCount] = useState<number>(0);
-  const { quizId } = route.params;
-  // const quizId = 1
 
+
+  
   const [questions, setQuestions] = useState<any[]>([]);
-  // const [quizData, setQuizData] = useState<any[]>([]);
-  // const [time, setTime] = useState<number>(20);
+
   const [userScore, setUserScore] = useState<number>(0);
   const [userAnswer, setUserAnswer] = useState<string>("");
   const [selectedBox, setSelectedBox] = useState<number | null>(null);
@@ -194,40 +197,48 @@ export default function QuizScreen() {
   const [isOpen, setIsOpen] = useState(false);
   const translateX = useRef(new Animated.Value(280)).current;
   const [timeUp, setTimeUp] = useState(false);
-
+  
   const toggleLanguage = () => {
     setLanguage(language === "en" ? "hin" : "en");
   };
   const [quizzes, setQuizzes] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-
+  
   const [loading, setLoading] = useState(true);
-
+  console.log(quizId)
   console.log("hello");
   useEffect(() => {
     const getQuizDetails = async () => {
-      const res = await axios.post(
-        `${SERVER_URI}/api/v1/quiz/getQuizById/${quizId}`
-      );
-
-      const quizData = res?.data?.data;
-      setQuizDetails(quizData);
-
-
-      setRemainingTime(quizData.timer);
-
-
-      setQuestions(quizData.questions);
-
-      setLoading(false);
-
+      console.log('entered')
+      try {
+        const res = await axios.get(
+          `${SERVER_URI}/api/v1/quiz/getQuizById/${quizId}`
+        );
+        console.log("🚀 ~ getQuizDetails ~ res:", res)
+  
+        const quizData = res?.data?.data;
+        setQuizDetails(quizData);
+        
+        
+        setRemainingTime(quizData.timer);
+        
+        
+        setQuestions(quizData.questions);
+        
+        setLoading(false);
+      } catch (error) {
+        console.log(error)
+      }
+     
+      
       // console.log(quizData);
-
+      
     };
-
+    
     getQuizDetails();
   }, [quizId]);
-
+  console.log(questions,"questions --------------------")
+  
   const handleSave = () => {
   
     if (count < questions.length - 1) {
@@ -253,13 +264,16 @@ export default function QuizScreen() {
     setUserAnswer(optionsArray[index][language]);
   };
 
+
+ 
   const handleSkip = () => {
-    console.log("skip", count);
-    if (count > 1) {
-      setCount((count) => count - 1);
-      setSelectedBox(null);
-      // setTime(15);
-    }
+      console.log("skip", count);
+      if (count > 1) {
+        setCount((count) => count - 1);
+        setSelectedBox(null);
+        // setTime(15);
+      }
+   
   };
 
 
@@ -275,11 +289,13 @@ export default function QuizScreen() {
 
   console.log(questions[count + 1]?.question[language], "quizDetails", quizDetails?.questions[0].options);
   // return (<></>)correctAnswer[language]
-  const currentQuestion = questions[count]?.question[language];
+  const currentQuestion = questions[count]?.question[language]
   const currentOptions = getOptionsArray(quizDetails?.questions[count], language);
 
   console.log("currentOptions", currentOptions);
 
+
+ 
   const handleMenuPress = () => {
     setIsOpen((prev) => !prev);
     Animated.timing(translateX, {
@@ -288,6 +304,7 @@ export default function QuizScreen() {
       useNativeDriver: true,
     }).start();
   };
+
 
   const handleSaveQuestion = async () => {
     try {
@@ -298,7 +315,12 @@ export default function QuizScreen() {
   };
 
   if (loading) {
-    return <CustomLoader name="2-curves" color="red" />;
+    return <ActivityIndicator size="large" color="red" style={{
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    }} />;
+    // return <CustomLoader name="2-curves" color="red" />;
   }
 
   const handleTimeup = async () => {
@@ -310,6 +332,8 @@ export default function QuizScreen() {
       Toast.show("Error saving question");
     }
   };
+
+console.log(String('\tjsbdubidusvbdsiduvi').replace(/[\t]/g, ""))
 
   return (
     <SafeAreaView
@@ -549,8 +573,9 @@ export default function QuizScreen() {
                 }}
               >
 
-                {currentQuestion}
-               
+                {/* {currentQuestion.replace(/[\t\n]/g, " ")} */}
+                {String(currentQuestion).replace(/[\t]/g, "")}
+               {/* {console.log(      {String(currentQuestion).replace(/[\t]/g, " ")})} */}
               </Text>
             </ScrollView>
 
