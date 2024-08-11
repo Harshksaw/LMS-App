@@ -81,7 +81,7 @@ exports.getUserById = async (req, res) => {
 
     // Check if user already exists
     const user = await User.findOne({ _id: id }).populate(
-      "courses ,quizes,studyMaterials"
+      "courses quizes studyMaterials"
     );
     if (!user) {
       return res.status(400).json({
@@ -580,26 +580,3 @@ exports.getAllUserCources = async (req, res) => {
   }
 }
 
-exports.assignCourseBundle = async (req, res) => {
-  try {
-   const { userId, courseId } = req.body;
-
-    const user = await User.findByIdAndUpdate({ _id: userId }, {
-      $push: { courses: courseId }
-
-    })
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    await user.save();
-    
-    res.status(200).json({ message: "Course assigned successfully ",data: user });
-
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-    
-  }
-}

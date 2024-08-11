@@ -45,6 +45,7 @@ router.get('/get-all-course-bundle', courseBundleController.getAllCourseBundle);
 // // Route to add study materials to a course bundle
 // router.post('/course-bundle/:id/study-materials', courseBundleController.addStudyMaterialsToBundle);
 
+router.post("/assignCourseBundle",courseBundleController.assignCourseBundle);
 // // Route to list all course bundles
 // router.get('/course-bundle', courseBundleController.listCourseBundles);
 

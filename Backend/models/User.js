@@ -33,13 +33,13 @@ const userSchema = new mongoose.Schema({
     quizes:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:"Course",
+            ref:"Quiz",
         }
     ],
     studyMaterials:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:"Course",
+            ref:"StudyMaterial",
         }
     ],
     image:{
