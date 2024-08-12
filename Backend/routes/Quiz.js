@@ -4,7 +4,7 @@ const {  getQuizbyId, getAllQuiz, editQuizbyId, ping, updateQuestionOptions, get
 const router = express.Router()
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const { getIsBundledMaterials, attemptQuiz, getAttemptById } = require("../controllers/CourseMaterials");
+const { getIsBundledMaterials, attemptQuiz, getAttemptById, getAllAttempById } = require("../controllers/CourseMaterials");
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
