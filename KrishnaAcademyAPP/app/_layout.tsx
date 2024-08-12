@@ -176,6 +176,14 @@ function RootLayoutNav() {
             headerBackTitle: "Back",
           }}
         />
+        <Stack.Screen
+          name="(routes)/quiz/quiz.attempts"
+          options={{
+            // headerShown: false,
+            title: "Quiz Attempts",
+            headerBackTitle: "Back",
+          }}
+        />
       </Stack>
     </ToastProvider>
   );

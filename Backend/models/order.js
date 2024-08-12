@@ -7,7 +7,7 @@ const orderSchema = new Schema({
     {
       itemType: { type: String, enum: ['Bundle', 'StudyMaterial'], required: true },
       item: { type: Schema.Types.ObjectId, required: true, refPath: 'items.itemType' },
-      price: { type: Number, required: true }
+      price: { type: Number, required: false }
     }
   ],
   totalAmount: { type: Number, required: true },

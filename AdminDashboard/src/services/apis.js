@@ -7,7 +7,7 @@
 ///prod url
 
 
-export const BASE_URL = "https://lms-app-1-eoim.onrender.com"
+export const BASE_URL = "https://lms-app-wqwt.onrender.com"
 
 
 export const endpoints = {

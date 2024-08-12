@@ -56,6 +56,8 @@ router.get("/getAllisBundleMaterials", getIsBundledMaterials)
 router.post("/attempt-quiz", attemptQuiz)
 router.post("/get-attempt-quiz/:id", getAttemptById)
 
+router.get("/get-allAttempts/:id",getAllAttempById)
+
 
 
 
