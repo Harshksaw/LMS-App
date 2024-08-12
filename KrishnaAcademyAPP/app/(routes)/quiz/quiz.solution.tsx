@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { SERVER_URI } from '@/utils/uri';
@@ -21,7 +21,7 @@ const quizsolution = () => {
 
     const fetchAttempts = async () => {
       try {
-        const response = await axios.post(`${SERVER_URI}/api/v1/quiz/get-attempt-quiz/${attemptId}` );
+        const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAttemptQuiz/${attemptId}` );
         const data = response.data
         console.log("🚀 ~ fetchAttempts ~ data:", data.data)
         console.log(JSON.parse(questionData), 'questionData')
@@ -36,6 +36,10 @@ const quizsolution = () => {
     fetchAttempts();
   }, [attemptId]);
 
+
+//   return (
+// <ActivityIndicator size="large" color="#0000ff" />
+//   )
   const renderItem = ({ item, index }) => {
     console.log(correctAnswers, 'correctAnswers');
     console.log(quizDetails, 'questionData.options');

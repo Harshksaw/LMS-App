@@ -270,7 +270,7 @@ exports.getAttemptById = async (req, res) => {
     console.log("🚀 ~ exports.getAttemptById= ~ id:", id)
 
     // Find the attempt by user and quiz
-    const attempt = await Attempt.findById(id)
+    const attempt = await Attempt.findById(id).populate('questions.question');
     console.log("🚀 ~ exports.getAttemptById= ~ attempt:", attempt)
 
     if (!attempt) {

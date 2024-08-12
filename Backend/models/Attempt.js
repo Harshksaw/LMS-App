@@ -25,8 +25,8 @@ const attemptSchema = new mongoose.Schema({
         {
             question: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Question",
-                required: true,
+                ref: "Questions",
+
             },
             userAnswer: {
                 type: String, // Assuming answers are strings, adjust if necessary
