@@ -473,6 +473,37 @@ exports.updateQuestionOptions = async (req, res) => {
 };
 
 
+exports.updateQuestion = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const { questionData } = req.body;
+console.log(questionData)
+    const updatedQuestion = await Questions.findByIdAndUpdate(id, {
+      $set: {
+        "question.en": questionData.question.en,
+        "question.hin": questionData.question.hin,
+        "options.optionA.en": questionData.options.optionA.en,
+        "options.optionA.hin": questionData.options.optionA.hin,
+        "options.optionB.en": questionData.options.optionB.en,
+        "options.optionB.hin": questionData.options.optionB.hin,
+        "options.optionC.en": questionData.options.optionC.en,
+        "options.optionC.hin": questionData.options.optionC.hin,
+        "options.optionD.en": questionData.options.optionD.en,
+        "options.optionD.hin": questionData.options.optionD.hin,
+        "correctAnswer.en": questionData.correctAnswer.en,
+        "correctAnswer.hin": questionData.correctAnswer.hin,
+      },
+    }, { new: true });
+
+    // if (!updatedQuestion) {
+    //   return res.status(404).json({ message: "Question not found" });
+    // }
+    res.status(200).json({ message: "Question updated successfully", question: updatedQuestion });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
 exports.deleteQuizById = async (req, res) => {
   try {
     const quizId = req.params.id;
