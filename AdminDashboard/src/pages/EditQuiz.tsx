@@ -8,6 +8,7 @@ const EditQuiz = () => {
   const { id } = useParams();
   const [openIndex, setOpenIndex] = useState(null);
   const [deleted, setDeleted] = useState(null);
+  const [disabled, setDisabled] = useState(false);
 
   const [refresh , setrefresh] = useState(false)  
 
@@ -85,6 +86,7 @@ const EditQuiz = () => {
   };
 
   const handleSaveQuestion = async (question) => {
+    setDisabled(true)
     console.log("🚀 ~ handleSaveQuestion ~ question:", question);
     toast.loading("Saving question...");
     toast.dismiss()
@@ -122,8 +124,11 @@ const EditQuiz = () => {
         setOpenIndex(null);
       }
       console.log("Question updated:", response.data);
+      setDisabled(false)
     } catch (error) {
       toast.dismiss();
+      setDisabled(false)
+      toast.error("Error updating question");
       console.error("Error updating question:", error);
     }
     // toast.dismiss();
@@ -161,6 +166,7 @@ const EditQuiz = () => {
 
   const handleSaveQuiz = async () => {
     try {
+      
       toast.loading("Saving quiz...");
       const response = await axios.put(
         `${BASE_URL}/api/v1/quiz/updateQuiz/${id}`,
@@ -169,8 +175,10 @@ const EditQuiz = () => {
       toast.success("Quiz saved successfully.");
       toast.dismiss();
       addQuestion();
+      setDisabled(false)
       console.log("Quiz saved:", response.data);
     } catch (error) {
+      setDisabled(false)
       toast.error("Error saving quiz");
       console.error("Error saving quiz:", error);
     }
@@ -226,7 +234,7 @@ const EditQuiz = () => {
     }
    
   }
-
+console.log(disabled, 'disabled')
   return (
 
       <div className="flex flex-col overflow-auto justify-center">
@@ -405,7 +413,8 @@ const EditQuiz = () => {
                     </div>
                     <div className={'w-full flex gap-4'}>
                     <button
-                      className="p-2 bg-blue-400 w-full text-white rounded-md"
+                      disabled={disabled}
+                      className="p-2 disabled:bg-blue-25 bg-blue-400 w-full text-white rounded-md"
                       onClick={() => handleSaveQuestion(question)}
                     >
                       Save
