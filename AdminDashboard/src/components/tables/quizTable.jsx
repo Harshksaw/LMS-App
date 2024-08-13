@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import { useState } from "react";
-import { FaCheck, FaTrash } from "react-icons/fa";
+import { FaCheck, FaEye, FaStreetView, FaTrash } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
 import { HiClock } from "react-icons/hi";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -115,8 +115,9 @@ export default function QuizTable({
               Status
             </Th>
             <Th className="text-left text-sm font-medium uppercase text-richblack-100">
-              Actions
+Actions
             </Th>
+       
           </Tr>
         </Thead>
 
@@ -138,7 +139,7 @@ export default function QuizTable({
             </Tr>
           ) : (
             courses?.map((course) => (
-               <Link to={`/dashboard/quiz/${course._id}`} className="flex-1">
+              
               <Tr
                 key={course._id}
                 className="flex gap-x-10 border-b border-richblack-800 px-6 py-8"
@@ -191,16 +192,21 @@ export default function QuizTable({
                   )}
                 </Td>
                 
-                <Td className="text-left text-sm text-richblack-100">
-                <FaTrash
-                  className="cursor-pointer text-red-500"
-                  onClick={() => deleteQuiz(course._id)}
-                />
-              </Td>
+                {/* <Td className="text-left text-sm text-richblack-100">
+               
+                </Td> */}
+
+                <Link to={`/dashboard/quiz/${course._id}`} className="flex-1">
+                <Td className="text-left text-sm text-richblack-100 flex justify-center items-center gap-5">
+                
+                  <p className="text-xl text-white cursor-pointer
+                  ">View</p>
+                </Td>
+                  </Link>
 
            
               </Tr>
-          </Link>
+
             ))
           )}
         </Tbody>

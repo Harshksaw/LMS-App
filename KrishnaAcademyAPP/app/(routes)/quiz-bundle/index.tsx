@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
+
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -19,17 +20,22 @@ import { SERVER_URI } from "@/utils/uri";
 import axios from "axios";
 import { styles } from "./styles";
 import InfoScreen from "./InfoScreen";
+import Button from "@/components/button/button";
+import { router } from "expo-router";
 
 const { height, width } = Dimensions.get("window");
 
 
-const ContentsScreen = () => (
-  <ScrollView style={styles.tabContent}>
+const ContentsScreen = ({data}) => (
+
+    <ScrollView style={styles.tabContent}>
 
     <View>
 
-      <QuizCard quizzes={courseData[0].quizzes} />
-      <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} />
+      <QuizCard quizzes={data.quizes} />
+
+      {/* //TODO  */}
+      {/* <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} /> */}
 
 
 
@@ -37,13 +43,14 @@ const ContentsScreen = () => (
     </View>
 
   </ScrollView>
-);
+  )
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function index() {
 
   const [BundleData, setBundleData] = React.useState(courseData[0]);
+  
   const route = useRoute();
   const { BundleId } = route.params;
 
@@ -72,6 +79,22 @@ export default function index() {
 
 
   }, [BundleId]);
+
+
+
+
+
+
+  const onPress = () => {
+    router.push({
+      pathname: '/(routes)/payment',
+      params: { itemId: BundleId, itemPrice : BundleData.price, itemData: JSON.stringify(BundleData) },
+
+
+    });
+  };
+  console.log("🚀 ~ index ~ BundleData:", BundleData)
+  
   return (
     <SafeAreaView
       style={{
@@ -80,21 +103,25 @@ export default function index() {
         // backgroundColor: "lightblue",
         flexDirection: "column",
         justifyContent: "flex-start",
+        // backgroundColor: "lightblue",
       }}
     >
       <View
         style={{
           height: height * 0.35,
+
           flexDirection: "column",
           justifyContent: "flex-start",
         }}
       >
         <Image source={{ uri: BundleData?.image }} style={styles.image} />
         <View style={styles.nameContainer}>
-          <Text style={styles.name}>Quiz Bundle Name</Text>
+          <Text style={styles.name}>{BundleData.bundleName}</Text>
         </View>
       </View>
-      <View style={styles.tabContainer}>
+      
+
+      <View style={{flex:1}}>
         <Tab.Navigator
           initialRouteName="Home"
           tabBarOptions={{
@@ -122,6 +149,7 @@ export default function index() {
           <Tab.Screen name="About"  component={() => <InfoScreen data={BundleData} />}  />
           <Tab.Screen name="Content" component={() => <ContentsScreen  data={BundleData}/>} />
         </Tab.Navigator>
+        <Button title="Enroll Now" onPress={onPress }/>
       </View>
     </SafeAreaView>
   );

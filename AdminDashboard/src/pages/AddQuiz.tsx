@@ -246,24 +246,24 @@ const AddQuiz = (props: Props) => {
       <div className="flex flex-1 flex-col w-full items-center justify-between rounded-2xl border-[1px] border-richblack-700 bg-richblack-800 p-6 px-0 sm:px-8">
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col space-y-6 py-6 w-full bg-richblack-800 rounded-md shadow-md justify-center items-center  "
+          className="flex flex-col space-y-6 py-6 w-full bg-white-800 rounded-md shadow-md justify-center items-center  "
         >
           <div className="flex flex-col w-full  justify-center  items-center   gap-10 rounded-md ">
 
 
 
-              <div className="flex   w-full px-10 flex-col  items-start  mt-5 space-y-2">
+              <div className="flex   w-full  flex-col  items-start  mt-5 space-y-2">
                 <label className="text-richblack-5">Enter the quiz name</label>
                 <input
                   type="text"
                   placeholder="Quiz Name"
                   value={quiz.name}
                   onChange={(e) => handleChange(e, "name")}
-                  className="p-2 w-full border border-yellow-25 rounded-md"
+                  className="p-2 w-full border border-yellow-25 rounded-md bg-richblack-800 text-white"
                 />
               </div>
 
-              <div className="flex  w-full px-10 flex-col items-start  mt-5 space-y-2">
+              <div className="flex  w-full flex-col items-start  mt-5 space-y-2">
                 <label className="text-richblack-5">
                   Add short Description
                 </label>
@@ -273,13 +273,13 @@ const AddQuiz = (props: Props) => {
                   rows={10}
                   cols={150}
                   onChange={(e) => handleChange(e, "shortDescription")}
-                  className="p-5 border  w-full border-yellow-25 rounded-md"
+                  className="p-5 border  w-full border-yellow-25 rounded-md bg-richblack-800 text-white "
                 />
               </div>
 
 
 
-            <div className="flex  flex-col items-start mt-5 space-y-2">
+            <div className="flex  flex-col items-start self-start mt-5 space-y-2">
               <label className="text-richblack-5">Image URL</label>
               <input
                 type="file"
@@ -302,12 +302,12 @@ const AddQuiz = (props: Props) => {
                 placeholder="Price"
                 value={quiz.price}
                 onChange={(e) => handleChange(e, "price")}
-                className="p-2 border border-yellow-25 rounded-md"
+                className="p-2 border border-yellow-25 rounded-md bg-richblack-100 "
               />
             </div>
           )}
 
-          <div className="flex flex-col space-y-5 mt-5">
+          <div className="flex flex-col space-y-5 mt-5 self-start">
             <div className="flex flex-row items-center gap-5 p-4 bg-richblack-700 border border-yellow-25 rounded-md">
               <label
                 htmlFor="isPartOfBundle"
@@ -319,7 +319,7 @@ const AddQuiz = (props: Props) => {
                 id="isPartOfBundle"
                 type="checkbox"
                 placeholder="isPartOfBundle"
-                className="ml-2"
+                className="ml-2 bg-richblack-100 "
                 checked={quiz.isPartOfBundle}
                 onChange={(e) =>
                   setQuiz({ ...quiz, isPartOfBundle: e.target.checked })
@@ -328,7 +328,7 @@ const AddQuiz = (props: Props) => {
             </div>
           </div>
 
-          <div className="p-4 bg-richblack-100 rounded-md w-60 self-center">
+          <div className="p-4 bg-richblack-100 rounded-md flex items-center justify-center self-center w-full">
             {/* Add the TimeInput component here */}
             <TimeInput onTimeChange={handleTimeChange} />
           </div>

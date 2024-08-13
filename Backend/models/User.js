@@ -115,8 +115,15 @@ const userSchema = new mongoose.Schema({
                 default: Date.now,
             },
         }
-    ]
+    ],
+    attempts: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Attempt',
+        },
+      ],
 },
+
 
 { timestamps: true }
 );

@@ -4,7 +4,7 @@ const {  getQuizbyId, getAllQuiz, editQuizbyId, ping, updateQuestionOptions, get
 const router = express.Router()
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const { getIsBundledMaterials } = require("../controllers/CourseMaterials");
+const { getIsBundledMaterials, attemptQuiz, getAttemptById, getAllAttempById } = require("../controllers/CourseMaterials");
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
@@ -28,7 +28,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // Define the routes with the upload middleware and controllers
 router.post("/initializeQuiz",upload.single('image'), intialize);
-router.post("/updateQuiz",upload.single('image'), UpdateQuiz);
+router.post("/updateQuiz/:id", UpdateQuiz);
 
 router.get("/getAllQuiz", getAllQuiz)
 // router.post("/getAllQuiz", saveQuestion)
@@ -50,6 +50,13 @@ router.get("/update", updateQuestionOptions)
 router.delete("/deleteQuiz/:id", deleteQuizById)
 
 router.get("/getAllisBundleMaterials", getIsBundledMaterials)
+
+
+
+router.post("/attempt-quiz", attemptQuiz)
+router.get("/getAttemptQuiz/:id", getAttemptById)
+
+router.get("/getAllAttempt/:id",getAllAttempById)
 
 
 

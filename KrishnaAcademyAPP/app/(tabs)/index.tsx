@@ -82,7 +82,7 @@ const CustomDrawerContent = (props) => {
 
         <DrawerItem
           label="My Results"
-          onPress={() => router.navigate("/(routes)/my-account/results")}
+          onPress={() => router.navigate("/(routes)/quiz/quiz.attempts")}
           icon={({ focused, size }) => (
             <Ionicons
               name="bookmark"

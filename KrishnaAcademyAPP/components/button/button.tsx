@@ -23,10 +23,14 @@ export default function Button({
         commonStyles.buttonContainer,
         {
           width: width * 1 - 150,
-          height: 40,
+          height: 50,
+          // elevation: 5,
+          marginBottom:10,
           alignItems: "center",
           flexDirection: "row",
           justifyContent: "center",
+          alignSelf: "center",
+          borderRadius: 20,
         },
       ]}
       onPress={() => onPress()}

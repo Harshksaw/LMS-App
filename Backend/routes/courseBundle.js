@@ -32,8 +32,9 @@ router.post('/course-bundle', upload.single('image'), courseBundleController.cre
 router.get('/course-bundle/:id', courseBundleController.getCourseBundleById);
 router.post('/course-bundle/update/:id', courseBundleController.addQuizzesToBundle);
 
-//delete
 router.post('/course-bundle/:id', courseBundleController.addQuizzesToBundle);
+
+router.post('/delete-bundle/:id', courseBundleController.deleteCourseBundle);
 
 // /step3
 router.post('/course-bundle/updateTime/:id', courseBundleController.updateTimenListing);

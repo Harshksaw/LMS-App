@@ -3,7 +3,7 @@ const app = express();
 
 const userRoutes = require("./routes/User");
 const profileRoutes = require("./routes/Profile");
-// const paymentRoutes = require("./routes/Payments");
+const paymentRoutes = require("./routes/Payments");
 const courseRoutes = require("./routes/Course");
 const contactUsRoute = require("./routes/Contact");
 const quizRoutes = require("./routes/Quiz");
@@ -44,7 +44,7 @@ app.use("/api/v1/course", courseRoutes);
 
 app.use("/api/v1/quiz", quizRoutes);
 app.use("/api/v1/study", studymaterials);
-// app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/reach", contactUsRoute);
 
 app.use("/api/v1/Bundle", CourseBundle)
