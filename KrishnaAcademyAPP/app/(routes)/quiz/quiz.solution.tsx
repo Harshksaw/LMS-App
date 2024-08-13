@@ -12,10 +12,10 @@ const quizsolution = () => {
 
   const [questions, setQuestions] = useState<any[]>([]);
   const route = useRoute();
-  const { attemptId, questionData } = route.params;
+  const { attemptId } = route.params;
   console.log("🚀 ~ quizsolution ~ attemptId:", attemptId)
 
-  const quizDetails = JSON.parse(questionData)
+  // const quizDetails = JSON.parse(questionData)
 
   useEffect(() => {
 
@@ -23,8 +23,8 @@ const quizsolution = () => {
       try {
         const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAttemptQuiz/${attemptId}` );
         const data = response.data
-        console.log("🚀 ~ fetchAttempts ~ data:", data.data)
-        console.log(JSON.parse(questionData), 'questionData')
+        console.log("🚀 ~ fetchAttempts ~ data:", data.data.questions)
+        // console.log(JSON.parse(questionData), 'questionData')
         setQuestions(data.data.questions);
         setUserSelections(data.data.questions.map(q => q.userAnswer));
         setCorrectAnswers(data.data.questions.map(q => q.correctAnswer));
@@ -37,18 +37,18 @@ const quizsolution = () => {
   }, [attemptId]);
 
 
-//   return (
-// <ActivityIndicator size="large" color="#0000ff" />
-//   )
+  return (
+<ActivityIndicator size="large" color="#0000ff" />
+  )
   const renderItem = ({ item, index }) => {
     console.log(correctAnswers, 'correctAnswers');
-    console.log(quizDetails, 'questionData.options');
+    // console.log(quizDetails, 'questionData.options');
     const questionData = quizDetails.find(q => q._id === item.question);
     console.log("🚀 ~ renderItem ~ questionData:", questionData)
     
     return (
       <View key={item._id} style={{ marginBottom: 20 }}>
-      <Text>Question: {questionData.question.en}</Text>
+      {/* <Text>Question: {questionData.question.en}</Text> */}
       {Object.entries(questionData.options).map(([key, option]) => {
         console.log(key, option, 'key, option', correctAnswers[index]);
         let textColor = 'black';
