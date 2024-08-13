@@ -28,7 +28,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // Define the routes with the upload middleware and controllers
 router.post("/initializeQuiz",upload.single('image'), intialize);
-router.post("/updateQuiz",upload.single('image'), UpdateQuiz);
+router.post("/updateQuiz/:id", UpdateQuiz);
 
 router.get("/getAllQuiz", getAllQuiz)
 // router.post("/getAllQuiz", saveQuestion)

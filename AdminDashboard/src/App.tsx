@@ -39,6 +39,7 @@ import CourseBundleForm from "./components/core/Dashboard/BundleCourse/CreateBun
 import EditQuiz from "./pages/EditQuiz";
 import AllUsers from "./pages/AllUsers";
 import User from "./components/core/User/User";
+import React from "react";
 
 function App() {
   const { user } = useSelector((state) => state.profile);

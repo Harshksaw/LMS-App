@@ -56,8 +56,8 @@ exports.intialize = async (req, res) => {
       message: "Canno create Quiz in, try again ",
     });
   }
-};
-exports.UpdateQuiz = async (req, res) => {
+};exports.UpdateQuiz = async (req, res) => {
+  const { id } = req.params;
   const {
     name,
     shortDescription,
@@ -70,10 +70,10 @@ exports.UpdateQuiz = async (req, res) => {
     isPartOfBundle,
     time,
   } = req.body;
+
+  console.log("🚀 ~ file", quizData, typeof quizData);
   const Quizimage = req.file ? req.file.path : "https://picsum.photos/200";
 
-  // console.log("first :", Quizimage);
-  // console.log("first :", name, category, shortDescription);
   if (!name || !shortDescription || !quizData || !time) {
     return res.status(400).json({
       success: false,
@@ -81,25 +81,33 @@ exports.UpdateQuiz = async (req, res) => {
     });
   }
 
+  
   let parsedQuizData;
-  try {
-    parsedQuizData =
-      typeof quizData === "string" ? JSON.parse(quizData) : quizData;
-  } catch (error) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid quiz data format",
-    });
-  }
 
-  if (!Array.isArray(parsedQuizData)) {
-    return res.status(400).json({
-      success: false,
-      message: "quizData should be an array",
-    });
+  if (typeof parsedQuizData === 'object' && !Array.isArray(parsedQuizData)) {
+    parsedQuizData = Object.values(parsedQuizData);
   }
+  // try {
+  //   parsedQuizData =
+  //     typeof quizData === "string" ? JSON.parse(quizData) : quizData;
+  // } catch (error) {
+  //   return res.status(400).json({
+  //     success: false,
+  //     message: "Invalid quiz data format",
+  //   });
+  // }
+  // Convert parsedQuizData to an array if it is an object
+
+
+  // if (!Array.isArray(parsedQuizData)) {
+  //   return res.status(400).json({
+  //     success: false,
+  //     message: "quizData should be an array",
+  //   });
+  // }
+
   try {
-    const questionData = parsedQuizData?.map((question) => ({
+    const questionData = parsedQuizData.map((question) => ({
       question: {
         en: question.question.en,
         hin: question.question.hin,
@@ -127,52 +135,45 @@ exports.UpdateQuiz = async (req, res) => {
         hin: question.correctAnswer.hin,
       },
     }));
-    console.log("second :", questionData);
 
-    var createdQuestions = await Questions.insertMany(questionData);
-    console.log("third :", createdQuestions);
+    const createdQuestions = await Questions.insertMany(questionData);
+    const questionIds = createdQuestions.map((question) => question._id);
 
-    // Extract question IDs for efficient quiz creation
-    var questionIds = createdQuestions.map((question) => question._id);
+    const updatedQuiz = await Quiz.findByIdAndUpdate(
+      id,
+      {
+        name,
+        shortDescription,
+        category,
+        isPaid,
+        price,
+        image: Quizimage,
+        questions: questionIds,
+        testSeries,
+        isListed,
+        timer: time,
+        isPartOfBundle,
+      },
+      { new: true }
+    );
 
-    // Return or process createdQuestions or questionIds as needed
-  } catch (error) {
-    console.error("Error creating questions:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Cannot create questions, try again!",
-    });
-  }
-  console.log("Forth :", questionIds);
-  // Create the quiz with references to created questions
-  const newQuiz = new Quiz({
-    name: name,
-    shortDescription: shortDescription,
-    category,
-    isPaid,
-    price,
-    image: Quizimage,
-    questions: questionIds,
-    testSeries,
-    isListed,
-    timer: time,
-    isPartOfBundle,
-  });
+    if (!updatedQuiz) {
+      return res.status(404).json({
+        success: false,
+        message: "Quiz not found",
+      });
+    }
 
-  try {
-    const savedQuiz = await newQuiz.save();
-    //   return savedQuiz;
     return res.status(200).json({
       success: true,
-      message: "worked",
-      data: savedQuiz,
+      message: "Quiz updated successfully",
+      data: updatedQuiz,
     });
   } catch (error) {
-    console.log(error.message);
-
-    return res.status(401).json({
+    console.error("Error updating quiz:", error);
+    return res.status(500).json({
       success: false,
-      message: "Canno create Quiz in, try again ",
+      message: "Cannot update quiz, try again!",
     });
   }
 };
