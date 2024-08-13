@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 const EditQuiz = () => {
   const { id } = useParams();
   const [openIndex, setOpenIndex] = useState(null);
+  const [deleted, setDeleted] = useState(null);
 
   const [refresh , setrefresh] = useState(false)  
 
@@ -64,6 +65,7 @@ const EditQuiz = () => {
           `${BASE_URL}/api/v1/quiz/getQuizById/${id}`
         );
         console.log("🚀 ~ fetchQuiz ~ response:", response);
+        
         setQuiz(response.data.data);
       } catch (error) {
         toast.error("Failed to load quiz");
@@ -74,7 +76,7 @@ const EditQuiz = () => {
     };
 
     fetchQuiz();
-  }, [id, refresh]);
+  }, [id, refresh,deleted]);
 
   const handleChange = (e, field, index, option, lang) => {
     const updatedQuestions = [...quiz.questions];
@@ -128,11 +130,18 @@ const EditQuiz = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setQuiz({
-      ...quiz,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    const { name, value, type, checked, files } = e.target;
+    if (type === "file") {
+      setQuiz({
+        ...quiz,
+        [name]: files[0], // assuming only one file is uploaded
+      });
+    } else {
+      setQuiz({
+        ...quiz,
+        [name]: type === "checkbox" ? checked : value,
+      });
+    }
   };
 
   const toggleAccordion = (index) => {
@@ -166,8 +175,57 @@ const EditQuiz = () => {
       console.error("Error saving quiz:", error);
     }
   };
+  const deleteQuestion = async(qid) => {
+    console.log(qid)
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/api/v1/quiz/deleteQuestion/${qid}`,
+      );
+
+      if (response.data) {
+        toast.success("Question deleted successfully");
+        setDeleted((prev) => !prev)
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   // console.log("Quiz:", quiz.questions);
+  const handleUpdateQuizDetails = async()=>{
+ 
+    try {
+      // toast.loading("updateing quiz details...");
+      // toast.dismiss()
+
+      const formData = new FormData();
+      formData.append("name", quiz.name);
+      formData.append("shortDescription", quiz.shortDescription);
+      formData.append("image", quiz.image);
+      formData.append("isPartOfBundle", quiz.isPartOfBundle);
+      
+      const response = await axios.post(
+        `${BASE_URL}/api/v1/quiz/editQuizDetails/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if(response.data.data){
+        toast.success("quiz details updated successfully")
+      }
+      console.log(response.data.data);
+   
+  // console.log(obj)
+    } catch (error) {
+      console.log(error)
+      toast.dismiss()
+    }
+   
+  }
 
   return (
 
@@ -177,6 +235,7 @@ const EditQuiz = () => {
             <div className="flex   flex-col  items-start  mt-5 space-y-2">
               <label className="text-richblack-5">Enter the quiz name</label>
               <input
+              name="name"
                 type="text"
                 placeholder="Quiz Name"
                 value={quiz.name}
@@ -191,7 +250,7 @@ const EditQuiz = () => {
                   type="file"
                   name="image"
                   placeholder="Image URL"
-                  onChange={(e) => handleChange(e, "image")}
+                  onChange={(e) => handleInputChange(e, "image")}
                   className="p-2 border  w-full border-yellow-25 rounded-md"
                 />
               </div>
@@ -212,14 +271,16 @@ const EditQuiz = () => {
             <div className="flex  flex-col items-start  mt-5 space-y-2">
               <label className="text-richblack-5">Add short Description</label>
               <textarea
+              name="shortDescription"
                 placeholder="Short Description"
                 value={quiz.shortDescription}
                 onChange={handleInputChange}
                 className="p-10 border  w-full border-yellow-25 rounded-md"
               />
             </div>
+            <button onClick={()=> handleUpdateQuizDetails()} className={'bg-white border-yellow-25 px-8 py-2 rounded-md my-4 hover:bg-richblack-50'}>Edit quiz details</button>
           </div>
-          <div></div>
+            
         </div>
   
         <div className="flex flex-col bg-brown-25 mt-10 text-brown-100 h-2"></div>
@@ -342,12 +403,21 @@ const EditQuiz = () => {
                         className="p-2 border border-yellow-25 rounded-md"
                       />
                     </div>
+                    <div className={'w-full flex gap-4'}>
                     <button
-                      className="p-2 bg-blue-400 text-white rounded-md"
+                      className="p-2 bg-blue-400 w-full text-white rounded-md"
                       onClick={() => handleSaveQuestion(question)}
                     >
                       Save
                     </button>
+                    <button
+                      className="p-2 w-full bg-[#da3232] text-white rounded-md"
+                      onClick={() => deleteQuestion(question._id)}
+                    >
+                      Delete
+                    </button>
+                    </div>
+                   
                   </div>
                 )}
               </div>

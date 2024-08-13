@@ -94,7 +94,7 @@ exports.intialize = async (req, res) => {
   //   return res.status(400).json({
   //     success: false,
   //     message: "Invalid quiz data format",
-  //   });
+  //   }); 
   // }
   // Convert parsedQuizData to an array if it is an object
 
@@ -178,6 +178,56 @@ exports.intialize = async (req, res) => {
   }
 };
 
+
+exports.UpdateQuizDetails = async (req, res) => {
+  const { id } = req.params;
+  const {
+    name,
+    shortDescription,
+    isPartOfBundle,
+  } = req.body;
+
+  // console.log("🚀 ~ file", quizData, typeof quizData);
+  const Quizimage = req.file ? req.file.path : "https://picsum.photos/200";
+
+  // if (!name || !shortDescription ) {
+  //   return res.status(400).json({
+  //     success: false,
+  //     message: "All fields are required !!",
+  //   });
+  // }
+  try {
+    const updatedQuiz = await Quiz.findByIdAndUpdate(
+      id,
+      {
+        name,
+        shortDescription,
+        image: Quizimage,
+        isPartOfBundle,
+      },
+      { new: true }
+    );
+
+    if (!updatedQuiz) {
+      return res.status(404).json({
+        success: false,
+        message: "Quiz not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Quiz details updated successfully",
+      data: updatedQuiz,
+    });
+  } catch (error) {
+    console.error("Error updating quiz details:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Cannot update quiz details, try again!",
+    });
+  }
+};
 exports.createQuestion = async (req, res) => {
   try {
     const { quizId, questionData } = req.body;
@@ -446,6 +496,40 @@ exports.deleteQuizById = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 }
+
+exports.deleteQuestionById = async (req, res) => {
+  try {
+    const questionId = req.params.id;
+
+    // Find the question by ID
+    const question = await Questions.findById(questionId);
+    if (!question) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    // Find quizzes that have this question
+    const quizzes = await Quiz.find({ questions: questionId });
+
+    // Remove the question from the quizzes' questions array
+    quizzes.forEach((quiz) => {
+      const index = quiz.questions.indexOf(questionId);
+      if (index !== -1) {
+        quiz.questions.splice(index, 1);
+        quiz.save();
+      }
+    });
+
+    // Delete the question
+    await Questions.findByIdAndDelete(questionId);
+
+    res.status(200).json({
+      success: true,
+      message: "Question deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
 
 
 // const req = {
