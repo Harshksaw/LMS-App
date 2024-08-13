@@ -25,6 +25,7 @@ const EditQuiz = () => {
     time: 0,
     questions: [
       {
+        _id: '',
         question: { en: "", hin: "" },
         options: {
           optionA: { en: "", hin: "" },
@@ -125,6 +126,7 @@ const EditQuiz = () => {
       }
       console.log("Question updated:", response.data);
       setDisabled(false)
+      setrefresh((prev) => !prev)
     } catch (error) {
       toast.dismiss();
       setDisabled(false)
@@ -195,6 +197,26 @@ const EditQuiz = () => {
         setDeleted((prev) => !prev)
       }
 
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const handleUpdateQuestion = async(questionData) => {
+    
+    
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/api/v1/quiz/updateQuestions/${questionData._id}`,{
+
+          questionData
+        }
+      );
+      if (response.data) {
+      console.log("resonpose .data",response.data)
+        setrefresh((prev)=> !prev)
+        toast.success("Question deleted successfully");
+        // setDeleted((prev) => !prev)
+      }
     } catch (error) {
       console.log(error)
     }
@@ -412,13 +434,26 @@ console.log(disabled, 'disabled')
                       />
                     </div>
                     <div className={'w-full flex gap-4'}>
-                    <button
-                      disabled={disabled}
-                      className="p-2 disabled:bg-blue-25 bg-blue-400 w-full text-white rounded-md"
-                      onClick={() => handleSaveQuestion(question)}
-                    >
-                      Save
-                    </button>
+                    {
+                      question._id ? (
+                        <button
+                        disabled={disabled}
+                        className="p-2 disabled:bg-blue-25 bg-blue-400 w-full text-white rounded-md"
+                        onClick={() => handleUpdateQuestion(question)}
+                      >
+                        Update
+                      </button>
+                      ) : (
+                        <button
+                        disabled={disabled}
+                        className="p-2 disabled:bg-blue-25 bg-blue-400 w-full text-white rounded-md"
+                        onClick={() => handleSaveQuestion(question)}
+                      >
+                        Save
+                      </button>
+                      )
+                    }
+                  
                     <button
                       className="p-2 w-full bg-[#da3232] text-white rounded-md"
                       onClick={() => deleteQuestion(question._id)}
