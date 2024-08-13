@@ -85,6 +85,7 @@ const EditQuiz = () => {
   const handleSaveQuestion = async (question) => {
     console.log("🚀 ~ handleSaveQuestion ~ question:", question);
     toast.loading("Saving question...");
+    toast.dismiss()
     // Check if all fields are entered
     const isQuestionValid =
       question.question.en &&
@@ -102,6 +103,7 @@ const EditQuiz = () => {
 
     if (!isQuestionValid) {
       alert("Please fill in all fields before saving.");
+      toast.dismiss()
       return;
     }
 
@@ -110,10 +112,11 @@ const EditQuiz = () => {
         `${BASE_URL}/api/v1/quiz/createQuestion`,
         { quizId: id, questionData: question }
       );
-
-      if (response.status === 201) {
-        toast.dismiss();
-        toast.success("Question created successfully.");
+      toast.success("Question created successfully.");
+      
+      if (response.data) {
+        
+        // toast.dismiss();
         setOpenIndex(null);
       }
       console.log("Question updated:", response.data);
@@ -121,7 +124,7 @@ const EditQuiz = () => {
       toast.dismiss();
       console.error("Error updating question:", error);
     }
-    toast.dismiss();
+    // toast.dismiss();
   };
 
   const handleInputChange = (e) => {
@@ -154,8 +157,8 @@ const EditQuiz = () => {
         `${BASE_URL}/api/v1/quiz/updateQuiz/${id}`,
         quiz
       );
-      toast.dismiss();
       toast.success("Quiz saved successfully.");
+      toast.dismiss();
       addQuestion();
       console.log("Quiz saved:", response.data);
     } catch (error) {
