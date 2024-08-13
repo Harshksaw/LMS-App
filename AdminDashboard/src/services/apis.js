@@ -3,13 +3,11 @@
 // export const BASE_URL = "https://stunning-robot-5gqr475wv5xpc576-3000.app.github.dev"
 
 
-// local
-// export const BASE_URL = "http://127.0.0.1:4000"
+// local     
+export const BASE_URL = "http://127.0.0.1:4000"
 
-///prod url
-export const BASE_URL = "https://lms-app-1-eoim.onrender.com"
-
-
+///prod url  
+// export const BASE_URL = "https://lms-app-1-eoim.onrender.com"
 
 // development
 // export const BASE_URL = "https://lms-app-wqwt.onrender.com"
