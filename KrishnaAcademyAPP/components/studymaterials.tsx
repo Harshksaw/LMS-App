@@ -62,7 +62,7 @@ const StudyMaterialsList: React.FC = () => {
       const response = await axios.get(
         `${SERVER_URI}/api/v1/study/getAllStudyMaterials`
       );
-      console.log(response.data, "---");
+      // console.log(response.data, "---");
       setStudyMaterials(response.data.data.slice(0, 5)); // Limit to 5 items
       setLoading(false);
       setRefreshing(false);

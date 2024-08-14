@@ -14,13 +14,13 @@ const StudyMaterials = () => {
 
   const uploadStudyMaterial = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("uploading study material");
+
     try {
       const formData = new FormData();
       formData.append("description", description);
       formData.append("course", course);
-      if (file) formData.append("file", file); // Ensure the field name is 'file'
-      // formData.append("isPaid", isPaid);
+
+
       formData.append("price", price);
       formData.append("isListed", isListed);
       formData.append("isPartOfBundle", isPartOfBundle);
@@ -32,9 +32,9 @@ const StudyMaterials = () => {
         formData.append("course", course);
       }
 
-      if (file) {
+      // if (file) {
         formData.append("file", file);
-      }
+      // }
 
       console.log("formData", formData);
 
@@ -57,9 +57,9 @@ const StudyMaterials = () => {
     }
 
   };
-  useEffect(() => {
-    // Fetch courses if needed
-  }, []);
+  // useEffect(() => {
+  //   // Fetch courses if needed
+  // }, []);
 
   return (
     <div className="flex flex-col justify-center items-center">
@@ -119,26 +119,27 @@ const StudyMaterials = () => {
               className='p-2 border border-yellow-25 rounded-md'
             />
           </div> */}
-    <div className='flex flex-row-reverse gap-10 m-10 items-center justify-center space-y-2'>
-  <label htmlFor='isListed' className='text-richblack-5'>Is Listed</label>
-  <input
-    id='isListed'
-    type='checkbox'
-    checked={isListed}
-    onChange={(e) => setIsListed(e.target.checked)}
-    className='p-2 border border-yellow-25 rounded-md'
-  />
-</div>
-<div className='flex flex-row-reverse gap-10 m-10 items-center justify-center space-y-2'>
-  <label htmlFor='isPartOfBundle' className='text-richblack-5'>Is Part of Bundle</label>
-  <input
-    id='isPartOfBundle'
-    type='checkbox'
-    checked={isPartOfBundle}
-    onChange={(e) => setIsPartOfBundle(e.target.checked)}
-    className='p-2 border border-yellow-25 rounded-md'
-  />
-</div>
+          <div className='flex flex-row-reverse gap-10 m-10 items-center justify-center space-y-2'>
+            <label htmlFor='isListed' className='text-richblack-5'>Is Listed</label>
+            <input
+              id='isListed'
+              type='checkbox'
+              checked={isListed}
+              onChange={(e) => setIsListed(e.target.checked)}
+              className='p-2 border border-yellow-25 rounded-md'
+            />
+          </div>
+          <div className='flex flex-row-reverse gap-10 m-10 items-center justify-center space-y-2'>
+            <label htmlFor='isPartOfBundle' className='text-richblack-5'>Is Part of Bundle</label>
+
+            <input
+              id='isPartOfBundle'
+              type='checkbox'
+              checked={isPartOfBundle}
+              onChange={(e) => setIsPartOfBundle(e.target.checked)}
+              className='p-2 border border-yellow-25 rounded-md'
+            />
+          </div>
           {isPaid && (
             <div className="flex flex-col space-y-2">
               <label className="text-richblack-5">Price</label>

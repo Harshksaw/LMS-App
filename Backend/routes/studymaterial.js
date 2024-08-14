@@ -6,11 +6,17 @@ const { capturePayment, verifyPayment, sendPaymentSuccessEmail } = require("../c
 const { uploadStudyMaterials,getAllStudyMaterials, getStudyMaterialById, buyStudyMaterial, getAllBoughtStudyMaterials, getAllBundleMaterial } = require("../controllers/CourseMaterials")
 const multer = require("multer");
 
-
+// const storage = multer.diskStorage({
+//   destination: './',
+//   filename: function(req, file, cb) {
+//     cb(null, file.originalname);
+//   }
+// });
 
 // Configure Multer storage
 
-  const upload = multer({ storage: multer.memoryStorage() });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 
 router.post("/uploadStudyMaterials",upload.single('file'),  uploadStudyMaterials)
