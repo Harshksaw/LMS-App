@@ -38,8 +38,8 @@ export default function TabsIndex() {
           </LinearGradient>
         </View>
       ) : (
-        <Redirect href={!user ? "/(routes)/onboarding" : "/(tabs)"} />
-        // <Redirect href={!user ? "/(routes)/onboarding" : "/(routes)/quiz/quiz.solution"} />
+        // <Redirect href={!user ? "/(routes)/onboarding" : "/(tabs)"} />
+        <Redirect href={!user ? "/(routes)/onboarding" : "/(routes)/quiz/quiz.result"} />
       )}
     </>
   );

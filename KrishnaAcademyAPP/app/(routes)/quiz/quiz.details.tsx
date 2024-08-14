@@ -394,10 +394,10 @@ export default function QuizScreen() {
         console.log('Attempt submitted successfully:', response.data._id);
 
         router.push({
-          // pathname: "/(routes)/quiz/quiz.result",
-          pathname: "/(routes)/quiz/quiz.solution",
+          pathname: "/(routes)/quiz/quiz.result",
+          // pathname: "/(routes)/quiz/quiz.solution",
           // params: { quizId: quizId },
-          params: { attemptId: response.data._id , questionData :JSON.stringify(questions)},
+          params: { attemptId: response.data._id },
         })
 
       } else {

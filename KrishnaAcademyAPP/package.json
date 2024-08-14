@@ -46,6 +46,7 @@
     "react-native-app-intro-slider": "^4.0.4",
     "react-native-countdown-circle-timer": "^3.2.1",
     "react-native-gesture-handler": "~2.16.1",
+    "react-native-gifted-charts": "^1.4.29",
     "react-native-modal": "^13.0.1",
     "react-native-pager-view": "6.3.0",
     "react-native-pdf": "^6.7.5",
