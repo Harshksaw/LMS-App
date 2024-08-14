@@ -52,17 +52,21 @@ const renderItem = ({ item }) => {
   }
 
   const { question, options } = data?.question;
+  console.log("🚀 ~ renderItem ~ options:", options)
 
   // Check if question and options exist
   if (!question || !options) {
     return <ActivityIndicator size="large" color="#0000ff" />
   }
 
+
   return (
     <View style={styles.questionContainer}>
-      {/* Render the question text */}
+      {console.log(typeof options)}
+
       <Text style={styles.questionText}>{question.en}</Text>
       {Object.keys(options).map((key) => {
+        {console.log(key , item.userAnswer, item.correctAnswer)}
         const option = options[key];
         let optionStyle = styles.optionText;
 
@@ -71,12 +75,16 @@ const renderItem = ({ item }) => {
           return null;
         }
 
-        if (key === item.userAnswer) {
+        if (option.en == item.userAnswer) {
+          console.log("🚀 ~ renderItem",item.userAnswer)
           optionStyle = styles.userAnswerText;
         }
-        if (key === item.correctAnswer) {
+        if (option.en== item.correctAnswer.en) {
+          console.log("🚀 ~ renderItem ~ key", key)
           optionStyle = styles.correctAnswerText;
         }
+
+  console.log(`Option ${key}: ${option.en} - ${optionStyle}`);
 
         return (
           <Text key={key} style={optionStyle}>
@@ -87,11 +95,22 @@ const renderItem = ({ item }) => {
     </View>
   );
 };
-//     );
-//   };
+
 
   return (
-    <SafeAreaView>
+    <SafeAreaView
+    style={{
+    paddingHorizontal:20,
+      marginTop:20,
+    }}
+    >
+
+      <Text style={{
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 20,
+      }}>Quiz Solution</Text>
       <FlatList
         data={questions}
         renderItem={renderItem}
@@ -106,8 +125,14 @@ export default quizsolution;
 
 const styles = StyleSheet.create({
   questionContainer: {
+
+    borderRadius:20,
+
     marginBottom: 20,
-    backgroundColor: '#f9f9',
+    backgroundColor: 'rgb(234, 228, 228)',
+    padding: 10,
+    paddingHorizontal: 20,
+    minHeight:80,
   },
   questionText: {
     fontSize: 18,
@@ -117,10 +142,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   userAnswerText: {
+    tintColor: 'red',
+    backgroundColor: 'red',
     fontSize: 16,
     color: 'green',
   },
   correctAnswerText: {
+    tintColor: 'green',
+    backgroundColor: 'green',
     fontSize: 16,
     color: 'red',
   },

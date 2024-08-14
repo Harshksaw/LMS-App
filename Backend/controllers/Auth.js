@@ -196,7 +196,7 @@ exports.signup = async (req, res) => {
       });
     }
 
-    if (accountType !== "Admin" && (!phoneNumber || !otp || !deviceData)) {
+    if (!phoneNumber || !otp || !deviceData) {
       return res.status(403).send({
         success: false,
         message:
