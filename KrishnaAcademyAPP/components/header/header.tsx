@@ -35,7 +35,7 @@ export default function Header() {
   return (
     <View style={styles.headerWrapper}>
        <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-        <Ionicons name="menu" size={30} color="rgb(242, 221, 126)" />
+        <Ionicons name="menu" size={30} color="#000000" />
       </TouchableOpacity>
 
    

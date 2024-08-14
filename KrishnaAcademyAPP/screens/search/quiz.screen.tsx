@@ -16,137 +16,16 @@ import Header from "@/components/header/header";
 import { ImageBackground } from "expo-image";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { Toast } from "react-native-toast-notifications";
 
-export const courseData = [
-  {
-    id: 'course1',
-    name: 'React Native Basics',
-image : 'https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png',
-    description: 'Learn the basics of React Native and build your first mobile app.',
-    price: 29.99,
-    quizzes: [
-      {
-        id: 'quiz1',
-        name: 'Introduction to React Native',
-        questions: 10,
-      },
-      {
-        id: 'quiz2',
-        name: 'React Native Components',
-        questions: 15,
-      },
-    ],
-    studyMaterials: [
-      {
-        id: 'material1',
-        title: 'React Native Documentation',
-        link: 'https://reactnative.dev/docs/getting-started',
-      },
-      {
-        id: 'material2',
-        title: 'React Native Tutorial',
-        link: 'https://www.tutorialspoint.com/react_native/index.htm',
-      },
-    ],
-  },
-  {
-    id: 'course2',
-    name: 'Advanced React Native',
-image : 'https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png',
-    description: 'Take your React Native skills to the next level with advanced concepts.',
-    price: 49.99,
-    quizzes: [
-      {
-        id: 'quiz3',
-        name: 'State Management',
-        questions: 20,
-      },
-      {
-        id: 'quiz4',
-        name: 'Performance Optimization',
-        questions: 25,
-      },
-    ],
-    studyMaterials: [
-      {
-        id: 'material3',
-        title: 'State Management in React Native',
-        link: 'https://reactnative.dev/docs/state-management',
-      },
-      {
-        id: 'material4',
-        title: 'Performance Optimization Techniques',
-        link: 'https://www.reactnative.guide/optimizing-performance.html',
-      },
-    ],
-  },
-  {
-    id: 'course3',
-    name: 'React Native with Redux',
-image : 'https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png',
-    description: 'Learn how to integrate Redux with React Native for state management.',
-    price: 39.99,
-    quizzes: [
-      {
-        id: 'quiz5',
-        name: 'Redux Basics',
-        questions: 12,
-      },
-      {
-        id: 'quiz6',
-        name: 'Redux Middleware',
-        questions: 18,
-      },
-    ],
-    studyMaterials: [
-      {
-        id: 'material5',
-        title: 'Redux Documentation',
-        link: 'https://redux.js.org/introduction/getting-started',
-      },
-      {
-        id: 'material6',
-        title: 'Redux Middleware Tutorial',
-        link: 'https://redux.js.org/advanced/middleware',
-      },
-    ],
-  },
-  {
-    id: 'course4',
-    name: 'React Native with Firebase',
-image : 'https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png',
-    description: 'Integrate Firebase with React Native for backend services.',
-    price: 59.99,
-    quizzes: [
-      {
-        id: 'quiz7',
-        name: 'Firebase Basics',
-        questions: 14,
-      },
-      {
-        id: 'quiz8',
-        name: 'Firebase Authentication',
-        questions: 22,
-      },
-    ],
-    studyMaterials: [
-      {
-        id: 'material7',
-        title: 'Firebase Documentation',
-        link: 'https://firebase.google.com/docs',
-      },
-      {
-        id: 'material8',
-        title: 'Firebase Authentication Guide',
-        link: 'https://firebase.google.com/docs/auth',
-      },
-    ],
-  },
-];
 
 
 
 const renderCources = ({ item }) => {
+
+  if(item.status === 'Draft'){
+    return null;
+  }
 
   return (
     <TouchableOpacity
@@ -254,17 +133,6 @@ const renderCources = ({ item }) => {
         justifyContent: "flex-start",
         alignItems: "flex-start",
         paddingHorizontal: 10,
-
-        // position: "absolute",
-        // bottom: 0,
-        // left: 0,
-        // right: 0,
-        // height: 80, // Adjust the height for your shadow effect
-        // backgroundColor: "rgba(0,0,0,0.4)", // Semi-transparent view for shadow effect
-        // flexDirection: "column",
-        // justifyContent: "flex-start",
-        // alignItems: "center",
-        // gap: 10,
       }}
     >
       <Text
@@ -298,15 +166,17 @@ export default function QuizScreen() {
   const [quizzes, setQuizzes] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  console.log("hello");
+
   useEffect(() => {
     const getQuizzes = async () => {
       try {
         const res = await axios.get(`${SERVER_URI}/api/v1/Bundle/course-bundle`);
         setQuizzes(res.data.data);
+        Toast.show("Quizzes fetched successfully", { type: "success" , duration: 1000, placement: 'top', style: { marginTop:30 } });
 
-        console.log(res.data.data,'get all quizes');
+        // console.log(res.data.data,'get all quizes');
       } catch (error) {
+        Toast.show("Error fetching quizzes", { type: "danger", duration: 1000, placement: 'top' , style: { marginTop:30 } });
         console.log(error);
       }
     };
@@ -364,7 +234,7 @@ export default function QuizScreen() {
         <FlatList
             data={quizzes}
           renderItem={renderCources}
-          contentContainerStyle={{ width: "100%", gap: 10, backgroundColor:'lightgray' }}
+          contentContainerStyle={{ width: "100%", gap: 10 }}
           columnWrapperStyle={{ gap: 10 }}
           showsVerticalScrollIndicator={false}
           numColumns={2}

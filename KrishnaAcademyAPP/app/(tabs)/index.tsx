@@ -47,7 +47,10 @@ const CustomDrawerContent = (props) => {
 
   const navigation = useNavigation();
   return (
-<DrawerContentScrollView {...props}>
+<DrawerContentScrollView {...props}
+
+
+>
       {/* User Info Section */}
       <UserInfoContent />
       {/* <DrawerItemList {...props} /> */}
@@ -61,7 +64,7 @@ const CustomDrawerContent = (props) => {
           onPress={() => router.navigate("/(routes)/my-account/daily.updates")}
           icon={({ focused, size }) => (
             <Ionicons
-              name="bookmark"
+              name="notifications"
               size={size}
               color={focused ? "blue" : "black"}
             />
@@ -85,7 +88,7 @@ const CustomDrawerContent = (props) => {
           onPress={() => router.navigate("/(routes)/quiz/quiz.attempts")}
           icon={({ focused, size }) => (
             <Ionicons
-              name="bookmark"
+              name="book"
               size={size}
               color={focused ? "blue" : "black"}
             />
@@ -232,13 +235,12 @@ export default function index() {
   const Drawer = createDrawerNavigator();
 
   return (
-    // <Drawer.Navigator
-    //   drawerContent={(props) => <CustomDrawerContent {...props} />}
-    // >
+  
     <Drawer.Navigator
+    
     initialRouteName="Home" // Start with UserInfo screen
     drawerContent={(props) => <CustomDrawerContent {...props} />}
-    drawerPosition="top" // Place the drawer content at the top
+
   >
       <Drawer.Screen name="UserInfo" component={UserInfoContent}
 
@@ -270,38 +272,8 @@ export default function index() {
 
 );
 }
-{/* Navigation Items Section */}
-{/* <View style={styles.navigationItems}>
-  <DrawerItemList {...props} />
-</View> */}
-      
-    //   <Drawer.Group
-    //     screenOptions={{
-    //       headerShown: false,
-    //     }}
-    //   >
-    //     <Drawer.Screen
-    //       name="Profile"
-    //       // children={
-    //       //   () => <HomeScreen />
-    //       // }
-    //       component={HomeScreen}
-    //       options={{
-    //         headerShown: false,
 
-    //         title: "Home",
 
-    //         drawerIcon: ({ focused, size }) => (
-    //           <Ionicons
-    //             name="back"
-    //             size={size}
-    //             color={focused ? "blue" : "black"}
-    //           />
-    //         ),
-    //       }}
-    //     />
-    //   </Drawer.Group>
-    // </Drawer.Navigator>
 
 const styles = StyleSheet.create({
   section: {
