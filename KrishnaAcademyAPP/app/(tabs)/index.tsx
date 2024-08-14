@@ -18,6 +18,7 @@ import useUser from "@/hooks/auth/useUser";
 import { router, useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import CoursesScreen from "@/screens/courses/courses.screen";
 
 
 const UserInfoContent = () => {
@@ -25,7 +26,7 @@ const UserInfoContent = () => {
 
   return (
     <TouchableOpacity style={styles.userInfoWrapper}
-    onPress={() => router.navigate("/(routes)/my-account/my-profile")}
+      onPress={() => router.navigate("/(routes)/my-account/my-profile")}
     >
       <Image
         source={{
@@ -47,15 +48,15 @@ const CustomDrawerContent = (props) => {
 
   const navigation = useNavigation();
   return (
-<DrawerContentScrollView {...props}
+    <DrawerContentScrollView {...props}
 
 
->
+    >
       {/* User Info Section */}
       <UserInfoContent />
-      {/* <DrawerItemList {...props} /> */}
 
-     
+
+
       <View style={styles.section}>
         <Text style={styles.heading}>My Accounts</Text>
 
@@ -199,19 +200,19 @@ const CustomDrawerContent = (props) => {
           />
         </View>
       </View>
-      <View style={[styles.section,{
+      <View style={[styles.section, {
         marginBottom: 20,
-      }] }>
-        {/* <Text style={styles.heading}>Account</Text> */}
+      }]}>
+
         <DrawerItem
           label="Logout"
           onPress={() => {
-             () => {
-               AsyncStorage.removeItem("token");
+            () => {
+              AsyncStorage.removeItem("token");
               AsyncStorage.removeItem("refresh_token");
               router.push("/(routes)/login",
 
-                  
+
               );
 
             };
@@ -222,7 +223,7 @@ const CustomDrawerContent = (props) => {
               name="log-out"
               size={size}
               color={focused ? "blue" : "black"}
-              
+
             />
           )}
         />
@@ -235,13 +236,14 @@ export default function index() {
   const Drawer = createDrawerNavigator();
 
   return (
-  
-    <Drawer.Navigator
-    
-    initialRouteName="Home" // Start with UserInfo screen
-    drawerContent={(props) => <CustomDrawerContent {...props} />}
 
-  >
+    <Drawer.Navigator
+
+
+      initialRouteName="Home" // Start with UserInfo screen
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+
+    >
       <Drawer.Screen name="UserInfo" component={UserInfoContent}
 
         options={
@@ -249,9 +251,9 @@ export default function index() {
             headerShown: false,
           }
         }
-       />
+      />
 
-    <Drawer.Screen
+      <Drawer.Screen
         name="Home"
 
         component={HomeScreen} // Assuming you still want the Home screen
@@ -261,16 +263,19 @@ export default function index() {
 
           drawerIcon: ({ focused, size }) => (
             <Ionicons
-            name="home" // Use appropriate icon for Home
-            size={size}
-            color={focused ? "blue" : "black"}
+              name="home" // Use appropriate icon for Home
+              size={size}
+              color={focused ? "blue" : "black"}
             />
           ),
         }}
-        />
-        </Drawer.Navigator>
+      />
 
-);
+
+
+    </Drawer.Navigator>
+
+  );
 }
 
 

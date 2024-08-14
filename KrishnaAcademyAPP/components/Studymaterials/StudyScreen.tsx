@@ -106,6 +106,16 @@ const StudyMaterialsScreen: React.FC = () => {
     openPdfModal(item.fileUrl);
   };
 
+
+
+  if(studyMaterials.length === 0){
+    return (
+      <View style={styles.centered}>
+        <Text>NO Study materials found</Text>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   if (loading) {
     return (
       <View style={styles.centered}>
