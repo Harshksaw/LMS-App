@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { SERVER_URI } from '@/utils/uri';
@@ -9,6 +9,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const quizsolution = () => {
   const [userSelections, setUserSelections] = useState<any[]>([]);
   const [correctAnswers, setCorrectAnswers] = useState<any[]>([]);
+
+  const [quizData, setQuizData] = useState<any>([]);
 
   const [questions, setQuestions] = useState<any[]>([]);
   const route = useRoute();
@@ -24,7 +26,7 @@ const quizsolution = () => {
         const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAttemptQuiz/${attemptId}` );
         const data = response.data
         console.log("🚀 ~ fetchAttempts ~ data:", data.data.questions)
-        // console.log(JSON.parse(questionData), 'questionData')
+
         setQuestions(data.data.questions);
         setUserSelections(data.data.questions.map(q => q.userAnswer));
         setCorrectAnswers(data.data.questions.map(q => q.correctAnswer));
@@ -37,39 +39,56 @@ const quizsolution = () => {
   }, [attemptId]);
 
 
+
+
+const renderItem = ({ item }) => {
+
+  // const data = JSON.stringify(item)
+  const data = item
+  console.log("🚀 ~ quizsolution ~ data:", data)
+  // Check if item and item.question exist
+  if (!data || !data.question) {
+    return <ActivityIndicator size="large" color="#0000ff" />
+  }
+
+  const { question, options } = data?.question;
+
+  // Check if question and options exist
+  if (!question || !options) {
+    return <ActivityIndicator size="large" color="#0000ff" />
+  }
+
   return (
-<ActivityIndicator size="large" color="#0000ff" />
-  )
-  const renderItem = ({ item, index }) => {
-    console.log(correctAnswers, 'correctAnswers');
-    // console.log(quizDetails, 'questionData.options');
-    const questionData = quizDetails.find(q => q._id === item.question);
-    console.log("🚀 ~ renderItem ~ questionData:", questionData)
-    
-    return (
-      <View key={item._id} style={{ marginBottom: 20 }}>
-      {/* <Text>Question: {questionData.question.en}</Text> */}
-      {Object.entries(questionData.options).map(([key, option]) => {
-        console.log(key, option, 'key, option', correctAnswers[index]);
-        let textColor = 'black';
-        let background = 'white';
-        if (key === correctAnswers[index]) {
-          textColor = 'green', background = 'lightgreen';
-        } else if (key === userSelections[index]) {
-          textColor = 'red', background = 'red';
+    <View style={styles.questionContainer}>
+      {/* Render the question text */}
+      <Text style={styles.questionText}>{question.en}</Text>
+      {Object.keys(options).map((key) => {
+        const option = options[key];
+        let optionStyle = styles.optionText;
+
+        // Check if option exists
+        if (!option) {
+          return null;
         }
-    
+
+        if (key === item.userAnswer) {
+          optionStyle = styles.userAnswerText;
+        }
+        if (key === item.correctAnswer) {
+          optionStyle = styles.correctAnswerText;
+        }
+
         return (
-          <Text key={key} style={{ color: textColor,backgroundColor:background  }}>
-            {option.en} 
-            {key === userSelections[index] && ' (Your Answer)'} 
-            {key === correctAnswers[index] && ' (Correct Answer)'}
+          <Text key={key} style={optionStyle}>
+            {option.en}
           </Text>
         );
       })}
     </View>
-    );
-  };
+  );
+};
+//     );
+//   };
 
   return (
     <SafeAreaView>
@@ -84,3 +103,25 @@ const quizsolution = () => {
 
 
 export default quizsolution;
+
+const styles = StyleSheet.create({
+  questionContainer: {
+    marginBottom: 20,
+    backgroundColor: '#f9f9',
+  },
+  questionText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  optionText: {
+    fontSize: 16,
+  },
+  userAnswerText: {
+    fontSize: 16,
+    color: 'green',
+  },
+  correctAnswerText: {
+    fontSize: 16,
+    color: 'red',
+  },
+});
