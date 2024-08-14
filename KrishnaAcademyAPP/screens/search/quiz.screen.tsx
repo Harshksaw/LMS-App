@@ -173,7 +173,7 @@ export default function QuizScreen() {
       try {
         const res = await axios.get(`${SERVER_URI}/api/v1/Bundle/course-bundle`);
         setQuizzes(res.data.data);
-        Toast.show("Quizzes fetched successfully", { type: "success" , duration: 1000, placement: 'top', style: { marginTop:30 } });
+
 
         // console.log(res.data.data,'get all quizes');
       } catch (error) {
