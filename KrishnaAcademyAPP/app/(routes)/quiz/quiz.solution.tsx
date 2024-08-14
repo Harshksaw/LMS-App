@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { SERVER_URI } from '@/utils/uri';
@@ -10,12 +10,14 @@ const quizsolution = () => {
   const [userSelections, setUserSelections] = useState<any[]>([]);
   const [correctAnswers, setCorrectAnswers] = useState<any[]>([]);
 
+  const [quizData, setQuizData] = useState<any>([]);
+
   const [questions, setQuestions] = useState<any[]>([]);
   const route = useRoute();
-  const { attemptId, questionData } = route.params;
+  const { attemptId } = route.params;
   console.log("🚀 ~ quizsolution ~ attemptId:", attemptId)
 
-  const quizDetails = JSON.parse(questionData)
+  // const quizDetails = JSON.parse(questionData)
 
   useEffect(() => {
 
@@ -23,8 +25,8 @@ const quizsolution = () => {
       try {
         const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAttemptQuiz/${attemptId}` );
         const data = response.data
-        console.log("🚀 ~ fetchAttempts ~ data:", data.data)
-        console.log(JSON.parse(questionData), 'questionData')
+        console.log("🚀 ~ fetchAttempts ~ data:", data.data.questions)
+
         setQuestions(data.data.questions);
         setUserSelections(data.data.questions.map(q => q.userAnswer));
         setCorrectAnswers(data.data.questions.map(q => q.correctAnswer));
@@ -37,42 +39,78 @@ const quizsolution = () => {
   }, [attemptId]);
 
 
-//   return (
-// <ActivityIndicator size="large" color="#0000ff" />
-//   )
-  const renderItem = ({ item, index }) => {
-    console.log(correctAnswers, 'correctAnswers');
-    console.log(quizDetails, 'questionData.options');
-    const questionData = quizDetails.find(q => q._id === item.question);
-    console.log("🚀 ~ renderItem ~ questionData:", questionData)
-    
-    return (
-      <View key={item._id} style={{ marginBottom: 20 }}>
-      <Text>Question: {questionData.question.en}</Text>
-      {Object.entries(questionData.options).map(([key, option]) => {
-        console.log(key, option, 'key, option', correctAnswers[index]);
-        let textColor = 'black';
-        let background = 'white';
-        if (key === correctAnswers[index]) {
-          textColor = 'green', background = 'lightgreen';
-        } else if (key === userSelections[index]) {
-          textColor = 'red', background = 'red';
+
+
+const renderItem = ({ item }) => {
+
+  // const data = JSON.stringify(item)
+  const data = item
+  console.log("🚀 ~ quizsolution ~ data:", data)
+  // Check if item and item.question exist
+  if (!data || !data.question) {
+    return <ActivityIndicator size="large" color="#0000ff" />
+  }
+
+  const { question, options } = data?.question;
+  console.log("🚀 ~ renderItem ~ options:", options)
+
+  // Check if question and options exist
+  if (!question || !options) {
+    return <ActivityIndicator size="large" color="#0000ff" />
+  }
+
+
+  return (
+    <View style={styles.questionContainer}>
+      {console.log(typeof options)}
+
+      <Text style={styles.questionText}>{question.en}</Text>
+      {Object.keys(options).map((key) => {
+        {console.log(key , item.userAnswer, item.correctAnswer)}
+        const option = options[key];
+        let optionStyle = styles.optionText;
+
+        // Check if option exists
+        if (!option) {
+          return null;
         }
-    
+
+        if (option.en == item.userAnswer) {
+          console.log("🚀 ~ renderItem",item.userAnswer)
+          optionStyle = styles.userAnswerText;
+        }
+        if (option.en== item.correctAnswer.en) {
+          console.log("🚀 ~ renderItem ~ key", key)
+          optionStyle = styles.correctAnswerText;
+        }
+
+  console.log(`Option ${key}: ${option.en} - ${optionStyle}`);
+
         return (
-          <Text key={key} style={{ color: textColor,backgroundColor:background  }}>
-            {option.en} 
-            {key === userSelections[index] && ' (Your Answer)'} 
-            {key === correctAnswers[index] && ' (Correct Answer)'}
+          <Text key={key} style={optionStyle}>
+            {option.en}
           </Text>
         );
       })}
     </View>
-    );
-  };
+  );
+};
+
 
   return (
-    <SafeAreaView>
+    <SafeAreaView
+    style={{
+    paddingHorizontal:20,
+      marginTop:20,
+    }}
+    >
+
+      <Text style={{
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 20,
+      }}>Quiz Solution</Text>
       <FlatList
         data={questions}
         renderItem={renderItem}
@@ -84,3 +122,35 @@ const quizsolution = () => {
 
 
 export default quizsolution;
+
+const styles = StyleSheet.create({
+  questionContainer: {
+
+    borderRadius:20,
+
+    marginBottom: 20,
+    backgroundColor: 'rgb(234, 228, 228)',
+    padding: 10,
+    paddingHorizontal: 20,
+    minHeight:80,
+  },
+  questionText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  optionText: {
+    fontSize: 16,
+  },
+  userAnswerText: {
+    tintColor: 'red',
+    backgroundColor: 'red',
+    fontSize: 16,
+    color: 'green',
+  },
+  correctAnswerText: {
+    tintColor: 'green',
+    backgroundColor: 'green',
+    fontSize: 16,
+    color: 'red',
+  },
+});
