@@ -53,7 +53,7 @@ const CustomDrawerContent = (props) => {
 >
       {/* User Info Section */}
       <UserInfoContent />
-      {/* <DrawerItemList {...props} /> */}
+
 
      
       <View style={styles.section}>
@@ -202,7 +202,7 @@ const CustomDrawerContent = (props) => {
       <View style={[styles.section,{
         marginBottom: 20,
       }] }>
-        {/* <Text style={styles.heading}>Account</Text> */}
+
         <DrawerItem
           label="Logout"
           onPress={() => {
@@ -237,6 +237,7 @@ export default function index() {
   return (
   
     <Drawer.Navigator
+    
     
     initialRouteName="Home" // Start with UserInfo screen
     drawerContent={(props) => <CustomDrawerContent {...props} />}

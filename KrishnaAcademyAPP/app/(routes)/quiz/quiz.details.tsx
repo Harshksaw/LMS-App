@@ -634,8 +634,8 @@ export default function QuizScreen() {
               flex: 1,
               // backgroundColor:'red',
               flexDirection: "column",
-              justifyContent: "space-between",
-              paddingBottom: 15,
+              // justifyContent: "space-between",
+              // paddingBottom: 15,
             }}
           >
 
@@ -664,16 +664,19 @@ export default function QuizScreen() {
               </Text>
             </ScrollView>
 
-            <View
+            <ScrollView
               style={{
+                // position: "absolute",
+                // bottom: 0,
+                flex: 1,
 
-                flexDirection: "column",
-                justifyContent: "space-between",
+                // flexDirection: "column",
+                // justifyContent: "space-between",
               }}
             >
 
 
-              <View style={{ alignItems: "center", marginTop: 12, padding: 12, }}>
+              <View style={{  marginTop: 12,marginBottom:30,paddingBottom:30, padding: 12,minHeight:200 }}>
                 {currentOptions.map((option, index) => (
                   <TouchableOpacity
                     style={{
@@ -730,6 +733,10 @@ export default function QuizScreen() {
 
               <View
                 style={{
+                // position: "absolute",
+                // bottom: 0,
+                marginTop: 12,
+                marginBottom  :20,
                   // flex: 1, justifyContent: 'flex-end', marginTop: 50
                 }}
               >
@@ -776,6 +783,7 @@ export default function QuizScreen() {
                   <View
                     style={{
                       marginTop: 12,
+                      width: "100%",
                       flexDirection: "row",
                       alignItems: "center",
                       justifyContent: "space-between",
@@ -828,7 +836,7 @@ export default function QuizScreen() {
                   </View>
                 )}
               </View>
-            </View>
+            </ScrollView>
 
 
 

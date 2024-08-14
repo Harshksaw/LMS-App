@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   FlatList,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 
 import { useEffect, useState } from "react";
@@ -192,7 +193,20 @@ export default function QuizScreen() {
     }, 2000);
   }, []);
 
+  if(quizzes.length === 0){
+    return <ActivityIndicator size="large" color="rgb(224, 21, 21)"
+    style={{
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      // backgroundColor:'red'
+    }}
+    />
+  }
+
   return (
+
+
     <View
       style={{
         flex: 1,
@@ -219,18 +233,7 @@ export default function QuizScreen() {
           // height: "100%",
         }}
       >
-        {/* <FlatList
-          data={quizzes}
-          renderItem={renderItem}
-          contentContainerStyle={{ width: "100%", gap: 10,  }}
-          columnWrapperStyle={{ gap: 10 }}
-          showsVerticalScrollIndicator={false}
-          numColumns={2}
-          keyExtractor={(item) => item._id}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        /> */}
+   
         <FlatList
             data={quizzes}
           renderItem={renderCources}

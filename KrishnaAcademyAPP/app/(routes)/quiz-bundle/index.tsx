@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { courseData } from "@/screens/search/quiz.screen";
+
 
 import QuizCard from "@/components/quiz/quiz.bundlecard";
 import StudyMaterialCard from "@/components/quiz/studymaterial";
@@ -49,7 +49,7 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function index() {
 
-  const [BundleData, setBundleData] = React.useState(courseData[0]);
+  const [BundleData, setBundleData] = React.useState([]);
   
   const route = useRoute();
   const { BundleId } = route.params;
