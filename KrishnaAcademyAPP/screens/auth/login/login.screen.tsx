@@ -41,8 +41,9 @@ export default function LoginScreen() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [buttonSpinner, setButtonSpinner] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    phoneNumber: 7991168445,
-    password: "Password123*",
+    // phoneNumber: 7991168445,
+    phoneNumber: 7991168442,
+    password: "Programmer1*",
   });
   const [required, setRequired] = useState("");
   const [error, setError] = useState({

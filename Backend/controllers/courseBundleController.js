@@ -165,7 +165,7 @@ const dateObject = new Date(req.body.date);
 
   exports.getCourseBundle = async(req, res) => {
     try {
-      const bundles = await Bundle.find().sort({created:-1})
+      const bundles = await Bundle.find({status:'Published'}).sort({created:-1})
       // const bundles = await Bundle.find({status:"Published"}).sort({created:-1}).populate('quizes').populate('studyMaterials');
       res.status(200).json({
         success:true,

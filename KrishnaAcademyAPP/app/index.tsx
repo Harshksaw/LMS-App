@@ -39,6 +39,7 @@ export default function TabsIndex() {
         </View>
       ) : (
         <Redirect href={!user ? "/(routes)/onboarding" : "/(tabs)"} />
+        // <Redirect href={!user ? "/(routes)/onboarding" : "/(routes)/quiz/quiz.solution"} />
       )}
     </>
   );
