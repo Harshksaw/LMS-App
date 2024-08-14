@@ -31,12 +31,13 @@ const uploadFile = async (file) => {
 };
 
 exports.uploadStudyMaterials = async (req, res) => {
-  const { title, description, course, isPaid, price, isListed, isPartOfBundle } = req.body;
+  const { title, description, course, price, isListed, isPartOfBundle } = req.body;
   const file = req.file; // Assuming you're using multer for file uploads
 
   try {
 
     const fileUrl = await uploadFile(file);
+    console.log("🚀 ~ exports.uploadStudyMaterials= ~ fileUrl:", fileUrl)
 
     // Upload file to S3 and get the CloudFront URL
     const fileType = file.mimetype;
@@ -48,7 +49,7 @@ exports.uploadStudyMaterials = async (req, res) => {
       fileType,
       fileUrl,
       course,
-      isPaid, price,
+       price,
       isListed,
       isPartOfBundle,
     });

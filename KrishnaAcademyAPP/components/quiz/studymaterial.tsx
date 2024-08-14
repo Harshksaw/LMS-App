@@ -6,9 +6,7 @@ const StudyMaterialCard = ({ studyMaterials }) => {
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Study Materials</Text>
-      {/* {studyMaterials.map((material) => ( */}
-        {/* <View key={material.id} style={styles.item}> */}
-       {/* <View style={styles.container}> */}
+   
      
     
 
