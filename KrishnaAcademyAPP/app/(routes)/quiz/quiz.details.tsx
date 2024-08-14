@@ -305,8 +305,7 @@ export default function QuizScreen() {
 
 
   const handleMenuPress = () => {
-    setIsOpen((prev) => !prev);
-    Animated.timing(translateX, {
+    setIsOpen((prev) => !prev);    Animated.timing(translateX, {
       toValue: isOpen ? 0 : 280,
       duration: 300,
       useNativeDriver: true,

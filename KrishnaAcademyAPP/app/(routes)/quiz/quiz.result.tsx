@@ -34,11 +34,22 @@ const calculateTotals = (data) => {
   const incorrectAnswers = data.filter(item => !item.isCorrect && !item.unanswered).length;
   const unansweredQuestions = data.filter(item => item.unanswered).length;
 
+  
+  const arrayOfObjects = [
+    { color: 'red', title: 'total', alpha: totalQuestions },
+    { color: 'blue', title: 'correct', alpha: correctAnswers },
+    { color: 'green', title: 'incorrect', alpha: incorrectAnswers},
+    { color: 'green', title: 'unanswered', alpha: unansweredQuestions},
+    // { color: 'yellow', title: 'Lemon', alpha: 'd' },
+    // { color: 'orange', title: 'Orange', alpha: 'e' },
+    // { color: 'purple', title: 'Plum', alpha: 'f' }
+  ];
   return {
     totalQuestions,
     correctAnswers,
     incorrectAnswers,
     unansweredQuestions,
+    arrayOfObjects
   };
 };
 
@@ -71,7 +82,7 @@ export default function quizresult() {
 
   }, []);
 
-  const { correctAnswers, incorrectAnswers, unansweredQuestions } = calculateTotals(questions);
+  const { correctAnswers, incorrectAnswers, unansweredQuestions, arrayOfObjects } = calculateTotals(questions);
   console.log("🚀 ~ quizresult ~ unansweredQuestions:", unansweredQuestions)
   
   const pieData = [
