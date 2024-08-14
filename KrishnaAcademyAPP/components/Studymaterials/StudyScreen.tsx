@@ -11,16 +11,11 @@ import {
 import axios from "axios";
 import { SERVER_URI } from "@/utils/uri";
 
-import {
-  AntDesign,
-  FontAwesome,
-  Ionicons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+
 import { router, useNavigation } from "expo-router";
-import PDFViewerModal from "../app/(routes)/pdfviewer";
+// import PDFViewerModal from "../app/(routes)/pdfviewer";
 import { Image } from "expo-image";
-import PaymentComponent from "../Payment/PaymentComponent";
+
 // import PaymentComponent from "./Payment/PaymentComponent";
 
 interface StudyMaterial {
@@ -36,7 +31,7 @@ const StudyMaterialsScreen: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedPdfUri, setSelectedPdfUri] = useState("");
-  const [paymentStatus, setPaymentStatus] = useState<boolean | null>(false);
+  // const [paymentStatus, setPaymentStatus] = useState<boolean | null>(false);
   const [studyMaterials, setStudyMaterials] = useState([]);
   const [pdfUri, setPdfUri] = useState("");
 
@@ -87,12 +82,9 @@ const StudyMaterialsScreen: React.FC = () => {
     // console.log("open========", item) ;
     setModalVisible(true);
     // console.log(item, "item.description");
-    if (paymentStatus) {
+
       openPdfModal();
-      console.log("Payment Success-----1051");
-    } else {
-      console.log("Payment required to open material");
-    }
+
   };
 
   const onCloseMaterial = async () => {
@@ -100,11 +92,11 @@ const StudyMaterialsScreen: React.FC = () => {
     setModalVisible(false);
   };
 
-  const onPaymentSuccess = async (item) => {
-    console.log("Payment Success-----105");
-    setPaymentStatus(true);
-    openPdfModal(item.fileUrl);
-  };
+  // const onPaymentSuccess = async (item) => {
+  //   console.log("Payment Success-----105");
+  //   setPaymentStatus(true);
+  //   openPdfModal(item.fileUrl);
+  // };
 
 
 
@@ -142,15 +134,7 @@ const StudyMaterialsScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-        <PaymentComponent
-          isVisible={isModalVisible}
-          onClose={onCloseMaterial}
-          onPaymentSuccess={() => onPaymentSuccess(selectedPdfUri)}
-          itemType="Study Material"
-          itemPrice="100"
-          handlePayment={() => console.log("Payment done")}
-          handleClose={closePdfModal}
-        />
+     
     
 
       <FlatList

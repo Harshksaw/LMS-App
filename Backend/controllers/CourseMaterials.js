@@ -80,7 +80,7 @@ console.log(file)
 
 exports.getAllStudyMaterials = async (req, res) => {
   try {
-    const studyMaterials = await StudyMaterial.find({ isPartOfBundle: false });
+    const studyMaterials = await StudyMaterial.find({ isListed:true });
     if (studyMaterials.length === 0) {
       return res.status(200).json({
         success: false,
