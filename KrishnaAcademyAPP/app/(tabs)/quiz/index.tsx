@@ -182,11 +182,6 @@ const renderCources = ({ item }) => {
             name="image-outline"
             size={140}
             color="red"
-            style={
-              {
-                // marginVertical: 10,
-              }
-            }
           />
         )}
       </View>

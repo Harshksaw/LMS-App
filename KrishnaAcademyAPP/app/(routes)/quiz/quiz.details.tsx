@@ -186,6 +186,7 @@ export default function QuizScreen() {
   const [quizDetails, setQuizDetails] = React.useState<any>(null);
 
   const [count, setCount] = useState<number>(0);
+  const [answered, setAnswered] = useState<number>([]);
 
 
 
@@ -270,11 +271,12 @@ export default function QuizScreen() {
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
 
 
-  const toggleColor = (index: number | null) => {
+  const toggleColor = (index: number | null, count: number) => {
     const optionsArray = Object.values(questions[count]?.options);
     console.log(optionsArray[index][language], "----l", index);
     if (index === null) return;
     setSelectedBox(index);
+    setAnswered((prev) => [...prev, count]);
     console.log(optionsArray[index][language], "----l");
     setUserAnswer(optionsArray[index][language]);
      setUserAnswers(prevAnswers => [...prevAnswers, optionsArray[index][language]]);
@@ -483,7 +485,14 @@ export default function QuizScreen() {
     numColumns={4} // 5 columns per row
     renderItem={({item, index}) => (
       <TouchableOpacity style={styles.menuItem} onPress={() => setCount(index)}>
-        <View style={{width: 40, height: 40, borderRadius: 20, backgroundColor: '#ccc', justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          backgroundColor: answered.includes(index) ? '#66CC00' : '#ccc', // conditional color
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
           <Text>{index + 1}</Text>
         </View>
       </TouchableOpacity>
@@ -751,7 +760,7 @@ export default function QuizScreen() {
                       width: "100%",
                     }}
                     key={index}
-                    onPress={() => toggleColor(index)}
+                    onPress={() => toggleColor(index, count)}
                   >
                     <Text
                       style={{
