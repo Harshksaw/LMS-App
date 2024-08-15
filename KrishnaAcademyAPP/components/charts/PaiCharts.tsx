@@ -85,7 +85,7 @@ const pieDsata = [
 const styles = StyleSheet.create({
   container: {
     // paddingVertical: 100,
-    backgroundColor: '#fff',
+    backgroundColor: '#f3f3f3',
     // flex: 1,
   },
   chartContainer: {

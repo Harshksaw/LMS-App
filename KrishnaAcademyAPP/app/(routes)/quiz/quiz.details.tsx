@@ -490,23 +490,28 @@ export default function QuizScreen() {
     transform: [{ translateX: visible ? 0 : Dimensions.get('window').width * 0.7 }],
   }}>
 
-<View style={{width: 260, height:"85%", backgroundColor: 'white', alignSelf: 'flex-end', marginTop:100, padding: 12, marginRight:-16}}>
-  <Text style={{marginTop: 4, marginBottom: 4, fontSize: 16}}>X</Text>
-  <View style={{gap:8 , alignItems: 'center'}}>
-    <View>
-      <View style={{backgroundColor: '#66CC00', height: 12, width: 12}} />
+<View style={{width: 260, height:"88%", backgroundColor: 'white', alignSelf: 'flex-end', marginTop:100, padding: 12, marginRight:-16}}>
+  <Text style={{marginTop: 4, marginBottom: 4, fontSize: 16, position: 'absolute', right:16, top:12}}>X</Text>
+  <View style={{gap:8 , alignItems: 'flex-start', marginHorizontal: 16, marginTop: 16, marginBottom: 8}}>
+    <View style={{gap:8, flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{backgroundColor: '#66cc00', height: 12, width: 12, borderRadius: 40}}  />
       <Text>answered</Text>
     </View>
-    <View>
-      <View style={{backgroundColor: '#ccc', height: 12, width: 12}} />
+    <View style={{gap:8, flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{backgroundColor: '#ccc', height: 12, width: 12, borderRadius: 40}} />
       <Text>unAnswered</Text>
     </View>
   </View>
   <FlatList
+  showsVerticalScrollIndicator={false}
     data={questions}
     numColumns={4} // 5 columns per row
     renderItem={({item, index}) => (
-      <TouchableOpacity style={styles.menuItem} onPress={() => setCount(index)}>
+      <TouchableOpacity style={styles.menuItem} onPress={() => {
+        setCount(index)
+        setVisible(false)
+      }}>
+        
         <View style={{
           width: 40,
           height: 40,

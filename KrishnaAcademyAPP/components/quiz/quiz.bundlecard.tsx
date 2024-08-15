@@ -72,13 +72,13 @@ const QuizBundleCard = ({ quizzes }) => {
             style={styles.quizImage}
           />
           <View style={styles.quizInfo}>
+            <View style={{gap:4, }}>
             <Text style={styles.itemTitle}>{quiz.name}</Text>
             <Text
               style={{
                 fontSize: 14,
                 color: "#666",
                 // width: '100%',
-                height: 50,
 
                 overflow: "hidden",
                 textAlign: "justify",
@@ -87,8 +87,11 @@ const QuizBundleCard = ({ quizzes }) => {
               {" "}
             {quiz.shortDescription.slice(0,25)}
             </Text>
+            </View>
+          
             <View
               style={{
+                marginTop: 8,
                 flexDirection: "row",
                 justifyContent: "space-evenly",
                 alignItems: "center",
@@ -155,7 +158,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 20,
     height: "95%",
 
     marginVertical: 10,
