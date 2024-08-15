@@ -1,7 +1,7 @@
 import { SERVER_URI } from "@/utils/uri";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
 import {
   useFonts,
   Raleway_700Bold,
@@ -19,50 +19,7 @@ import CourseCard from "@/components/cards/course.card";
 import Header from "@/components/header/header";
 import React from "react";
 import CourseList from "@/components/Course/CourseList";
-const sampleItem = [
-  {
-    id: 1,
-    name: "React Native Course",
-    banner: {
-      url: "https://example.com/banner1.jpg",
-    },
-    chapters: [
-      { title: "Introduction" },
-      { title: "Getting Started" },
-      { title: "Components" },
-    ],
-    time: 10,
-    price: 0,
-  },
-  {
-    id: 2,
-    name: "Advanced React Native",
-    banner: {
-      url: "https://example.com/banner2.jpg",
-    },
-    chapters: [
-      { title: "Advanced Components" },
-      { title: "State Management" },
-      { title: "Performance Optimization" },
-    ],
-    time: 15,
-    price: 50,
-  },
-  {
-    id: 3,
-    name: "React Native with Redux",
-    banner: {
-      url: "https://example.com/banner3.jpg",
-    },
-    chapters: [
-      { title: "Introduction to Redux" },
-      { title: "Redux with React Native" },
-      { title: "Advanced Redux" },
-    ],
-    time: 12,
-    price: 30,
-  },
-];
+
 export default function CoursesScreen() {
   const [courses, setCourses] = useState<CoursesType[]>([]);
   const [originalCourses, setOriginalCourses] = useState<CoursesType[]>([]);
@@ -71,31 +28,7 @@ export default function CoursesScreen() {
   const [activeCategory, setactiveCategory] = useState("All");
   const [forceHideLoader, setForceHideLoader] = useState(false);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`${SERVER_URI}/get-layout/Categories`)
-  //     .then((res) => {
-  //       setcategories(res.data.layout.categories);
-  //       fetchCourses();
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
 
-  // const fetchCourses = () => {
-  //   axios
-  //     .get(`${SERVER_URI}/get-courses`)
-  //     .then((res: any) => {
-  //       setCourses(res.data.courses);
-  //       setOriginalCourses(res.data.courses);
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       setLoading(false);
-  //       console.log(error);
-  //     });
-  // };
 
   let [fontsLoaded, fontError] = useFonts({
     Raleway_700Bold,
@@ -134,7 +67,11 @@ export default function CoursesScreen() {
         //   style={{ paddingTop: 40, height: "100%" }}
         // >
 
+        
         <View>
+           <View style={styles.overlay}>
+        <Text style={styles.comingSoonText}>Coming Soon</Text>
+      </View>
           <View style={{ padding: 0 }}>
             {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <TouchableOpacity
@@ -207,3 +144,24 @@ export default function CoursesScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 13,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Transparent gray background
+  },
+  comingSoonText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    fontVariant: ['small-caps'],
+
+    color: 'white',
+  },
+});

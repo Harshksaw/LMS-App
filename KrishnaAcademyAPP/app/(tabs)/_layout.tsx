@@ -84,10 +84,10 @@ export default function TabsLayout() {
               title = "Study Materials";
             } else if (route.name === "quiz/index") {
               iconName = require("@/assets/icons/puzzle-piece.png");
-              title = "Courses";
+              title = "Quiz";
             } else if (route.name === "courses/index") {
               iconName = require("@/assets/icons/more.png");
-              title = "Quiz";
+              title = "Courses";
             } else if (route.name === "profile/index") {
               iconName = require("@/assets/icons/User.png");
               title = "Profile";

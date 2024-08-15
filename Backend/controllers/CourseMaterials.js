@@ -4,14 +4,20 @@ const StudyMaterial = require("../models/material"); // Import the StudyMaterial
 
 require("dotenv").config();
 
-const AWS = require("aws-sdk");
+
 const { v4: uuidv4 } = require("uuid");
 const { adminId } = require("../utils/env");
 const Attempt = require("../models/Attempt");
+const AWS = require('aws-sdk');
 
+AWS.config.update({
+  accessKeyId: process.env.AWS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+  region: 'ap-south-1'
+});
 
 const s3 = new AWS.S3();
-const cloudFrontUrl = process.env.CLOUDFRONT_URL;
+const cloudFrontUrl = "https://d33zqdivlk1hm.cloudfront.net";
 
 const uploadFile = async (file) => {
 
@@ -19,7 +25,7 @@ const uploadFile = async (file) => {
 
   const fileKey = `${uuidv4()}-${file.originalname}`;
   const params = {
-    Bucket: process.env.S3_BUCKET_NAME,
+    Bucket: "harshexpolms",
     Key: fileKey,
     Body: file.buffer,
     ContentType: file.mimetype,
@@ -31,12 +37,13 @@ const uploadFile = async (file) => {
 };
 
 exports.uploadStudyMaterials = async (req, res) => {
-  const { title, description, course, isPaid, price, isListed, isPartOfBundle } = req.body;
+  const { title, description, price, isListed, isPartOfBundle } = req.body;
   const file = req.file; // Assuming you're using multer for file uploads
-
+console.log(file)
   try {
 
     const fileUrl = await uploadFile(file);
+    console.log("🚀 ~ exports.uploadStudyMaterials= ~ fileUrl:", fileUrl)
 
     // Upload file to S3 and get the CloudFront URL
     const fileType = file.mimetype;
@@ -47,8 +54,7 @@ exports.uploadStudyMaterials = async (req, res) => {
       description,
       fileType,
       fileUrl,
-      course,
-      isPaid, price,
+       price,
       isListed,
       isPartOfBundle,
     });
@@ -74,7 +80,7 @@ exports.uploadStudyMaterials = async (req, res) => {
 
 exports.getAllStudyMaterials = async (req, res) => {
   try {
-    const studyMaterials = await StudyMaterial.find({ isPartOfBundle: false });
+    const studyMaterials = await StudyMaterial.find({ isListed:true });
     if (studyMaterials.length === 0) {
       return res.status(200).json({
         success: false,
@@ -367,3 +373,4 @@ exports.getAllAttempById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 }
+

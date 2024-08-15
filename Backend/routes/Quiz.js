@@ -54,6 +54,8 @@ router.delete("/deleteQuestion/:id", deleteQuestionById)
 
 router.get("/getAllisBundleMaterials", getIsBundledMaterials)
 
+router.get("/getUserQuizzes/:id",)
+
 
 
 router.post("/attempt-quiz", attemptQuiz)

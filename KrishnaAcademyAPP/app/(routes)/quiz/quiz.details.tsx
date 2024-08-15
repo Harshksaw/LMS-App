@@ -305,8 +305,7 @@ export default function QuizScreen() {
 
 
   const handleMenuPress = () => {
-    setIsOpen((prev) => !prev);
-    Animated.timing(translateX, {
+    setIsOpen((prev) => !prev);    Animated.timing(translateX, {
       toValue: isOpen ? 0 : 280,
       duration: 300,
       useNativeDriver: true,
@@ -394,10 +393,10 @@ export default function QuizScreen() {
         console.log('Attempt submitted successfully:', response.data._id);
 
         router.push({
-          // pathname: "/(routes)/quiz/quiz.result",
-          pathname: "/(routes)/quiz/quiz.solution",
+          pathname: "/(routes)/quiz/quiz.result",
+          // pathname: "/(routes)/quiz/quiz.solution",
           // params: { quizId: quizId },
-          params: { attemptId: response.data._id , questionData :JSON.stringify(questions)},
+          params: { attemptId: response.data._id },
         })
 
       } else {

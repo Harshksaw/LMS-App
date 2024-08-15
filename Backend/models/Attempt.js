@@ -46,9 +46,13 @@ const attemptSchema = new mongoose.Schema({
             },
         }
     ],
+    highestPercentage: {
+        type: Number,
+        default: 0,
+    },
 }, { timestamps: true });
-
 attemptSchema.pre('save', function(next) {
+    let correctAnswers = 0;
     this.questions.forEach(question => {
         if (!question.userAnswer) {
             question.unanswered = true;
@@ -57,7 +61,18 @@ attemptSchema.pre('save', function(next) {
             question.unanswered = false;
             question.isCorrect = question.userAnswer === question.correctAnswer;
         }
+        if (question.isCorrect) {
+            correctAnswers++;
+        }
     });
+
+    const totalQuestions = this.questions.length;
+    const currentPercentage = ((correctAnswers / totalQuestions) * 100).toFixed(2);
+
+    if (currentPercentage > this.highestPercentage) {
+        this.highestPercentage = currentPercentage;
+    }
+
     next();
 });
 

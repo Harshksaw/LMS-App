@@ -52,6 +52,9 @@ exports.sendotp = async (req, res) => {
     const otpPayload = { phoneNumber, otp };
     //creating... an entry in Database for OTP
     const otpBody = await OTP.create(otpPayload);
+
+    //TODO
+    await sendOTP(otp, phoneNumber);
     console.log("otpBODY -> ", otpBody);
 
     //sending...final response
