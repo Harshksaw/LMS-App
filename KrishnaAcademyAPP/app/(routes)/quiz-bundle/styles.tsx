@@ -5,9 +5,30 @@ import { Dimensions, StyleSheet } from "react-native";
 const { height, width } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
+    // container: {
+    //   flex: 1,
+    //   backgroundColor: "lightred",
+    // },
     container: {
       flex: 1,
-      backgroundColor: "lightred",
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    noVideoContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    noVideoImage: {
+      width: 400,
+      height: 300,
+      marginBottom: 10,
+    },
+    noVideoText: {
+      fontSize: 25,
+
+      color: 'black',
+      fontFamily: 'Roboto',
+      fontWeight: 'bold',
     },
     drawerContainer: {
       flexDirection: "row",

@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { courseData } from "@/screens/search/quiz.screen";
+
 
 import QuizCard from "@/components/quiz/quiz.bundlecard";
 import StudyMaterialCard from "@/components/quiz/studymaterial";
@@ -45,16 +45,40 @@ const ContentsScreen = ({data}) => (
   </ScrollView>
   )
 
+  const VideoScreen = ({data}) => {
+    const [videodata, setvideoData] = React.useState([]);
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      {videodata.length === 0 ? (
+          <View style={styles.noVideoContainer}>
+          <Image
+            source={{ uri: 'https://unbridledwealth.com/wp-content/uploads/2017/08/video-placeholder.jpg' }} // Replace with your image URL
+            style={styles.noVideoImage}
+          />
+          <Text style={styles.noVideoText}>No video available</Text>
+        </View>
+      ) : (
+        // Render your video content here
+        <View>
+          {/* Replace this with your actual video rendering logic */}
+          <Text>Video Content</Text>
+        </View>
+      )}
+    </View>
+
+    )
+  }
+
 const Tab = createMaterialTopTabNavigator();
 
 export default function index() {
 
-  const [BundleData, setBundleData] = React.useState(courseData[0]);
+  const [BundleData, setBundleData] = React.useState([]);
   
   const route = useRoute();
   const { BundleId } = route.params;
 
-  console.log("🚀 ~ index ~ BundleId:", BundleId)
+  // console.log("🚀 ~ index ~ BundleId:", BundleId)
 
 
   const fetchBundleData = async () => {
@@ -93,7 +117,7 @@ export default function index() {
 
     });
   };
-  console.log("🚀 ~ index ~ BundleData:", BundleData)
+  // console.log("🚀 ~ index ~ BundleData:", BundleData)
   
   return (
     <SafeAreaView
@@ -146,13 +170,13 @@ export default function index() {
             },
           }}
         >
-          <Tab.Screen name="About"  component={() => <InfoScreen data={BundleData} />}  />
+          <Tab.Screen name="Overview"  component={() => <InfoScreen data={BundleData} />}  />
           <Tab.Screen name="Content" component={() => <ContentsScreen  data={BundleData}/>} />
+          <Tab.Screen name="Video" component={() => <VideoScreen data={[]}  />} />
         </Tab.Navigator>
         <Button title="Enroll Now" onPress={onPress }/>
       </View>
     </SafeAreaView>
   );
 }
-
 

@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
     courses:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:"Course",
+            ref:"Bundle",
         }
     ],
     quizes:[
@@ -40,6 +40,12 @@ const userSchema = new mongoose.Schema({
         {
             type:mongoose.Schema.Types.ObjectId,
             ref:"StudyMaterial",
+        }
+    ],
+    questions:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Questions",
         }
     ],
     image:{

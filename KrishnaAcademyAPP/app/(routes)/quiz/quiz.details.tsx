@@ -4,7 +4,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Animated,
+  StyleSheet,
   Modal,
+  Dimensions,
+  FlatList,
   ActivityIndicator,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -18,7 +21,7 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomLoader from "@/components/CustomLoader";
+
 import { Toast } from "react-native-toast-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -183,6 +186,7 @@ export default function QuizScreen() {
   const [quizDetails, setQuizDetails] = React.useState<any>(null);
 
   const [count, setCount] = useState<number>(0);
+  const [answered, setAnswered] = useState<number>([]);
 
 
 
@@ -198,7 +202,15 @@ export default function QuizScreen() {
   const [isOpen, setIsOpen] = useState(false);
   const translateX = useRef(new Animated.Value(280)).current;
   const [timeUp, setTimeUp] = useState(false);
+  const [visible, setVisible] = useState(false);
 
+  const handleMenuPress = () => {
+    setVisible(true);
+  };
+
+  const handleClose = () => {
+    setVisible(false);
+  };
   const toggleLanguage = () => {
     setLanguage(language === "en" ? "hin" : "en");
   };
@@ -225,7 +237,6 @@ export default function QuizScreen() {
 
 
         setQuestions(quizData.questions);
-
         setLoading(false);
       } catch (error) {
         console.log(error)
@@ -260,11 +271,12 @@ export default function QuizScreen() {
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
 
 
-  const toggleColor = (index: number | null) => {
+  const toggleColor = (index: number | null, count: number) => {
     const optionsArray = Object.values(questions[count]?.options);
     console.log(optionsArray[index][language], "----l", index);
     if (index === null) return;
     setSelectedBox(index);
+    setAnswered((prev) => [...prev, count]);
     console.log(optionsArray[index][language], "----l");
     setUserAnswer(optionsArray[index][language]);
      setUserAnswers(prevAnswers => [...prevAnswers, optionsArray[index][language]]);
@@ -304,19 +316,34 @@ export default function QuizScreen() {
 
 
 
-  const handleMenuPress = () => {
-    setIsOpen((prev) => !prev);
-    Animated.timing(translateX, {
-      toValue: isOpen ? 0 : 280,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
+  // const handleMenuPress = () => {
+  //   setIsOpen((prev) => !prev);    Animated.timing(translateX, {
+  //     toValue: isOpen ? 0 : 280,
+  //     duration: 300,
+  //     useNativeDriver: true,
+  //   }).start();
+  // };
+
+
 
 
   const handleSaveQuestion = async () => {
     try {
-      Toast.show("Saving question");
+      const isUser = await AsyncStorage.getItem("user");
+      const user = JSON.parse(isUser);
+      console.log("🚀 ~ QuizScreen ~ user", questions[count]._id)
+
+      const res = await axios.post(`${SERVER_URI}/api/v1/quiz/saveUserQuestion`,{
+        userId : user._id , questionId : questions[count]._id
+      })
+      if(res.status === 201){
+
+        Toast.show("Saving question");
+      }else{
+        Toast.show("Error saving question");
+      }
+
+
     } catch (error) {
       Toast.show("Error saving question");
     }
@@ -394,10 +421,10 @@ export default function QuizScreen() {
         console.log('Attempt submitted successfully:', response.data._id);
 
         router.push({
-          // pathname: "/(routes)/quiz/quiz.result",
-          pathname: "/(routes)/quiz/quiz.solution",
+          pathname: "/(routes)/quiz/quiz.result",
+          // pathname: "/(routes)/quiz/quiz.solution",
           // params: { quizId: quizId },
-          params: { attemptId: response.data._id , questionData :JSON.stringify(questions)},
+          params: { attemptId: response.data._id },
         })
 
       } else {
@@ -426,6 +453,67 @@ export default function QuizScreen() {
         padding: 12,
       }}
     >
+
+
+
+
+     {/* TODO: exclude white view to close the modal Modal  */}
+        {visible && (
+        <Modal
+          transparent={true}
+          onRequestClose={handleClose}
+        >
+          <TouchableOpacity
+            style={styles.overlay}
+            onPress={handleClose}
+          >
+            <View style={{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'transparent',
+    padding: 20,
+    transform: [{ translateX: visible ? 0 : Dimensions.get('window').width * 0.7 }],
+  }}>
+
+<View style={{width: 260, height:"85%", backgroundColor: 'white', alignSelf: 'flex-end', marginTop:100, padding: 12, marginRight:-16}}>
+  <Text style={{marginTop: 4, marginBottom: 4, fontSize: 16}}>X</Text>
+  <View style={{gap:8 , alignItems: 'center'}}>
+    <View>
+      <View style={{backgroundColor: '#66CC00', height: 12, width: 12}} />
+      <Text>answered</Text>
+    </View>
+    <View>
+      <View style={{backgroundColor: '#ccc', height: 12, width: 12}} />
+      <Text>unAnswered</Text>
+    </View>
+  </View>
+  <FlatList
+    data={questions}
+    numColumns={4} // 5 columns per row
+    renderItem={({item, index}) => (
+      <TouchableOpacity style={styles.menuItem} onPress={() => setCount(index)}>
+        <View style={{
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          backgroundColor: answered.includes(index) ? '#66CC00' : '#ccc', // conditional color
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <Text>{index + 1}</Text>
+        </View>
+      </TouchableOpacity>
+    )}
+    keyExtractor={(item, index) => index.toString()}
+  />
+</View>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      )}
       <View
         style={{
           //  backgroundColor:'red',
@@ -562,23 +650,11 @@ export default function QuizScreen() {
                 //   transform: [{ translateX }],
                 // }}
                 >
-                  <TouchableOpacity onPress={handleMenuPress}>
-                    <Ionicons
-                      style={{
-                        alignSelf: "center",
-                        // position: "absolute",
-                        // left: -60,
-                        backgroundColor: "#e2e2e2",
-                        padding: 4,
-                      }}
-                      name="menu"
-                      size={24}
-                      color={"black"}
-                      zIndex={999}
-                    />
-                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.button} onPress={handleMenuPress}>
+        <Ionicons name="menu" size={24} color="black" />
+      </TouchableOpacity>
 
-                  {/* <View><Text>dddd</Text></View> */}
+
                 </Animated.View>
                 <TouchableOpacity onPress={handleSaveQuestion}>
                   <MaterialCommunityIcons
@@ -634,8 +710,8 @@ export default function QuizScreen() {
               flex: 1,
               // backgroundColor:'red',
               flexDirection: "column",
-              justifyContent: "space-between",
-              paddingBottom: 15,
+              // justifyContent: "space-between",
+              // paddingBottom: 15,
             }}
           >
 
@@ -664,16 +740,19 @@ export default function QuizScreen() {
               </Text>
             </ScrollView>
 
-            <View
+            <ScrollView
               style={{
+                // position: "absolute",
+                // bottom: 0,
+                flex: 1,
 
-                flexDirection: "column",
-                justifyContent: "space-between",
+                // flexDirection: "column",
+                // justifyContent: "space-between",
               }}
             >
 
 
-              <View style={{ alignItems: "center", marginTop: 12, padding: 12, }}>
+              <View style={{  marginTop: 12,marginBottom:30,paddingBottom:30, padding: 12,minHeight:200 }}>
                 {currentOptions.map((option, index) => (
                   <TouchableOpacity
                     style={{
@@ -691,7 +770,7 @@ export default function QuizScreen() {
                       width: "100%",
                     }}
                     key={index}
-                    onPress={() => toggleColor(index)}
+                    onPress={() => toggleColor(index, count)}
                   >
                     <Text
                       style={{
@@ -730,6 +809,10 @@ export default function QuizScreen() {
 
               <View
                 style={{
+                // position: "absolute",
+                // bottom: 0,
+                marginTop: 12,
+                marginBottom  :20,
                   // flex: 1, justifyContent: 'flex-end', marginTop: 50
                 }}
               >
@@ -776,6 +859,7 @@ export default function QuizScreen() {
                   <View
                     style={{
                       marginTop: 12,
+                      width: "100%",
                       flexDirection: "row",
                       alignItems: "center",
                       justifyContent: "space-between",
@@ -828,7 +912,7 @@ export default function QuizScreen() {
                   </View>
                 )}
               </View>
-            </View>
+            </ScrollView>
 
 
 
@@ -1010,3 +1094,32 @@ export default function QuizScreen() {
     </SafeAreaView>
   );
 }
+const styles = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  // menuContainer: {
+  //   position: 'absolute',
+  //   top: 0,
+  //   left: 0,
+  //   right: 0,
+  //   bottom: 0,
+  //   backgroundColor: 'white',
+  //   padding: 20,
+  //   transform: [{ translateX: visible ? 0 : Dimensions.get('window').width * 0.7 }],
+  // },
+  menu: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+});

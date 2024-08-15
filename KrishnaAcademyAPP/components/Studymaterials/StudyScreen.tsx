@@ -11,16 +11,11 @@ import {
 import axios from "axios";
 import { SERVER_URI } from "@/utils/uri";
 
-import {
-  AntDesign,
-  FontAwesome,
-  Ionicons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+
 import { router, useNavigation } from "expo-router";
-import PDFViewerModal from "../app/(routes)/pdfviewer";
+// import PDFViewerModal from "../app/(routes)/pdfviewer";
 import { Image } from "expo-image";
-import PaymentComponent from "../Payment/PaymentComponent";
+
 // import PaymentComponent from "./Payment/PaymentComponent";
 
 interface StudyMaterial {
@@ -36,7 +31,7 @@ const StudyMaterialsScreen: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedPdfUri, setSelectedPdfUri] = useState("");
-  const [paymentStatus, setPaymentStatus] = useState<boolean | null>(false);
+  // const [paymentStatus, setPaymentStatus] = useState<boolean | null>(false);
   const [studyMaterials, setStudyMaterials] = useState([]);
   const [pdfUri, setPdfUri] = useState("");
 
@@ -87,12 +82,9 @@ const StudyMaterialsScreen: React.FC = () => {
     // console.log("open========", item) ;
     setModalVisible(true);
     // console.log(item, "item.description");
-    if (paymentStatus) {
+
       openPdfModal();
-      console.log("Payment Success-----1051");
-    } else {
-      console.log("Payment required to open material");
-    }
+
   };
 
   const onCloseMaterial = async () => {
@@ -100,12 +92,22 @@ const StudyMaterialsScreen: React.FC = () => {
     setModalVisible(false);
   };
 
-  const onPaymentSuccess = async (item) => {
-    console.log("Payment Success-----105");
-    setPaymentStatus(true);
-    openPdfModal(item.fileUrl);
-  };
+  // const onPaymentSuccess = async (item) => {
+  //   console.log("Payment Success-----105");
+  //   setPaymentStatus(true);
+  //   openPdfModal(item.fileUrl);
+  // };
 
+
+
+  if(studyMaterials.length === 0){
+    return (
+      <View style={styles.centered}>
+        <Text>NO Study materials found</Text>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   if (loading) {
     return (
       <View style={styles.centered}>
@@ -132,15 +134,7 @@ const StudyMaterialsScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-        <PaymentComponent
-          isVisible={isModalVisible}
-          onClose={onCloseMaterial}
-          onPaymentSuccess={() => onPaymentSuccess(selectedPdfUri)}
-          itemType="Study Material"
-          itemPrice="100"
-          handlePayment={() => console.log("Payment done")}
-          handleClose={closePdfModal}
-        />
+     
     
 
       <FlatList
@@ -148,59 +142,83 @@ const StudyMaterialsScreen: React.FC = () => {
         numColumns={2}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.item}
-            // onPress={()=>{console.log(item.fileUrl, "item.description")}}
-
-            // onPress={() => router.push({
-            //   pathname: '(routes)/pdfviewer',
-            //   params: { pdfUri: item.fileUrl },
-            // })}
-
-            onPress={() => {
-              console.log(item.fileUrl, "item-----");
-              setPdfUri(item.fileUrl);
-              handleOpenMaterial();
-            }}
+          <TouchableOpacity style={styles.item}
+              onPress={() => router.push({
+              pathname: '(routes)/pdfviewer',
+              params: { pdfUri: item.fileUrl },
+            })}
           >
-            <Text
-              style={{
-                position: "absolute",
-                top: 12,
-                left:12,
-                backgroundColor: "#2DC43E",
-                color: "white",
-                padding: 2,
-                borderRadius: 3,
-              }}
-            >
-              {item?.isPaid ? item?.price : "free"}
-            </Text>
-            <View
-              style={{
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 5,
-                marginTop: 24,
-                height: 'auto',
-              }}
-            >
-              <Image
-                style={{
-                  width: "100%",
-                  height: "80%",
-                  borderRadius: 5,
-                  alignSelf: "center",
-                  objectFit: "cover",
-                }}
-                source={{
-                  uri: "https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png",
-                }}
-              />
-
-              <Text style={styles.title}>{item.title}</Text>
+          <Image
+            style={{
+              width: '80%',
+              height: '80%',
+              borderRadius: 5,
+              alignSelf: "center",
+              objectFit: "cover",
+            }}
+            source={{ uri: 'https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png' }}
+          />
+          <View style={{ alignContent: 'flex-start' }}>
+            <View style={{ justifyContent: "space-between", flexDirection: 'row' }}>
+              <Text style={{ fontSize: 14, fontWeight: "bold" }}>{item.title}</Text>
+              <Text style={{ fontSize: 14, fontWeight: "bold", paddingHorizontal: 8, textAlign: 'center', borderWidth: 2, borderRadius: 12 }}>
+                {item.isPaid ? "paid" : 'free'}
+              </Text>
             </View>
-          </TouchableOpacity>
+
+          </View>
+        </TouchableOpacity>
+          // <TouchableOpacity
+          //   style={styles.item}
+          //   // onPress={()=>{console.log(item.fileUrl, "item.description")}}
+
+          //   // onPress={() => router.push({
+          //   //   pathname: '(routes)/pdfviewer',
+          //   //   params: { pdfUri: item.fileUrl },
+          //   // })}
+
+          //   onPress={() => {
+          //     console.log(item.fileUrl, "item-----");
+          //     setPdfUri(item.fileUrl);
+          //     handleOpenMaterial();
+          //   }}
+          // >
+          //   <Text
+          //     style={{
+          //       position: "absolute",
+          //       top: 12,
+          //       left:12,
+          //       backgroundColor: "#2DC43E",
+          //       color: "white",
+          //       padding: 2,
+          //       borderRadius: 3,
+          //     }}
+          //   >
+          //     {item?.isPaid ? item?.price : "free"}
+          //   </Text>
+          //   <View
+          //     style={{
+          //       flexDirection: "column",
+          //       alignItems: "center",
+          //       gap: 5,
+          //       marginTop: 24,
+          //       height: 'auto',
+          //     }}
+          //   >
+          //       <Image
+          //           style={{
+          //             width: '80%',
+          //             height: '80%',
+          //             borderRadius: 5,
+          //             alignSelf: "center",
+          //             objectFit: "cover",
+          //           }}
+          //           source={{ uri: 'https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png' }}
+          //         />
+
+          //     <Text style={styles.title}>{item.title}</Text>
+          //   </View>
+          // </TouchableOpacity>
         )}
       />
     </View>
@@ -208,6 +226,29 @@ const StudyMaterialsScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+
+    containercard: {
+      // position: 'relative',
+      backgroundColor: "white",
+      marginBottom: 10,
+      padding: 12,
+  
+      // minWidth: "49%",
+      // maxWidth: "100%",
+      marginHorizontal: 0,
+      height: 200, // Ensure this is set to control the size
+
+      // justifyContent: "center",
+      borderRadius: 20,
+      overflow: "hidden", // Ensure the borderRadius effect applies to children
+      elevation: 4, // Adds shadow for Android
+      shadowColor: "#000000", // Shadow color for iOS
+      shadowOffset: { width: 0, height: 2 }, // Shadow direction and distance for iOS
+      shadowOpacity: 0.2, // Shadow opacity for iOS
+      shadowRadius: 3.84, // Shadow blur radius for iOS
+  
+    },
+
   container: {
     flex: 1,
     // padding: 10,
@@ -228,7 +269,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     margin: 10,
 
-    backgroundColor: "rgb(233, 221, 221)1)",
+    backgroundColor: "rgb(235, 229, 229)",
     borderRadius: 8,
   },
   title: {
@@ -244,32 +285,3 @@ const styles = StyleSheet.create({
 
 export default StudyMaterialsScreen;
 
-
-{/* <View
-style={{
-  flexDirection: "row",
-  justifyContent: "space-between",
-  alignItems: "center",
-  marginBottom: 16,
-}}
->
-
-
-<TouchableOpacity
-  onPress={() => {
-    setRefreshing(!refreshing);
-  }}
->
-  <Text style={styles.heading}>Study Materials</Text>
-</TouchableOpacity>
-<TouchableOpacity
-  onPress={() =>
-    router.push({
-      pathname: "(routes)/studymaterials",
-      params: { study: JSON.stringify(studyMaterials) },
-    })
-  }
->
-  <Ionicons name="arrow-forward" size={30} color="gray" />
-</TouchableOpacity>
-</View> */}

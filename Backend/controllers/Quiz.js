@@ -563,297 +563,67 @@ exports.deleteQuestionById = async (req, res) => {
 };
 
 
-// const req = {
-//   body: {
-//     name: "Sample Quiz",
-//     shortDescription: "This is a sample quiz description.",
-//     category: "General Knowledge",
-//     isPaid: false,
-//     price: 0,
-//     quizData: [
-//       {
-//         question: {
-//           en: "What is the capital of France?",
-//           hin: "फ्रांस की राजधानी क्या है?",
-//         },
-//         options: {
-//           optionA: {
-//             en: "Paris",
-//             hin: "पेरिस",
-//           },
-//           optionB: {
-//             en: "London",
-//             hin: "लंदन",
-//           },
-//           optionC: {
-//             en: "Berlin",
-//             hin: "बर्लिन",
-//           },
-//           optionD: {
-//             en: "Madrid",
-//             hin: "मैड्रिड",
-//           },
-//         },
-//         correctAnswer: {
-//           en: "Paris",
-//           hin: "पेरिस",
-//         },
-//       },
-//       {
-//         question: {
-//           en: "What is the largest planet in our solar system?",
-//           hin: "हमारे सौर मंडल का सबसे बड़ा ग्रह कौन सा है?",
-//         },
-//         options: {
-//           optionA: {
-//             en: "Earth",
-//             hin: "पृथ्वी",
-//           },
-//           optionB: {
-//             en: "Jupiter",
-//             hin: "बृहस्पति",
-//           },
-//           optionC: {
-//             en: "Saturn",
-//             hin: "शनि",
-//           },
-//           optionD: {
-//             en: "Mars",
-//             hin: "मंगल",
-//           },
-//         },
-//         correctAnswer: {
-//           en: "Jupiter",
-//           hin: "बृहस्पति",
-//         },
-//       },
-//       {
-//         question: {
-//           en: "Who wrote 'To Kill a Mockingbird'?",
-//           hin: "'टू किल अ मॉकिंगबर्ड' किसने लिखा?",
-//         },
-//         options: {
-//           optionA: {
-//             en: "Harper Lee",
-//             hin: "हार्पर ली",
-//           },
-//           optionB: {
-//             en: "Mark Twain",
-//             hin: "मार्क ट्वेन",
-//           },
-//           optionC: {
-//             en: "Ernest Hemingway",
-//             hin: "अर्नेस्ट हेमिंग्वे",
-//           },
-//           optionD: {
-//             en: "F. Scott Fitzgerald",
-//             hin: "एफ. स्कॉट फिट्जगेराल्ड",
-//           },
-//         },
-//         correctAnswer: {
-//           en: "Harper Lee",
-//           hin: "हार्पर ली",
-//         },
-//       },
-//       {
-//         question: {
-//           en: "What is the chemical symbol for water?",
-//           hin: "पानी का रासायनिक प्रतीक क्या है?",
-//         },
-//         options: {
-//           optionA: {
-//             en: "H2O",
-//             hin: "एच2ओ",
-//           },
-//           optionB: {
-//             en: "O2",
-//             hin: "ओ2",
-//           },
-//           optionC: {
-//             en: "CO2",
-//             hin: "सीओ2",
-//           },
-//           optionD: {
-//             en: "H2",
-//             hin: "एच2",
-//           },
-//         },
-//         correctAnswer: {
-//           en: "H2O",
-//           hin: "एच2ओ",
-//         },
-//       },
-//       {
-//         question: {
-//           en: "What is the speed of light?",
-//           hin: "प्रकाश की गति क्या है?",
-//         },
-//         options: {
-//           optionA: {
-//             en: "300,000 km/s",
-//             hin: "300,000 किमी/से",
-//           },
-//           optionB: {
-//             en: "150,000 km/s",
-//             hin: "150,000 किमी/से",
-//           },
-//           optionC: {
-//             en: "450,000 km/s",
-//             hin: "450,000 किमी/से",
-//           },
-//           optionD: {
-//             en: "600,000 km/s",
-//             hin: "600,000 किमी/से",
-//           },
-//         },
-//         correctAnswer: {
-//           en: "300,000 km/s",
-//           hin: "300,000 किमी/से",
-//         },
-//       },
-//       {
-//         question: {
-//           en: "Who painted the Mona Lisa?",
-//           hin: "मोना लिसा किसने चित्रित की?",
-//         },
-//         options: {
-//           optionA: {
-//             en: "Leonardo da Vinci",
-//             hin: "लियोनार्डो दा विंची",
-//           },
-//           optionB: {
-//             en: "Vincent van Gogh",
-//             hin: "विंसेंट वैन गॉग",
-//           },
-//           optionC: {
-//             en: "Pablo Picasso",
-//             hin: "पाब्लो पिकासो",
-//           },
-//           optionD: {
-//             en: "Claude Monet",
-//             hin: "क्लाउड मोनेट",
-//           },
-//         },
-//         correctAnswer: {
-//           en: "Leonardo da Vinci",
-//           hin: "लियोनार्डो दा विंची",
-//         },
-//       },
-//       {
-//         question: {
-//           en: "What is the smallest prime number?",
-//           hin: "सबसे छोटा अभाज्य संख्या कौन सी है?",
-//         },
-//         options: {
-//           optionA: {
-//             en: "1",
-//             hin: "1",
-//           },
-//           optionB: {
-//             en: "2",
-//             hin: "2",
-//           },
-//           optionC: {
-//             en: "3",
-//             hin: "3",
-//           },
-//           optionD: {
-//             en: "5",
-//             hin: "5",
-//           },
-//         },
-//         correctAnswer: {
-//           en: "2",
-//           hin: "2",
-//         },
-//       },
-//       {
-//         question: {
-//           en: "What is the capital of Japan?",
-//           hin: "जापान की राजधानी क्या है?",
-//         },
-//         options: {
-//           optionA: {
-//             en: "Tokyo",
-//             hin: "टोक्यो",
-//           },
-//           optionB: {
-//             en: "Kyoto",
-//             hin: "क्योटो",
-//           },
-//           optionC: {
-//             en: "Osaka",
-//             hin: "ओसाका",
-//           },
-//           optionD: {
-//             en: "Nagoya",
-//             hin: "नागोया",
-//           },
-//         },
-//         correctAnswer: {
-//           en: "Tokyo",
-//           hin: "टोक्यो",
-//         },
-//       },
-//       {
-//         question: {
-//           en: "What is the powerhouse of the cell?",
-//           hin: "कोशिका का पावरहाउस क्या है?",
-//         },
-//         options: {
-//           optionA: {
-//             en: "Nucleus",
-//             hin: "नाभिक",
-//           },
-//           optionB: {
-//             en: "Mitochondria",
-//             hin: "माइटोकॉन्ड्रिया",
-//           },
-//           optionC: {
-//             en: "Ribosome",
-//             hin: "राइबोसोम",
-//           },
-//           optionD: {
-//             en: "Golgi apparatus",
-//             hin: "गोल्जी तंत्र",
-//           },
-//         },
-//         correctAnswer: {
-//           en: "Mitochondria",
-//           hin: "माइटोकॉन्ड्रिया",
-//         },
-//       },
-//       {
-//         question: {
-//           en: "What is the boiling point of water?",
-//           hin: "पानी का क्वथनांक क्या है?",
-//         },
-//         options: {
-//           optionA: {
-//             en: "100°C",
-//             hin: "100°C",
-//           },
-//           optionB: {
-//             en: "0°C",
-//             hin: "0°C",
-//           },
-//           optionC: {
-//             en: "50°C",
-//             hin: "50°C",
-//           },
-//           optionD: {
-//             en: "150°C",
-//             hin: "150°C",
-//           },
-//         },
-//         correctAnswer: {
-//           en: "100°C",
-//           hin: "100°C",
-//         },
-//       },
-//     ],
-//   },
-//   file: {
-//     path: 'path/to/uploaded/image.jpg',
-//   },
-// };
+exports.addQuestionToUser = async (req, res) => {
+  try {
+    const { userId, questionId } = req.body;
+
+    if (!userId || !questionId) {
+      return res.status(400).json({ error: "User ID and question ID are required" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (!user.questions.includes(questionId)) {
+      user.questions.push(questionId);
+      await user.save();
+    }
+
+    res.status(201).json({ message: "Question bookmarked successfully", data: user });
+  } catch (error) {
+    console.error("Error bookmarking question:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Remove a question reference from the user's questions array
+exports.removeQuestionFromUser = async (req, res) => {
+  try {
+    const { userId, questionId } = req.body;
+
+    if (!userId || !questionId) {
+      return res.status(400).json({ error: "User ID and question ID are required" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    user.questions = user.questions.filter(q => q.toString() !== questionId);
+    await user.save();
+
+    res.status(200).json({ message: "Question removed from bookmarks successfully", data: user });
+  } catch (error) {
+    console.error("Error removing bookmarked question:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+exports.getAllSavedQuestions = async (req, res) => {
+  try {
+
+    const {id} = req.params;
+    const savedQuestions = await User.findById(id).populate('questions');
+    console.log("🚀 ~ exports.getAllSavedQuestions= ~ savedQuestions:", savedQuestions)
+
+    res.status(200).json({
+      message: 'Saved questions fetched successfully',
+      data: savedQuestions
+    });
+  } catch (error) {
+    console.error('Error fetching saved questions:', error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+};

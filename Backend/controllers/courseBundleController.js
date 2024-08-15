@@ -232,3 +232,32 @@ const dateObject = new Date(req.body.date);
       
     }
   }
+
+  exports.getUserQuizzes = async (req, res) => {  
+    try {
+      const { id } = req.params;
+      console.log("🚀 ~ exports.getUserQuizzes= ~ id:", id)
+  
+      const user = await User.findById(id).populate({
+        path: 'courses',
+        populate: {
+          path: 'quizes',
+          model: 'Quiz'
+        }
+      });
+      
+      let allQuizzes = [];
+      user.courses.forEach(course => {
+        allQuizzes = [...allQuizzes, ...course.quizes];
+      });
+      
+      console.log("🚀 ~ exports.getUserQuizzes= ~ allQuizzes:", allQuizzes)
+  
+      res.status(200).json({
+        success: true,
+        data: allQuizzes
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }

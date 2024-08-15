@@ -4,14 +4,20 @@ const StudyMaterial = require("../models/material"); // Import the StudyMaterial
 
 require("dotenv").config();
 
-const AWS = require("aws-sdk");
+
 const { v4: uuidv4 } = require("uuid");
 const { adminId } = require("../utils/env");
 const Attempt = require("../models/Attempt");
+const AWS = require('aws-sdk');
 
+AWS.config.update({
+  accessKeyId: process.env.AWS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+  region: 'ap-south-1'
+});
 
 const s3 = new AWS.S3();
-const cloudFrontUrl = process.env.CLOUDFRONT_URL;
+const cloudFrontUrl = "https://d33zqdivlk1hm.cloudfront.net";
 
 const uploadFile = async (file) => {
 
@@ -19,7 +25,7 @@ const uploadFile = async (file) => {
 
   const fileKey = `${uuidv4()}-${file.originalname}`;
   const params = {
-    Bucket: process.env.S3_BUCKET_NAME,
+    Bucket: "harshexpolms",
     Key: fileKey,
     Body: file.buffer,
     ContentType: file.mimetype,
@@ -31,12 +37,13 @@ const uploadFile = async (file) => {
 };
 
 exports.uploadStudyMaterials = async (req, res) => {
-  const { title, description, course, isPaid, price, isListed, isPartOfBundle } = req.body;
+  const { title, description, price, isListed, isPartOfBundle } = req.body;
   const file = req.file; // Assuming you're using multer for file uploads
-
+console.log(file)
   try {
 
     const fileUrl = await uploadFile(file);
+    console.log("🚀 ~ exports.uploadStudyMaterials= ~ fileUrl:", fileUrl)
 
     // Upload file to S3 and get the CloudFront URL
     const fileType = file.mimetype;
@@ -47,8 +54,7 @@ exports.uploadStudyMaterials = async (req, res) => {
       description,
       fileType,
       fileUrl,
-      course,
-      isPaid, price,
+       price,
       isListed,
       isPartOfBundle,
     });
@@ -74,7 +80,7 @@ exports.uploadStudyMaterials = async (req, res) => {
 
 exports.getAllStudyMaterials = async (req, res) => {
   try {
-    const studyMaterials = await StudyMaterial.find({ isPartOfBundle: false });
+    const studyMaterials = await StudyMaterial.find({ isListed:true });
     if (studyMaterials.length === 0) {
       return res.status(200).json({
         success: false,
@@ -367,3 +373,63 @@ exports.getAllAttempById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 }
+
+
+exports.updateLeaderboard = async (req, res) => {
+
+  try {
+    const { userId, quizId, newScore } = req.body;
+
+    // Find the user by userId
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send({ message: 'User not found' });
+    }
+
+    // Find the quiz result for the given quizId
+    let quizResult = user.quizResults.find(result => result.quiz.toString() === quizId);
+
+    if (quizResult) {
+      // If the new score is higher, update the score
+      if (newScore > quizResult.score) {
+        quizResult.score = newScore;
+        await user.save();
+
+        // Update the leaderboard
+        await Leaderboard.findOneAndUpdate(
+          { quiz: quizId, user: userId },
+          { score: newScore },
+          { upsert: true }
+        );
+      }
+    } else {
+      // If no quiz result exists, add a new quiz result
+      user.quizResults.push({ quiz: quizId, score: newScore });
+      await user.save();
+
+      // Create a new leaderboard entry
+      await Leaderboard.create({ quiz: quizId, user: userId, score: newScore });
+    }
+
+    res.status(200).send({ message: 'Leaderboard updated successfully' });
+  } catch (error) {
+    console.error('Error updating leaderboard:', error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
+}
+
+exports.getLeaderboard = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const leaderboard = await Leaderboard.find({ quiz: id }).sort({ score: -1 }).limit(10);
+
+    res.status(200).send({
+      success: true,
+      data: leaderboard
+    });
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
+};
