@@ -313,9 +313,25 @@ export default function QuizScreen() {
   };
 
 
+
+
   const handleSaveQuestion = async () => {
     try {
-      Toast.show("Saving question");
+      const isUser = await AsyncStorage.getItem("user");
+      const user = JSON.parse(isUser);
+      console.log("🚀 ~ QuizScreen ~ user", questions[count]._id)
+
+      const res = await axios.post(`${SERVER_URI}/api/v1/quiz/saveUserQuestion`,{
+        userId : user._id , questionId : questions[count]._id
+      })
+      if(res.status === 200){
+
+        Toast.show("Saving question");
+      }else{
+        Toast.show("Error saving question");
+      }
+
+
     } catch (error) {
       Toast.show("Error saving question");
     }
@@ -577,7 +593,7 @@ export default function QuizScreen() {
                     />
                   </TouchableOpacity>
 
-                  {/* <View><Text>dddd</Text></View> */}
+
                 </Animated.View>
                 <TouchableOpacity onPress={handleSaveQuestion}>
                   <MaterialCommunityIcons
