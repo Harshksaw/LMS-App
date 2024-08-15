@@ -191,6 +191,7 @@ export default function QuizScreen() {
 
 
   const [questions, setQuestions] = useState<any[]>([]);
+  const [savedQuestions, setSavedQuestions] = useState<any[]>([]);
 
   const [userScore, setUserScore] = useState<number>(0);
   const [userAnswer, setUserAnswer] = useState<string>("");
@@ -231,7 +232,7 @@ export default function QuizScreen() {
 
         const quizData = res?.data?.data;
         setQuizDetails(quizData);
-
+       
 
         setRemainingTime(quizData.timer);
 
@@ -248,7 +249,7 @@ export default function QuizScreen() {
     };
 
     getQuizDetails();
-  }, [quizId]);
+  }, [quizId,refreshing]);
   // console.log(questions, "questions --------------------")
 
   const handleSave = () => {
@@ -328,6 +329,7 @@ export default function QuizScreen() {
 
 
   const handleSaveQuestion = async () => {
+
     try {
       const isUser = await AsyncStorage.getItem("user");
       const user = JSON.parse(isUser);
@@ -338,7 +340,10 @@ export default function QuizScreen() {
       })
       if(res.status === 201){
 
-        Toast.show("Saving question");
+        
+        Toast.show("Saved question");
+        setSavedQuestions((prev) => [...prev,questions[count]._id ])
+        setRefreshing((prev) => !prev)
       }else{
         Toast.show("Error saving question");
       }
@@ -348,6 +353,8 @@ export default function QuizScreen() {
       Toast.show("Error saving question");
     }
   };
+  console.log(savedQuestions, 'saved questions')
+
 
   if (loading) {
     return <ActivityIndicator size="large" color="red" style={{
@@ -653,13 +660,11 @@ export default function QuizScreen() {
                   <TouchableOpacity style={styles.button} onPress={handleMenuPress}>
         <Ionicons name="menu" size={24} color="black" />
       </TouchableOpacity>
-
-
                 </Animated.View>
                 <TouchableOpacity onPress={handleSaveQuestion}>
                   <MaterialCommunityIcons
                     style={{ alignSelf: "center" }}
-                    name={false ? "bookmark" : "bookmark-outline"}
+                    name={ savedQuestions.includes(questions[count]._id ) ? "bookmark" : "bookmark-outline"}
                     size={35}
                     color="#d7f776"
                   />
@@ -716,10 +721,12 @@ export default function QuizScreen() {
           >
 
             <ScrollView
+            showsVerticalScrollIndicator={false}
               style={{
-
+                flex: 1,
+                // backgroundColor: 'pink',
                 minHeight: 250,
-                maxHeight: 250,
+                // maxHeight: 250,
               }}
             >
 
@@ -738,20 +745,10 @@ export default function QuizScreen() {
                 {String(currentQuestion).replace(/[\t]/g, "")}
                 {/* {console.log(      {String(currentQuestion).replace(/[\t]/g, " ")})} */}
               </Text>
-            </ScrollView>
-
-            <ScrollView
-              style={{
-                // position: "absolute",
-                // bottom: 0,
-                flex: 1,
-
-                // flexDirection: "column",
-                // justifyContent: "space-between",
-              }}
-            >
 
 
+
+{/* Questions */}
               <View style={{  marginTop: 12,marginBottom:30,paddingBottom:30, padding: 12,minHeight:200 }}>
                 {currentOptions.map((option, index) => (
                   <TouchableOpacity
@@ -777,6 +774,7 @@ export default function QuizScreen() {
                         fontWeight: "500",
                         fontSize: 16,
                         textAlign: "left",
+                        maxWidth: 280
                       }}
                     >
                       {option.value}
@@ -807,7 +805,15 @@ export default function QuizScreen() {
                 ))}
               </View>
 
-              <View
+
+
+
+
+
+{/* {button} */}
+            
+            </ScrollView>
+            <View
                 style={{
                 // position: "absolute",
                 // bottom: 0,
@@ -912,7 +918,21 @@ export default function QuizScreen() {
                   </View>
                 )}
               </View>
-            </ScrollView>
+
+            {/* <ScrollView
+              style={{
+                // position: "absolute",
+                // bottom: 0,
+                flex: 1,
+
+                // flexDirection: "column",
+                // justifyContent: "space-between",
+              }}
+            > */}
+
+
+            
+            {/* </ScrollView> */}
 
 
 
