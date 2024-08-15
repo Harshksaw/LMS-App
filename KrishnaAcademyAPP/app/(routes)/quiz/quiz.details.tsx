@@ -209,6 +209,7 @@ export default function QuizScreen() {
   const translateX = useRef(new Animated.Value(280)).current;
   const [timeUp, setTimeUp] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [remainderTime ,setRemainderTime] = useState(0)
 
   const handleMenuPress = () => {
     setVisible(true);
@@ -553,7 +554,7 @@ export default function QuizScreen() {
             }}
           >
             <CountdownCircleTimer
-              isPlaying
+              isPlaying={!scoreModalVisible}
               duration={remainingTime}
               colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
               colorsTime={[7, 5, 2, 0]}
@@ -562,12 +563,20 @@ export default function QuizScreen() {
               onComplete={() => {
                 handleTimeup();
               }}
+              
             >
               {({ remainingTime }) => (
+          
                 <Text style={{
                   fontSize:10
-                }}> {secondsToHms(remainingTime)}</Text>
+                }}> {secondsToHms(remainingTime)}
+                
+                {
+                scoreModalVisible && setRemainderTime(remainingTime)
+              }</Text>
+                
               )}
+             
             </CountdownCircleTimer>
           </View>
 
@@ -1007,7 +1016,7 @@ export default function QuizScreen() {
                   <Text style={{ fontSize: 14, color: "gray" }}>Time left</Text>
                 </View>
                 <Text style={{ fontSize: 14, color: "gray" }}>
-                  {"00:28:31"}
+                 {secondsToHms(remainderTime)}
                 </Text>
               </View>
               <View

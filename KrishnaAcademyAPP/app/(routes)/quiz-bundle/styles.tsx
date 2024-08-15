@@ -74,6 +74,8 @@ export const styles = StyleSheet.create({
       // alignItems: "center",
       // flexDirection:'column-reverse',
       paddingHorizontal: 20,
+      gap:20,
+      paddingTop: 20,
       paddingBottom: 10,
       marginBottom: 0,
       // backgroundColor: "lightblue",

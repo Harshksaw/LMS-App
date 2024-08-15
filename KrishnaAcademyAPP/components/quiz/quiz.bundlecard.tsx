@@ -72,7 +72,7 @@ const QuizBundleCard = ({ quizzes }) => {
             style={styles.quizImage}
           />
           <View style={styles.quizInfo}>
-            <View style={{gap:4, }}>
+            <View style={{gap:4,paddingHorizontal:10 }}>
             <Text style={styles.itemTitle}>{quiz.name}</Text>
             <Text
               style={{
