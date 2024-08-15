@@ -207,15 +207,15 @@ const CustomDrawerContent = (props) => {
         <DrawerItem
           label="Logout"
           onPress={() => {
-            () => {
+
               AsyncStorage.removeItem("token");
               AsyncStorage.removeItem("refresh_token");
               router.push("/(routes)/login",
 
 
-              );
+              )
 
-            };
+          
             /* Add your sign out logic here */
           }}
           icon={({ focused, size }) => (

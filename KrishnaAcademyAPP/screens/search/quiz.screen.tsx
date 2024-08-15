@@ -18,6 +18,7 @@ import { ImageBackground } from "expo-image";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Toast } from "react-native-toast-notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -171,11 +172,15 @@ export default function QuizScreen() {
   useEffect(() => {
     const getQuizzes = async () => {
       try {
-        const res = await axios.get(`${SERVER_URI}/api/v1/Bundle/course-bundle`);
-        setQuizzes(res.data.data);
+
+        const userI = await AsyncStorage.getItem("user");
+        const isUser = JSON.parse(userI);
+        const res = await axios.get(`${SERVER_URI}/api/v1/Bundle/getUserQuizzes/${isUser._id}`);
+        setQuizzes(res.data.data.courses);
+
+        console.log("🚀 ~ getQuizzes ~ courses:", res.data.data.courses)
 
 
-        // console.log(res.data.data,'get all quizes');
       } catch (error) {
         Toast.show("Error fetching quizzes", { type: "danger", duration: 1000, placement: 'top' , style: { marginTop:30 } });
         console.log(error);
