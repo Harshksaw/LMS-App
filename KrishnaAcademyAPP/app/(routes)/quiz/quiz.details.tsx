@@ -480,6 +480,16 @@ export default function QuizScreen() {
 
 <View style={{width: 260, height:"85%", backgroundColor: 'white', alignSelf: 'flex-end', marginTop:100, padding: 12, marginRight:-16}}>
   <Text style={{marginTop: 4, marginBottom: 4, fontSize: 16}}>X</Text>
+  <View style={{gap:8 , alignItems: 'center'}}>
+    <View>
+      <View style={{backgroundColor: '#66CC00', height: 12, width: 12}} />
+      <Text>answered</Text>
+    </View>
+    <View>
+      <View style={{backgroundColor: '#ccc', height: 12, width: 12}} />
+      <Text>unAnswered</Text>
+    </View>
+  </View>
   <FlatList
     data={questions}
     numColumns={4} // 5 columns per row
