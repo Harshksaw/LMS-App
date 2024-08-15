@@ -77,7 +77,16 @@ export default function quizresult() {
       
     }
 
+    const leaderBoard = async () => {
+      const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getLeaderboard/${attemptId || "66bc38010eb297c55055ed4b"}`);
+      const data = response.data
+      console.log("🚀 ~ leaderBoard ~ data:", data)
+
+    }
+
+
     fetchAttempts();
+    leaderBoard();
 
 
   }, []);

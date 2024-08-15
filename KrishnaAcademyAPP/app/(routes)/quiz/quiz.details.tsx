@@ -4,7 +4,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Animated,
+  StyleSheet,
   Modal,
+  Dimensions,
+  FlatList,
   ActivityIndicator,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -198,7 +201,15 @@ export default function QuizScreen() {
   const [isOpen, setIsOpen] = useState(false);
   const translateX = useRef(new Animated.Value(280)).current;
   const [timeUp, setTimeUp] = useState(false);
+  const [visible, setVisible] = useState(false);
 
+  const handleMenuPress = () => {
+    setVisible(true);
+  };
+
+  const handleClose = () => {
+    setVisible(false);
+  };
   const toggleLanguage = () => {
     setLanguage(language === "en" ? "hin" : "en");
   };
@@ -225,7 +236,6 @@ export default function QuizScreen() {
 
 
         setQuestions(quizData.questions);
-
         setLoading(false);
       } catch (error) {
         console.log(error)
@@ -304,13 +314,13 @@ export default function QuizScreen() {
 
 
 
-  const handleMenuPress = () => {
-    setIsOpen((prev) => !prev);    Animated.timing(translateX, {
-      toValue: isOpen ? 0 : 280,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
+  // const handleMenuPress = () => {
+  //   setIsOpen((prev) => !prev);    Animated.timing(translateX, {
+  //     toValue: isOpen ? 0 : 280,
+  //     duration: 300,
+  //     useNativeDriver: true,
+  //   }).start();
+  // };
 
 
 
@@ -324,7 +334,7 @@ export default function QuizScreen() {
       const res = await axios.post(`${SERVER_URI}/api/v1/quiz/saveUserQuestion`,{
         userId : user._id , questionId : questions[count]._id
       })
-      if(res.status === 200){
+      if(res.status === 201){
 
         Toast.show("Saving question");
       }else{
@@ -441,6 +451,52 @@ export default function QuizScreen() {
         padding: 12,
       }}
     >
+
+
+
+
+     {/* TODO: exclude white view to close the modal Modal  */}
+        {visible && (
+        <Modal
+          transparent={true}
+          onRequestClose={handleClose}
+        >
+          <TouchableOpacity
+            style={styles.overlay}
+            onPress={handleClose}
+          >
+            <View style={{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'transparent',
+    padding: 20,
+    transform: [{ translateX: visible ? 0 : Dimensions.get('window').width * 0.7 }],
+  }}>
+
+    <View style={{width: 300, height:"70%", backgroundColor: 'white', alignSelf: 'flex-end', marginTop:100, padding: 12, marginRight:-16}}>
+    <FlatList
+    data={questions}
+    horizontal
+    renderItem={({item, index}) => (
+      <TouchableOpacity style={styles.menuItem} onPress={() => console.log('Answered')}>
+        <View style={{width: 40, height: 40, borderRadius: 20, backgroundColor: '#ccc', justifyContent: 'center', alignItems: 'center'}}>
+          <Text>{index}</Text>
+        </View>
+      </TouchableOpacity>
+    )}
+    keyExtractor={(item, index) => index.toString()}
+  />
+    
+             
+    </View>
+           
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      )}
       <View
         style={{
           //  backgroundColor:'red',
@@ -577,21 +633,9 @@ export default function QuizScreen() {
                 //   transform: [{ translateX }],
                 // }}
                 >
-                  <TouchableOpacity onPress={handleMenuPress}>
-                    <Ionicons
-                      style={{
-                        alignSelf: "center",
-                        // position: "absolute",
-                        // left: -60,
-                        backgroundColor: "#e2e2e2",
-                        padding: 4,
-                      }}
-                      name="menu"
-                      size={24}
-                      color={"black"}
-                      zIndex={999}
-                    />
-                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.button} onPress={handleMenuPress}>
+        <Ionicons name="menu" size={24} color="black" />
+      </TouchableOpacity>
 
 
                 </Animated.View>
@@ -1033,3 +1077,32 @@ export default function QuizScreen() {
     </SafeAreaView>
   );
 }
+const styles = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  // menuContainer: {
+  //   position: 'absolute',
+  //   top: 0,
+  //   left: 0,
+  //   right: 0,
+  //   bottom: 0,
+  //   backgroundColor: 'white',
+  //   padding: 20,
+  //   transform: [{ translateX: visible ? 0 : Dimensions.get('window').width * 0.7 }],
+  // },
+  menu: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+});

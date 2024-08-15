@@ -374,3 +374,62 @@ exports.getAllAttempById = async (req, res) => {
   }
 }
 
+
+exports.updateLeaderboard = async (req, res) => {
+
+  try {
+    const { userId, quizId, newScore } = req.body;
+
+    // Find the user by userId
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send({ message: 'User not found' });
+    }
+
+    // Find the quiz result for the given quizId
+    let quizResult = user.quizResults.find(result => result.quiz.toString() === quizId);
+
+    if (quizResult) {
+      // If the new score is higher, update the score
+      if (newScore > quizResult.score) {
+        quizResult.score = newScore;
+        await user.save();
+
+        // Update the leaderboard
+        await Leaderboard.findOneAndUpdate(
+          { quiz: quizId, user: userId },
+          { score: newScore },
+          { upsert: true }
+        );
+      }
+    } else {
+      // If no quiz result exists, add a new quiz result
+      user.quizResults.push({ quiz: quizId, score: newScore });
+      await user.save();
+
+      // Create a new leaderboard entry
+      await Leaderboard.create({ quiz: quizId, user: userId, score: newScore });
+    }
+
+    res.status(200).send({ message: 'Leaderboard updated successfully' });
+  } catch (error) {
+    console.error('Error updating leaderboard:', error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
+}
+
+exports.getLeaderboard = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const leaderboard = await Leaderboard.find({ quiz: id }).sort({ score: -1 }).limit(10);
+
+    res.status(200).send({
+      success: true,
+      data: leaderboard
+    });
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
+};

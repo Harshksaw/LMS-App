@@ -74,7 +74,7 @@ const CustomDrawerContent = (props) => {
 
         <DrawerItem
           label="Saved Questions"
-          onPress={() => router.navigate("/(routes)/enrolled-courses")}
+          onPress={() => router.navigate("/(routes)/quiz/savedQuestions")}
           icon={({ focused, size }) => (
             <Ionicons
               name="bookmark"
@@ -97,9 +97,7 @@ const CustomDrawerContent = (props) => {
         />
         <DrawerItem
           label="My Courses"
-          onPress={() => {
-            /* Add your my courses logic here */
-          }}
+          onPress={() => router.navigate("/(routes)/enrolled-courses")}
           icon={({ focused, size }) => (
             <Ionicons
               name="school"

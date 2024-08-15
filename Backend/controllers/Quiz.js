@@ -611,3 +611,19 @@ exports.removeQuestionFromUser = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+exports.getAllSavedQuestions = async (req, res) => {
+  try {
+
+    const {id} = req.params;
+    const savedQuestions = await User.findById(id).populate('questions');
+    console.log("🚀 ~ exports.getAllSavedQuestions= ~ savedQuestions:", savedQuestions)
+
+    res.status(200).json({
+      message: 'Saved questions fetched successfully',
+      data: savedQuestions
+    });
+  } catch (error) {
+    console.error('Error fetching saved questions:', error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
