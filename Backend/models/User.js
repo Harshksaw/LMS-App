@@ -42,6 +42,12 @@ const userSchema = new mongoose.Schema({
             ref:"StudyMaterial",
         }
     ],
+    questions:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Questions",
+        }
+    ],
     image:{
         type:String,
     },

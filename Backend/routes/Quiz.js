@@ -1,10 +1,10 @@
 // Import the required modules
 const express = require("express")
-const {  getQuizbyId, getAllQuiz, editQuizbyId, ping, updateQuestionOptions, getAllBundleQuiz,  createQuestion,  UpdateQuiz, intialize, deleteQuizById, UpdateQuizDetails, deleteQuestionById, updateQuestion } = require("../controllers/Quiz")
+const {  getQuizbyId, getAllQuiz, editQuizbyId, ping, updateQuestionOptions, getAllBundleQuiz,  createQuestion,  UpdateQuiz, intialize, deleteQuizById, UpdateQuizDetails, deleteQuestionById, updateQuestion, addQuestionToUser, removeQuestionFromUser } = require("../controllers/Quiz")
 const router = express.Router()
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const { getIsBundledMaterials, attemptQuiz, getAttemptById, getAllAttempById } = require("../controllers/CourseMaterials");
+const { getIsBundledMaterials, attemptQuiz, getAttemptById, getAllAttempById,  } = require("../controllers/CourseMaterials");
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
@@ -54,8 +54,11 @@ router.delete("/deleteQuestion/:id", deleteQuestionById)
 
 router.get("/getAllisBundleMaterials", getIsBundledMaterials)
 
-router.get("/getUserQuizzes/:id",)
+// router.get("/getUserQuizzes/:id",)
 
+
+router.post("/saveUserQuestion",addQuestionToUser )
+router.post("/removeUserQuestion", removeQuestionFromUser)
 
 
 router.post("/attempt-quiz", attemptQuiz)
