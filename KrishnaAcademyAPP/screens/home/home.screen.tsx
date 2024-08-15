@@ -19,8 +19,9 @@ import StudyMaterialsList from "@/components/studymaterials";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import QuizScreen from "../search/quiz.screen";
-
+import { usePreventScreenCapture } from 'expo-screen-capture';
 export default function HomeScreen() {
+  usePreventScreenCapture();
   const [videoUri, setVideoUri] = useState(null);
   const videoref = React.useRef(null);
 
@@ -52,7 +53,7 @@ export default function HomeScreen() {
         {/* <StudyMaterialsList /> */}
 
         <View
-          style={{ height: 'auto', marginHorizontal: 0, paddingHorizontal: 0, gap:5 }}
+          style={{ height: 'auto', marginHorizontal: 0, paddingHorizontal: 0, gap:5, marginTop:5 }}
         >
           <View
             style={{

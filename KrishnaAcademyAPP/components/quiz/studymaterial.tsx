@@ -1,8 +1,11 @@
 import { Image } from 'expo-image';
 import React from 'react';
-import { View, Text, StyleSheet, Linking, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, StyleSheet,  TouchableOpacity, FlatList } from 'react-native';
+
+import { usePreventScreenCapture } from 'expo-screen-capture';
 
 const StudyMaterialCard = ({ studyMaterials }) => {
+  usePreventScreenCapture();
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Study Materials</Text>

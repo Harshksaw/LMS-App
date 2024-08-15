@@ -10,6 +10,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
+
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import { useEffect, useRef, useState } from "react";
@@ -24,9 +25,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Toast } from "react-native-toast-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usePreventScreenCapture } from 'expo-screen-capture';
 
 const renderItem = ({ item }) => {
-  console.log(item, "item");
+  // console.log(item, "item");
   return (
     <TouchableOpacity
       style={{
@@ -175,7 +177,10 @@ function secondsToHms(seconds) {
 
   return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(secondsLeft, 2)}`;
 }
+
+
 export default function QuizScreen() {
+  usePreventScreenCapture();
   const route = useRoute();
   const { quizId } = route.params;
 
@@ -289,7 +294,7 @@ export default function QuizScreen() {
 
   const handleSkip = () => {
     console.log("skip", count);
-    if (count > 1) {
+    if (count >= 1) {
       setCount((count) => count - 1);
       setSelectedBox(null);
       // setTime(15);
@@ -353,7 +358,7 @@ export default function QuizScreen() {
       Toast.show("Error saving question");
     }
   };
-  console.log(savedQuestions, 'saved questions')
+  // console.log(savedQuestions, 'saved questions')
 
 
   if (loading) {
@@ -547,14 +552,16 @@ export default function QuizScreen() {
               duration={remainingTime}
               colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
               colorsTime={[7, 5, 2, 0]}
-              size={70}
+              size={50}
               strokeWidth={2}
               onComplete={() => {
                 handleTimeup();
               }}
             >
               {({ remainingTime }) => (
-                <Text style={{}}> {secondsToHms(remainingTime)}</Text>
+                <Text style={{
+                  fontSize:10
+                }}> {secondsToHms(remainingTime)}</Text>
               )}
             </CountdownCircleTimer>
           </View>
@@ -612,13 +619,16 @@ export default function QuizScreen() {
       // showsVerticalScrollIndicator={false}
       >
 
-        <View style={{ backgroundColor: "white" }}>
+        <View style={{ backgroundColor: "white" , padding:5}}>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             {/* {left} */}
             <View style={{ flexDirection: "row", paddingVertical: 4 }}>
-              <Text style={{ fontWeight: "600" }}>{`Q.${count + 1}`}</Text>
+              <Text style={{  fontSize: 18,
+                  color: "black",
+                  fontWeight: "800",
+                  alignSelf: "center" }}>{`Q.${count + 1}`}</Text>
               <Text
                 style={{
                   fontSize: 18,
@@ -703,7 +713,7 @@ export default function QuizScreen() {
               onPress={toggleLanguage}
             >
               <Text style={{ fontWeight: "800", fontSize: 12, color: "white" }}>
-                {language === "english" ? "English" : "Hindi"}
+                {language === "en" ? "English" : "Hindi"}
               </Text>
             </TouchableOpacity>
 

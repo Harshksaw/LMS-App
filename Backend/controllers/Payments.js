@@ -173,13 +173,13 @@ exports.sendPaymentSuccessEmail = async(req, res) => {
 // Create a new order
 exports.createOrder = async (req, res) => {
     try {
-      const { user, items, totalAmount, coupon } = req.body;
+      const { user, items, totalAmount } = req.body;
   
       const order = new Order({
         user,
         items,
         totalAmount,
-        coupon
+
 
       });
   

@@ -72,6 +72,7 @@ export const styles = StyleSheet.create({
       flex: 1,
       // justifyContent: "flex-start",
       // alignItems: "center",
+      // flexDirection:'column-reverse',
       paddingHorizontal: 20,
       paddingBottom: 10,
       marginBottom: 0,

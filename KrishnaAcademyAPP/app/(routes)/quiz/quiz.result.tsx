@@ -3,18 +3,19 @@ import  PieCharts  from "@/components/charts/PaiCharts";
 import { SERVER_URI } from "@/utils/uri";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const arrayOfObjects = [
-  { color: 'red', title: 'Apple', alpha: 'a' },
-  { color: 'blue', title: 'Blueberry', alpha: 'b' },
-  { color: 'green', title: 'Grapes', alpha: 'c' },
-  { color: 'yellow', title: 'Lemon', alpha: 'd' },
-  { color: 'orange', title: 'Orange', alpha: 'e' },
-  { color: 'purple', title: 'Plum', alpha: 'f' }
-];
+// const arrayOfObjects = [
+//   { color: 'red', title: 'Apple', alpha: 'a' },
+//   { color: 'blue', title: 'Blueberry', alpha: 'b' },
+//   { color: 'green', title: 'Grapes', alpha: 'c' },
+//   { color: 'yellow', title: 'Lemon', alpha: 'd' },
+//   { color: 'orange', title: 'Orange', alpha: 'e' },
+//   { color: 'purple', title: 'Plum', alpha: 'f' }
+// ];
 // const pieData = [
 //   {
 //     value: 47,
@@ -36,10 +37,10 @@ const calculateTotals = (data) => {
 
   
   const arrayOfObjects = [
-    { color: 'red', title: 'total', alpha: totalQuestions },
-    { color: 'blue', title: 'correct', alpha: correctAnswers },
-    { color: 'green', title: 'incorrect', alpha: incorrectAnswers},
-    { color: 'green', title: 'unanswered', alpha: unansweredQuestions},
+    { color: 'red', bgColor: 'white' , title: 'total', alpha: totalQuestions },
+    { color: 'blue', bgColor: '#009FFF' , title: 'correct', alpha: correctAnswers },
+    { color: 'green', bgColor: '#FFA5BA' , title: 'incorrect', alpha: incorrectAnswers},
+    { color: 'green', bgColor: '#BDB2FA' , title: 'unanswered', alpha: unansweredQuestions},
     // { color: 'yellow', title: 'Lemon', alpha: 'd' },
     // { color: 'orange', title: 'Orange', alpha: 'e' },
     // { color: 'purple', title: 'Plum', alpha: 'f' }
@@ -116,7 +117,7 @@ export default function quizresult() {
         renderItem={({ item }) => (
           <View style={{ flex: 1, alignItems: 'center', 
           justifyContent: 'center', padding: 10, margin: 8, borderRadius: 14, height: 100, 
-          borderWidth: 1, borderColor: item.color }}>
+          borderWidth: 1 , backgroundColor: item.bgColor}}>
             <Text>{item.alpha}</Text>
             <Text>{item.title}</Text>
           </View>)}
@@ -138,6 +139,11 @@ export default function quizresult() {
             padding: 16,
             borderRadius: 4,
           }}
+          onPress={()=> {
+    // router.push({
+    // pathname:`(routes)/quiz/quiz.details/${quizId}`,
+    // })
+          }}
         >
           <Text style={{
             textAlign: 'center',
@@ -146,6 +152,12 @@ export default function quizresult() {
         </TouchableOpacity>
 
         <TouchableOpacity
+          onPress={()=> {
+
+            router.push({
+              pathname : "/(routes)/quiz/quiz.solution"
+          })
+          }}
           style={{
             flex: 1,
             backgroundColor: "#f44336",

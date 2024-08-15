@@ -5,7 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useRoute } from '@react-navigation/native';
 import { Image } from 'expo-image';
-// import RazorpayCheckout from 'react-native-razorpay';
+import { Toast } from 'react-native-toast-notifications';
+import RazorpayCheckout from 'react-native-razorpay';
 
 const PaymentPage = () => {
   const [items, setItems] = useState([
@@ -17,7 +18,7 @@ const PaymentPage = () => {
   const { itemId,  itemData , itemPrice} = route.params;
 
   const ItemData = JSON.parse(itemData);
-  console.log("🚀 ~ file: index.tsx ~ line 136 ~ fetchBundleData ~ response",  itemPrice, ItemData)
+  console.log("🚀 ~ file: index.tsx ~ line 136 ~ fetchBundleData ~ response",   ItemData)
   
 
   const [coupon, setCoupon] = useState('');
@@ -65,32 +66,35 @@ const PaymentPage = () => {
   };
 
 
-//TODO razorpoay payment
-// const RazorpayPayment = () => {
-//   const handlePayment = () => {
-//     var options = {
-//       description: 'Credits towards consultation',
-//       image: 'https://i.imgur.com/3g7nmJC.png',
-//       currency: 'INR',
-//       key: 'YOUR_RAZORPAY_KEY', // Your Razorpay Key
-//       amount: '5000', // Amount in paise
-//       name: 'foo',
-//       prefill: {
-//         email: 'void@razorpay.com',
-//         contact: '9191919191',
-//         name: 'Razorpay Software'
-//       },
-//       theme: { color: '#F37254' }
-//     };
+// TODO razorpoay payment
 
-//     RazorpayCheckout.open(options).then((data) => {
-//       // handle success
-//       Alert.alert(`Success: ${data.razorpay_payment_id}`);
-//     }).catch((error) => {
-//       // handle failure
-//       Alert.alert(`Error: ${error.code} | ${error.description}`);
-//     });
-//   };
+  const handlePayment = async() => {
+    var options = {
+      description: 'Credits towards consultation',
+      image: 'https://i.imgur.com/3g7nmJC.png',
+      currency: 'INR',
+      key: '', // Your api key
+      amount: '5000',
+      name: 'foo',
+      prefill: {
+        email: 'void@razorpay.com',
+        contact: '9191919191',
+        name: 'Razorpay Software'
+      },
+      theme: {color: '#F37254'}
+    }
+
+    await RazorpayCheckout.open(options).then((data) => {
+      // handle success
+      Toast.show('Payment successful');
+      // Alert.alert(`Success: ${data.razorpay_payment_id}`);
+    }).catch((error) => {
+      console.log(error)
+      // handle failure
+      Toast.show('Payment failed');
+      // Alert.alert(`Error: ${error.code} | ${error.description}`);
+    });
+  }
 
 
   
@@ -137,7 +141,31 @@ const PaymentPage = () => {
       </View> */}
       
       <TouchableOpacity 
-      style={{backgroundColor: "red", padding:12,borderRadius: 24, alignSelf: 'center',elevation: 4 , alignItems: 'center',marginHorizontal:'auto', width: '80%', position: 'absolute', bottom: 24}}   onPress={applyCoupon}>
+      style={{backgroundColor: "red", padding:12,borderRadius: 24, alignSelf: 'center',elevation: 4 , alignItems: 'center',marginHorizontal:'auto', width: '80%', position: 'absolute', bottom: 24}}  
+      onPress={() => {
+        var options = {
+          description: 'Credits towards consultation',
+          image: 'https://i.imgur.com/3g7nmJC.png',
+          currency: 'INR',
+          key: "rzp_test_frHyAhT1IdPBwO", // Your api key
+          amount: '5000',
+          name: 'fo7o',
+          prefill: {
+            email: 'void@razorpay.com',
+            contact: '9191919191',
+            name: 'Razorpay Software'
+          },
+          theme: {color: '#F37254'}
+        }
+        RazorpayCheckout.open(options).then((data) => {
+          // handle success
+          alert(`Success: ${data.razorpay_payment_id}`);
+        }).catch((error) => {
+          // handle failure
+          console.log(error)
+          alert(`Error: ${error.code} | ${error.description}`);
+        });
+      }}>
         <Text style={{color: 'white', textAlign: 'center'}}>Confirm purchase</Text>
       </TouchableOpacity>
     </SafeAreaView>

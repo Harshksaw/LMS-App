@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import {
@@ -84,7 +85,7 @@ const QuizBundleCard = ({ quizzes }) => {
               }}
             >
               {" "}
-              Lorem, ipsum dolor sit amet consectetur{" "}
+            {quiz.shortDescription.slice(0,25)}
             </Text>
             <View
               style={{
@@ -93,10 +94,20 @@ const QuizBundleCard = ({ quizzes }) => {
                 alignItems: "center",
                 width: "100%",
               }}
+
             >
+              <View style={{
+                flexDirection:'row'
+
+              }}>  
+
+              <Ionicons name="timer" 
+              size={20}
+              />
               <Text style={styles.itemTitle}>
                 {convertSecondsToTime(quiz.timer)}
               </Text>
+              </View>
               <Text style={styles.itemSubtitle}>
                 Questions: {quiz.questions.length}
               </Text>
@@ -117,12 +128,12 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   quizCard: {
-    // backgroundColor: '#fff',
-    backgroundColor: "#f2eded",
+    backgroundColor: '#fff',
+    // backgroundColor: "#f2eded",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderRadius: 20,
+    borderRadius: 10,
     height: 120,
     width: "100%",
     paddingHorizontal: 20,
@@ -138,7 +149,7 @@ const styles = StyleSheet.create({
   quizImage: {
     width: "20%",
     height: 70,
-    borderRadius: 50,
+    borderRadius: 10,
   },
   quizInfo: {
     flexDirection: "column",

@@ -67,11 +67,23 @@ export default function Search() {
             // height: "100%",
           }}
         >
+          <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: 20,
+            // marginTop: 20,
+            // color: "white",
+          }}
+          >
+            Quizzes
+          </Text>
           <FlatList
             data={quizzes}
             renderItem={renderCources}
-            contentContainerStyle={{ width: "100%",  alignItems:'center' }}
-            columnWrapperStyle={{ gap: 10 }}
+            contentContainerStyle={{ width: "100%",  marginHorizontal : 20, }}
+            columnWrapperStyle={{ gap: 30 }}
             showsVerticalScrollIndicator={false}
             numColumns={2}
             keyExtractor={(item) => item.id}
@@ -99,13 +111,14 @@ const renderCources = ({ item }) => {
         backgroundColor: "#fff",
         borderWidth: 1,
         borderColor: "#d2cccc",
+        marginTop: 20,
         // marginBottom: 10,
-        width: '100%',
+        // width: '100%',
 
         height: 240, // Ensure this is set to control the size
         flexDirection: "column",
 
-        alignItems: "center",
+        // alignItems: "center",
         gap: 4,
 
 

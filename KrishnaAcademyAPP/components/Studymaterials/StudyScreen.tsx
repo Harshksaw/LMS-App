@@ -134,6 +134,15 @@ const StudyMaterialsScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <Text
+      style={{
+        fontSize:20,
+        textAlign:'center',
+        fontWeight:'bold',
+      }}
+      >
+        Free Study Materials
+      </Text>
      
     
 
@@ -251,7 +260,7 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    // padding: 10,
+    paddingTop: 40,
   },
   heading: {
     fontSize: 24,
@@ -267,7 +276,7 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingVertical: 18,
     paddingHorizontal: 12,
-    margin: 10,
+    marginTop: 20,
 
     backgroundColor: "rgb(235, 229, 229)",
     borderRadius: 8,

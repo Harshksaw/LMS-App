@@ -11,14 +11,15 @@ import {
 
 import { StyleSheet, Text, View } from "react-native";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Image } from "expo-image";
 import useUser from "@/hooks/auth/useUser";
 
 import { router, useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import CoursesScreen from "@/screens/courses/courses.screen";
+
+
 
 
 const UserInfoContent = () => {
@@ -231,6 +232,10 @@ const CustomDrawerContent = (props) => {
 };
 
 export default function index() {
+
+
+
+
   const Drawer = createDrawerNavigator();
 
   return (
