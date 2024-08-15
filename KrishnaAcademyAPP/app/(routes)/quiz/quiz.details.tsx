@@ -476,23 +476,21 @@ export default function QuizScreen() {
     transform: [{ translateX: visible ? 0 : Dimensions.get('window').width * 0.7 }],
   }}>
 
-    <View style={{width: 300, height:"70%", backgroundColor: 'white', alignSelf: 'flex-end', marginTop:100, padding: 12, marginRight:-16}}>
-    <FlatList
+<View style={{width: 260, height:"85%", backgroundColor: 'white', alignSelf: 'flex-end', marginTop:100, padding: 12, marginRight:-16}}>
+  <Text style={{marginTop: 4, marginBottom: 4, fontSize: 16}}>X</Text>
+  <FlatList
     data={questions}
-    horizontal
+    numColumns={4} // 5 columns per row
     renderItem={({item, index}) => (
-      <TouchableOpacity style={styles.menuItem} onPress={() => console.log('Answered')}>
+      <TouchableOpacity style={styles.menuItem} onPress={() => setCount(index)}>
         <View style={{width: 40, height: 40, borderRadius: 20, backgroundColor: '#ccc', justifyContent: 'center', alignItems: 'center'}}>
-          <Text>{index}</Text>
+          <Text>{index + 1}</Text>
         </View>
       </TouchableOpacity>
     )}
     keyExtractor={(item, index) => index.toString()}
   />
-    
-             
-    </View>
-           
+</View>
             </View>
           </TouchableOpacity>
         </Modal>
