@@ -245,10 +245,17 @@ const dateObject = new Date(req.body.date);
           model: 'Quiz'
         }
       });
+      
+      let allQuizzes = [];
+      user.courses.forEach(course => {
+        allQuizzes = [...allQuizzes, ...course.quizes];
+      });
+      
+      console.log("🚀 ~ exports.getUserQuizzes= ~ allQuizzes:", allQuizzes)
   
       res.status(200).json({
         success: true,
-        data: user
+        data: allQuizzes
       });
     } catch (error) {
       res.status(500).json({ error: error.message });
