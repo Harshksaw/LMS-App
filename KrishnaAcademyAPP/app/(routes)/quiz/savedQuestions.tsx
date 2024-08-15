@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SERVER_URI } from '@/utils/uri';
@@ -51,9 +51,13 @@ const SavedQuestions = () => {
             }}
             >Saved Questions</Text>
 
+            <ScrollView>
+
+
             {questions.map((question, index) => (
                 <QuestionCard key={index} question={question} />
             ))}
+            </ScrollView>
         </SafeAreaProvider>
     );
 };

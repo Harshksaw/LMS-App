@@ -20,18 +20,18 @@ export default function Search() {
       const userI = await AsyncStorage.getItem("user");
       const isUser = JSON.parse(userI);
       const bundlesRes = await axios.get(`${SERVER_URI}/api/v1/Bundle/getUserBundleQuizzes/${isUser._id}`);
-      Toast.show("Fetching Quizzes", { type: "success", duration: 1000, placement: 'top' , style: { marginTop:30 } });
+      // Toast.show("Fetching Quizzes", { type: "success", duration: 1000, placement: 'top' , style: { marginTop:30 } });
       const bundles = bundlesRes.data.data;
       console.log("🚀 ~ fetchQuizzes ~ bundles:", bundles)
       setQuizzes(bundles)
-      let allQuizzes = [];
+      // let allQuizzes = [];
 
       // Iterate over each bundle to fetch quizzes
-      for (const bundle of bundles) {
-        
+      // for (const bundle of bundles) {
+
       //   const res = await axios.get(`${SERVER_URI}/api/v1/Bundle/getUserBundleQuizzes/${bundle._id}`);
       //   allQuizzes = [...allQuizzes, ...res.data.data.courses];
-      }
+      // }
       // Toast.show("Fetching Quizzes", { type: "success", duration: 1000, placement: 'top', style: { marginTop: 30 } });
       // console.log(allQuizzes, "------------------");
       // setQuizzes(allQuizzes);
@@ -41,47 +41,47 @@ export default function Search() {
   }, []);
   return (
 
-<SafeAreaView
-style={{
-  flex:1,
-  paddingTop: 50,
-}}
->
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingTop: 50,
+      }}
+    >
 
-{/* <ScrollView> */}
+      {/* <ScrollView> */}
 
-<View style={{flex:1}}>
-<View
-        style={{
+      <View style={{ flex: 1 }}>
+        <View
+          style={{
 
-          // marginHorizontal: 10,
-          // backgroundColor: "red",
-flex: 1,
-          flexDirection: "column",
-          justifyContent: "center",
-          // alignItems: "center",
-          // padding: 10,
-          gap: 10
+            // marginHorizontal: 10,
+            // backgroundColor: "red",
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "center",
+            // alignItems: "center",
+            // padding: 10,
+            gap: 10
 
 
-          // height: "100%",
-        }}
-      >
-<FlatList
-          data={quizzes}
-          renderItem={renderCources}
-          // contentContainerStyle={{ width: "100%",  alignItems:'center' }}
-          columnWrapperStyle={{ gap: 10 }}
-          showsVerticalScrollIndicator={false}
-          numColumns={2}
-          keyExtractor={(item) => item.id}
+            // height: "100%",
+          }}
+        >
+          <FlatList
+            data={quizzes}
+            renderItem={renderCources}
+            contentContainerStyle={{ width: "100%",  alignItems:'center' }}
+            columnWrapperStyle={{ gap: 10 }}
+            showsVerticalScrollIndicator={false}
+            numColumns={2}
+            keyExtractor={(item) => item.id}
           // refreshControl={
           //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           // }
-        />
+          />
         </View>
-</View>
-</SafeAreaView>
+      </View>
+    </SafeAreaView>
 
 
   );
@@ -101,12 +101,10 @@ const renderCources = ({ item }) => {
         borderColor: "#d2cccc",
         // marginBottom: 10,
         width: '100%',
-        // minWidth: "46%",
-        // maxWidth: "50%",
-        marginLeft: 8,
-        height: 250, // Ensure this is set to control the size
+
+        height: 240, // Ensure this is set to control the size
         flexDirection: "column",
-        // justifyContent: "space-between",
+
         alignItems: "center",
         gap: 4,
 
@@ -117,37 +115,13 @@ const renderCources = ({ item }) => {
       }}
       onPress={() =>
         router.push({
-        
+
           pathname: "/(routes)/quiz/quiz.details",
-          params:{quizId :item._id }
+          params: { quizId: item._id }
         })
       }
     >
-      <View
-        style={{
-
-          position: "absolute",
-          top: 12,
-          left: 12,
-          justifyContent: "flex-start", // Aligns children vertically to the top
-          alignItems: "flex-start", // Aligns children horizontally to the left
-          backgroundColor: "green", // Dark background color
-          borderRadius: 10,
-          alignSelf: "flex-start",
-          padding: 5, // Add padding for better appearance
-        }}
-      >
-        <Text
-          style={{
-            color: "white", // White text color
-            fontSize: 12,
-            // fontWeight: "bold",
-            textAlign: "left", // Align text to the left
-          }}
-        >
-          {"purchased"}
-        </Text>
-      </View>
+      
 
       <View
         style={{
@@ -158,23 +132,25 @@ const renderCources = ({ item }) => {
           justifyContent: "center",
           alignItems: "center",
           // marginBottom: 10,
-          marginTop: 48,
+          marginTop: 18,
         }}
       >
 
 
-        {!item.image ? (
+        {item.image ? (
           <ImageBackground
-            source={{ uri: item.image ? item.image : "https://picsum.photos/200" }}
+            source={{ uri: !item.image ? item.image : "https://picsum.photos/200" }}
             style={{
-              width: "100%",
-              height: "100%", // Adjusted to fill the TouchableOpacity
+              width: 150,
+              height: 150,
+              // width: "100%",
+              // height: "100%", 
               // justifyContent: "center",
 
               // alignItems: "center",
             }}
             imageStyle={{
-              borderRadius: 20, // Apply borderRadius to the image itself
+              borderRadius: 10, // Apply borderRadius to the image itself
             }}
           />
         ) : (
@@ -207,7 +183,7 @@ const renderCources = ({ item }) => {
           {item.name}
 
         </Text>
-        {/* <Text
+        <Text
           style={{
             // color: "white",
             fontSize: 12,
@@ -215,8 +191,8 @@ const renderCources = ({ item }) => {
             textAlign: "left",
           }}
         >
-          {item.shortDescription.slice(0, 15)}
-        </Text> */}
+          {item?.shortDescription.slice(0, 25)}
+        </Text>
       </View>
     </TouchableOpacity>
   )
