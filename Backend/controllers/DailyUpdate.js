@@ -85,11 +85,12 @@ exports.updateDailyUpdate = async (req, res) => {
 // Delete a daily update
 exports.deleteDailyUpdate = async (req, res) => {
   try {
-    const dailyUpdate = await DailyUpdate.findById(req.params.id);
+    const dailyUpdate = await DailyUpdate.findByIdAndRemove(req.params.id);
+
     if (!dailyUpdate)
       return res.status(404).json({ message: "Daily update not found" });
 
-    await dailyUpdate.remove();
+    // await dailyUpdate.remove();
     res.json({ message: "Daily update deleted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
