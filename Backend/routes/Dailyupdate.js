@@ -24,6 +24,6 @@ router.get("/getAllUpdates", getAllDailyUpdates);
 router.get("/getDailyUpdate/:id", getDailyUpdate);
 router.post("/createDailyUpdate", upload.single("image"), createDailyUpdate);
 router.post("/DailyUpdate/:id", upload.single("image"), updateDailyUpdate);
-router.post("/DeleteUpdate/:id", deleteDailyUpdate);
+router.delete("/DeleteUpdate/:id", deleteDailyUpdate);
 
 module.exports = router;

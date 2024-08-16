@@ -43,6 +43,7 @@ import React from "react";
 import Blog from "./pages/Blog";
 import DailyUpdateForm from "./pages/createBlog";
 import EditBlog from "./pages/EditBlog";
+import ViewBlog from "./pages/ViewBlog";
 
 function App() {
   const { user } = useSelector((state) => state.profile);
@@ -175,9 +176,15 @@ function App() {
               <Route path="dashboard/user/:id" element={<User />} />
               <Route path="dashboard/my-quiz" element={<MyQuiz />} />
               <Route path="/dashboard/quiz/:id" element={<EditQuiz />} />
-
               <Route path="/dashboard/daily-update" element={<Blog />} />
-              <Route path="/dashboard/create-update" element={<DailyUpdateForm />} />
+              <Route
+                path="/dashboard/view-daily-update/:id"
+                element={<ViewBlog />}
+              />
+              <Route
+                path="/dashboard/create-update"
+                element={<DailyUpdateForm />}
+              />
               <Route path="/dashboard/edit-update/:id" element={<EditBlog />} />
               <Route
                 path="dashboard/create-studymaterials"
@@ -195,9 +202,7 @@ function App() {
               <ViewCourse />
             </ProtectedRoute>
           }
-        >
-     
-        </Route>
+        ></Route>
 
         {/* Page Not Found (404 Page ) */}
         <Route path="*" element={<PageNotFound />} />

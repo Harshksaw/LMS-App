@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../services/apis";
 import toast from "react-hot-toast";
@@ -13,6 +13,16 @@ const DailyUpdateForm = () => {
     content: "",
     image: "",
   });
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(
+        `${BASE_URL}/api/v1/DailyUpdate/getDailyUpdate/${id}`
+      );
+      console.log("individual blog data in edit blog is", response.data);
+      setFormData(response.data);
+    };
+    fetchData();
+  }, []);
   const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,9 +57,12 @@ const DailyUpdateForm = () => {
       className="max-w-full mx-auto p-4 bg-pure-greys-300  rounded-lg shadow-md"
     >
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 ">Title:</label>
+        <label className="block text-gray-700 font-bold mb-2  " htmlFor="title">
+          Title:
+        </label>
         <input
           type="text"
+          id="title"
           name="title"
           value={formData.title}
           onChange={handleChange}
@@ -58,9 +71,15 @@ const DailyUpdateForm = () => {
         />
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 ">Heading:</label>
+        <label
+          className="block text-gray-700 font-bold mb-2 "
+          htmlFor="heading"
+        >
+          Heading:
+        </label>
         <input
           type="text"
+          id="heading"
           name="heading"
           value={formData.heading}
           onChange={handleChange}
@@ -69,21 +88,31 @@ const DailyUpdateForm = () => {
         />
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 ">
+        <label
+          className="block text-gray-700 font-bold mb-2 "
+          htmlFor="description"
+        >
           Description:
         </label>
         <textarea
           name="description"
           value={formData.description}
+          id="description"
           onChange={handleChange}
           required
           className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-32"
         />
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 ">Content:</label>
+        <label
+          className="block text-gray-700 font-bold mb-2 "
+          htmlFor="content"
+        >
+          Content:
+        </label>
         <textarea
           name="content"
+          id="content"
           value={formData.content}
           onChange={handleChange}
           required
@@ -91,13 +120,14 @@ const DailyUpdateForm = () => {
         />
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 ">
+        <label className="block text-gray-700 font-bold mb-2 " htmlFor="image">
           Image URL:
         </label>
         <input
           type="file"
           name="image"
-          value={formData.image}
+          id="image"
+          value={formData?.image}
           onChange={handleChange}
           required
           className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

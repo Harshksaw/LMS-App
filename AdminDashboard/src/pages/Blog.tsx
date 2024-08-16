@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../services/apis";
 import { Link } from "react-router-dom";
+import { DeleteBlog } from "../components/core/Dashboard/Blog/DeleteBlog";
 
 const Blog = () => {
   const [blogData, setBlogData] = useState([]);
@@ -52,11 +53,18 @@ const BlogCard = ({ blog }) => {
           {new Date(blog.date).toLocaleDateString()}
         </small>
         <Link
+          to={`/dashboard/view-daily-update/${blog._id}`}
+          className="bg-blue-500 text-white px-4 py-2 mt-4 ml-4 inline-block"
+        >
+          view
+        </Link>
+        <Link
           to={`/dashboard/edit-update/${blog._id}`}
           className="bg-blue-500 text-white px-4 py-2 mt-4 ml-4 inline-block"
         >
           Edit
         </Link>
+        <DeleteBlog id={blog._id} />
       </div>
     </div>
   );
