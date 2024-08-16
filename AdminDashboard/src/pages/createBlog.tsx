@@ -34,28 +34,28 @@ const DailyUpdateForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Title:</label>
-        <input type="text" name="title" value={formData.title} onChange={handleChange} required />
+    <form onSubmit={handleSubmit} className='max-w-full mx-auto p-4 bg-white rounded-lg shadow-md'>
+      <div className='mb-4'>
+        <label className="block text-gray-700 font-bold mb-2 ">Title:</label>
+        <input type="text" name="title" value={formData.title} onChange={handleChange} required  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
       </div>
-      <div>
-        <label>Heading:</label>
-        <input type="text" name="heading" value={formData.heading} onChange={handleChange} required />
+      <div className="mb-4">
+        <label className="block text-gray-700 font-bold mb-2 ">Heading:</label>
+        <input type="text" name="heading" value={formData.heading} onChange={handleChange} required  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
       </div>
-      <div>
-        <label>Description:</label>
-        <textarea name="description" value={formData.description} onChange={handleChange} required />
+      <div className='mb-4'>
+        <label className="block text-gray-700 font-bold mb-2 ">Description:</label>
+        <textarea name="description" value={formData.description} onChange={handleChange} required  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-32" />
       </div>
-      <div>
-        <label>Content:</label>
-        <textarea name="content" value={formData.content} onChange={handleChange} required />
+      <div className='mb-4'>
+        <label className="block text-gray-700 font-bold mb-2 ">Content:</label>
+        <textarea name="content" value={formData.content} onChange={handleChange} required  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-48"/>
       </div>
-      <div>
-        <label>Image URL:</label>
-        <input type="text" name="image" value={formData.image} onChange={handleChange} required />
+      <div className='mb-4'>
+        <label className="block text-gray-700 font-bold mb-2 ">Image URL:</label>
+        <input type="file" name="image" value={formData.image} onChange={handleChange} required  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
       </div>
-      <button type="submit">Submit</button>
+      <button type="submit"  className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit</button>
     </form>
   );
 };

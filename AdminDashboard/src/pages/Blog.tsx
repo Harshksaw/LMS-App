@@ -7,8 +7,7 @@ import { BASE_URL } from '../services/apis';
 const Blog = () => {
 
     const [blogData, setBlogData] = useState([
-      id:"",
-      
+    
     ]);
     useEffect(() => {
       const fetchData=async ()=>{

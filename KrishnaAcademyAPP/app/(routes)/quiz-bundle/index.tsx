@@ -36,11 +36,11 @@ const ContentsScreen = ({data,  bundleId ,userId }) => {
     const checkPurchaseStatus = async () => {
       try {
         const response = await axios.post(`${SERVER_URI}/api/v1/Bundle/check-purchase`, {
-          bundleId,
-          userId
+          userId,
+          bundleId
         });
         console.log("🚀 ~ checkPurchaseStatus ~ response:", response)
-        if(response.status===200 && response.data.success){
+        if(response.status === 200 && response.data.success){
           setIsBundleBought(true);
         }
         // setIsBundleBought(response.data.isPurchased);
