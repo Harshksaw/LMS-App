@@ -110,7 +110,8 @@ const CustomDrawerContent = (props) => {
         <DrawerItem
           label="My Purchases"
           onPress={() => {
-            /* Add your my courses logic here */
+
+            router.navigate("/(routes)/my-account/OrderScreen")
           }}
           icon={({ focused, size }) => (
             <Ionicons

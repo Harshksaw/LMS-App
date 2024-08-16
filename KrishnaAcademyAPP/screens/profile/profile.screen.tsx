@@ -334,7 +334,10 @@ export default function ProfileScreen() {
                       color={"black"}
                     />
                   </View>
-                  <View>
+                  <TouchableOpacity
+                  onPress={() => router.push({
+                    pathname : "/(routes)/my-account/OrderScreen"} )}
+                  >
                     <Text
                       style={{ fontSize: 16, fontFamily: "Nunito_700Bold" }}
                     >
@@ -348,7 +351,7 @@ export default function ProfileScreen() {
                     >
                       The all enrolled courses
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
                 <TouchableOpacity>
                   <AntDesign name="right" size={26} color={"#CBD5E0"} />

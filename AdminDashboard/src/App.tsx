@@ -42,6 +42,7 @@ import User from "./components/core/User/User";
 import React from "react";
 import Blog from "./pages/Blog";
 import DailyUpdateForm from "./pages/createBlog";
+import EditBlog from "./pages/EditBlog";
 
 function App() {
   const { user } = useSelector((state) => state.profile);
@@ -177,6 +178,7 @@ function App() {
 
               <Route path="/dashboard/daily-update" element={<Blog />} />
               <Route path="/dashboard/create-update" element={<DailyUpdateForm />} />
+              <Route path="/dashboard/edit-update/:id" element={<EditBlog />} />
               <Route
                 path="dashboard/create-studymaterials"
                 element={<StudyMaterials />}

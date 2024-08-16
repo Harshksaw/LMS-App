@@ -205,3 +205,23 @@ exports.getOrder = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
+
+  exports.getUserOrders = async (req, res) => {
+    try {
+        const {id} = req.params;
+        
+        const orders = await Order.find({ user: id }).populate('User')
+    
+        if (!orders) {
+            return res.status(404).json({ error: 'Orders not found' });
+        }
+    
+        res.status(200).json({
+            success: true,
+            data: orders,
+        });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+        
+    }
+  }

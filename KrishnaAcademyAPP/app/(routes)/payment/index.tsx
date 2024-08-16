@@ -18,14 +18,12 @@ import RazorpayCheckout from "react-native-razorpay";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PaymentPage = () => {
-  const [items, setItems] = useState([
-    { id: "1", name: "Item 1", price: 100 },
-    { id: "2", name: "Item 2", price: 200 },
-  ]);
+  
 
   const route = useRoute();
   const { itemId, itemData, itemPrice } = route.params;
 
+  const [purchaseDetails, setPurchaseDetails] = useState<any>(null);
   const ItemData = JSON.parse(itemData);
   // console.log(
   //   "🚀 ~ file: index.tsx ~ line 136 ~ fetchBundleData ~ response",
@@ -35,19 +33,27 @@ const PaymentPage = () => {
   const [coupon, setCoupon] = useState("");
 
   const [totalPrice, setTotalPrice] = useState(
-    items.reduce((acc, item) => acc + item.price, 0)
+    ItemData.price 
   );
   const [discount, setDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState(40);
   const [Id, setItemId] = useState("");
 
-  const createOrder = async ({ user, items, totalAmount }: any) => {
+  const createOrder = async ({ user,  totalAmount }: any) => {
+    console.log(purchaseDetails, "purchaseDetails");
+
+    const items ={
+      "itemType":"Bundle",
+      "item": itemId,
+      "price": totalPrice
+    }
     try {
       const response = await axios.post("api/v1/payment/create-order", {
         user,
         items,
         totalAmount,
-        // coupon
+        details: purchaseDetails
+
       });
       return response.data;
     } catch (error) {
@@ -122,7 +128,7 @@ const PaymentPage = () => {
       .then((data) => {
         // handle success
         Toast.show("Payment successful");
-        // Alert.alert(`Success: ${data.razorpay_payment_id}`);
+        setPurchaseDetails(data);
       })
       .catch((error) => {
         console.log(error);

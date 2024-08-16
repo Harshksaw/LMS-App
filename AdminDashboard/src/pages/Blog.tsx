@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from '../services/apis';
-
+import {Link} from 'react-router-dom';
 
 
 const Blog = () => {
@@ -28,7 +28,7 @@ const Blog = () => {
       {
 
         blogData.map((blog)=>(
-          <div key={blog.id} className="w-full md:w-full lg:w-1/3 px-2 mb-4">
+          <div key={blog._id} className="w-full  px-2 mb-4">
           <BlogCard blog={blog} />
         </div>
         ))
@@ -53,6 +53,7 @@ const BlogCard = ({ blog }) => {
         <h3 className="text-lg font-semibold mb-2">{blog.heading}</h3>
         <p className="text-gray-700 mb-4">{blog.description.slice(0,100)}</p>
         <small className="text-gray-500">{new Date(blog.date).toLocaleDateString()}</small>
+        <Link to={`/dashboard/edit-update/:${blog._id}`} className="bg-blue-500 text-white px-4 py-2 mt-4 ml-4 inline-block">Edit</Link>
       </div>
     </div>
   );

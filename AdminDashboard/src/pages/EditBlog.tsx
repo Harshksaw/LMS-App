@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../services/apis';
 import toast from 'react-hot-toast';
-
+import { useParams } from 'react-router-dom';
 const DailyUpdateForm = () => {
+  const {id}= useParams();
+  
   const [formData, setFormData] = useState({
     title: '',
     heading: '',
@@ -24,14 +26,14 @@ const DailyUpdateForm = () => {
     e.preventDefault();
     try {
     toast.loading('Saving daily update...');
-      const response = await axios.post(`${BASE_URL}/api/v1/DailyUpdate/createDailyUpdate`, formData);
+      const response = await axios.put(`${BASE_URL}/api/v1/DailyUpdate/updateDailyUpdate/${id}`, formData);
       toast.dismiss();
-        toast.success('Daily update saved successfully');
-      console.log('Daily update saved:', response.data);
+        toast.success('Daily update updated successfully');
+      console.log('Daily update update:', response.data);
     } catch (error) {
-      console.error('Error saving daily update:', error);
+      console.error('Error updating daily update:', error);
       toast.dismiss();
-      toast.error('Error saving daily update');
+      toast.error('Error updating daily update');
     }
   };
 
@@ -57,7 +59,7 @@ const DailyUpdateForm = () => {
         <label className="block text-gray-700 font-bold mb-2 ">Image URL:</label>
         <input type="file" name="image" value={formData.image} onChange={handleChange} required  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
       </div>
-      <button type="submit"  className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit</button>
+      <button type="submit"  className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Update</button>
     </form>
   );
 };
