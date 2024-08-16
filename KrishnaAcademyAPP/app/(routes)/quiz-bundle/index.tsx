@@ -22,6 +22,7 @@ import InfoScreen from "./InfoScreen";
 import Button from "@/components/button/button";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("window");
 
@@ -32,9 +33,9 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
   useEffect(() => {
     const checkPurchaseStatus = async () => {
       try {
-        console.log("🚀 ~ checkPurchaseStatus ~ userId:", userId);
-        const response = await axios.post(
-          `${SERVER_URI}/api/v1/Bundle/checkPurchase`,
+        console.log("🚀 ~ checkPurchaseStatus ~ userId:", userId,
+          bundleId);
+        const response = await axios.post(`${SERVER_URI}/api/v1/Bundle/checkPurchase`,
           {
             userId,
             bundleId,
@@ -53,7 +54,7 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
     };
 
     checkPurchaseStatus();
-  }, [bundleId, userId]);
+  }, []);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -78,18 +79,20 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
             bottom: 0,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.2)",
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
           }}
         >
+          <Ionicons name="lock-closed-outline" size={100} color="red" />
           <Text
             style={{
-              color: "#fff",
+              color: "#FFF",
               marginBottom: 20,
-              fontSize: 18,
+              fontSize: 25,
+              fontWeight: "bold",
               textAlign: "center",
             }}
           >
-            You need to buy the bundle to access the content.
+              Unlock
           </Text>
           {/* <Button title="Go to Payment" onPress={() => navigate('/(routes)/payment', { itemId: bundleId })} /> */}
         </View>
@@ -104,12 +107,12 @@ const VideoScreen = ({ data }) => {
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       {videodata.length === 0 ? (
         <View style={styles.noVideoContainer}>
-          <Image
+          {/* <Image
             source={{
               uri: "https://unbridledwealth.com/wp-content/uploads/2017/08/video-placeholder.jpg",
             }} // Replace with your image URL
             style={styles.noVideoImage}
-          />
+          /> */}
           <Text style={styles.noVideoText}>No video available</Text>
         </View>
       ) : (
@@ -186,10 +189,11 @@ export default function index() {
     >
       <View
         style={{
-          height: height * 0.35,
+          height: height * 0.38,
 
           flexDirection: "column",
           justifyContent: "flex-start",
+
         }}
       >
         <Image source={{ uri: BundleData?.image }} style={styles.image} />

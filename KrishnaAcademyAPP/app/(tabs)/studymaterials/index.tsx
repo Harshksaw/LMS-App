@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import StudyMateialScreen from '@/components/Studymaterials/StudyScreen'
+import StudyMaterialScreen from '@/components/Studymaterials/StudyScreen'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function index() {
@@ -8,7 +8,7 @@ export default function index() {
     <SafeAreaView style={{
       flex:1,
     }}>
-     <StudyMateialScreen/>
+     <StudyMaterialScreen/>
     </SafeAreaView>
   )
 }

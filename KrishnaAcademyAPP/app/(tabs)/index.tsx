@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   userInfoWrapper: {
-    flexDirection: "column",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 10,
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   userDetailsWrapper: {
-    marginTop: 25,
+    // marginTop: 25,
     marginLeft: 10,
   },
   userName: {

@@ -148,7 +148,7 @@ const StudyMaterialsScreen: React.FC = () => {
 
       <FlatList
         data={studyMaterials}
-        numColumns={2}
+
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.item}
@@ -159,75 +159,23 @@ const StudyMaterialsScreen: React.FC = () => {
           >
           <Image
             style={{
-              width: '80%',
-              height: '80%',
+              width: '30%',
+              height: '90%',
               borderRadius: 5,
               alignSelf: "center",
               objectFit: "cover",
             }}
             source={{ uri: 'https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png' }}
           />
-          <View style={{ alignContent: 'flex-start' }}>
-            <View style={{ justifyContent: "space-between", flexDirection: 'row' }}>
-              <Text style={{ fontSize: 14, fontWeight: "bold" }}>{item.title}</Text>
-              <Text style={{ fontSize: 14, fontWeight: "bold", paddingHorizontal: 8, textAlign: 'center', borderWidth: 2, borderRadius: 12 }}>
-                {item.isPaid ? "paid" : 'free'}
-              </Text>
-            </View>
+          <View style={{ alignContent: 'center', justifyContent:'center' }}>
+
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>{item.title.slice(0,50)}</Text>
+              
+
 
           </View>
         </TouchableOpacity>
-          // <TouchableOpacity
-          //   style={styles.item}
-          //   // onPress={()=>{console.log(item.fileUrl, "item.description")}}
-
-          //   // onPress={() => router.push({
-          //   //   pathname: '(routes)/pdfviewer',
-          //   //   params: { pdfUri: item.fileUrl },
-          //   // })}
-
-          //   onPress={() => {
-          //     console.log(item.fileUrl, "item-----");
-          //     setPdfUri(item.fileUrl);
-          //     handleOpenMaterial();
-          //   }}
-          // >
-          //   <Text
-          //     style={{
-          //       position: "absolute",
-          //       top: 12,
-          //       left:12,
-          //       backgroundColor: "#2DC43E",
-          //       color: "white",
-          //       padding: 2,
-          //       borderRadius: 3,
-          //     }}
-          //   >
-          //     {item?.isPaid ? item?.price : "free"}
-          //   </Text>
-          //   <View
-          //     style={{
-          //       flexDirection: "column",
-          //       alignItems: "center",
-          //       gap: 5,
-          //       marginTop: 24,
-          //       height: 'auto',
-          //     }}
-          //   >
-          //       <Image
-          //           style={{
-          //             width: '80%',
-          //             height: '80%',
-          //             borderRadius: 5,
-          //             alignSelf: "center",
-          //             objectFit: "cover",
-          //           }}
-          //           source={{ uri: 'https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png' }}
-          //         />
-
-          //     <Text style={styles.title}>{item.title}</Text>
-          //   </View>
-          // </TouchableOpacity>
+          
         )}
       />
     </View>
@@ -261,6 +209,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 40,
+    // justifyContent: "center",
+    // alignItems: "center",
+
   },
   heading: {
     fontSize: 24,
@@ -269,12 +220,17 @@ const styles = StyleSheet.create({
   },
   item: {
     flex: 1,
+    width: "95%",
     marginBottom: 16,
-    flexDirection: "column",
-    height: 240,
-    maxWidth: "45%",
+    flexDirection: "row",
+    marginHorizontal: 10,
+
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    height: 120,
+    maxWidth: "95%",
     gap: 10,
-    paddingVertical: 18,
+    paddingVertical: 10,
     paddingHorizontal: 12,
     marginTop: 20,
 

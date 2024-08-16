@@ -56,17 +56,19 @@ export const styles = StyleSheet.create({
     },
     image: {
       width: "100%",
-      height: "80%",
+      height: "70%",
       // height: height * 0.3,
     },
     nameContainer: {
       height: height * 0.1,
       justifyContent: "center",
       alignItems: "center",
+      // marginVertical: 10,
     },
     name: {
       fontSize: 24,
       fontWeight: "bold",
+
     },
     tabContent: {
       flex: 1,
