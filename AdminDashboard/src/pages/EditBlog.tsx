@@ -25,21 +25,44 @@ const DailyUpdateForm = () => {
   }, []);
   const navigate = useNavigate();
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    const { name, value, files } = e.target;
+    // setFormData({
+    //   ...formData,
+    //   [name]: value,
+    // });
+    if (name === "image" && files.length > 0) {
+      setFormData({
+        ...formData,
+        [name]: files[0], // Store the file directly in the state
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       toast.loading("Saving daily update...");
+      const formDataToSubmit = new FormData();
+      formDataToSubmit.append("title", formData.title);
+      formDataToSubmit.append("heading", formData.heading);
+      formDataToSubmit.append("description", formData.description);
+      formDataToSubmit.append("content", formData.content);
+      formDataToSubmit.append("image", formData.image);
+      // const response = await axios.post(
+      //   `${BASE_URL}/api/v1/DailyUpdate/updateDailyUpdate/${id}`,
+      //   formDataToSubmit
+      // );
       const response = await axios.post(
-        `${BASE_URL}/api/v1/DailyUpdate/updateDailyUpdate/${id}`,
-        formData
+        `${BASE_URL}/api/v1/DailyUpdate/DailyUpdate/${id}`,
+        formDataToSubmit,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
+      console.log("Response path:", response.data.path);
       toast.dismiss();
       toast.success("Daily update updated successfully");
       navigate("/dashboard/daily-update");
@@ -127,7 +150,7 @@ const DailyUpdateForm = () => {
           type="file"
           name="image"
           id="image"
-          value={formData?.image}
+          // value={formData.image}
           onChange={handleChange}
           required
           className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
