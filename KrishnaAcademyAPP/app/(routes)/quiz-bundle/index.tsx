@@ -42,7 +42,7 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
           }
         );
         console.log("🚀 ~ checkPurchaseStatus ~ response:", response);
-        if (response.status === 200 && response.data.success) {
+        if (response.status === 200 ) {
           setIsBundleBought(true);
         }
         // setIsBundleBought(response.data.isPurchased);
