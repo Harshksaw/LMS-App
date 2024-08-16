@@ -45,7 +45,7 @@ exports.createDailyUpdate = async (req, res) => {
 exports.updateDailyUpdate = async (req, res) => {
   try {
     const dailyUpdate = await DailyUpdate.findById(req.params.id);
-    if (!dailyUpdate) return res.status(404).json({ message: 'Daily update not found' });
+    if (!dailyUpdate) return res.status(401).json({ message: 'Daily update not found' });
 
     dailyUpdate.title = req.body.title || dailyUpdate.title;
     dailyUpdate.heading = req.body.heading || dailyUpdate.heading;
