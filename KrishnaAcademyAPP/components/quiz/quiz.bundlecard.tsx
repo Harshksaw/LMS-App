@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import {
@@ -71,32 +72,45 @@ const QuizBundleCard = ({ quizzes }) => {
             style={styles.quizImage}
           />
           <View style={styles.quizInfo}>
+            <View style={{gap:4,paddingHorizontal:10 }}>
             <Text style={styles.itemTitle}>{quiz.name}</Text>
             <Text
               style={{
                 fontSize: 14,
                 color: "#666",
                 // width: '100%',
-                height: 50,
 
                 overflow: "hidden",
                 textAlign: "justify",
               }}
             >
               {" "}
-              Lorem, ipsum dolor sit amet consectetur{" "}
+            {quiz.shortDescription.slice(0,25)}
             </Text>
+            </View>
+          
             <View
               style={{
+                marginTop: 8,
                 flexDirection: "row",
                 justifyContent: "space-evenly",
                 alignItems: "center",
                 width: "100%",
               }}
+
             >
+              <View style={{
+                flexDirection:'row'
+
+              }}>  
+
+              <Ionicons name="timer" 
+              size={20}
+              />
               <Text style={styles.itemTitle}>
                 {convertSecondsToTime(quiz.timer)}
               </Text>
+              </View>
               <Text style={styles.itemSubtitle}>
                 Questions: {quiz.questions.length}
               </Text>
@@ -117,12 +131,12 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   quizCard: {
-    // backgroundColor: '#fff',
-    backgroundColor: "#f2eded",
+    backgroundColor: '#fff',
+    // backgroundColor: "#f2eded",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderRadius: 20,
+    borderRadius: 10,
     height: 120,
     width: "100%",
     paddingHorizontal: 20,
@@ -138,13 +152,14 @@ const styles = StyleSheet.create({
   quizImage: {
     width: "20%",
     height: 70,
-    borderRadius: 50,
+    borderRadius: 10,
   },
   quizInfo: {
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 20,
     height: "95%",
 
     marginVertical: 10,

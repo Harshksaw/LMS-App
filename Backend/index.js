@@ -10,6 +10,7 @@ const quizRoutes = require("./routes/Quiz");
 const studymaterials = require("./routes/studymaterial");
 
 const CourseBundle = require("./routes/courseBundle")
+const Dailyupdate = require("./routes/Dailyupdate")
 
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
@@ -17,6 +18,7 @@ const cors = require("cors");
 const { cloudinaryConnect } = require("./config/cloudinary");
 
 const dotenv = require("dotenv");
+
 
 
 
@@ -48,6 +50,7 @@ app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/reach", contactUsRoute);
 
 app.use("/api/v1/Bundle", CourseBundle)
+app.use("/api/v1/DailyUpdate",Dailyupdate)
 
 
 app.get("/", (req, res) => {

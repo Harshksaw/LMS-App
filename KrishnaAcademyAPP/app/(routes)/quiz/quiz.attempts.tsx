@@ -61,8 +61,14 @@ const renderItem = ({ item }) => (
     </View>
 
     <View style={styles.cardHeader}>
-    <Text>Attempt Date: {new Date(item.attemptDate).toLocaleDateString()}</Text>
-    <Text>Number of Questions: {item.questions.length}</Text>
+    <Text style={{
+      fontSize: 12,
+      color: '#888',
+    }}>Attempted: {new Date(item.attemptDate).toLocaleDateString()}</Text>
+    <Text style={{
+      fontSize: 12,
+      color: '#888',
+    }}> {item.questions.length}Questions</Text>
     {/* <View style={styles.questions}>
         <View key={index} style={styles.question}>
         <Text>User Answer: {question.userAnswer || 'Unanswered'}</Text>
@@ -78,6 +84,17 @@ const renderItem = ({ item }) => (
 
   return (
     <SafeAreaView style={styles.container}>
+      <Text
+      style={{
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
+        
+      }}
+      >
+        Quiz Attempts
+      </Text>
       <FlatList
         data={attempts}
         renderItem={renderItem}
@@ -93,8 +110,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   card: {
-    backgroundColor: 'rgb(210, 209, 209)',
-    padding: 20,
+    backgroundColor: '#fff',
+    padding: 25,
     margin: 15,
     borderRadius: 20,
     flexDirection: 'column',

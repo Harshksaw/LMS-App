@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
+  ActivityIndicator,
 
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -22,28 +23,73 @@ import { styles } from "./styles";
 import InfoScreen from "./InfoScreen";
 import Button from "@/components/button/button";
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { height, width } = Dimensions.get("window");
 
 
-const ContentsScreen = ({data}) => (
+const ContentsScreen = ({data, userId, bundleId}) => {
+  const [isBundleBought, setIsBundleBought] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const checkPurchaseStatus = async () => {
+      try {
+        const response = await axios.post(`${SERVER_URI}/api/v1/Bundle/check-purchase`, {
+          // userId,
+          // bundleId,
+        });
+        setIsBundleBought(response.data.isPurchased);
+      } catch (error) {
+        console.error('Error checking purchase status:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkPurchaseStatus();
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+
+
+
+  return(
+
+    <View style={styles.container}>
     <ScrollView style={styles.tabContent}>
-
-    <View>
-
-      <QuizCard quizzes={data.quizes} />
-
-      {/* //TODO  */}
-      {/* <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} /> */}
-
-
-
-
-    </View>
-
-  </ScrollView>
-  )
+      <View>
+        <QuizCard quizzes={data.quizes} />
+        {/* //TODO  */}
+        {/* <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} /> */}
+      </View>
+    </ScrollView>
+    {!isBundleBought && (
+      <View style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      }}>
+        <Text style={{
+    color: '#fff',
+    marginBottom: 20,
+    fontSize: 18,
+    textAlign: 'center',
+  }}>You need to buy the bundle to access the content.</Text>
+        {/* <Button title="Go to Payment" onPress={() => navigate('/(routes)/payment', { itemId: bundleId })} /> */}
+      </View>
+    )}
+  </View>
+    )
+}
 
   const VideoScreen = ({data}) => {
     const [videodata, setvideoData] = React.useState([]);
@@ -78,10 +124,15 @@ export default function index() {
   const route = useRoute();
   const { BundleId } = route.params;
 
+  const [userId, setUserId] = React.useState("");
   // console.log("🚀 ~ index ~ BundleId:", BundleId)
 
+ 
 
   const fetchBundleData = async () => {
+    const userI = await AsyncStorage.getItem("user");
+    const isUser = JSON.parse(userI);
+    setUserId(isUser._id);
     try {
       const response = await axios.get(`${SERVER_URI}/api/v1/Bundle/course-bundle/${BundleId}`);
       console.log("🚀 ~ file: index.tsx ~ line 136 ~ fetchBundleData ~ response", response.data.data);
@@ -171,7 +222,10 @@ export default function index() {
           }}
         >
           <Tab.Screen name="Overview"  component={() => <InfoScreen data={BundleData} />}  />
-          <Tab.Screen name="Content" component={() => <ContentsScreen  data={BundleData}/>} />
+          <Tab.Screen name="Content" component={() => <ContentsScreen  data={BundleData} 
+          bundleId={itemId}
+          userId={userId}
+          />} />
           <Tab.Screen name="Video" component={() => <VideoScreen data={[]}  />} />
         </Tab.Navigator>
         <Button title="Enroll Now" onPress={onPress }/>

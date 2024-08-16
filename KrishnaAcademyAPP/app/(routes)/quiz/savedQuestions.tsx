@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SERVER_URI } from '@/utils/uri';
@@ -8,11 +8,19 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 // Define the QuestionCard component
 const QuestionCard = ({ question }) => (
     <View style={styles.card}>
+       
         <Text style={styles.questionText}>{question.question.en}</Text>
         {Object.entries(question.options).map(([key, option], index) => (
-            <Text key={index} style={styles.optionText}>
-                {option.en}
-            </Text>
+            <View
+            key={index}
+            style={[
+              styles.optionContainer,
+              
+            ]}
+          >
+            <Text style={styles.optionText ,
+                option.en === question.correctAnswer.en && styles.correctAnswer}>{option.en}</Text>
+          </View>
         ))}
     </View>
 );
@@ -51,9 +59,13 @@ const SavedQuestions = () => {
             }}
             >Saved Questions</Text>
 
+            <ScrollView>
+
+
             {questions.map((question, index) => (
                 <QuestionCard key={index} question={question} />
             ))}
+            </ScrollView>
         </SafeAreaProvider>
     );
 };
@@ -76,11 +88,24 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
         elevation: 2,
     },
+    optionContainer: {
+        padding: 12,
+        marginVertical: 4,
+        borderRadius: 4,
+        borderWidth: 1,
+        borderColor: '#ccc',
+      },
     questionText: {
         fontSize: 16,
         textAlign:'left',
         fontWeight: 'bold',
     },
+    correctAnswer: {
+        // backgroundColor: 'green',
+        color: 'green',
+        fontWeight: 'bold',
+        fontSize: 16,
+      },
 
     optionText: {
         fontSize: 14,

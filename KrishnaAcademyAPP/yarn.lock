@@ -3873,6 +3873,11 @@ expo-router@~3.5.20:
     react-native-helmet-async "2.0.4"
     schema-utils "^4.0.1"
 
+expo-screen-capture@~6.0.1:
+  version "6.0.1"
+  resolved "https://registry.npmjs.org/expo-screen-capture/-/expo-screen-capture-6.0.1.tgz"
+  integrity sha512-rJnwcKxZ6anfEx2xFeRo9MAVp2JgI4S+TuhUurHRf9rildPVorS2JvLey3i5xZPs7CxEe2xcijTmr5WT5Lw4dA==
+
 expo-splash-screen@~0.27.4, expo-splash-screen@0.27.5:
   version "0.27.5"
   resolved "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-0.27.5.tgz"
@@ -4185,11 +4190,6 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
-
-fsevents@^2.3.2:
-  version "2.3.3"
-  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz"
-  integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
 
 function-bind@^1.1.2:
   version "1.1.2"
@@ -5107,10 +5107,10 @@ lighthouse-logger@^1.0.0:
     debug "^2.6.9"
     marky "^1.2.2"
 
-lightningcss-darwin-arm64@1.19.0:
+lightningcss-win32-x64-msvc@1.19.0:
   version "1.19.0"
-  resolved "https://registry.npmjs.org/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.19.0.tgz"
-  integrity sha512-wIJmFtYX0rXHsXHSr4+sC5clwblEMji7HHQ4Ub1/CznVRxtCFha6JIt5JZaNf8vQrfdZnBxLLC6R8pC818jXqg==
+  resolved "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.19.0.tgz"
+  integrity sha512-C+VuUTeSUOAaBZZOPT7Etn/agx/MatzJzGRkeV+zEABmPuntv1zihncsi+AyGmjkkzq3wVedEy7h0/4S84mUtg==
 
 lightningcss@~1.19.0:
   version "1.19.0"

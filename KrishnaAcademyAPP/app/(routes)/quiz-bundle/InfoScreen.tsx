@@ -5,6 +5,28 @@ import { styles } from "./styles";
 
 const InfoScreen = ({ data }: any) => (
   <ScrollView style={styles.tabContent}>
+    
+    <View>
+      <Text style={styles.sectionTitle}>About</Text>
+      <View style={styles.descriptionContainer}>
+        <Text style={styles.description}>
+          {data?.aboutDescription?.split("\n").map((paragraph, index) => {
+            const isBulletPoint = paragraph.trim().startsWith("-");
+            return (
+              <Text
+                key={index}
+                style={isBulletPoint ? styles.bulletPoint : styles.paragraph}
+              >
+                {isBulletPoint
+                  ? `• ${paragraph.trim().substring(1).trim()}`
+                  : paragraph.trim()}
+                {"\n"}
+              </Text>
+            );
+          })}
+        </Text>
+      </View>
+    </View>
     <View
       style={{
         flexDirection: "column",
@@ -44,27 +66,6 @@ const InfoScreen = ({ data }: any) => (
       </View>
     </View>
 
-    <View>
-      <Text style={styles.sectionTitle}>About</Text>
-      <View style={styles.descriptionContainer}>
-        <Text style={styles.description}>
-          {data?.aboutDescription?.split("\n").map((paragraph, index) => {
-            const isBulletPoint = paragraph.trim().startsWith("-");
-            return (
-              <Text
-                key={index}
-                style={isBulletPoint ? styles.bulletPoint : styles.paragraph}
-              >
-                {isBulletPoint
-                  ? `• ${paragraph.trim().substring(1).trim()}`
-                  : paragraph.trim()}
-                {"\n"}
-              </Text>
-            );
-          })}
-        </Text>
-      </View>
-    </View>
   </ScrollView>
 );
 

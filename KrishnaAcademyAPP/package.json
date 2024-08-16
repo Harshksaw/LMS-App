@@ -6,11 +6,7 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web",
-    "test": "jest --watchAll"
-  },
-  "jest": {
-    "preset": "jest-expo"
+    "web": "expo start --web"
   },
   "dependencies": {
     "@expo-google-fonts/nunito": "^0.2.3",
@@ -33,6 +29,7 @@
     "expo-linear-gradient": "^13.0.2",
     "expo-linking": "~6.3.1",
     "expo-router": "~3.5.20",
+    "expo-screen-capture": "~6.0.1",
     "expo-splash-screen": "~0.27.4",
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.4",

@@ -1,36 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput,TouchableOpacity, FlatList,Button, StyleSheet} from 'react-native';
-import axios from 'axios';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  Button,
+  StyleSheet,
+} from "react-native";
+import axios from "axios";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useRoute } from '@react-navigation/native';
-import { Image } from 'expo-image';
-// import RazorpayCheckout from 'react-native-razorpay';
+import { useRoute } from "@react-navigation/native";
+import { Image } from "expo-image";
+import { Toast } from "react-native-toast-notifications";
+import RazorpayCheckout from "react-native-razorpay";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PaymentPage = () => {
   const [items, setItems] = useState([
-    { id: '1', name: 'Item 1', price: 100 },
-    { id: '2', name: 'Item 2', price: 200 },
+    { id: "1", name: "Item 1", price: 100 },
+    { id: "2", name: "Item 2", price: 200 },
   ]);
 
   const route = useRoute();
-  const { itemId,  itemData , itemPrice} = route.params;
+  const { itemId, itemData, itemPrice } = route.params;
 
   const ItemData = JSON.parse(itemData);
-  console.log("🚀 ~ file: index.tsx ~ line 136 ~ fetchBundleData ~ response",  itemPrice, ItemData)
-  
+  // console.log(
+  //   "🚀 ~ file: index.tsx ~ line 136 ~ fetchBundleData ~ response",
+  //   ItemData
+  // );
 
-  const [coupon, setCoupon] = useState('');
+  const [coupon, setCoupon] = useState("");
 
-
-  const [totalPrice, setTotalPrice] = useState(items.reduce((acc, item) => acc + item.price, 0));
+  const [totalPrice, setTotalPrice] = useState(
+    items.reduce((acc, item) => acc + item.price, 0)
+  );
   const [discount, setDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState(40);
-  const [Id, setItemId] = useState('');
+  const [Id, setItemId] = useState("");
 
-  const createOrder = async ({user, items, totalAmount,} :any) => {
+  const createOrder = async ({ user, items, totalAmount }: any) => {
     try {
-      const response = await axios.post('api/v1/payment/create-order', {
+      const response = await axios.post("api/v1/payment/create-order", {
         user,
         items,
         totalAmount,
@@ -43,74 +56,113 @@ const PaymentPage = () => {
     }
   };
 
-
-  
   useEffect(() => {
     setItemId(itemId);
   }, []);
 
   const applyCoupon = async () => {
     try {
-      const response = await axios.post('/api/apply-coupon', { coupon });
+      const response = await axios.post("/api/apply-coupon", { coupon });
       if (response.data.success) {
         setDiscount(response.data.discount);
         setTotalPrice(totalPrice - response.data.discount);
       } else {
-        alert('Invalid coupon');
+        alert("Invalid coupon");
       }
     } catch (error) {
-      console.error('Error applying coupon:', error);
-      alert('Error applying coupon');
+      console.error("Error applying coupon:", error);
+      alert("Error applying coupon");
     }
   };
 
+  // TODO razorpoay payment
 
-//TODO razorpoay payment
-// const RazorpayPayment = () => {
-//   const handlePayment = () => {
-//     var options = {
-//       description: 'Credits towards consultation',
-//       image: 'https://i.imgur.com/3g7nmJC.png',
-//       currency: 'INR',
-//       key: 'YOUR_RAZORPAY_KEY', // Your Razorpay Key
-//       amount: '5000', // Amount in paise
-//       name: 'foo',
-//       prefill: {
-//         email: 'void@razorpay.com',
-//         contact: '9191919191',
-//         name: 'Razorpay Software'
-//       },
-//       theme: { color: '#F37254' }
-//     };
-
-//     RazorpayCheckout.open(options).then((data) => {
-//       // handle success
-//       Alert.alert(`Success: ${data.razorpay_payment_id}`);
-//     }).catch((error) => {
-//       // handle failure
-//       Alert.alert(`Error: ${error.code} | ${error.description}`);
-//     });
-//   };
+  const handlePayment = async () => {
+    const userI = await AsyncStorage.getItem("user");
+    const isUser = JSON.parse(userI);
 
 
-  
+
+    if (!isUser.email || !isUser.phoneNumber || !isUser.name) {
+      console.log(isUser.email, isUser.phoneNumber, isUser.name);
+      Toast.show("Incomplete user data");
+      throw new Error("Incomplete user data");
+    }
+
+
+    if (!ItemData || !ItemData.bundleName) {
+      Toast.show("Item data not found");
+      throw new Error("Item data not found");
+    }
+
+    if (!itemPrice) {
+      console.log(itemPrice, "itemPrice");
+      Toast.show("Item price not found");
+      throw new Error("Item price not found");
+    }
+
+
+
+    var options = {
+      description: `Buying ${ItemData.bundleName} for ${itemPrice}`,
+      image: `${ItemData.image}`,
+      currency: "INR",
+      key: "rzp_test_frHyAhT1IdPBwO", // Your api key
+      amount: `${itemPrice}*100`,
+      name: `${ItemData.bundleName}`,
+      prefill: {
+        email: `${isUser.email}`,
+        contact: `${isUser.phoneNumber}`,
+        name: `${isUser.name}`,
+      },
+      theme: { color: "rgb(247, 70, 70)" },
+    };
+
+    await RazorpayCheckout.open(options)
+      .then((data) => {
+        // handle success
+        Toast.show("Payment successful");
+        // Alert.alert(`Success: ${data.razorpay_payment_id}`);
+      })
+      .catch((error) => {
+        console.log(error);
+        // handle failure
+        Toast.show("Payment failed");
+        // Alert.alert(`Error: ${error.code} | ${error.description}`);
+      });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-
-      <View
-      style={{alignItems: 'center', justifyContent: 'center',}}
-      >
-        <Text style={{fontSize: 24,fontWeight: 'bold',}}>{"Purchase Details"}</Text>
-        <Image source={{uri: ItemData.image}} style={{width: 200, height: 200, borderRadius: 12, marginVertical: 12}} />
-
-
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+          {"Purchase Details"}
+        </Text>
+       
+        <Image
+          source={{ uri: ItemData.image }}
+          style={{
+            width: 200,
+            height: 200,
+            borderRadius: 12,
+            marginVertical: 12,
+          }}
+        />
+         <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+         {ItemData.bundleName}
+        </Text>
+        <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+    {ItemData.shortDescription}
+        </Text>
       </View>
-      
-          <View style={styles.item}>
-            <Text style={{fontSize: 16,fontWeight: 'bold',}}>{"Course price"}</Text>
-            <Text style={{fontSize: 16,fontWeight: 'bold',}}>${itemPrice}</Text>
-          </View>
-          {/* {
+
+      <View style={styles.item}>
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+          {"Course price"}
+        </Text>
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>₹{itemPrice}</Text>
+      </View>
+      {/* {
         couponApplied > 0 && (
           <View style={styles.item}>
           <Text style={{fontSize: 16,fontWeight: 'bold',}}>{"Coupon discount"}</Text>
@@ -119,9 +171,8 @@ const PaymentPage = () => {
         )
       } */}
 
+      <Text style={styles.total}>Total Price: ₹{totalPrice}</Text>
 
-      <Text style={styles.total}>Total Price: ${totalPrice}</Text>
-    
       {/*
     
       <TextInput
@@ -135,10 +186,25 @@ const PaymentPage = () => {
         <Text style={{color: 'white', textAlign: 'center'}}>Apply coupon</Text>
       </TouchableOpacity>
       </View> */}
-      
-      <TouchableOpacity 
-      style={{backgroundColor: "red", padding:12,borderRadius: 24, alignSelf: 'center',elevation: 4 , alignItems: 'center',marginHorizontal:'auto', width: '80%', position: 'absolute', bottom: 24}}   onPress={applyCoupon}>
-        <Text style={{color: 'white', textAlign: 'center'}}>Confirm purchase</Text>
+
+      <TouchableOpacity
+        style={{
+          backgroundColor: "red",
+          padding: 12,
+          borderRadius: 24,
+          alignSelf: "center",
+          elevation: 4,
+          alignItems: "center",
+          marginHorizontal: "auto",
+          width: "80%",
+          position: "absolute",
+          bottom: 24,
+        }}
+        onPress={handlePayment}
+      >
+        <Text style={{ color: "white", textAlign: "center" }}>
+          Confirm purchase
+        </Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -148,30 +214,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingVertical: 40
+    paddingVertical: 40,
   },
   item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 10,
   },
   input: {
-    alignSelf:'center',
-    width: '80%',
+    alignSelf: "center",
+    width: "80%",
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 10,
     borderRadius: 24,
     marginBottom: 10,
   },
   total: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 20,
+    fontSize: 25,
+    fontWeight: "bold",
+    marginTop: 50,
   },
   discount: {
     fontSize: 16,
-    color: 'green',
+    color: "green",
     marginTop: 10,
   },
 });
