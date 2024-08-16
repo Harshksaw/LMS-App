@@ -26,14 +26,14 @@ const QuizBundleCard = ({ quizzes }) => {
 
 
 
-    // router.push(
-    //   {
+  // router.push(
+  //   {
 
-    //     pathname: "/(routes)/quiz/quiz.details",
-    //     params:{quizId :quizzes._ }
-    //   }
+  //     pathname: "/(routes)/quiz/quiz.details",
+  //     params:{quizId :quizzes._ }
+  //   }
 
-    // )
+  // )
 
 
 
@@ -50,16 +50,16 @@ const QuizBundleCard = ({ quizzes }) => {
       </Text>
       {quizzes?.map((quiz) => (
         <TouchableOpacity
-          key={quiz.id}
+          key={quiz._id}
           style={styles.quizCard}
           onPress={() => {
             router.push(
               {
-        
+
                 pathname: "/(routes)/quiz/quiz.details",
-                params:{quizId :quiz._id }
+                params: { quizId: quiz._id }
               }
-        
+
             )
           }}
         >
@@ -72,23 +72,23 @@ const QuizBundleCard = ({ quizzes }) => {
             style={styles.quizImage}
           />
           <View style={styles.quizInfo}>
-            <View style={{gap:4,paddingHorizontal:10 }}>
-            <Text style={styles.itemTitle}>{quiz.name}</Text>
-            <Text
-              style={{
-                fontSize: 14,
-                color: "#666",
-                // width: '100%',
+            <View style={{ gap: 4, paddingHorizontal: 10 }}>
+              <Text style={styles.itemTitle}>{quiz.name}</Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "#666",
+                  // width: '100%',
 
-                overflow: "hidden",
-                textAlign: "justify",
-              }}
-            >
-              {" "}
-            {quiz.shortDescription.slice(0,25)}
-            </Text>
+                  overflow: "hidden",
+                  textAlign: "justify",
+                }}
+              >
+                {" "}
+                {quiz.shortDescription.slice(0, 25)}
+              </Text>
             </View>
-          
+
             <View
               style={{
                 marginTop: 8,
@@ -100,16 +100,16 @@ const QuizBundleCard = ({ quizzes }) => {
 
             >
               <View style={{
-                flexDirection:'row'
+                flexDirection: 'row'
 
-              }}>  
+              }}>
 
-              <Ionicons name="timer" 
-              size={20}
-              />
-              <Text style={styles.itemTitle}>
-                {convertSecondsToTime(quiz.timer)}
-              </Text>
+                <Ionicons name="timer"
+                  size={20}
+                />
+                <Text style={styles.itemTitle}>
+                  {convertSecondsToTime(quiz.timer)}
+                </Text>
               </View>
               <Text style={styles.itemSubtitle}>
                 Questions: {quiz.questions.length}

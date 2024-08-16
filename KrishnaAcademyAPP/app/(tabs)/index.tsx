@@ -33,8 +33,8 @@ const UserInfoContent = () => {
         source={{
           uri: `https://api.dicebear.com/5.x/initials/svg?seed=${user?.name}`,
         }}
-        width={60}
-        height={60}
+        width={50}
+        height={50}
         style={{ borderRadius: 40 }}
       />
       <View style={styles.userDetailsWrapper}>
@@ -50,6 +50,7 @@ const CustomDrawerContent = (props) => {
   const navigation = useNavigation();
   return (
     <DrawerContentScrollView {...props}
+   
 
 
     >
@@ -122,7 +123,14 @@ const CustomDrawerContent = (props) => {
           )}
         />
       </View>
-      <View style={styles.section}>
+      <View style={
+        {
+          marginTop: 10,
+          borderTopWidth: 1,
+          borderTopColor: "#ccc",
+          paddingTop: 5,
+        }
+      }>
         <Text style={styles.heading}>Others</Text>
         <DrawerItem
           label="Share this App"
@@ -286,10 +294,10 @@ export default function index() {
 
 const styles = StyleSheet.create({
   section: {
-    marginTop: 20,
+    marginTop: 10,
     borderTopWidth: 1,
     borderTopColor: "#ccc",
-    paddingTop: 10,
+    paddingTop: 5,
   },
   heading: {
     fontSize: 16,
@@ -306,7 +314,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 10,
-    paddingVertical: 10,
+    paddingVertical: 5,
 
     // borderBottomColor: "#000",
     // borderBottomWidth: 1,
@@ -325,7 +333,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   userEmail: {
-    fontSize: 16,
+    fontSize: 12,
     fontStyle: "italic",
     textAlign: "center",
     textDecorationLine: "underline",

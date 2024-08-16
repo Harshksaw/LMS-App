@@ -17,10 +17,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/App.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.harsh10021.lms"
+
+
     },
     "web": {
       "bundler": "metro",
