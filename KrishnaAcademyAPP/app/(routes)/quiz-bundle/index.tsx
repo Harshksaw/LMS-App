@@ -15,7 +15,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 
 
 import QuizCard from "@/components/quiz/quiz.bundlecard";
-import StudyMaterialCard from "@/components/quiz/studymaterial";
+
 import { useRoute } from "@react-navigation/native";
 import { SERVER_URI } from "@/utils/uri";
 import axios from "axios";
@@ -28,7 +28,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const { height, width } = Dimensions.get("window");
 
 
-const ContentsScreen = ({data, userId, bundleId}) => {
+const ContentsScreen = ({data,  bundleId ,userId }) => {
   const [isBundleBought, setIsBundleBought] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -36,10 +36,14 @@ const ContentsScreen = ({data, userId, bundleId}) => {
     const checkPurchaseStatus = async () => {
       try {
         const response = await axios.post(`${SERVER_URI}/api/v1/Bundle/check-purchase`, {
-          // userId,
-          // bundleId,
+          userId,
+          bundleId
         });
-        setIsBundleBought(response.data.isPurchased);
+        console.log("🚀 ~ checkPurchaseStatus ~ response:", response)
+        if(response.status === 200 && response.data.success){
+          setIsBundleBought(true);
+        }
+        // setIsBundleBought(response.data.isPurchased);
       } catch (error) {
         console.error('Error checking purchase status:', error);
       } finally {
@@ -48,7 +52,7 @@ const ContentsScreen = ({data, userId, bundleId}) => {
     };
 
     checkPurchaseStatus();
-  }, []);
+  }, [bundleId, userId]);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -120,7 +124,7 @@ const Tab = createMaterialTopTabNavigator();
 export default function index() {
 
   const [BundleData, setBundleData] = React.useState([]);
-  
+
   const route = useRoute();
   const { BundleId } = route.params;
 
@@ -223,7 +227,7 @@ export default function index() {
         >
           <Tab.Screen name="Overview"  component={() => <InfoScreen data={BundleData} />}  />
           <Tab.Screen name="Content" component={() => <ContentsScreen  data={BundleData} 
-          bundleId={itemId}
+          bundleId={BundleId}
           userId={userId}
           />} />
           <Tab.Screen name="Video" component={() => <VideoScreen data={[]}  />} />

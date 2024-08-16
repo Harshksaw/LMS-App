@@ -5,7 +5,7 @@ import { useRoute } from '@react-navigation/native';
 import { SERVER_URI } from '@/utils/uri';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, useNavigation } from 'expo-router';
+import { router } from 'expo-router';
 
 const QuizAttempts = () => {
   const [attempts, setAttempts] = useState<any[]>([]);
@@ -17,7 +17,7 @@ const QuizAttempts = () => {
       try {
         const userI = await AsyncStorage.getItem("user");
         const isUser = JSON.parse(userI);
-        const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAllAttempt/${isUser._id}`);
+        const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAllAttempt/${isUser._id}`)
         const data = response.data.data;
         setAttempts(data); // Directly set the fetched data
       } catch (error) {
@@ -31,7 +31,15 @@ const QuizAttempts = () => {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return  (
+
+      <ActivityIndicator size="large" color="#0000ff" style={{
+      
+      flex:1,
+      alignItems:'center'
+      }}/> 
+    ) 
+    
   }
 
 
