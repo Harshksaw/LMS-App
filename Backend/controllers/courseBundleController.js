@@ -261,3 +261,23 @@ const dateObject = new Date(req.body.date);
       res.status(500).json({ error: error.message });
     }
   }
+
+  exports.checkPurchase = async (req, res) => {
+
+    const { userId, courseId } = req.body;
+    console.log("🚀 ~ exports.checkPurchase= ~ userId, courseId", userId, courseId)
+
+      try {
+        const user = await User.findOne({ _id: userId, courses: courseId }).lean();
+    
+       
+    if (!user) {
+      return res.status(404).json({ message: "Course not found for the user" });
+    }
+    res.status(200).json({ message: "Course exists for the user", data: user });
+      } catch (error) {
+        console.error('Error checking course ID:', error);
+        throw error;
+      }
+
+  }

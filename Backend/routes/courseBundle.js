@@ -51,5 +51,6 @@ router.post("/assignCourseBundle",courseBundleController.assignCourseBundle);
 router.get('/getUserBundleQuizzes/:id', courseBundleController.getUserQuizzes );
 
 
+router.post('/check-purchase', courseBundleController.checkPurchase);
 
 module.exports = router

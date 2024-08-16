@@ -1,5 +1,6 @@
 import { View, Text, SafeAreaView, StyleSheet } from 'react-native'
 import React from 'react'
+import DailyUpdatesScreen from './DailyUpdateScreen';
 
 export default function dailyIpdates() {
   return (
