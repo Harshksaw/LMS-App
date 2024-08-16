@@ -12,10 +12,10 @@ import {
 } from "react-native";
 
 const QuizBundleCard = ({ quizzes }) => {
-  console.log(
-    "🚀 ~ file: quiz.bundlecard.tsx ~ line 10 ~ QuizBundleCard ~ quizzes",
-    quizzes
-  );
+  // console.log(
+  //   "🚀 ~ file: quiz.bundlecard.tsx ~ line 10 ~ QuizBundleCard ~ quizzes",
+  //   quizzes
+  // );
 
   const convertSecondsToTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
