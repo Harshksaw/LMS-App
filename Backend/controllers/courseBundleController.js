@@ -269,6 +269,7 @@ const dateObject = new Date(req.body.date);
 
       try {
         const user = await User.findOne({ _id: userId, courses: courseId }).lean();
+        console.log("🚀 ~ exports.checkPurchase= ~ user:", user)
     
        
     if (!user) {

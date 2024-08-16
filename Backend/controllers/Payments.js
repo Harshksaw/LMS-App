@@ -173,18 +173,23 @@ exports.sendPaymentSuccessEmail = async(req, res) => {
 // Create a new order
 exports.createOrder = async (req, res) => {
     try {
-      const { user, items, totalAmount } = req.body;
+      const { user, items, totalAmount ,details} = req.body;
   
-      const order = new Order({
+      const orderCreated = new Order({
         user,
         items,
         totalAmount,
+        details
 
 
       });
   
-      await order.save();
-      res.status(201).json(order);
+        await Order.save();
+        
+      res.status(201).json({
+        success: true,
+        data: orderCreated,
+      });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -205,3 +210,23 @@ exports.getOrder = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
+
+  exports.getUserOrders = async (req, res) => {
+    try {
+        const {id} = req.params;
+        
+        const orders = await Order.find({ user: id }).populate('User')
+    
+        if (!orders) {
+            return res.status(404).json({ error: 'Orders not found' });
+        }
+    
+        res.status(200).json({
+            success: true,
+            data: orders,
+        });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+        
+    }
+  }

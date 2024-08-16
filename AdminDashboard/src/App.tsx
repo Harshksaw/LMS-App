@@ -40,6 +40,9 @@ import EditQuiz from "./pages/EditQuiz";
 import AllUsers from "./pages/AllUsers";
 import User from "./components/core/User/User";
 import React from "react";
+import Blog from "./pages/Blog";
+import DailyUpdateForm from "./pages/createBlog";
+import EditBlog from "./pages/EditBlog";
 
 function App() {
   const { user } = useSelector((state) => state.profile);
@@ -172,6 +175,10 @@ function App() {
               <Route path="dashboard/user/:id" element={<User />} />
               <Route path="dashboard/my-quiz" element={<MyQuiz />} />
               <Route path="/dashboard/quiz/:id" element={<EditQuiz />} />
+
+              <Route path="/dashboard/daily-update" element={<Blog />} />
+              <Route path="/dashboard/create-update" element={<DailyUpdateForm />} />
+              <Route path="/dashboard/edit-update/:id" element={<EditBlog />} />
               <Route
                 path="dashboard/create-studymaterials"
                 element={<StudyMaterials />}

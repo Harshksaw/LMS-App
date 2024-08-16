@@ -86,18 +86,18 @@ export const sidebarLinks = [
     type: ACCOUNT_TYPE.ADMIN,
     icon: "VscCreditCard",
   },
-  // {
-  //   id: 13,
-  //   name: "Settings",
-  //   path: "/dashboard/settings",
-  //   type: ACCOUNT_TYPE.ADMIN,
-  //   icon: "VscSettingsGear",
-  // },
-  // {
-  //   id: 14,
-  //   name: "Logout",
-  //   path: "/dashboard/logout",
-  //   type: ACCOUNT_TYPE.ADMIN,
-  //   icon: "VscSignOut",
-  // },
+  {
+    id: 13,
+    name: "Daily Update",
+    path: "/dashboard/daily-update",
+    type: ACCOUNT_TYPE.ADMIN,
+    icon: "VscLibrary",
+  },
+  {
+    id: 14,
+    name: "Create Daily Update",
+    path: "/dashboard/create-update",
+    type: ACCOUNT_TYPE.ADMIN,
+    icon: "VscAdd",
+  },
 ];
