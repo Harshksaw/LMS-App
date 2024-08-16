@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     flexDirection: "column",
     height: 240,
-    maxWidth: "50%",
+    maxWidth: "45%",
     gap: 10,
     paddingVertical: 18,
     paddingHorizontal: 12,

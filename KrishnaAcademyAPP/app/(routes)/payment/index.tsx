@@ -16,12 +16,14 @@ import { Image } from "expo-image";
 import { Toast } from "react-native-toast-notifications";
 import RazorpayCheckout from "react-native-razorpay";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SERVER_URI } from "@/utils/uri";
 
 const PaymentPage = () => {
-  
+
 
   const route = useRoute();
   const { itemId, itemData, itemPrice } = route.params;
+  const [isUser, setIsUser] = useState<any>({});
 
   const [purchaseDetails, setPurchaseDetails] = useState<any>(null);
   const ItemData = JSON.parse(itemData);
@@ -33,28 +35,34 @@ const PaymentPage = () => {
   const [coupon, setCoupon] = useState("");
 
   const [totalPrice, setTotalPrice] = useState(
-    ItemData.price 
+    ItemData.price
   );
   const [discount, setDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState(40);
   const [Id, setItemId] = useState("");
 
-  const createOrder = async ({ user,  totalAmount }: any) => {
+  const createOrder = async ({ user, totalAmount }: any) => {
     console.log(purchaseDetails, "purchaseDetails");
 
-    const items ={
-      "itemType":"Bundle",
+    const items = {
+      "itemType": "Bundle",
       "item": itemId,
       "price": totalPrice
     }
     try {
-      const response = await axios.post("api/v1/payment/create-order", {
+      const response = await axios.post(`${SERVER_URI}/api/v1/payment/create-order`, {
         user,
         items,
         totalAmount,
         details: purchaseDetails
 
       });
+      console.log(response.data, "response.data");
+      Toast.show("Order created successfully", {
+        type: "success",
+        duration: 3000,
+        placement: "top",
+      })
       return response.data;
     } catch (error) {
       console.error(error);
@@ -64,6 +72,13 @@ const PaymentPage = () => {
 
   useEffect(() => {
     setItemId(itemId);
+
+    const getUser = async () => {
+      const userI = await AsyncStorage.getItem("user");
+      const isUser = JSON.parse(userI);
+      setIsUser(isUser);
+    }
+    getUser();
   }, []);
 
   const applyCoupon = async () => {
@@ -84,37 +99,39 @@ const PaymentPage = () => {
   // TODO razorpoay payment
 
   const handlePayment = async () => {
-    const userI = await AsyncStorage.getItem("user");
-    const isUser = JSON.parse(userI);
+
+
+    console.log(isUser.email, isUser.phoneNumber, isUser.name, "isUser");
+    console.log(ItemData, ItemData.bundleName,ItemData.price , "ItemData");
 
 
 
     if (!isUser.email || !isUser.phoneNumber || !isUser.name) {
       console.log(isUser.email, isUser.phoneNumber, isUser.name);
       Toast.show("Incomplete user data");
-      throw new Error("Incomplete user data");
+
     }
 
 
     if (!ItemData || !ItemData.bundleName) {
       Toast.show("Item data not found");
-      throw new Error("Item data not found");
+
     }
 
     if (!itemPrice) {
       console.log(itemPrice, "itemPrice");
       Toast.show("Item price not found");
-      throw new Error("Item price not found");
+
     }
 
 
 
     var options = {
-      description: `Buying ${ItemData.bundleName} for ${itemPrice}`,
+      description: `Buying ${ItemData.bundleName} for ${ItemData.price}`,
       image: `${ItemData.image}`,
       currency: "INR",
       key: "rzp_test_frHyAhT1IdPBwO", // Your api key
-      amount: `${itemPrice}*100`,
+      amount: `${ItemData.price * 100}`,
       name: `${ItemData.bundleName}`,
       prefill: {
         email: `${isUser.email}`,
@@ -124,18 +141,45 @@ const PaymentPage = () => {
       theme: { color: "rgb(247, 70, 70)" },
     };
 
-    await RazorpayCheckout.open(options)
-      .then((data) => {
-        // handle success
-        Toast.show("Payment successful");
-        setPurchaseDetails(data);
-      })
-      .catch((error) => {
-        console.log(error);
-        // handle failure
-        Toast.show("Payment failed");
-        // Alert.alert(`Error: ${error.code} | ${error.description}`);
+    try {
+        Toast.show("Processing payment",{
+
+          type: 'info',
+          duration: 3000,
+          placement: 'top'
+        })
+      const data = RazorpayCheckout.open(options)
+      await createOrder({ user: isUser, totalAmount: totalPrice });
+      setPurchaseDetails(data);
+      Toast.show("Payment successful",{
+        type: 'success',
+        duration: 1000,
+        placement: 'top'
       });
+  
+      
+    } catch (error) {
+      console.error("Error creating order:", error);
+      Toast.show("Error creating")
+      
+    }
+   
+
+      // .then((data) => {
+
+      //   // handle success
+
+        
+      // })
+      // .catch((error) => {
+      //   console.log(error);
+      //   // handle failure
+      //   Toast.show("Payment failed");
+      //   // Alert.alert(`Error: ${error.code} | ${error.description}`);
+      // });
+
+
+
   };
 
   return (
@@ -144,7 +188,7 @@ const PaymentPage = () => {
         <Text style={{ fontSize: 24, fontWeight: "bold" }}>
           {"Purchase Details"}
         </Text>
-       
+
         <Image
           source={{ uri: ItemData.image }}
           style={{
@@ -154,11 +198,11 @@ const PaymentPage = () => {
             marginVertical: 12,
           }}
         />
-         <Text style={{ fontSize: 24, fontWeight: "bold" }}>
-         {ItemData.bundleName}
+        <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+          {ItemData.bundleName}
         </Text>
         <Text style={{ fontSize: 24, fontWeight: "bold" }}>
-    {ItemData.shortDescription}
+          {ItemData.shortDescription}
         </Text>
       </View>
 
