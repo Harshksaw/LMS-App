@@ -4,9 +4,10 @@ import useUser from "@/hooks/auth/useUser";
 import Material from "@/screens/material";
 import { SERVER_URI } from "@/utils/uri";
 import axios from "axios";
-import { LinearGradient } from "expo-linear-gradient";
+
 import { useEffect, useState } from "react";
-import { FlatList } from "react-native";
+
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function index() {
   const [courses, setcourses] = useState<CoursesType[]>([]);
@@ -24,9 +25,21 @@ export default function index() {
   }, [loader, user]);
 
   return (
-    <>
+    <SafeAreaView 
+    style={{
+      flex: 1,
+paddingTop: 20,
+    }}
+    >
+
+      {/* {loader || loading ? (
+        // <ActivityIndicator color={"blue"}  />
+      ) : (
+      
+        
+      )} */}
      
-      <Material />
-    </>
+
+    </SafeAreaView>
   );
 }

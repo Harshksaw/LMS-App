@@ -184,7 +184,7 @@ const PaymentPage = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ alignItems: "center", justifyContent: "center" }}>
+      <View style={{ alignItems: "center", justifyContent: "center", gap:10 }}>
         <Text style={{ fontSize: 24, fontWeight: "bold" }}>
           {"Purchase Details"}
         </Text>
@@ -212,19 +212,18 @@ const PaymentPage = () => {
         </Text>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>₹{itemPrice}</Text>
       </View>
-      {/* {
+      {
         couponApplied > 0 && (
           <View style={styles.item}>
           <Text style={{fontSize: 16,fontWeight: 'bold',}}>{"Coupon discount"}</Text>
           <Text style={{fontSize: 16,fontWeight: 'bold',}}>${couponApplied}</Text>
         </View>
         )
-      } */}
+      }
 
-      <Text style={styles.total}>Total Price: ₹{totalPrice}</Text>
 
-      {/*
-    
+      
+      <View>
       <TextInput
         style={styles.input}
         placeholder="Enter coupon code"
@@ -235,7 +234,10 @@ const PaymentPage = () => {
       style={{backgroundColor: "red", padding:12,borderRadius: 24, alignSelf: 'center',elevation: 4 , alignItems: 'center',marginHorizontal:'auto', width: '80%'}}   onPress={applyCoupon}>
         <Text style={{color: 'white', textAlign: 'center'}}>Apply coupon</Text>
       </TouchableOpacity>
-      </View> */}
+      </View>
+
+
+      <Text style={styles.total}>Total Price: ₹{totalPrice}</Text>
 
       <TouchableOpacity
         style={{
