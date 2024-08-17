@@ -129,7 +129,6 @@ const renderCources = ({ item }) => {
           backgroundColor: '#fff',
           // marginTop: -15,
           width: "100%",
-          marginVertical: 10,
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "flex-start",
@@ -140,6 +139,7 @@ const renderCources = ({ item }) => {
           style={{
             // color: "white",
             fontSize: 16,
+            marginBottom: 14,
             fontWeight: "600",
             textAlign: "left",
           }}
@@ -147,7 +147,7 @@ const renderCources = ({ item }) => {
           {item.bundleName}
 
         </Text>
-        <Text
+        {/* <Text
           style={{
             // color: "white",
             fontSize: 12,
@@ -156,7 +156,7 @@ const renderCources = ({ item }) => {
           }}
         >
           {item.aboutDescription.slice(0, 15)}
-        </Text>
+        </Text> */}
       </View>
     </TouchableOpacity>
   )

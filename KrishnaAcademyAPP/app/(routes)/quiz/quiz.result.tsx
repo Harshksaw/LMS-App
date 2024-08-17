@@ -1,11 +1,11 @@
 
 import  PieCharts  from "@/components/charts/PaiCharts";
 import { SERVER_URI } from "@/utils/uri";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ScrollView, BackHandler } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // const arrayOfObjects = [
@@ -58,9 +58,23 @@ const calculateTotals = (data) => {
 export default function quizresult() {
   const route = useRoute();
   const { attemptId, quizId } = route.params as any;
-
+  const navigation = useNavigation();
   
 
+  useEffect(() => {  
+    const backAction = () => {  
+      // TODO: HARSH
+      // navigation.navigate(); 
+      return true; // Prevent the default back action  
+    };  
+
+    const backHandler = BackHandler.addEventListener(  
+      'hardwareBackPress',  
+      backAction  
+    );  
+
+    return () => backHandler.remove(); // Clean up the event listener on unmount  
+  }, [navigation]);  
 
 
   const [questions, setQuestions] = useState<any[]>([]);
@@ -156,8 +170,9 @@ export default function quizresult() {
           onPress={()=> {
 
             router.push({
-              pathname : "/(routes)/quiz/quiz.solution"
-          })
+              pathname: '/(routes)/quiz/quiz.solution',
+              params: {attemptId : attemptId}
+            })
           }}
           style={{
             flex: 1,

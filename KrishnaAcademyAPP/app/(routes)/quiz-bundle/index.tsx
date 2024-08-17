@@ -69,7 +69,7 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
           {/* <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} /> */}
         </View>
       </ScrollView>
-      {!isBundleBought && (
+      {isBundleBought && (
         <View
           style={{
             position: "absolute",
@@ -79,13 +79,13 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
             bottom: 0,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            backgroundColor: "#f4f4f480",
           }}
         >
           <Ionicons name="lock-closed-outline" size={100} color="red" />
           <Text
             style={{
-              color: "#FFF",
+              color: "red",
               marginBottom: 20,
               fontSize: 25,
               fontWeight: "bold",

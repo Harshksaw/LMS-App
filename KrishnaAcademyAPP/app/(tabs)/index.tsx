@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 16,
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "left",
   },
   userEmail: {
     fontSize: 12,

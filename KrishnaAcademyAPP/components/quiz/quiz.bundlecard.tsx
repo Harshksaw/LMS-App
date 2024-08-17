@@ -72,9 +72,9 @@ const QuizBundleCard = ({ quizzes }) => {
             style={styles.quizImage}
           />
           <View style={styles.quizInfo}>
-            <View style={{ gap: 4, paddingHorizontal: 10 }}>
+            <View style={{ gap: 4, paddingHorizontal: 2 }}>
               <Text style={styles.itemTitle}>{quiz.name}</Text>
-              <Text
+              {/* <Text
                 style={{
                   fontSize: 14,
                   color: "#666",
@@ -86,14 +86,14 @@ const QuizBundleCard = ({ quizzes }) => {
               >
                 {" "}
                 {quiz.shortDescription.slice(0, 25)}
-              </Text>
+              </Text> */}
             </View>
 
             <View
               style={{
-                marginTop: 8,
+                marginTop: 24,
                 flexDirection: "row",
-                justifyContent: "space-evenly",
+                justifyContent: "space-between",
                 alignItems: "center",
                 width: "100%",
               }}
