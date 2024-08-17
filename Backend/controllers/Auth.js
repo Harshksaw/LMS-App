@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const mailSender = require("../utils/mailSender");
 const { passwordUpdated } = require("../mail/templates/passwordUpdate");
-const { default: sendOTP } = require("../utils/otpSender");
+const sendOtp = require("../utils/otpSender");
+
 
 const MAX_ATTEMPTS = 30;
 const BAN_DURATION = 24 * 60 * 60 * 1000; // 1 day in milliseconds
@@ -55,7 +56,7 @@ exports.sendotp = async (req, res) => {
     const otpBody = await OTP.create(otpPayload);
 
     //TODO
-    await sendOTP(otp, phoneNumber);
+    await sendOtp(otp, phoneNumber);
     console.log("otpBODY -> ", otpBody);
 
     //sending...final response
