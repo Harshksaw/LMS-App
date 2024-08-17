@@ -57,9 +57,9 @@ const calculateTotals = (data) => {
 
 export default function quizresult() {
   const route = useRoute();
-  const { attemptId } = route.params as any;
+  const { attemptId, quizId } = route.params as any;
 
- 
+  
 
 
 
@@ -140,9 +140,10 @@ export default function quizresult() {
             borderRadius: 4,
           }}
           onPress={()=> {
-    // router.push({
-    // pathname:`(routes)/quiz/quiz.details/${quizId}`,
-    // })
+    router.push({
+      pathname: "/(routes)/quiz/quiz.details",
+      params: { quizId: quizId }
+    })
           }}
         >
           <Text style={{

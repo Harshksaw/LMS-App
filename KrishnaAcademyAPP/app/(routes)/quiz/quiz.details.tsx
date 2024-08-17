@@ -437,7 +437,7 @@ export default function QuizScreen() {
           pathname: "/(routes)/quiz/quiz.result",
           // pathname: "/(routes)/quiz/quiz.solution",
           // params: { quizId: quizId },
-          params: { attemptId: response.data._id },
+          params: { attemptId: response.data._id,  quizId: quizId  },
         })
 
       } else {
