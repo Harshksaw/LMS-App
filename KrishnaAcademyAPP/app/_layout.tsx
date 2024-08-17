@@ -144,8 +144,10 @@ function RootLayoutNav() {
         />
         <Stack.Screen
           name="(routes)/my-account/my-profile"
+
           options={{
-            // headerShown: false,
+
+            headerShown: false,
             title: "My Profile",
             headerBackTitle: "Back",
           }}
