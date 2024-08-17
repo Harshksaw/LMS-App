@@ -73,9 +73,10 @@ export const styles = StyleSheet.create({
     tabContent: {
       flex: 1,
       // justifyContent: "flex-start",
-      // alignItems: "center",
+
       // flexDirection:'column-reverse',
-      paddingHorizontal: 20,
+      paddingLeft: 20,
+      paddingRight: 30,
       gap:20,
       paddingTop: 20,
       paddingBottom: 10,

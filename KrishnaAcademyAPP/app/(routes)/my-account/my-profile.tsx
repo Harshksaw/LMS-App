@@ -1,9 +1,13 @@
-import Button from '@/components/button/button';
+
 import useUser from '@/hooks/auth/useUser';
 import { SERVER_URI } from '@/utils/uri';
+import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'expo-image';
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, StyleSheet, ActivityIndicator, TouchableOpacity, Button } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Toast } from 'react-native-toast-notifications';
 
 const ProfileScreen = () => {
@@ -12,15 +16,55 @@ const ProfileScreen = () => {
 
   const { user, loading, setRefetch } = useUser();
 
-  const [info, setUser] = useState({
-    dob: '', // Initial value for demonstration
+  const [info, setInfo] = useState({
+    dob: Date.now(),
+    phoneNumber: '',
     state: '',
-    city: ''
+    email: '',
+    city: '',
   });
+  const handleAdditionDetails = async () => {
+
+
+    try {
+
+      const response = await fetch(`${SERVER_URI}/api/v1/user/additionalDetails`, {
+        dob : info.dob, state : info.state, city: info.city
+
+      })
+
+      if(response.status ===200){
+        Toast.show("Profile Updated")
+      }
+
+
+    } catch (error) {
+      Toast.show('Error in updating profile', { type: 'danger' })
+
+    }
+
+  }
+
+
+  const getUserDetails = async () => {
+    const userI = await AsyncStorage.getItem("user");
+    const isUser = JSON.parse(userI);
+    setInfo({ ...info, phoneNumber: user.phoneNumber, email: user.email });
+  }
+
+  useEffect(() => {
+
+    getUserDetails();
+
+  }, [])
+
+
+
+
   const [isEditing, setIsEditing] = useState(false);
 
   const handleInputChange = (field, value) => {
-    setUser({ ...user, [field]: value });
+    setInfo({ ...info, [field]: value });
   };
 
   const handleEditPress = () => {
@@ -34,102 +78,131 @@ const ProfileScreen = () => {
 
 
 
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+  };
 
 
-  const handleAdditionDetails = async()=>{
 
 
-    try {
-
-      const response = await fetch(`${SERVER_URI}/api/v1/user/additionalDetails`, {
-        
-
-      })
-
-
-    } catch (error) {
-      Toast.show('Error in updating profile', {type: 'danger'})
-      
-    }
-
-  }
   return (
 
     user ? (
 
-    <View style={styles.container}>
-    
-    <View style={styles.userInfoWrapper}>
-        <Image
-          source={{
-            uri: `https://api.dicebear.com/5.x/initials/svg?seed=${user?.name}`,
-          }}
-          width={120}
-          height={120}
-
-          style={{
-            borderRadius: 40,
-            // margin: 10,
-          }}
-        />
-        <View style={styles.userDetailsWrapper}>
-          <Text style={styles.userName}> {user?.name}</Text>
-          <Text style={styles.userEmail}>{user?.email}</Text>
-        </View>
-      </View>
-      <Text style={styles.phoneNumber}>{user?.phoneNumber}</Text>
-
-      <View 
-      
-      style={{
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-
-      }}>
-
-      {isEditing ? (
-        <>
-          <TextInput
-            style={styles.editableInput}
-            value={info?.dob}
-            onChangeText={(value) => handleInputChange('dob', value)}
-          />
-          <TextInput
-            style={styles.editableInput}
-            value={info?.state}
-            onChangeText={(value) => handleInputChange('state', value)}
-          />
-          <TextInput
-            style={styles.editableInput}
-            value={info?.city}
-            onChangeText={(value) => handleInputChange('city', value)}
-          />
-          <Button title="Update" onPress={handleUpdatePress} />
-        </>
-      ) : (
-        <>
-          <TouchableOpacity onPress={handleEditPress}>
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: 10,
-              width: '80%',
-              borderWidth: 1,
-              borderColor: '#ccc',
-              marginTop: 10,
-            }}>
-              <Text>{info?.dob || 'Edit DOB'}</Text>
-              {/* <FontAwesomeIcon icon={faPencilAlt} /> */}
-            </View>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()}>
+          <Ionicons name='arrow-back-outline' size={30} />
           </TouchableOpacity>
-          {/* Similar components for state and city */}
-        </>
-      )}
-    </View>
-    </View>) :(
+          <Text style={styles.headerTitle}>My Profile</Text>
+          <TouchableOpacity onPress={handleEditToggle} style={{
+            backgroundColor:'red',
+            paddingHorizontal:20,
+            padding:10,
+            borderRadius:20
+          }}>
+            <Text style={styles.editButton}>{isEditing ? 'Save' : 'Edit'}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.userInfoWrapper}>
+          <Image
+            source={{
+              uri: `https://api.dicebear.com/5.x/initials/svg?seed=${info?.name}`,
+            }}
+            width={120}
+            height={120}
+            style={styles.profilePic}
+          />
+          <View style={styles.userDetailsWrapper}>
+            <Text style={styles.userName}>{user?.name}</Text>
+          </View>
+        </View>
+
+        <TextInput
+        style={styles.input}
+        value={info.phoneNumber}
+        // onChangeText={(value) => handleInputChange('phoneNumber', value)}
+        placeholder="Phone Number"
+        editable={isEditing}
+      />
+      <TextInput
+        style={styles.input}
+        value={info.email}
+        // onChangeText={(value) => handleInputChange('email', value)}
+        placeholder="Email"
+        editable={isEditing}
+      />
+      <TextInput
+        style={styles.input}
+        value={info.dob}
+        onChangeText={(value) => handleInputChange('dob', value)}
+        placeholder="Date of Birth"
+        editable={isEditing}
+      />
+      <TextInput
+        style={styles.input}
+        value={info.state}
+        onChangeText={(value) => handleInputChange('state', value)}
+        placeholder="State"
+        editable={isEditing}
+      />
+        <TextInput
+        style={styles.input}
+        value={info.city}
+        onChangeText={(value) => handleInputChange('city', value)}
+        placeholder="City"
+        editable={isEditing}
+      />
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={{
+          alignSelf:'center',
+          backgroundColor:'red',
+          borderRadius:20,
+          padding:10,
+
+        }}  onPress={handleAdditionDetails} ><Text style={{
+          color:'#fff',
+          fontSize:16,
+          fontWeight:600
+        }}>
+            Change Password
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{
+          alignSelf:'center',
+          backgroundColor:'red',
+          borderRadius:20,
+          padding:10,
+
+        }}  onPress={() => { /* Handle change password */ }} ><Text style={{
+          color:'#fff',
+          fontSize:16,
+          fontWeight:600
+        }}>
+            Logout
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{
+          alignSelf:'center',
+          backgroundColor:'red',
+          borderRadius:20,
+          padding:10,
+
+        }}  onPress={handleAdditionDetails} ><Text style={{
+          color:'#fff',
+          fontSize:16,
+          fontWeight:600
+        }}>
+        Submit
+          </Text>
+        </TouchableOpacity>
+     
+      </View>
+
+
+      </SafeAreaView>) : (
       <ActivityIndicator size="large" color="#000" />
     )
   );
@@ -138,67 +211,60 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 30,
+    paddingHorizontal:20
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    // justifyContent: 'center',
+    // paddingHorizontal:20,
+    marginBottom: 20,
+  },
+  backButton: {
+    fontSize: 16,
+    color: 'blue',
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  editButton: {
+    fontSize: 16,
 
-    padding: 20,
+    color: 'white',
+
   },
   userInfoWrapper: {
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: 50,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    // borderBottomColor: "#000",
-    // borderBottomWidth: 1,
-    // marginBottom: 10,
-  }, userDetailsWrapper: {
-    marginTop: 25,
-    marginLeft: 10,
-    flexDirection: "column",
-    gap:20,
-
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  profilePic: {
+    borderRadius: 60,
+    width: 120,
+    height: 120,
+  },
+  userDetailsWrapper: {
+    alignItems: 'center',
+    marginTop: 10,
   },
   userName: {
-    fontSize: 25,
-
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  userEmail: {
-    fontSize: 20,
-    
-    fontStyle: "italic",
-    textAlign: "center",
-    textDecorationLine: "underline",
-  },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-  name: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 20,
   },
-  email: {
-    fontSize: 16,
-    marginTop: 10,
-  },
-  phoneNumber: {
-    fontSize: 20,
-    fontStyle: 'italic',
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  editableInput: {
-    width: '80%',
+  input: {
     borderWidth: 1,
     borderColor: '#ccc',
     padding: 10,
-    marginTop: 10,
+    marginVertical: 10,
+    borderRadius: 5,
+    color:'#000'
+  },
+  buttonContainer: {
+    flexDirection:'row',
+    gap:10,
+    
+    marginTop: 20,
   },
 });
 

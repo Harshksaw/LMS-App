@@ -38,11 +38,11 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
         const response = await axios.post(`${SERVER_URI}/api/v1/Bundle/checkPurchase`,
           {
             userId,
-            bundleId,
+            courseId : bundleId,
           }
         );
         console.log("🚀 ~ checkPurchaseStatus ~ response:", response);
-        if (response.status === 200 && response.data.success) {
+        if (response.status === 200 ) {
           setIsBundleBought(true);
         }
         // setIsBundleBought(response.data.isPurchased);
@@ -63,11 +63,9 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.tabContent}>
-        <View>
           <QuizCard quizzes={data.quizes} />
           {/* //TODO  */}
           {/* <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} /> */}
-        </View>
       </ScrollView>
       {!isBundleBought && (
         <View
@@ -79,13 +77,13 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
             bottom: 0,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            backgroundColor: "#f4f4f480",
           }}
         >
           <Ionicons name="lock-closed-outline" size={100} color="red" />
           <Text
             style={{
-              color: "#FFF",
+              color: "red",
               marginBottom: 20,
               fontSize: 25,
               fontWeight: "bold",

@@ -73,7 +73,7 @@ export default function HomeScreen() {
             <TouchableOpacity
               onPress={() =>
                 router.push({
-                  pathname: "/(tabs)/quiz",
+                  pathname: "/(tabs)/courses",
                   // params: { study: JSON.stringify(studyMaterials) },
                 })
               }

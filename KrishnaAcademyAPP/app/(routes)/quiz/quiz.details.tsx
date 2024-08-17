@@ -270,12 +270,23 @@ export default function QuizScreen() {
     } else {
       setGetResultClicked(true);
       console.log("userScore", userScore);
+        fetchAttempts()
       setScoreModalVisible(true);
     }
     console.log("userScore", userScore, count);
   };
 
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
+  const fetchAttempts = async () => {
+
+      
+    const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAttemptQuiz/${attemptId || "66bc38010eb297c55055ed4b"}`);
+    const data = response.data
+    console.log("🚀 ~ fetchAttempts ~ data:", data.data.questions)
+    setQuestions(data.data.questions);
+    
+    
+  }
 
 
   const toggleColor = (index: number | null, count: number) => {
@@ -437,7 +448,7 @@ export default function QuizScreen() {
           pathname: "/(routes)/quiz/quiz.result",
           // pathname: "/(routes)/quiz/quiz.solution",
           // params: { quizId: quizId },
-          params: { attemptId: response.data._id },
+          params: { attemptId: response.data._id,  quizId: quizId  },
         })
 
       } else {

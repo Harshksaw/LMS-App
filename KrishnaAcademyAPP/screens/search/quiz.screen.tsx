@@ -97,17 +97,19 @@ const renderCources = ({ item }) => {
       >
 
 
-        {!item.image ? (
+        {item.image ? (
           <ImageBackground
+          placeholder={{uri :"https://res.cloudinary.com/dbnnlqq5v/image/upload/v1723394487/images/gxtgjwsur0ledawfh8ll.jpg"}}
             source={{ uri: item.image }}
             style={{
-              width: "100%",
-              height: "100%", // Adjusted to fill the TouchableOpacity
+              width: 160,
+              height: 140, // Adjusted to fill the TouchableOpacity
               // justifyContent: "center",
 
               // alignItems: "center",
             }}
             imageStyle={{
+              paddingHorizontal:5,
               borderRadius: 20, // Apply borderRadius to the image itself
             }}
           />
@@ -129,7 +131,6 @@ const renderCources = ({ item }) => {
           backgroundColor: '#fff',
           // marginTop: -15,
           width: "100%",
-          marginVertical: 10,
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "flex-start",
@@ -140,6 +141,7 @@ const renderCources = ({ item }) => {
           style={{
             // color: "white",
             fontSize: 16,
+            marginBottom: 14,
             fontWeight: "600",
             textAlign: "left",
           }}
@@ -147,7 +149,7 @@ const renderCources = ({ item }) => {
           {item.bundleName}
 
         </Text>
-        <Text
+        {/* <Text
           style={{
             // color: "white",
             fontSize: 12,
@@ -156,7 +158,7 @@ const renderCources = ({ item }) => {
           }}
         >
           {item.aboutDescription.slice(0, 15)}
-        </Text>
+        </Text> */}
       </View>
     </TouchableOpacity>
   )
