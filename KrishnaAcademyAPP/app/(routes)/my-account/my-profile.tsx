@@ -36,20 +36,20 @@ const ProfileScreen = () => {
 
 
 
-  const handleAdditionDetails = async()=>{
+  const handleAdditionDetails = async () => {
 
 
     try {
 
       const response = await fetch(`${SERVER_URI}/api/v1/user/additionalDetails`, {
-        
+
 
       })
 
 
     } catch (error) {
-      Toast.show('Error in updating profile', {type: 'danger'})
-      
+      Toast.show('Error in updating profile', { type: 'danger' })
+
     }
 
   }
@@ -57,79 +57,79 @@ const ProfileScreen = () => {
 
     user ? (
 
-    <View style={styles.container}>
-    
-    <View style={styles.userInfoWrapper}>
-        <Image
-          source={{
-            uri: `https://api.dicebear.com/5.x/initials/svg?seed=${user?.name}`,
-          }}
-          width={120}
-          height={120}
+      <View style={styles.container}>
+
+        <View style={styles.userInfoWrapper}>
+          <Image
+            source={{
+              uri: `https://api.dicebear.com/5.x/initials/svg?seed=${user?.name}`,
+            }}
+            width={120}
+            height={120}
+
+            style={{
+              borderRadius: 40,
+              // margin: 10,
+            }}
+          />
+          <View style={styles.userDetailsWrapper}>
+            <Text style={styles.userName}> {user?.name}</Text>
+            <Text style={styles.userEmail}>{user?.email}</Text>
+          </View>
+        </View>
+        <Text style={styles.phoneNumber}>{user?.phoneNumber}</Text>
+
+        <View
 
           style={{
-            borderRadius: 40,
-            // margin: 10,
-          }}
-        />
-        <View style={styles.userDetailsWrapper}>
-          <Text style={styles.userName}> {user?.name}</Text>
-          <Text style={styles.userEmail}>{user?.email}</Text>
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 20,
+
+          }}>
+
+          {isEditing ? (
+            <>
+              <TextInput
+                style={styles.editableInput}
+                value={info?.dob}
+                onChangeText={(value) => handleInputChange('dob', value)}
+              />
+              <TextInput
+                style={styles.editableInput}
+                value={info?.state}
+                onChangeText={(value) => handleInputChange('state', value)}
+              />
+              <TextInput
+                style={styles.editableInput}
+                value={info?.city}
+                onChangeText={(value) => handleInputChange('city', value)}
+              />
+              <Button title="Update" onPress={handleUpdatePress} />
+            </>
+          ) : (
+            <>
+              <TouchableOpacity onPress={handleEditPress}>
+                <View style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: 10,
+                  width: '80%',
+                  borderWidth: 1,
+                  borderColor: '#ccc',
+                  marginTop: 10,
+                }}>
+                  <Text>{info?.dob || 'Edit DOB'}</Text>
+                  {/* <FontAwesomeIcon icon={faPencilAlt} /> */}
+                </View>
+              </TouchableOpacity>
+              {/* Similar components for state and city */}
+            </>
+          )}
         </View>
-      </View>
-      <Text style={styles.phoneNumber}>{user?.phoneNumber}</Text>
-
-      <View 
-      
-      style={{
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-
-      }}>
-
-      {isEditing ? (
-        <>
-          <TextInput
-            style={styles.editableInput}
-            value={info?.dob}
-            onChangeText={(value) => handleInputChange('dob', value)}
-          />
-          <TextInput
-            style={styles.editableInput}
-            value={info?.state}
-            onChangeText={(value) => handleInputChange('state', value)}
-          />
-          <TextInput
-            style={styles.editableInput}
-            value={info?.city}
-            onChangeText={(value) => handleInputChange('city', value)}
-          />
-          <Button title="Update" onPress={handleUpdatePress} />
-        </>
-      ) : (
-        <>
-          <TouchableOpacity onPress={handleEditPress}>
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: 10,
-              width: '80%',
-              borderWidth: 1,
-              borderColor: '#ccc',
-              marginTop: 10,
-            }}>
-              <Text>{info?.dob || 'Edit DOB'}</Text>
-              {/* <FontAwesomeIcon icon={faPencilAlt} /> */}
-            </View>
-          </TouchableOpacity>
-          {/* Similar components for state and city */}
-        </>
-      )}
-    </View>
-    </View>) :(
+      </View>) : (
       <ActivityIndicator size="large" color="#000" />
     )
   );
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
     marginLeft: 10,
     flexDirection: "column",
-    gap:20,
+    gap: 20,
 
   },
   userName: {
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   userEmail: {
     fontSize: 20,
-    
+
     fontStyle: "italic",
     textAlign: "center",
     textDecorationLine: "underline",
