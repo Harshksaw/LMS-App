@@ -6,20 +6,21 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const mailSender = require("../utils/mailSender");
 const { passwordUpdated } = require("../mail/templates/passwordUpdate");
-const Profile = require("../models/Profile");
+const { default: sendOTP } = require("../utils/otpSender");
+
 const MAX_ATTEMPTS = 30;
 const BAN_DURATION = 24 * 60 * 60 * 1000; // 1 day in milliseconds
 
 //otp verification by SENDING OTP
 exports.sendotp = async (req, res) => {
   try {
-    //1st STEP => fetching... eamil from req.body
-    console.log("REQ BODY => ", req.body);
+
+
     const { phoneNumber } = req.body;
 
-    //check if user already present..
+
     const checkUserPresent = await User.findOne({ phoneNumber });
-    //if user is already present
+
     if (checkUserPresent) {
       return res.status(401).json({
         sucess: false,
@@ -33,7 +34,7 @@ exports.sendotp = async (req, res) => {
       lowerCaseAlphabets: false,
       specialChars: false,
     });
-    console.log("OTP GENERATED => ", otp);
+    // console.log("OTP GENERATED => ", otp);
 
     const result = await OTP.findOne({ otp: otp });
     // console.log("Result is Generate OTP Func");

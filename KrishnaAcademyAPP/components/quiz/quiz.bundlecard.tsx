@@ -14,7 +14,7 @@ import {
 const QuizBundleCard = ({ quizzes }) => {
   console.log(
     "🚀 ~ file: quiz.bundlecard.tsx ~ line 10 ~ QuizBundleCard ~ quizzes",
-    quizzes
+    quizzes.map((item) => item._id)
   );
 
   const convertSecondsToTime = (seconds) => {
@@ -23,17 +23,6 @@ const QuizBundleCard = ({ quizzes }) => {
     return `${hours}h ${minutes}m`;
   };
 
-
-
-
-  // router.push(
-  //   {
-
-  //     pathname: "/(routes)/quiz/quiz.details",
-  //     params:{quizId :quizzes._ }
-  //   }
-
-  // )
 
 
 
