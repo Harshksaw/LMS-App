@@ -3,7 +3,7 @@ import  PieCharts  from "@/components/charts/PaiCharts";
 import { SERVER_URI } from "@/utils/uri";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, ScrollView, BackHandler } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -59,12 +59,12 @@ export default function quizresult() {
   const route = useRoute();
   const { attemptId, quizId } = route.params as any;
   const navigation = useNavigation();
-  
+  const router = useRouter()
 
   useEffect(() => {  
     const backAction = () => {  
       // TODO: HARSH
-      // navigation.navigate(); 
+      router.push('/(tabs)'); 
       return true; // Prevent the default back action  
     };  
 

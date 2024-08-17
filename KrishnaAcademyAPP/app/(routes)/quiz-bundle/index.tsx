@@ -63,13 +63,11 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.tabContent}>
-        <View>
           <QuizCard quizzes={data.quizes} />
           {/* //TODO  */}
           {/* <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} /> */}
-        </View>
       </ScrollView>
-      {isBundleBought && (
+      {!isBundleBought && (
         <View
           style={{
             position: "absolute",

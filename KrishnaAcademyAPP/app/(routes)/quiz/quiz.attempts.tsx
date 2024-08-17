@@ -44,13 +44,13 @@ const QuizAttempts = () => {
 
 
 
+console.log('attemptsattemptsattemptsattempts', )
 
-
-  const handleSolutions = (id) => {
+  const handleSolutions = (id, quizId) => {
     console.log("ID", id);
     router.push({
-      pathname: '/(routes)/quiz/quiz.solution',
-      params: {attemptId : id}
+      pathname: '/(routes)/quiz/quiz.result',
+      params: {attemptId : id, quizId:quizId}
     })
 
 
@@ -61,7 +61,7 @@ const QuizAttempts = () => {
 
 const renderItem = ({ item }) => (
   <TouchableOpacity style={styles.card}
-  onPress={()=> handleSolutions(item._id)}
+  onPress={()=> handleSolutions(item._id,item.quiz._id)}
   >
     <View style={styles.cardHeader}>
       <Text style={styles.quizName}>{item.quiz.name}</Text>
