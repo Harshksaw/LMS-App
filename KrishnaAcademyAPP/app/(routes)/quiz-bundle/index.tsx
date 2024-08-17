@@ -38,7 +38,7 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
         const response = await axios.post(`${SERVER_URI}/api/v1/Bundle/checkPurchase`,
           {
             userId,
-            bundleId,
+            courseId : bundleId,
           }
         );
         console.log("🚀 ~ checkPurchaseStatus ~ response:", response);
