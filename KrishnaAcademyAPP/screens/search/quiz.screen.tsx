@@ -102,13 +102,14 @@ const renderCources = ({ item }) => {
           placeholder={{uri :"https://res.cloudinary.com/dbnnlqq5v/image/upload/v1723394487/images/gxtgjwsur0ledawfh8ll.jpg"}}
             source={{ uri: item.image }}
             style={{
-              width: "100%",
-              height: "100%", // Adjusted to fill the TouchableOpacity
+              width: 160,
+              height: 140, // Adjusted to fill the TouchableOpacity
               // justifyContent: "center",
 
               // alignItems: "center",
             }}
             imageStyle={{
+              paddingHorizontal:5,
               borderRadius: 20, // Apply borderRadius to the image itself
             }}
           />

@@ -69,7 +69,7 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
           {/* <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} /> */}
         </View>
       </ScrollView>
-      {isBundleBought && (
+      {!isBundleBought && (
         <View
           style={{
             position: "absolute",
