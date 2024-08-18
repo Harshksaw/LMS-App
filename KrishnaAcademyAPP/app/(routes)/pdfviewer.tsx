@@ -5,6 +5,7 @@ import { useRoute } from '@react-navigation/native';
 import WebView from 'react-native-webview';
 import { enableScreens, Screen } from 'react-native-screens';
 import {router} from 'expo-router';
+import Loader from '@/components/loader/loader';
 
 enableScreens();
 
@@ -31,6 +32,8 @@ const PDFViewerScreen = () => {
     };
   }, []);
 
+
+
   return (
     <Screen style={styles.screen}>
       <SafeAreaView style={styles.container}>
@@ -41,12 +44,26 @@ const PDFViewerScreen = () => {
           <Text style={styles.closeButtonText}>Close</Text>
         </TouchableOpacity>
         {loading && (
-        <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" color="#ED3137" />
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          // backgroundColor:'gray'
+        }}>
+          <ActivityIndicator size="large" color="#ED3137" style={{
+           flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }} 
+
+          />
         </View>
       )}
       <WebView
         source={{ uri: googleDocsViewerUri }}
+        onOpenWindow={()=>{
+          router.back();
+        }}
         style={styles.webview}
         onLoadStart={() => setLoading(true)}
         onLoadEnd={() => setLoading(false)}

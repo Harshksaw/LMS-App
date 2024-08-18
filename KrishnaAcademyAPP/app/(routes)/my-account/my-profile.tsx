@@ -11,18 +11,29 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Toast } from 'react-native-toast-notifications';
 
 const ProfileScreen = () => {
-
-
-
   const { user, loading, setRefetch } = useUser();
-
   const [info, setInfo] = useState({
-    dob: Date.now(),
+    dob: '',
     phoneNumber: '',
     state: '',
     email: '',
     city: '',
   });
+
+
+
+  useEffect(() => {
+
+    if (user) {
+      setInfo({
+        dob:  new Date().toISOString().split('T')[0],
+        phoneNumber: user.phoneNumber || 0,
+        state:  '',
+        email: user.email || '',
+        city:  '',
+      });
+    }
+  }, [user]);
   const handleAdditionDetails = async () => {
 
 
@@ -46,17 +57,8 @@ const ProfileScreen = () => {
   }
 
 
-  const getUserDetails = async () => {
-    const userI = await AsyncStorage.getItem("user");
-    const isUser = JSON.parse(userI);
-    setInfo({ ...info, phoneNumber: user.phoneNumber, email: user.email });
-  }
+ 
 
-  useEffect(() => {
-
-    getUserDetails();
-
-  }, [])
 
 
 
@@ -119,27 +121,54 @@ const ProfileScreen = () => {
           </View>
         </View>
 
-        <TextInput
-        style={styles.input}
-        value={info.phoneNumber}
-        // onChangeText={(value) => handleInputChange('phoneNumber', value)}
-        placeholder="Phone Number"
-        editable={isEditing}
-      />
+
+
+        <View
+        style={{
+          // borderRadius:20,
+          borderWidth:1,
+          width:'auto',
+          padding:20,
+          paddingHorizontal:10
+        }}
+        >
+          <Text
+          style={{
+            flexDirection:'row',
+            textAlign:'left'
+          }}
+          >
+            {info.phoneNumber}
+          </Text>
+        </View>
+        <View
+        style={{
+          // borderRadius:20,
+          borderWidth:1,
+          marginTop:20,
+          width:'auto',
+          padding:20,
+          paddingHorizontal:10
+        }}
+        >
+          <Text
+          style={{
+            flexDirection:'row',
+            textAlign:'left'
+          }}
+          >
+            {info.email}
+          </Text>
+        </View>
+   
       <TextInput
-        style={styles.input}
-        value={info.email}
-        // onChangeText={(value) => handleInputChange('email', value)}
-        placeholder="Email"
-        editable={isEditing}
-      />
-      <TextInput
+      
         style={styles.input}
         value={info.dob}
         onChangeText={(value) => handleInputChange('dob', value)}
         placeholder="Date of Birth"
         editable={isEditing}
-      />
+      />  
       <TextInput
         style={styles.input}
         value={info.state}

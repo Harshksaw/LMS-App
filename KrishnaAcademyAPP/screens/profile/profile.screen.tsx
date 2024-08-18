@@ -1,13 +1,15 @@
 import Loader from "@/components/loader/loader";
 import useUser from "@/hooks/auth/useUser";
-import {
-  AntDesign,
-  FontAwesome,
-  Ionicons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+
 import { LinearGradient } from "expo-linear-gradient";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
 import {
   useFonts,
   Raleway_600SemiBold,
@@ -18,21 +20,78 @@ import {
   Nunito_600SemiBold,
   Nunito_700Bold,
 } from "@expo-google-fonts/nunito";
-import { useState } from "react";
-import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
+import { useEffect, useState } from "react";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { SERVER_URI } from "@/utils/uri";
 import { router } from "expo-router";
 import { Image } from "expo-image";
 import React from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
+import Button from "@/components/button/button";
+import { Toast } from "react-native-toast-notifications";
+
+const states = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jammu and Kashmir",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttarakhand",
+  "Uttar Pradesh",
+  "West Bengal",
+];
 
 export default function ProfileScreen() {
   const { user, loading, setRefetch } = useUser();
+  // console.log("🚀 ~ ProfileScreen ~ user:", user)
+
   const [image, setImage] = useState<any>(null);
   const [loader, setLoader] = useState(false);
+  const [name, setName] = useState(user?.name);
+  const [mobileNo, setMobileNo] = useState("");
+  const [email, setEmail] = useState("");
+  const [dob, setDob] = useState(new Date());
+  const [state, setState] = useState("");
+  const [usercity, setCity] = useState("");
+  const [show, setShow] = useState(false);
 
+  useEffect(() => {
+    // Set the default value of the phoneNumber property
+    if (user) {
+      setMobileNo(user?.phoneNumber);
+    }
+  }, [user]);
+
+
+  const onChange = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate || dob;
+    setShow(false);
+    setDob(currentDate);
+  };
   let [fontsLoaded, fontError] = useFonts({
     Raleway_600SemiBold,
     Raleway_700Bold,
@@ -51,54 +110,49 @@ export default function ProfileScreen() {
     router.push("/(routes)/login");
   };
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
 
-    if (!result.canceled) {
-      const base64 = await FileSystem.readAsStringAsync(result.assets[0].uri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-      setLoader(true);
-      const base64Image = `data:image/jpeg;base64,${base64}`;
-      setImage(base64Image);
 
-      const accessToken = await AsyncStorage.getItem("token");
-      const refreshToken = await AsyncStorage.getItem("refresh_token");
+  const updateCity = (newCity: string) => {
+    // console.log(newCity);
+    setCity(newCity);
+  };
+  // console.log(user?._id)
+  const handleUpdateAdditionalDetails = async () => {
+    try {
+      const response = await axios.post(
 
-      try {
-        const response = await axios.put(
-          `${SERVER_URI}/update-user-avatar`,
-          {
-            avatar: base64Image,
-          },
-          {
-            headers: {
-              "access-token": accessToken,
-              "refresh-token": refreshToken,
-            },
-          }
-        );
-        if (response.data) {
-          setRefetch(true);
-          setLoader(false);
+        `${SERVER_URI}/api/v1/auth/additionalDetails/${user?._id}`,
+        {
+          dob,
+          state,
+          city : usercity,
         }
-      } catch (error) {
-        setLoader(false);
-        console.log(error);
+      );
+
+      if (response.status === 200) {
+        Toast.show("Additional details updated successfully!", {
+          type: "success",
+        })
+      } else {
+        alert("Error updating additional details!");
       }
+    } catch (error) {
+      console.error("Error updating additional details:", error);
+      alert("Internal server error!");
     }
   };
 
+  // console.log(user?.phoneNumber);
+  if (!user) {
+    return <ActivityIndicator
+    color={'red'}
+    size={50}
+    style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+    />
+  }
   return (
     <>
-      {loader || loading ? (
-        <Loader />
-      ) : (
+     
         <LinearGradient
           colors={["#E5ECF9", "#F6F7F9"]}
           style={{ flex: 1, paddingTop: 80 }}
@@ -106,11 +160,10 @@ export default function ProfileScreen() {
           <ScrollView>
             <View style={{ flexDirection: "row", justifyContent: "center" }}>
               <View style={{ position: "relative" }}>
-              
                 <Image
-                  source={{ uri: "https://api.dicebear.com/5.x/initials/svg?seed=Harsh" }}
-
-
+                  source={{
+                    uri: `https://api.dicebear.com/5.x/initials/svg?seed=${user.name}`,
+                  }}
                   style={{
                     width: 100,
                     height: 100,
@@ -118,296 +171,145 @@ export default function ProfileScreen() {
                     borderRadius: 100,
                   }}
                 />
-
-
               </View>
             </View>
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 25,
-                paddingTop: 10,
-                fontWeight: "600",
-              }}
-            >
-              {user?.name}
-            </Text>
-            <View style={{ marginHorizontal: 16, marginTop: 30 }}>
-              <Text
+
+            <View style={{ marginTop: 36, paddingHorizontal: 16, gap: 8 }}>
+              <Text style={{ fontSize: 16 }}>Name:</Text>
+              <TextInput
                 style={{
-                  fontSize: 20,
-                  marginBottom: 16,
-                  fontFamily: "Raleway_700Bold",
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  paddingHorizontal: 4,
+                  borderColor: "#c4c4c4",
+                  fontSize: 16,
+                  paddingVertical: 3,
                 }}
-              >
-                Account Details
-              </Text>
+                value={user.name}
+                editable={false}
+                placeholder="Name"
+              />
 
-              
-
-
-              <TouchableOpacity
+              <Text style={{ fontSize: 16 }}>Mobile No:</Text>
+              <TextInput
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: 20,
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  paddingHorizontal: 4,
+                  borderColor: "#c4c4c4",
+                  fontSize: 16,
+                  paddingVertical: 3,
                 }}
-                onPress={
-                  () => router.push("/(routes)/my-account/my-profile")
-                }
-              >
+                value={`${user.phoneNumber}`}
+                editable={false}
+                placeholder="Mobile Number"
+                keyboardType="numeric"
+              />
+
+              <Text style={{ fontSize: 16 }}>Email:</Text>
+              <TextInput
+                style={{
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  paddingHorizontal: 4,
+                  borderColor: "#c4c4c4",
+                  fontSize: 16,
+                  paddingVertical: 3,
+                }}
+                value={user.email}
+                editable={false}
+                placeholder="Email"
+                keyboardType="email-address"
+              />
+
+              <Text style={{ fontSize: 16 }}>DOB:</Text>
+              <View>
                 <View
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
-                    columnGap: 30,
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    paddingVertical: 12,
+                    paddingHorizontal: 10,
+                    borderColor: "#c4c4c4",
                   }}
                 >
-                  <View
-                    style={{
-                      borderWidth: 2,
-                      borderColor: "#dde2ec",
-                      padding: 15,
-                      borderRadius: 100,
-                      width: 55,
-                      height: 55,
-                    }}
-                  >
-                    <FontAwesome
-                      style={{ alignSelf: "center" }}
-                      name="user-o"
-                      size={20}
-                      color={"black"}
-                    />
-                  </View>
-                  <View>
-                    <Text
-                      style={{ fontSize: 16, fontFamily: "Nunito_700Bold" }}
-                    >
-                      Detail Profile
-                    </Text>
-                    <Text
-                      style={{
-                        color: "#575757",
-                        fontFamily: "Nunito_400Regular",
-                      }}
-                    >
-                      Information Account
-                    </Text>
-                  </View>
-                </View>
-                <TouchableOpacity>
-                  <AntDesign name="right" size={26} color={"#CBD5E0"} />
-                </TouchableOpacity>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: 20,
-        }}
-        onPress={() => router.push('/(routes)/my-account/saved-questions')} // Adjust navigation path
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            columnGap: 30,
-          }}
-        >
-          <View
-            style={{
-              borderWidth: 2,
-              borderColor: '#dde2ec',
-              padding: 15,
-              borderRadius: 100,
-              width: 55,
-              height: 55,
-            }}
-          >
-            <FontAwesome
-              style={{ alignSelf: 'center' }}
-              name="bookmark" // Replace with appropriate icon
-              size={20}
-              color={'black'}
-            />
-          </View>
-          <View>
-            <Text style={{ fontSize: 16, fontFamily: 'Nunito_700Bold' }}>
-              Saved Questions
-            </Text>
-            <Text style={{ color: '#575757', fontFamily: 'Nunito_400Regular' }}>
-              Your saved questions
-            </Text>
-          </View>
-        </View>
-        <TouchableOpacity>
-          <AntDesign name="right" size={26} color={'#CBD5E0'} />
-        </TouchableOpacity>
-      </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: 20,
-                }}
-                onPress={() => router.push("/(routes)/enrolled-courses")}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    columnGap: 30,
-                  }}
-                >
-                  <View
-                    style={{
-                      borderWidth: 2,
-                      borderColor: "#dde2ec",
-                      padding: 15,
-                      borderRadius: 100,
-                      width: 55,
-                      height: 55,
-                    }}
-                  >
-                    <MaterialCommunityIcons
-                      style={{ alignSelf: "center" }}
-                      name="book-account-outline"
-                      size={20}
-                      color={"black"}
-                    />
-                  </View>
-                  <View>
-                    <Text
-                      style={{ fontSize: 16, fontFamily: "Nunito_700Bold" }}
-                    >
-                      Enrolled courses
-                    </Text>
-                    <Text
-                      style={{
-                        color: "#575757",
-                        fontFamily: "Nunito_400Regular",
-                      }}
-                    >
-                      The all enrolled courses
-                    </Text>
-                  </View>
-                </View>
-                <TouchableOpacity>
-                  <AntDesign name="right" size={26} color={"#CBD5E0"} />
-                </TouchableOpacity>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: 20,
-                }}
-                onPress={() => router.push("/(routes)/enrolled-courses")}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    columnGap: 30,
-                  }}
-                >
-                  <View
-                    style={{
-                      borderWidth: 2,
-                      borderColor: "#dde2ec",
-                      padding: 15,
-                      borderRadius: 100,
-                      width: 55,
-                      height: 55,
-                    }}
-                  >
-                    <MaterialCommunityIcons
-                      style={{ alignSelf: "center" }}
-                      name="cash-multiple"
-                      size={20}
-                      color={"black"}
-                    />
-                  </View>
-                  <TouchableOpacity
-                  onPress={() => router.push({
-                    pathname : "/(routes)/my-account/OrderScreen"} )}
-                  >
-                    <Text
-                      style={{ fontSize: 16, fontFamily: "Nunito_700Bold" }}
-                    >
-                      Purchases
-                    </Text>
-                    <Text
-                      style={{
-                        color: "#575757",
-                        fontFamily: "Nunito_400Regular",
-                      }}
-                    >
-                      The all enrolled courses
-                    </Text>
+                  <Text style={{ flex: 1, color: "gray" }}>
+                    {/* {dob.toLocaleDateString()} */}
+                    {user?.additionalDetails?.dob ? user?.additionalDetails?.dob.slice(0,10) : dob.toLocaleDateString() } 
+                  </Text>
+                  <TouchableOpacity onPress={() => setShow(true)}>
+                    <Text style={{ color: "black" }}>Select date</Text>
                   </TouchableOpacity>
                 </View>
-                <TouchableOpacity>
-                  <AntDesign name="right" size={26} color={"#CBD5E0"} />
-                </TouchableOpacity>
-              </TouchableOpacity>
+                {show && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={dob}
+                    mode="date"
+                    display="default"
+                    onChange={onChange}
+                  />
+                )}
+              </View>
 
-
-              <TouchableOpacity
+              <Text style={{ fontSize: 16 }}>State:</Text>
+              <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: 20,
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  paddingHorizontal: 4,
+                  borderColor: "#c4c4c4",
+
+                  paddingVertical: 0,
                 }}
-                onPress={() => logoutHandler()}
               >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    columnGap: 30,
-                  }}
+                <Picker
+                  selectedValue={user.additionalDetails?.state ? user.additionalDetails?.state : state } 
+                  // enabled={false}
+                  onValueChange={(itemValue, itemIndex) => setState(itemValue)}
                 >
-                  <View
-                    style={{
-                      borderWidth: 2,
-                      borderColor: "#dde2ec",
-                      padding: 15,
-                      borderRadius: 100,
-                      width: 55,
-                      height: 55,
-                    }}
-                  >
-                    <Ionicons
-                      style={{ alignSelf: "center" }}
-                      name="log-out-outline"
-                      size={20}
-                      color={"black"}
-                    />
-                  </View>
-                  <TouchableOpacity onPress={() => logoutHandler()}>
-                    <Text
-                      style={{ fontSize: 16, fontFamily: "Nunito_700Bold" }}
-                    >
-                      Log Out
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <TouchableOpacity>
-                  <AntDesign name="right" size={26} color={"#CBD5E0"} />
-                </TouchableOpacity>
-              </TouchableOpacity>
+                  <Picker.Item label="Select a state" value={user?.state} />
+                  {states.map((state: any) => (
+                    <Picker.Item label={state} value={state} key={state} />
+                  ))}
+                </Picker>
+              </View>
+
+              <Text style={{ fontSize: 16 }}>City:</Text>
+              <TextInput
+                style={{
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  paddingHorizontal: 4,
+                  borderColor: '#c4c4c4',
+                  fontSize: 16,
+                  paddingVertical: 3,
+                }}
+                value={user.additionalDetails?.city ? user.additionalDetails?.city : usercity} 
+                editable={true}
+                placeholder="City"
+                onChangeText={updateCity}
+              />
+            </View>
+
+            <View style={{ paddingVertical: 24 }}>
+              <Button title="Update" onPress={handleUpdateAdditionalDetails} />
+            </View>
+            <View style={{ paddingVertical: 10 }}>
+              <Button
+                title="Logout"
+                onPress={() => {
+                  AsyncStorage.removeItem("token");
+                  AsyncStorage.removeItem("refresh_token");
+                  router.push("/(routes)/login");
+                }}
+              />
             </View>
           </ScrollView>
         </LinearGradient>
-      )}
+
     </>
   );
 }

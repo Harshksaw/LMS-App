@@ -26,7 +26,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("window");
 
-const ContentsScreen = ({ data, bundleId, userId }) => {
+const ContentsScreen = ({ data, bundleId, userId, handleBought }) => {
   const [isBundleBought, setIsBundleBought] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -43,21 +43,43 @@ const ContentsScreen = ({ data, bundleId, userId }) => {
         );
         console.log("🚀 ~ checkPurchaseStatus ~ response:", response);
         if (response.status === 200 ) {
+
+          setLoading(false)
+          handleBought();
           setIsBundleBought(true);
         }
+        
         // setIsBundleBought(response.data.isPurchased);
       } catch (error) {
-        console.error("Error checking purchase status:", error);
-      } finally {
-        setLoading(false);
+        if (error.response.status === 404 ) {
+
+          setLoading(false)
+          setIsBundleBought(false);
+        }
+       else if (error.response.status === 400) {
+        console.error("Bad request: Missing required parameters");
+      } else if (error.response.status === 401) {
+        console.error("User not authenticated");
+      } else if (error.response.status === 403) {
+        console.error("User not authorized to access this course bundle");
+      } else {
+        console.error("Unexpected status code:", error.response.status);
       }
+        console.error("Error checking purchase status:", error);
+      } 
     };
 
     checkPurchaseStatus();
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return <ActivityIndicator size="large" color="#0000ff" 
+    style={{
+      flex :1,
+      justifyContent:'center',
+      alignItems:'center'
+    }}
+    />;
   }
 
   return (
@@ -129,11 +151,16 @@ const Tab = createMaterialTopTabNavigator();
 export default function index() {
   const [BundleData, setBundleData] = React.useState([]);
 
+  const [isBought, setIsBought] = React.useState(false);
+  const handleBought = ()=>{
+    setIsBought(true);
+  }
+
   const route = useRoute();
   const { BundleId } = route.params;
 
   const [userId, setUserId] = React.useState("");
-  // console.log("🚀 ~ index ~ BundleId:", BundleId)
+
 
   const fetchBundleData = async () => {
     const userI = await AsyncStorage.getItem("user");
@@ -236,6 +263,7 @@ export default function index() {
                 data={BundleData}
                 bundleId={BundleId}
                 userId={userId}
+                handleBought={handleBought}
               />
             )}
           />
@@ -244,7 +272,13 @@ export default function index() {
             component={() => <VideoScreen data={[]} />}
           />
         </Tab.Navigator>
-        <Button title="Enroll Now" onPress={onPress} />
+        {
+          !isBought && (
+            <Button title="Enroll Now" onPress={onPress} />
+          )
+
+        }
+
       </View>
     </SafeAreaView>
   );
