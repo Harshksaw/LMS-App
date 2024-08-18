@@ -72,6 +72,32 @@ const PaymentPage = () => {
     }
   };
 
+  const assignCourse = async ({ userId, courseId  }: any) => {
+    console.log(userId, courseId, "assignCourse");
+
+ 
+    try {
+
+      console.log(
+        userId,
+        courseId,)
+      const response = await axios.post(`${SERVER_URI}/api/v1/Bundle/assignCourseBundle`, {
+        userId,
+        courseId
+      });
+      console.log(response.data, "response.data");
+      Toast.show("Order added to users successfully", {
+        type: "success",
+        duration: 3000,
+        placement: "top",
+      })
+      return response.data;
+    } catch (error) {
+      console.error(error.message);
+      // throw error;
+    }
+  };
+
   useEffect(() => {
     setItemId(itemId);
 
@@ -161,6 +187,17 @@ const PaymentPage = () => {
         user: isUser, totalAmount: ItemData.price,
         purchaseDetails: data
       });
+
+      if(orderData){
+        const assignbundle  = await assignCourse({userId:isUser._id, courseId:itemId})
+        if(assignbundle){
+          Toast.show("you have purchased the bundle", {
+            type: 'success',
+            duration: 1000,
+            placement: 'top'
+          });
+        }
+      }
 
       console.log("🚀 ~ handlePayment ~ orderData:", orderData)
       Toast.show("Payment successful", {
