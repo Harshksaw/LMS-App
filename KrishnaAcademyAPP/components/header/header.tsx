@@ -85,6 +85,7 @@ export default function Header() {
           style={{
             flex: 1,
             justifyContent: 'center',
+         
             alignItems: 'center',
             backgroundColor: 'rgba(0, 0, 0, 0.5)'
           }}
@@ -92,46 +93,48 @@ export default function Header() {
           <View
             style={{
               backgroundColor: '#fff',
-              padding: 20,
+              padding: 30,
               borderRadius: 10
             }}
           >
-            <Text style={{ fontSize: 18, fontWeight: 'bold',marginBottom:10 }}>
+            <Text style={{ fontSize: 25, fontWeight: 'bold',marginBottom:10 }}>
               Contact Us
             </Text>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginVertical: 6
+                marginVertical: 12,
+                gap:5,
               }}
             >
              <Text style={{ fontSize: 16 }}>
                 Email: {' '}
               </Text>
               <Text style={{ fontSize: 16 }}>
-                Example@gmail.com
+              Help@krishnaacademy.com
               </Text>
             </View>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginVertical: 6
+                marginVertical: 12,
+                gap:5,
               }}
             >
              <Text style={{ fontSize: 16 }}>
                 Phone: {' '}
               </Text>
               <Text style={{ fontSize: 16 }}>
-                +1 (123) 456-7890
+              +91 91169 72045
               </Text>
             </View>
             <TouchableOpacity
               style={{
-                backgroundColor: '#4CAF50',
+                backgroundColor: '#e73131',
                 padding: 10,
-                borderRadius: 5,
+                borderRadius: 15,
                 marginTop:16
               }}
               onPress={() => setModalVisible(false)}
