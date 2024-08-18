@@ -72,6 +72,7 @@ const states = [
 
 export default function ProfileScreen() {
   const { user, loading, setRefetch } = useUser();
+  console.log("🚀 ~ ProfileScreen ~ user:", user)
 
   const [image, setImage] = useState<any>(null);
   const [loader, setLoader] = useState(false);
@@ -80,7 +81,7 @@ export default function ProfileScreen() {
   const [email, setEmail] = useState("");
   const [dob, setDob] = useState(new Date());
   const [state, setState] = useState("");
-  const [city, setCity] = useState("");
+  const [usercity, setCity] = useState("");
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -89,6 +90,7 @@ export default function ProfileScreen() {
       setMobileNo(user?.phoneNumber);
     }
   }, [user]);
+
 
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || dob;
@@ -116,6 +118,7 @@ export default function ProfileScreen() {
 
 
   const updateCity = (newCity: string) => {
+    console.log(newCity);
     setCity(newCity);
   };
   console.log(user?._id)
@@ -127,7 +130,7 @@ export default function ProfileScreen() {
         {
           dob,
           state,
-          city,
+          city : usercity,
         }
       );
 
@@ -231,12 +234,13 @@ export default function ProfileScreen() {
                     borderRadius: 5,
                     borderWidth: 1,
                     paddingVertical: 12,
-                    paddingHorizontal: 4,
+                    paddingHorizontal: 10,
                     borderColor: "#c4c4c4",
                   }}
                 >
                   <Text style={{ flex: 1, color: "gray" }}>
-                    {dob.toLocaleDateString()}
+                    {/* {dob.toLocaleDateString()} */}
+                    {user.additionalDetails?.dob ? user.additionalDetails?.dob.slice(0,10) : dob } 
                   </Text>
                   <TouchableOpacity onPress={() => setShow(true)}>
                     <Text style={{ color: "black" }}>Select date</Text>
@@ -265,7 +269,7 @@ export default function ProfileScreen() {
                 }}
               >
                 <Picker
-                  selectedValue={state}
+                  selectedValue={user.additionalDetails?.state ? user.additionalDetails?.state : state } 
                   // enabled={false}
                   onValueChange={(itemValue, itemIndex) => setState(itemValue)}
                 >
@@ -286,7 +290,7 @@ export default function ProfileScreen() {
                   fontSize: 16,
                   paddingVertical: 3,
                 }}
-                value={city}
+                value={user.additionalDetails?.city ? user.additionalDetails?.city : usercity} 
                 editable={true}
                 placeholder="City"
                 onChangeText={updateCity}
