@@ -173,6 +173,7 @@ exports.sendPaymentSuccessEmail = async(req, res) => {
 // Create a new order
 exports.createOrder = async (req, res) => {
     try {
+        console.log(req.body, "--->");
       const { user, items, totalAmount ,details} = req.body;
   
       const orderCreated = new Order({
@@ -184,14 +185,16 @@ exports.createOrder = async (req, res) => {
 
       });
   
-        await Order.save();
+        await orderCreated.save();
+
+
         
       res.status(201).json({
         success: true,
         data: orderCreated,
       });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(503).json({ error: error.message });
     }
   };
   

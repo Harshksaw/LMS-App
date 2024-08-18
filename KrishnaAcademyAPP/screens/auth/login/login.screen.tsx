@@ -148,7 +148,11 @@ export default function LoginScreen() {
           Login to your existing account of LMS
         </Text>
         <View style={styles.inputContainer}>
-          <View>
+          <View style={{
+            flexDirection: "column",
+            justifyContent: "center",
+
+          }}>
             <TextInput
               style={[styles.input, { paddingLeft: 40 }]}
               keyboardType="phonenumber"
@@ -198,27 +202,41 @@ export default function LoginScreen() {
                 size={20}
                 color={"#A1A1A1"}
               />
+
+
+
+
             </View>
-            {error.password && (
-              <View style={[commonStyles.errorContainer, { top: 145 }]}>
-                <Entypo name="cross" size={18} color={"red"} />
-                <Text style={{ color: "red", fontSize: 11, marginTop: -1 }}>
-                  {error.password}
-                </Text>
-              </View>
-            )}
-            <TouchableOpacity
-              onPress={() => router.push("/(routes)/forgot-password")}
-            >
-              <Text
-                style={[
-                  styles.forgotSection,
-                  { fontFamily: "Nunito_600SemiBold" },
-                ]}
+
+            <View
+             style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+             }}>
+
+              {error.password && (
+                <View style={[commonStyles.errorContainer, {  }]}>
+                  <Entypo name="cross" size={18} color={"red"} />
+                  <Text style={{ color: "red", fontSize: 11, marginTop: -1 }}>
+                    {error.password}
+                  </Text>
+                </View>
+              )}
+
+
+              <TouchableOpacity
+                onPress={() => router.push("/(routes)/forgot-password")}
               >
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.forgotSection,
+                    { fontFamily: "Nunito_600SemiBold" },
+                  ]}
+                >
+                  Forgot Password?
+                </Text>
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity
               style={{

@@ -25,7 +25,7 @@ const PaymentPage = () => {
   const { itemId, itemData, itemPrice } = route.params;
   const [isUser, setIsUser] = useState<any>({});
 
-  const [purchaseDetails, setPurchaseDetails] = useState<any>({});
+  // const [purchaseDetails, setPurchaseDetails] = useState<any>({});
   const ItemData = JSON.parse(itemData);
 
 
@@ -38,17 +38,22 @@ const PaymentPage = () => {
   const [couponApplied, setCouponApplied] = useState(40);
   const [Id, setItemId] = useState("");
 
-  const createOrder = async ({ user, totalAmount }: any) => {
-    console.log(purchaseDetails, "purchaseDetails");
+  const createOrder = async ({ user, totalAmount, purchaseDetails }: any) => {
+    console.log(typeof purchaseDetails.razorpay_payment_id, "purchaseDetails");
 
     const items = {
-      "itemType": "Bundle",
-      "item": itemId,
-      "price": totalPrice
-    }
+      itemType: "Bundle",
+      item: itemId,
+      price: totalPrice,
+    };
     try {
+
+      console.log(user,
+        items,
+        totalAmount,
+        purchaseDetails.razorpay_payment_id)
       const response = await axios.post(`${SERVER_URI}/api/v1/payment/create-order`, {
-        user,
+        user: user?._id,
         items,
         totalAmount,
         details: purchaseDetails.razorpay_payment_id
@@ -57,13 +62,39 @@ const PaymentPage = () => {
       console.log(response.data, "response.data");
       Toast.show("Order created successfully", {
         type: "success",
+        duration: 5000,
+        placement: "top",
+      })
+      return response.data;
+    } catch (error) {
+      console.error(error.message);
+      // throw error;
+    }
+  };
+
+  const assignCourse = async ({ userId, courseId  }: any) => {
+    console.log(userId, courseId, "assignCourse");
+
+ 
+    try {
+
+      console.log(
+        userId,
+        courseId,)
+      const response = await axios.post(`${SERVER_URI}/api/v1/Bundle/assignCourseBundle`, {
+        userId,
+        courseId
+      });
+      console.log(response.data, "response.data");
+      Toast.show("Order added to users successfully", {
+        type: "success",
         duration: 3000,
         placement: "top",
       })
       return response.data;
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error.message);
+      // throw error;
     }
   };
 
@@ -138,61 +169,59 @@ const PaymentPage = () => {
       theme: { color: "rgb(247, 70, 70)" },
     };
 
-    try {
-      Toast.show("Processing payment", {
 
-        type: 'info',
-        duration: 3000,
-        placement: 'top'
-      })
-      const data = await RazorpayCheckout.open(options)
+    Toast.show("Processing payment", {
 
-      if (data && data.razorpay_payment_id) {
-        setPurchaseDetails(data);
-        console.log(data, "data");
-  
-        await createOrder({ user: isUser, totalAmount: ItemData.price });
-        Toast.show("Payment successful", {
-          type: 'success',
-          duration: 1000,
-          placement: 'top'
-        });
-      } else {
-        Toast.show("Payment failed", {
-          type: 'error',
-          duration: 1000,
-          placement: 'top'
-        });
-        throw new Error("Payment data is null");
+      type: 'info',
+      duration: 3000,
+      placement: 'top'
+    })
+    const data = await RazorpayCheckout.open(options)
+    console.log("🚀 ~ handlePayment ~ data:", data)
+
+    if (data && data.razorpay_payment_id) {
+
+      console.log(data, "data");
+
+      const orderData = await createOrder({
+        user: isUser, totalAmount: ItemData.price,
+        purchaseDetails: data
+      });
+
+      if(orderData){
+        const assignbundle  = await assignCourse({userId:isUser._id, courseId:itemId})
+        if(assignbundle){
+          Toast.show("you have purchased the bundle", {
+            type: 'success',
+            duration: 1000,
+            placement: 'top'
+          });
+        }
       }
 
-
-
-
-
-    } catch (error) {
-      console.error("Error creating order:", error);
-      Toast.show("Error creating order", {
-        type: 'danger',
-        duration: 3000,
+      console.log("🚀 ~ handlePayment ~ orderData:", orderData)
+      Toast.show("Payment successful", {
+        type: 'success',
+        duration: 1000,
         placement: 'top'
       });
 
+      
+    } else {
+      Toast.show("Payment failed", {
+        type: 'error',
+        duration: 1000,
+        placement: 'top'
+      });
+      throw new Error("Payment data is null");
     }
 
 
-    // .then((data) => {
-
-    //   // handle success
 
 
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    //   // handle failure
-    //   Toast.show("Payment failed");
-    //   // Alert.alert(`Error: ${error.code} | ${error.description}`);
-    // });
+
+
+
 
 
 

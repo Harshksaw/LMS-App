@@ -302,7 +302,7 @@ export default function SignUpScreen() {
               />
             </View>
             {error.password && (
-              <View style={[commonStyles.errorContainer, { top: 145 }]}>
+              <View style={[commonStyles.errorContainer, { }]}>
                 <Entypo name="cross" size={18} color={"red"} />
                 <Text style={{ color: "red", fontSize: 11, marginTop: -1 }}>
                   {error.password}
