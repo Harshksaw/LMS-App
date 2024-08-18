@@ -55,9 +55,9 @@ export const commonStyles = StyleSheet.create({
   },
   errorContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: 16,
-    position: "absolute",
-    top: 60,
+    // alignItems: "center",
+    // marginHorizontal: 16,
+    // position: "relative",
+    top: 15,
   },
 });
