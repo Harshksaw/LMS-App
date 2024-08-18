@@ -9,7 +9,7 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 
-import { StyleSheet, Text, View } from "react-native";
+import { BackHandler, StyleSheet, Text, View } from "react-native";
 
 import React, { useEffect } from "react";
 import { Image } from "expo-image";
@@ -18,6 +18,7 @@ import useUser from "@/hooks/auth/useUser";
 import { router, useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigationState } from "@react-navigation/native";
 
 
 
@@ -27,7 +28,9 @@ const UserInfoContent = () => {
 
   return (
     <TouchableOpacity style={styles.userInfoWrapper}
-      onPress={() => router.navigate("/(routes)/my-account/my-profile")}
+      onPress={() => router.push({
+        pathname:'/(tabs)/profile'
+      })}
     >
       <Image
         source={{
@@ -46,6 +49,7 @@ const UserInfoContent = () => {
 };
 const CustomDrawerContent = (props) => {
   const { user, loading, setRefetch } = useUser();
+
 
   const navigation = useNavigation();
   return (
@@ -241,6 +245,27 @@ const CustomDrawerContent = (props) => {
 };
 
 export default function index() {
+  const navigationState = useNavigationState(state => state);
+
+  useEffect(() => {
+    const backAction = () => {
+      const currentRoute = navigationState.routes[navigationState.index].name;
+
+      if (currentRoute == 'Home') {
+        BackHandler.exitApp();
+        return true;
+      } else {
+        // Navigate to the previous screen
+        router.back();
+        // BackHandler.exitApp();
+        return true;
+      }
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    return () => backHandler.remove();
+  }, [navigationState]);
 
 
 
@@ -256,14 +281,7 @@ export default function index() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
 
     >
-      <Drawer.Screen name="UserInfo" component={UserInfoContent}
-
-        options={
-          {
-            headerShown: false,
-          }
-        }
-      />
+  
 
       <Drawer.Screen
         name="Home"
@@ -283,6 +301,14 @@ export default function index() {
         }}
       />
 
+<Drawer.Screen name="UserInfo" component={UserInfoContent}
+
+options={
+  {
+    headerShown: false,
+  }
+}
+/>
 
 
     </Drawer.Navigator>
@@ -315,6 +341,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 5,
+    gap: 20,
 
     // borderBottomColor: "#000",
     // borderBottomWidth: 1,

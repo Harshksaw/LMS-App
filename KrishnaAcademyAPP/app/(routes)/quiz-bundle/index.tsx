@@ -223,7 +223,7 @@ export default function index() {
       >
         <Image source={{ uri: BundleData?.image }} style={styles.image} />
         <View style={styles.nameContainer}>
-          <Text style={styles.name}>{BundleData.bundleName}</Text>
+          <Text style={styles.name}>{BundleData?.bundleName}</Text>
         </View>
       </View>
 

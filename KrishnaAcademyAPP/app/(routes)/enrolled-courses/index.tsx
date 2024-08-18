@@ -126,7 +126,7 @@ const renderCources = ({ item }) => {
             textAlign: "left",
           }}
         >
-          {item?.shortDescription.slice(0, 15)}
+          {/* {item?.shortDescription.slice(0, 15)} */}
         </Text>
       </View>
     </TouchableOpacity>
@@ -149,8 +149,8 @@ export default function index() {
       const isUser = JSON.parse(user);
       console.log(isUser._id, "------------------");
       try {
-        const res = await axios.get(`${SERVER_URI}/api/v1/Bundle/getUserBundleQuizzes/${isUser._id}`);
-        console.log(res.data.data, "------------------");
+        const res = await axios.get(`${SERVER_URI}/api/v1/Auth/getAllUserCourses/${isUser._id}`);
+        // console.log(res.data, "------------------153");
         setQuizzes(res.data.data);
 
         if(res.status === 200){
@@ -189,7 +189,7 @@ export default function index() {
     >
 
       { loading ? (
-        <ActivityIndicator color={"blue"}  />
+        <ActivityIndicator color={"red"}  />
       ) : (
         <FlatList
           data={quizzes}
