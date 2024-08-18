@@ -1,11 +1,6 @@
 import Loader from "@/components/loader/loader";
 import useUser from "@/hooks/auth/useUser";
-import {
-  AntDesign,
-  FontAwesome,
-  Ionicons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+
 import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
@@ -13,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import {
   useFonts,
@@ -25,8 +21,7 @@ import {
   Nunito_700Bold,
 } from "@expo-google-fonts/nunito";
 import { useEffect, useState } from "react";
-import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { SERVER_URI } from "@/utils/uri";
@@ -72,7 +67,7 @@ const states = [
 
 export default function ProfileScreen() {
   const { user, loading, setRefetch } = useUser();
-  console.log("🚀 ~ ProfileScreen ~ user:", user)
+  // console.log("🚀 ~ ProfileScreen ~ user:", user)
 
   const [image, setImage] = useState<any>(null);
   const [loader, setLoader] = useState(false);
@@ -118,10 +113,10 @@ export default function ProfileScreen() {
 
 
   const updateCity = (newCity: string) => {
-    console.log(newCity);
+    // console.log(newCity);
     setCity(newCity);
   };
-  console.log(user?._id)
+  // console.log(user?._id)
   const handleUpdateAdditionalDetails = async () => {
     try {
       const response = await axios.post(
@@ -147,15 +142,17 @@ export default function ProfileScreen() {
     }
   };
 
-  console.log(user?.phoneNumber);
+  // console.log(user?.phoneNumber);
   if (!user) {
-    return <Text>laoding</Text>;
+    return <ActivityIndicator
+    color={'red'}
+    size={50}
+    style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+    />
   }
   return (
     <>
-      {loader || loading ? (
-        <Loader />
-      ) : (
+     
         <LinearGradient
           colors={["#E5ECF9", "#F6F7F9"]}
           style={{ flex: 1, paddingTop: 80 }}
@@ -240,7 +237,7 @@ export default function ProfileScreen() {
                 >
                   <Text style={{ flex: 1, color: "gray" }}>
                     {/* {dob.toLocaleDateString()} */}
-                    {user.additionalDetails?.dob ? user.additionalDetails?.dob.slice(0,10) : dob } 
+                    {user?.additionalDetails?.dob ? user?.additionalDetails?.dob.slice(0,10) : dob.toLocaleDateString() } 
                   </Text>
                   <TouchableOpacity onPress={() => setShow(true)}>
                     <Text style={{ color: "black" }}>Select date</Text>
@@ -312,7 +309,7 @@ export default function ProfileScreen() {
             </View>
           </ScrollView>
         </LinearGradient>
-      )}
+
     </>
   );
 }
