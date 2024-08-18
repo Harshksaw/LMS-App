@@ -15,7 +15,7 @@ const QuizBundleCard = ({ quizzes }) => {
 
   console.log(
     "🚀 ~ file: quiz.bundlecard.tsx ~ line 10 ~ QuizBundleCard ~ quizzes",
-    quizzes.map((item) => item._id)
+    quizzes?.map((item) => item._id)
   );
 
 

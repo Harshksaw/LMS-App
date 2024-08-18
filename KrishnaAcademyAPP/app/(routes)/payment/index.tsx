@@ -25,12 +25,9 @@ const PaymentPage = () => {
   const { itemId, itemData, itemPrice } = route.params;
   const [isUser, setIsUser] = useState<any>({});
 
-  const [purchaseDetails, setPurchaseDetails] = useState<any>(null);
+  const [purchaseDetails, setPurchaseDetails] = useState<any>({});
   const ItemData = JSON.parse(itemData);
-  // console.log(
-  //   "🚀 ~ file: index.tsx ~ line 136 ~ fetchBundleData ~ response",
-  //   ItemData
-  // );
+
 
   const [coupon, setCoupon] = useState("");
 
@@ -54,7 +51,7 @@ const PaymentPage = () => {
         user,
         items,
         totalAmount,
-        details: purchaseDetails
+        details: purchaseDetails.razorpay_payment_id
 
       });
       console.log(response.data, "response.data");
@@ -102,7 +99,7 @@ const PaymentPage = () => {
 
 
     console.log(isUser.email, isUser.phoneNumber, isUser.name, "isUser");
-    console.log(ItemData, ItemData.bundleName,ItemData.price , "ItemData");
+    console.log(ItemData, ItemData.bundleName, ItemData.price, "ItemData");
 
 
 
@@ -142,41 +139,60 @@ const PaymentPage = () => {
     };
 
     try {
-        Toast.show("Processing payment",{
+      Toast.show("Processing payment", {
 
-          type: 'info',
-          duration: 3000,
-          placement: 'top'
-        })
-      const data = RazorpayCheckout.open(options)
-      await createOrder({ user: isUser, totalAmount: totalPrice });
-      setPurchaseDetails(data);
-      Toast.show("Payment successful",{
-        type: 'success',
-        duration: 1000,
+        type: 'info',
+        duration: 3000,
         placement: 'top'
-      });
+      })
+      const data = await RazorpayCheckout.open(options)
+
+      if (data && data.razorpay_payment_id) {
+        setPurchaseDetails(data);
+        console.log(data, "data");
   
-      
+        await createOrder({ user: isUser, totalAmount: ItemData.price });
+        Toast.show("Payment successful", {
+          type: 'success',
+          duration: 1000,
+          placement: 'top'
+        });
+      } else {
+        Toast.show("Payment failed", {
+          type: 'error',
+          duration: 1000,
+          placement: 'top'
+        });
+        throw new Error("Payment data is null");
+      }
+
+
+
+
+
     } catch (error) {
       console.error("Error creating order:", error);
-      Toast.show("Error creating")
-      
+      Toast.show("Error creating order", {
+        type: 'danger',
+        duration: 3000,
+        placement: 'top'
+      });
+
     }
-   
 
-      // .then((data) => {
 
-      //   // handle success
+    // .then((data) => {
 
-        
-      // })
-      // .catch((error) => {
-      //   console.log(error);
-      //   // handle failure
-      //   Toast.show("Payment failed");
-      //   // Alert.alert(`Error: ${error.code} | ${error.description}`);
-      // });
+    //   // handle success
+
+
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    //   // handle failure
+    //   Toast.show("Payment failed");
+    //   // Alert.alert(`Error: ${error.code} | ${error.description}`);
+    // });
 
 
 
@@ -184,7 +200,7 @@ const PaymentPage = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ alignItems: "center", justifyContent: "center", gap:10 }}>
+      <View style={{ alignItems: "center", justifyContent: "center", gap: 10 }}>
         <Text style={{ fontSize: 24, fontWeight: "bold" }}>
           {"Purchase Details"}
         </Text>
@@ -215,25 +231,25 @@ const PaymentPage = () => {
       {
         couponApplied > 0 && (
           <View style={styles.item}>
-          <Text style={{fontSize: 16,fontWeight: 'bold',}}>{"Coupon discount"}</Text>
-          <Text style={{fontSize: 16,fontWeight: 'bold',}}>${couponApplied}</Text>
-        </View>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', }}>{"Coupon discount"}</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', }}>${couponApplied}</Text>
+          </View>
         )
       }
 
 
-      
+
       <View>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter coupon code"
-        value={coupon}
-        onChangeText={setCoupon}
-      />
-      <TouchableOpacity 
-      style={{backgroundColor: "red", padding:12,borderRadius: 24, alignSelf: 'center',elevation: 4 , alignItems: 'center',marginHorizontal:'auto', width: '80%'}}   onPress={applyCoupon}>
-        <Text style={{color: 'white', textAlign: 'center'}}>Apply coupon</Text>
-      </TouchableOpacity>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter coupon code"
+          value={coupon}
+          onChangeText={setCoupon}
+        />
+        <TouchableOpacity
+          style={{ backgroundColor: "red", padding: 12, borderRadius: 24, alignSelf: 'center', elevation: 4, alignItems: 'center', marginHorizontal: 'auto', width: '80%' }} onPress={applyCoupon}>
+          <Text style={{ color: 'white', textAlign: 'center' }}>Apply coupon</Text>
+        </TouchableOpacity>
       </View>
 
 

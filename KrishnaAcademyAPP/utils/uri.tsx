@@ -3,7 +3,7 @@
 //dev
 // export const SERVER_URI = "https://lms-app-wqwt.onrender.com"
 
-// export const SERVER_URI = "http://localhost:4000"
+// export const SERVER_URI = "http://localhost:3000"
 export const SERVER_URI = "https://lms-app-1-eoim.onrender.com"
 
 // export const SERVER_URI = "https://effective-space-cod-49xp5rgg7gphwg9-3000.app.github.dev"

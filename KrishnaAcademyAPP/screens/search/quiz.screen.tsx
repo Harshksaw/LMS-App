@@ -102,7 +102,7 @@ const renderCources = ({ item }) => {
           placeholder={{uri :"https://res.cloudinary.com/dbnnlqq5v/image/upload/v1723394487/images/gxtgjwsur0ledawfh8ll.jpg"}}
             source={{ uri: item.image }}
             style={{
-              width: 160,
+              width: 140,
               height: 140, // Adjusted to fill the TouchableOpacity
               // justifyContent: "center",
 
@@ -239,8 +239,8 @@ export default function QuizScreen() {
         <FlatList
           data={quizzes}
           renderItem={renderCources}
-          contentContainerStyle={{ width: "100%", gap: 10 }}
-          columnWrapperStyle={{ gap: 10 }}
+          contentContainerStyle={{ width: "100%", gap: 5 }}
+          columnWrapperStyle={{ gap: 5 }}
           showsVerticalScrollIndicator={false}
           numColumns={2}
           keyExtractor={(item) => item.id}
