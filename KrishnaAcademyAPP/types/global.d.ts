@@ -16,9 +16,15 @@ type User = {
   _id: string;
   name: string;
   email: string;
+  phoneNumber: string;
   avatar?: Avatar;
   password?: string;
   courses?: any;
+  additionalDetails: {
+    dob: any
+    state: string
+    city: string
+},
   createdAt?: Date;
   updatedAt?: Date;
 };
