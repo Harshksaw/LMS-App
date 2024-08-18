@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Modal,View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Raleway_700Bold } from "@expo-google-fonts/raleway";
 import { useFonts } from "expo-font";
 import useUser from "@/hooks/auth/useUser";
@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function Header() {
   const navigation = useNavigation();
   const [cartItems, setCartItems] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const subscription = async () => {
@@ -63,14 +64,86 @@ export default function Header() {
         gap:5
       }}
       >
-        <Image 
-        source={require('../../assets/icons/customer-service.png')}
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: 10
-        }}
+
+           <View>
+      <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <Image
+          source={require('../../assets/icons/customer-service.png')}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 10
+          }}
         />
+      </TouchableOpacity>
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)'
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: '#fff',
+              padding: 20,
+              borderRadius: 10
+            }}
+          >
+            <Text style={{ fontSize: 18, fontWeight: 'bold',marginBottom:10 }}>
+              Contact Us
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginVertical: 6
+              }}
+            >
+             <Text style={{ fontSize: 16 }}>
+                Email: {' '}
+              </Text>
+              <Text style={{ fontSize: 16 }}>
+                Example@gmail.com
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginVertical: 6
+              }}
+            >
+             <Text style={{ fontSize: 16 }}>
+                Phone: {' '}
+              </Text>
+              <Text style={{ fontSize: 16 }}>
+                +1 (123) 456-7890
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#4CAF50',
+                padding: 10,
+                borderRadius: 5,
+                marginTop:16
+              }}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={{ fontSize: 16, color: '#fff', textAlign: 'center' }}>
+                Close
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
 
       <TouchableOpacity onPress={() => router.push("/(routes)/notifications")}>
         <FontAwesome name="bell" size={35} color="rgb(242, 221, 126)" />
