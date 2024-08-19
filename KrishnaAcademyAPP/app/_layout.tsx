@@ -137,8 +137,16 @@ function RootLayoutNav() {
         <Stack.Screen
           name="(routes)/blogs/blogscreen"
           options={{
-            // headerShown: false,
+            headerShown: true,
             title: "Daily Updates",
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="(routes)/quiz/savedQuestions"
+          options={{
+            headerShown: true,
+            title: "Saved Questions",
             headerBackTitle: "Back",
           }}
         />
@@ -157,7 +165,7 @@ function RootLayoutNav() {
         <Stack.Screen 
           name="(routes)/quiz/quiz.result"
           options={{
-            // headerShown: false,
+            headerShown: true,
             title: "Quiz result Dashboard",
             headerBackTitle: "Back",
           }}

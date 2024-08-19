@@ -1,4 +1,4 @@
-import { ACCOUNT_TYPE } from '../src/utils/constants';
+import { ACCOUNT_TYPE } from "../src/utils/constants";
 
 export const sidebarLinks = [
   {
@@ -62,8 +62,7 @@ export const sidebarLinks = [
     name: "Create Study Materials",
     path: "/dashboard/create-studymaterials",
     type: ACCOUNT_TYPE.ADMIN,
-     icon: "VscAdd",
-    
+    icon: "VscAdd",
   },
   {
     id: 10,
@@ -97,6 +96,13 @@ export const sidebarLinks = [
     id: 14,
     name: "Create Daily Update",
     path: "/dashboard/create-update",
+    type: ACCOUNT_TYPE.ADMIN,
+    icon: "VscAdd",
+  },
+  {
+    id: 15,
+    name: "App Config",
+    path: "/dashboard/app-config",
     type: ACCOUNT_TYPE.ADMIN,
     icon: "VscAdd",
   },

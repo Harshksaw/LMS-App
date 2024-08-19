@@ -148,7 +148,7 @@ export default function Header() {
       </Modal>
     </View>
 
-      <TouchableOpacity onPress={() => router.push("/(routes)/notifications")}>
+      <TouchableOpacity onPress={() => router.push("/(routes)/my-account/DailyUpdateScreen")}>
         <FontAwesome name="bell" size={35} color="rgb(242, 221, 126)" />
       </TouchableOpacity>
       </View>
