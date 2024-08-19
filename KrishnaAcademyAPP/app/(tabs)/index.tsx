@@ -9,7 +9,7 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 
-import { BackHandler, StyleSheet, Text, View } from "react-native";
+import { BackHandler, Linking, StyleSheet, Text, View } from "react-native";
 
 import React, { useEffect } from "react";
 import { Image } from "expo-image";
@@ -19,6 +19,8 @@ import { router, useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigationState } from "@react-navigation/native";
+import { SERVER_URI } from "@/utils/uri";
+import axios from "axios";
 
 
 
@@ -49,6 +51,19 @@ const UserInfoContent = () => {
 };
 const CustomDrawerContent = (props) => {
   const { user, loading, setRefetch } = useUser();
+  const [socialMedia, setSocialMedia] = React.useState([]);
+
+  useEffect(() => {
+    const fetchBannerData = async () => 
+      {
+        const res = await axios.get(`${SERVER_URI}/api/v1/app/socialMedia`);
+        console.log(res.data, "---response.datwa");
+        // setBannerData(res.data.data);
+        setSocialMedia(res.data);
+      }
+      fetchBannerData();
+
+  }, []);
 
 
   const navigation = useNavigation();
@@ -187,25 +202,29 @@ const CustomDrawerContent = (props) => {
           }}
         >
           <Ionicons
+          onPress={() => Linking.openURL("https://www.facebook.com/profile.php?id=61564100115978&mibextid=ZbWKwL")}
             name="logo-facebook"
             size={24}
             color="blue"
             style={styles.icon}
           />
           <Ionicons
-            name="logo-twitter"
+          onPress={()=> Linking.openURL("https://t.me/+02hwcfZFdPE3MDVl")}
+            name="paper-plane-outline"
             size={24}
             color="skyblue"
             style={styles.icon}
           />
           <Ionicons
+          onPress={()=> Linking.openURL("https://www.instagram.com/krishnaacademy_/")}
             name="logo-instagram"
             size={24}
             color="purple"
             style={styles.icon}
           />
           <Ionicons
-            name="logo-linkedin"
+          onPress={()=> Linking.openURL("https://twitter.com/krishnaacademy_")}
+            name="logo-twitter"
             size={24}
             color="blue"
             style={styles.icon}

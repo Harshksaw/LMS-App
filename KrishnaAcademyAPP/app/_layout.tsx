@@ -143,6 +143,15 @@ function RootLayoutNav() {
           }}
         />
         <Stack.Screen
+          name="(routes)/my-account/daily.updates"
+          options={{
+            headerShown: true,
+
+            title: "Daily Updates",
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
           name="(routes)/quiz/savedQuestions"
           options={{
             headerShown: true,
@@ -157,6 +166,16 @@ function RootLayoutNav() {
 
             headerShown: false,
             title: "My Profile",
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="(routes)/my-account/OrderScreen"
+
+          options={{
+
+            headerShown: true,
+            title: "My Purchases",
             headerBackTitle: "Back",
           }}
         />

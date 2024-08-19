@@ -218,7 +218,7 @@ exports.getOrder = async (req, res) => {
     try {
         const {id} = req.params;
         
-        const orders = await Order.find({ user: id }).populate('user')
+        const orders = await Order.find({ user: id }).populate('user').populate('items.item');
     
         if (!orders) {
             return res.status(404).json({ error: 'Orders not found' });

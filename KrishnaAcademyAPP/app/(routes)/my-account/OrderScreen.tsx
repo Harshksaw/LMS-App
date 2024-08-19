@@ -17,7 +17,7 @@ interface Order {
 }
 
 const OrderScreen: React.FC = () => {
-    const [orders, setOrders] = useState<Order[]>([]);
+    const [orders, setOrders] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -28,7 +28,9 @@ const OrderScreen: React.FC = () => {
         const isUser = JSON.parse(userI);
       try {
         const response = await axios.get(`${SERVER_URI}/api/v1/payment/getUserOrders/${isUser._id}`);
-        setOrders(response.data);
+        console.log(response.data.data, "---response.data");
+        setOrders(response.data.data);
+        setLoading(false);
 
       } catch (error) {
         Toast.show("Error fetching orders");
@@ -51,27 +53,25 @@ const OrderScreen: React.FC = () => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return <ActivityIndicator size="large" color="#0000ff" 
+    
+    style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+
+    }}
+    />;
   }
   return (
     <SafeAreaView style={{
         flex: 1,
-        paddingTop:20,
+        // paddingTop:20,
         // justifyContent: 'center',
         // alignItems: 'center',
       }}>
 
-        <Text
-        style={{
-            fontSize: 24,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            marginBottom: 16,
 
-        }}
-        >
-            Orders
-        </Text>
       {orders.map((order) => (
         <TouchableOpacity key={order._id} onPress={() => handleCardClick(order)}>
           <OrderCard order={order} />
@@ -87,47 +87,79 @@ const OrderModal = ({ isVisible, onClose, order }) => {
     if (!order) return null;
   
     return (
-      <Modal isVisible={isVisible} onBackdropPress={onClose}>
+      <Modal isVisible={isVisible} onBackdropPress={onClose} style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems:'center'
+      }}>
         <View style={styles.modalContent}>
           <Text style={styles.title}>Order ID: {order._id}</Text>
           <Text>User: {order.user.name}</Text>
           <Text>Total Amount: ${order.totalAmount}</Text>
           <Text>Order Date: {new Date(order.orderDate).toLocaleDateString()}</Text>
-          <View style={styles.itemsContainer}>
-            <Text style={styles.subtitle}>Items:</Text>
-            {order.items.map((item, index) => (
-              <Text key={index}>
-                {item.itemType}: {item.item.name} - ${item.price}
-              </Text>
-            ))}
+        
+          
+        <View style={styles.itemsContainer}>
+          <Text style={styles.subtitle}>Items:</Text>
+          <Text style={{
+            fontSize: 20,
+            fontWeight: 'semibold',
+            marginTop: 10,
+          }}>{order.items.itemType}</Text>
+          <Text style={{
+            fontSize: 16,
+            fontWeight: 'semibold',
+            marginTop: 10,
+          }}>₹ {order.items.price}</Text>
+          {/* <Text>{order.items.item}</Text> */}
+        </View>
           </View>
           <Button title="Close" onPress={onClose} />
-        </View>
+
       </Modal>
     );
   };
   
 
   const OrderCard = ({ order }) => {
+    console.log(order, "---order");
     return (
       <View style={styles.card}>
+
+        <View>
+
         <Text style={styles.title}>Order ID: {order._id}</Text>
         <Text style={styles.text}>User: {order.user.name}</Text>
+        </View>
+        <View>
+
         <Text style={styles.text}>Total Amount: ${order.totalAmount}</Text>
         <Text style={styles.text}>Order Date: {new Date(order.orderDate).toLocaleDateString()}</Text>
+        </View>
+
+
         <View style={styles.itemsContainer}>
           <Text style={styles.subtitle}>Items:</Text>
-          {order.items.map((item, index) => (
-            <Text key={index} style={styles.text}>
-              {item.itemType}: {item.item.name} - ${item.price}
-            </Text>
-          ))}
+          <Text style={{
+            fontSize: 20,
+            fontWeight: 'semibold',
+            marginTop: 10,
+          }}>{order.items.itemType}</Text>
+          <Text style={{
+            fontSize: 16,
+            fontWeight: 'semibold',
+            marginTop: 10,
+          }}>₹ {order.items.price}</Text>
+          {/* <Text>{order.items.item}</Text> */}
         </View>
       </View>
     );
   };
   const styles = StyleSheet.create({
     modalContent: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems:'center',
       backgroundColor: 'white',
       padding: 20,
       borderRadius: 10,
@@ -139,13 +171,19 @@ const OrderModal = ({ isVisible, onClose, order }) => {
       marginTop: 10,
     },
     itemsContainer: {
+      flexDirection:'row',
+      flexWrap: 'wrap',
+      // justifyContent:'center',
+      gap:10,
+      alignItems:'center',
       marginTop: 10,
     },
     card: {
-        width: 360,
-        backgroundColor: '#1a1a1a',
-        color: '#e0e0e0',
-        height: 300,
+        width: '90%',
+        backgroundColor: 'rgb(255, 255, 255)',
+        color: '#000000',
+
+        height: 150,
         padding: 16,
         margin: 16,
         shadowColor: '#000',
@@ -156,13 +194,13 @@ const OrderModal = ({ isVisible, onClose, order }) => {
         borderRadius: 10,
       },
       title: {
-        fontSize: 20,
+        fontSize: 14,
         fontWeight: 'bold',
         marginBottom: 8,
-        color: '#e0e0e0',
+        color: '#000000',
       },
       text: {
-        color: '#a0a0a0',
+        color: '#000000',
       },
      
   });

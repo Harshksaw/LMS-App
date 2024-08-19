@@ -26,7 +26,7 @@ const DailyUpdatesScreen = () => {
     fetchUpdates();
   }, []);
   const handleSolutions = (id) => {
-    console.log("ID", id);
+    // console.log("ID", id);
     router.push({
       pathname: '/(routes)/my-account/BlogScreen',
       params: {blogId : id}
@@ -60,19 +60,11 @@ const DailyUpdatesScreen = () => {
     <SafeAreaView
     style={{
       flex: 1,
-      paddingTop: 40,
+      // paddingTop: 10,
       backgroundColor: '#f5f5f5',
     }}
     >
-      <Text
-      style={{
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginHorizontal: 10,
-        textAlign: 'center',
-      }}>
-        Daily Updates
-      </Text>
+
 
     <FlatList
       data={updates}

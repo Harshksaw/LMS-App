@@ -25,6 +25,8 @@ export default function HomeScreen() {
   const [videoUri, setVideoUri] = useState(null);
   const videoref = React.useRef(null);
 
+
+
   return (
    <SafeAreaView
    style={{

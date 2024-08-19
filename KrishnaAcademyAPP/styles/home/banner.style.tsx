@@ -7,12 +7,15 @@ import {
 
 export const styles = StyleSheet.create({
   container: {
-    marginTop: 5,
+    marginVertical: 10,
     height: hp("25%"),
     marginHorizontal: 16,
   },
 
-  slide: { flex: 1 },
+  slide: { flex: 1,
+
+    paddingVertical: 10,
+   },
 
   background: {
     width: "100%",

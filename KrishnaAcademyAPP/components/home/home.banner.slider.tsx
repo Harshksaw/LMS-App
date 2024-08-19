@@ -3,9 +3,25 @@ import { useFonts, Raleway_700Bold } from "@expo-google-fonts/raleway";
 import { Nunito_400Regular, Nunito_700Bold } from "@expo-google-fonts/nunito";
 import { styles } from "@/styles/home/banner.style";
 import Swiper from "react-native-swiper";
-import { bannerData } from "@/constants/constans";
+
+import { useEffect, useState } from "react";
+import { SERVER_URI } from "@/utils/uri";
+import axios from "axios";
+import React from "react";
 
 export default function HomeBannerSlider() {
+  const [bannerData, setBannerData] = useState<BannerDataTypes[]>([]);
+
+  useEffect(() => {
+    const fetchBannerData = async () => 
+      {
+        const res = await axios.get(`${SERVER_URI}/api/v1/app/carousel`);
+        console.log(res.data.data, "---response.data");
+        setBannerData(res.data.data);
+      }
+      fetchBannerData();
+
+  }, []);
   let [fontsLoaded, fontError] = useFonts({
     Raleway_700Bold,
     Nunito_400Regular,
@@ -27,8 +43,8 @@ export default function HomeBannerSlider() {
         {bannerData.map((item: BannerDataTypes, index: number) => (
           <View key={index} style={styles.slide}>
             <Image
-              source={item.bannerImageUrl!}
-              style={{ width: 400, height: 200 }}
+              source={{uri : item }}
+              style={{ width: 400, height: 250 }}
             />
           </View>
         ))}
@@ -36,3 +52,5 @@ export default function HomeBannerSlider() {
     </View>
   );
 }
+
+
