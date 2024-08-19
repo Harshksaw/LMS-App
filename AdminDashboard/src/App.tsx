@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import PageNotFound from "./pages/PageNotFound";
 import CourseDetails from "./pages/CourseDetails";
 
+import AppConfig from "./components/core/AppConfig/AppConfig";
 import Navbar from "./components/common/Navbar";
 
 import OpenRoute from "./components/core/Auth/OpenRoute";
@@ -190,6 +191,7 @@ function App() {
                 path="dashboard/create-studymaterials"
                 element={<StudyMaterials />}
               />
+              <Route path="/dashboard/app-config" element={<AppConfig />} />
               <Route path="dashboard/Settings" element={<Settings />} />
             </>
           )}
