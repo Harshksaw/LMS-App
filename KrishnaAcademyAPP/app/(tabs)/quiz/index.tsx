@@ -44,7 +44,7 @@ export default function Search() {
     <SafeAreaView
       style={{
         flex: 1,
-        paddingTop: 50,
+        // paddingTop: 50,
         paddingHorizontal: 12
       }}
     >

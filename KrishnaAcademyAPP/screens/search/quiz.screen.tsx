@@ -149,16 +149,7 @@ const renderCources = ({ item }) => {
           {item.bundleName}
 
         </Text>
-        <Text
-          style={{
-            // color: "white",
-            fontSize: 12,
-            fontWeight: "condensed",
-            textAlign: "left",
-          }}
-        >
-          {item.aboutDescription.slice(0, 20)}
-        </Text>
+      
       </View>
     </TouchableOpacity>
   )

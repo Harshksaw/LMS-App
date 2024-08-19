@@ -13,10 +13,6 @@ import {
 
 const QuizBundleCard = ({ quizzes }) => {
 
-  console.log(
-    "🚀 ~ file: quiz.bundlecard.tsx ~ line 10 ~ QuizBundleCard ~ quizzes",
-    quizzes?.map((item) => item._id)
-  );
 
 
   const convertSecondsToTime = (seconds) => {
@@ -32,8 +28,8 @@ const QuizBundleCard = ({ quizzes }) => {
     <View style={styles.container}>
       <Text
         style={{
-          textAlign: "left",
-          fontSize: 20,
+          textAlign: "center",
+          fontSize: 24,
           fontWeight: "bold",
         }}
       >
@@ -115,10 +111,10 @@ const QuizBundleCard = ({ quizzes }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
+    // paddingTop: 20,
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "flex-start",
+    alignItems: "center",
     gap: 10,
   },
   quizCard: {

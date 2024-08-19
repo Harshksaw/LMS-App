@@ -136,7 +136,7 @@ const StudyMaterialsScreen: React.FC = () => {
     <View style={styles.container}>
       <Text
       style={{
-        fontSize:20,
+        fontSize:24,
         textAlign:'center',
         fontWeight:'bold',
       }}
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    paddingTop: 40,
+    // paddingTop: 40,
     // justifyContent: "center",
     // alignItems: "center",
 

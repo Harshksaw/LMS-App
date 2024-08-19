@@ -89,12 +89,12 @@ const renderCources = ({ item }) => {
     >
 
      
-      {!item.image ? (
+      {item.image ? (
         <ImageBackground
           source={{ uri: item.image }}
           style={{
-            width: "100%",
-            height: "100%", // Adjusted to fill the TouchableOpacity
+            width: 160,
+            height: 140, // Adjusted to fill the TouchableOpacity
             // justifyContent: "center",
 
             // alignItems: "center",
@@ -150,16 +150,7 @@ const renderCources = ({ item }) => {
         {item.bundleName}
 
       </Text>
-      <Text
-        style={{
-          // color: "white",
-          fontSize: 12,
-          fontWeight: "condensed",
-          textAlign: "left",
-        }}
-      >
-        {item.aboutDescription.slice(0,15)}
-      </Text>
+    
     </View>
   </TouchableOpacity>
   )
@@ -173,7 +164,7 @@ export default function CoursesScreen() {
   const [refreshing, setRefreshing] = useState(false);
 const [loading , setLoading]= useState(true)
 
-  console.log("hello");
+
   useEffect(() => {
     const getQuizzes = async () => {
       try {
@@ -231,7 +222,7 @@ const [loading , setLoading]= useState(true)
         flexDirection: "column",
         justifyContent: "center",
         // alignItems: "center",
-        padding: 10,
+        // padding: 10,
         gap:10
 
 

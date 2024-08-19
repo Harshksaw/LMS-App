@@ -65,26 +65,31 @@ const states = [
   "West Bengal",
 ];
 
-export default function ProfileScreen() {
-  const { user, loading, setRefetch } = useUser();
-  // console.log("🚀 ~ ProfileScreen ~ user:", user)
+async function getUser() {
+  const usera = await AsyncStorage.getItem("user");
+  const isUser = JSON.parse(usera);
+  return isUser
+  
+}
 
-  const [image, setImage] = useState<any>(null);
-  const [loader, setLoader] = useState(false);
-  const [name, setName] = useState(user?.name);
-  const [mobileNo, setMobileNo] = useState("");
-  const [email, setEmail] = useState("");
+export default function ProfileScreen() {
+
+  // console.log("🚀 ~ ProfileScreen ~ user:", user)
+const {user} = useUser()
+
+  // const user = getUser()
+
+  // const [image, setImage] = useState<any>(null);
+  // const [loader, setLoader] = useState(false);
+  // const [name, setName] = useState(user.name);
+  // const [mobileNo, setMobileNo] = useState("");
+  // const [email, setEmail] = useState("");
   const [dob, setDob] = useState(new Date());
   const [state, setState] = useState("");
   const [usercity, setCity] = useState("");
   const [show, setShow] = useState(false);
 
-  useEffect(() => {
-    // Set the default value of the phoneNumber property
-    if (user) {
-      setMobileNo(user?.phoneNumber);
-    }
-  }, [user]);
+ 
 
 
   const onChange = (event: any, selectedDate: any) => {
@@ -119,9 +124,12 @@ export default function ProfileScreen() {
   // console.log(user?._id)
   const handleUpdateAdditionalDetails = async () => {
     try {
+
+      const user = await AsyncStorage.getItem("user");
+      const isUser = JSON.parse(user);
       const response = await axios.post(
 
-        `${SERVER_URI}/api/v1/auth/additionalDetails/${user?._id}`,
+        `${SERVER_URI}/api/v1/auth/additionalDetails/${isUser._id}`,
         {
           dob,
           state,
@@ -142,14 +150,7 @@ export default function ProfileScreen() {
     }
   };
 
-  // console.log(user?.phoneNumber);
-  if (!user) {
-    return <ActivityIndicator
-    color={'red'}
-    size={50}
-    style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-    />
-  }
+
   return (
     <>
      
@@ -162,7 +163,7 @@ export default function ProfileScreen() {
               <View style={{ position: "relative" }}>
                 <Image
                   source={{
-                    uri: `https://api.dicebear.com/5.x/initials/svg?seed=${user.name}`,
+                    uri: `https://api.dicebear.com/5.x/initials/svg?seed=${user?.name}`,
                   }}
                   style={{
                     width: 100,
@@ -185,7 +186,7 @@ export default function ProfileScreen() {
                   fontSize: 16,
                   paddingVertical: 3,
                 }}
-                value={user.name}
+                value={user?.name}
                 editable={false}
                 placeholder="Name"
               />
@@ -200,7 +201,7 @@ export default function ProfileScreen() {
                   fontSize: 16,
                   paddingVertical: 3,
                 }}
-                value={`${user.phoneNumber}`}
+                value={`${user?.phoneNumber}`}
                 editable={false}
                 placeholder="Mobile Number"
                 keyboardType="numeric"
@@ -216,7 +217,7 @@ export default function ProfileScreen() {
                   fontSize: 16,
                   paddingVertical: 3,
                 }}
-                value={user.email}
+                value={user?.email}
                 editable={false}
                 placeholder="Email"
                 keyboardType="email-address"
@@ -266,7 +267,8 @@ export default function ProfileScreen() {
                 }}
               >
                 <Picker
-                  selectedValue={user.additionalDetails?.state ? user.additionalDetails?.state : state } 
+                  selectedValue={ state === "" ? user?.additionalDetails?.state : state } 
+                  
                   // enabled={false}
                   onValueChange={(itemValue, itemIndex) => setState(itemValue)}
                 >
@@ -287,7 +289,7 @@ export default function ProfileScreen() {
                   fontSize: 16,
                   paddingVertical: 3,
                 }}
-                value={user.additionalDetails?.city ? user.additionalDetails?.city : usercity} 
+                value={user?.additionalDetails?.city ? user?.additionalDetails?.city : usercity} 
                 editable={true}
                 placeholder="City"
                 onChangeText={updateCity}
