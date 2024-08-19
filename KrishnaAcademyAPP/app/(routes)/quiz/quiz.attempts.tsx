@@ -92,17 +92,7 @@ const renderItem = ({ item }) => (
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text
-      style={{
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        textAlign: 'center',
-        
-      }}
-      >
-        Quiz Attempts
-      </Text>
+  
       <FlatList
         data={attempts}
         renderItem={renderItem}

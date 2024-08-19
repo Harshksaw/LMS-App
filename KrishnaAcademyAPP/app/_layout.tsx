@@ -189,7 +189,7 @@ function RootLayoutNav() {
         <Stack.Screen
           name="(routes)/quiz/quiz.attempts"
           options={{
-            // headerShown: false,
+            headerShown: true,
             title: "Quiz Attempts",
             headerBackTitle: "Back",
           }}

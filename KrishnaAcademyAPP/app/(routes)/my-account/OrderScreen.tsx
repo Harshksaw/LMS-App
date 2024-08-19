@@ -33,9 +33,7 @@ const OrderScreen: React.FC = () => {
       } catch (error) {
         Toast.show("Error fetching orders");
         console.error('Error fetching orders:', error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchOrders();
