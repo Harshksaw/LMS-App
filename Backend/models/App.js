@@ -18,9 +18,8 @@ const configSchema = new mongoose.Schema({
     default: [],
   },
   socialMediaLinks: {
-    type: Map,
-    of: String,
-    default: {},
+    type: [String],
+    default: ["", "", "", ""], // Default array with four empty strings
   },
   aboutUs: {
     type: String,

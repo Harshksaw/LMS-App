@@ -6,26 +6,33 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const cloudinary = require('cloudinary').v2;
 
+// Configure Cloudinary
+  
 cloudinary.config({
-    cloud_name: "dkijovd6p",
-    api_key: 351972686379935,
-    api_secret: "Cgm2d5dHRR7NsBNcus9mL1fQlfk",
-  });
-  
-  
-  // Configure Multer storage using Cloudinary
-  const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-      folder: "carousel-images",
-      resource_type: "auto",
-    },
-  })
-    const upload = multer({ storage: storage });
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret:process.env.API_SECRET,
+});
 
-//create _>> all configs
-router.post("/config",upload.array('carousel', 5)  , createOrUpdateConfig);
+// Configure Multer storage using Cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'carousel',
 
+    public_id: (req, file) => file.originalname,
+  },
+});
+
+const upload = multer({ storage: storage });
+
+const logRequest = (req, res, next) => {
+  console.log('Request Body:', req.body);
+  console.log('Uploaded Files:', req.files);
+  next();
+};
+// Create or update config with file upload and logging middleware
+router.post("/config",   upload.array('carousel', 5) , logRequest, createOrUpdateConfig);
 
 router.post("/contact", contactUsController)
 router.get("/carousel", getCarouseImages)

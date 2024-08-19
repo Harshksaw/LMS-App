@@ -5,7 +5,8 @@ const mailSender = require("../utils/mailSender")
 const dotenv = require("dotenv");
 const cloudinary = require('cloudinary').v2;
 dotenv.config();
-
+const fs = require('fs');
+const path = require('path');
 
 
 exports.contactUsController = async (req, res) => {
@@ -77,28 +78,30 @@ exports.rateOthersLink = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch rate others link" });
   }
 }
-
-
+// cloudinary.config({
+//   cloud_name: "dkijovd6p",
+//   api_key: "351972686379935",
+//   api_secret: "Cgm2d5dHRR7NsBNcus9mL1fQlfk",
+// });
+  
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret:process.env.API_SECRET,
+});
 exports.createOrUpdateConfig = async (req, res) => {
+
     try {
-
-      console.log(req.files)
-
-    // if (req.files && req.files.length > 0) {
- 
-    //   const uploadPromises = req.files.map(file => {
-    //     console.log(file.path)
-    //     return cloudinary.uploader.upload(file.path, { folder: 'carousel' });
-    //   });
-
-    //   const uploadResults = await Promise.all(uploadPromises);
-    //   const uploadedFiles = uploadResults.map(result => result.secure_url);
-    //   config.carouselImages = uploadedFiles;
-    // }
-
-
-    const { carouselImages, socialMediaLinks, aboutUs, rateOthersLink, shareAppLink } = req.body;
-    let config = await Config.findOne();
+      if (req.files && req.files.length > 0) {
+        // Extract URLs from req.files
+        const carouselImages = req.files.map(file => file.path);
+        req.body.carouselImages = carouselImages;
+      }
+      
+  
+      const {message,  socialMediaLinks, aboutUs, rateOthersLink, shareAppLink , carouselImages} = req.body;
+      let config = await Config.findOne();
+      console.log("🚀 ~ exports.createOrUpdateConfig= ~ config:", config)
 
     if (!config) {
       config = new Config();
