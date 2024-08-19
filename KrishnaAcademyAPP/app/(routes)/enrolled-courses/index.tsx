@@ -34,7 +34,7 @@ const renderCources = ({ item }) => {
         height: 240, // Ensure this is set to control the size
         flexDirection: "column",
         justifyContent: "flex-start",
-        alignItems: "flex-start",
+        alignItems: "center",
         gap: 4,
 
 
@@ -98,12 +98,12 @@ const renderCources = ({ item }) => {
       <View
         style={{
           backgroundColor: '#fff',
-          marginTop: -15,
+          marginTop: -10,
           width: "100%",
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          paddingHorizontal: 10,
+          paddingHorizontal:10,
         }}
       >
         <Text
@@ -115,7 +115,7 @@ const renderCources = ({ item }) => {
             textAlign: "left",
           }}
         >
-          {item.name}
+          {item.bundleName}
 
         </Text>
         <Text
@@ -126,7 +126,7 @@ const renderCources = ({ item }) => {
             textAlign: "left",
           }}
         >
-          {/* {item?.shortDescription.slice(0, 15)} */}
+          {item?.aboutDescription.slice(0, 25)}
         </Text>
       </View>
     </TouchableOpacity>
@@ -150,8 +150,8 @@ export default function index() {
       console.log(isUser._id, "------------------");
       try {
         const res = await axios.get(`${SERVER_URI}/api/v1/Auth/getAllUserCourses/${isUser._id}`);
-        // console.log(res.data, "------------------153");
-        setQuizzes(res.data.data);
+        console.log(res.data.data.courses, "------------------153");
+        setQuizzes(res.data.data.courses);
 
         if(res.status === 200){
           setLoading(false);

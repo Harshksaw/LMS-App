@@ -49,7 +49,7 @@ const SavedQuestions = () => {
 
     return (
         <SafeAreaProvider style={styles.container}>
-
+{/* 
             <Text
             style={{
                 fontSize: 20,
@@ -57,7 +57,7 @@ const SavedQuestions = () => {
                 marginBottom: 20,
                 textAlign: 'center',
             }}
-            >Saved Questions</Text>
+            >Saved Questions</Text> */}
 
             <ScrollView>
 

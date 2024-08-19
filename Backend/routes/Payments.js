@@ -11,7 +11,7 @@ router.post("/sendPaymentSuccessEmail", auth, isStudent, sendPaymentSuccessEmail
 router.post("/create-order",createOrder)
 router.post("/get-order", getOrder)
 
-router.get('/getUserOrders', getUserOrders)
+router.get('/getUserOrders/:id', getUserOrders)
 
 
 

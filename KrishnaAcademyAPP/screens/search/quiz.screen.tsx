@@ -141,7 +141,7 @@ const renderCources = ({ item }) => {
           style={{
             // color: "white",
             fontSize: 16,
-            marginBottom: 14,
+            marginBottom: 4,
             fontWeight: "600",
             textAlign: "left",
           }}
@@ -149,7 +149,7 @@ const renderCources = ({ item }) => {
           {item.bundleName}
 
         </Text>
-        {/* <Text
+        <Text
           style={{
             // color: "white",
             fontSize: 12,
@@ -157,8 +157,8 @@ const renderCources = ({ item }) => {
             textAlign: "left",
           }}
         >
-          {item.aboutDescription.slice(0, 15)}
-        </Text> */}
+          {item.aboutDescription.slice(0, 20)}
+        </Text>
       </View>
     </TouchableOpacity>
   )
