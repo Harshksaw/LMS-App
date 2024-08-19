@@ -3,7 +3,10 @@ const { getFeedback } = require("../mail/templates/feedback");
 const Config = require("../models/App");
 const mailSender = require("../utils/mailSender")
 const dotenv = require("dotenv");
+const cloudinary = require('cloudinary').v2;
 dotenv.config();
+
+
 
 exports.contactUsController = async (req, res) => {
   const { email, firstname, lastname, message, phoneNo, countrycode } = req.body
@@ -77,7 +80,23 @@ exports.rateOthersLink = async (req, res) => {
 
 
 exports.createOrUpdateConfig = async (req, res) => {
-  try {
+    try {
+
+      console.log(req.files)
+
+    // if (req.files && req.files.length > 0) {
+ 
+    //   const uploadPromises = req.files.map(file => {
+    //     console.log(file.path)
+    //     return cloudinary.uploader.upload(file.path, { folder: 'carousel' });
+    //   });
+
+    //   const uploadResults = await Promise.all(uploadPromises);
+    //   const uploadedFiles = uploadResults.map(result => result.secure_url);
+    //   config.carouselImages = uploadedFiles;
+    // }
+
+
     const { carouselImages, socialMediaLinks, aboutUs, rateOthersLink, shareAppLink } = req.body;
     let config = await Config.findOne();
 
@@ -94,6 +113,8 @@ exports.createOrUpdateConfig = async (req, res) => {
     await config.save();
     res.status(200).json({ success: true, message: "Configuration updated successfully" });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Failed to update configuration" });
+    res.status(500).json({ success: false, message: "Failed to update configuration", 
+      erromes: error.message
+     });
   }
 };
