@@ -18,10 +18,10 @@ console.log(
 
 cloudinary.config({
     // cloud_name: process.env.CLOUD_NAME,
-     cloud_name: 'dbnnlqq5v', 
-        api_key: '283514623947746',
+     cloud_name: process.env.CLOUD_NAME, 
+        api_key: process.env.API_KEY,
     // api_key: process.env.API_KEY,
-    api_secret: 'E2s6axKWvXTiJi5_DGiFuPe7Lxo',
+    api_secret: process.env.API_SECRET,
 
 
   });
@@ -35,7 +35,7 @@ exports.createCourseBundle = async (req, res) => {
     const response= await cloudinary.uploader.upload(req.file.path, {
         folder: 'images',
       })
-    console.log("🚀 ~ exports.createCourseBundle= ~ response:", response)
+    // console.log("🚀 ~ exports.createCourseBundle= ~ response:", response)
 
     const bundle = new Bundle({
       bundleName: req.body.bundleName,
