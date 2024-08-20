@@ -204,6 +204,7 @@ export default function QuizScreen() {
       style={{
         flex: 1,
         // backgroundColor:'red',
+        paddingBottom: 30,
 
       }}
     >

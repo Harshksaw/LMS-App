@@ -46,14 +46,14 @@ const quizsolution = () => {
 
     // const data = JSON.stringify(item)
     const data = item
-    console.log("🚀 ~ quizsolution ~ data:", data)
+    // console.log("🚀 ~ quizsolution ~ data:", data)
     // Check if item and item.question exist
     if (!data || !data.question) {
       return <ActivityIndicator size="large" color="#0000ff" />
     }
 
     const { question, options } = data?.question;
-    console.log("🚀 ~ renderItem ~ options:", options)
+    // console.log("🚀 ~ renderItem ~ options:", options)
 
     // Check if question and options exist
     if (!question || !options) {
@@ -73,6 +73,7 @@ const quizsolution = () => {
           flexDirection:'column',
           justifyContent:'center',
           // alignItems:'center',
+          paddingBottom:20,
           gap:5,
           marginTop:10,
           paddingHorizontal:10,
@@ -146,6 +147,7 @@ const quizsolution = () => {
       style={{
         paddingHorizontal: 20,
         marginTop: 20,
+        paddingBottom:80,
       }}
     >
 
@@ -176,6 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(234, 228, 228)',
     padding: 10,
     paddingHorizontal: 20,
+
     minHeight: 80,
   },
   questionText: {

@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/App.png",
+        "foregroundImage": "./assets/icons/app.jpg",
         "backgroundColor": "#ffffff"
       },
       "package": "com.harsh10021.lms"

@@ -68,35 +68,30 @@ const states = [
 async function getUser() {
   const usera = await AsyncStorage.getItem("user");
   const isUser = JSON.parse(usera);
-  return isUser
-  
+  return isUser;
 }
 
 export default function ProfileScreen() {
-
-  // console.log("🚀 ~ ProfileScreen ~ user:", user)
-const {user} = useUser()
-
-  // const user = getUser()
-
-  // const [image, setImage] = useState<any>(null);
-  // const [loader, setLoader] = useState(false);
-  // const [name, setName] = useState(user.name);
-  // const [mobileNo, setMobileNo] = useState("");
-  // const [email, setEmail] = useState("");
-  const [dob, setDob] = useState(new Date());
-  const [state, setState] = useState("");
-  const [usercity, setCity] = useState("");
+  const { user } = useUser();
+  const [dob, setDob] = useState(new Date(user?.additionalDetails?.dob || new Date()));
+  const [state, setState] = useState(user?.additionalDetails?.state || "");
+  const [usercity, setCity] = useState(user?.additionalDetails.city || "");
   const [show, setShow] = useState(false);
 
- 
-
+  useEffect(() => {
+    getUser().then((user) => {
+      setDob(new Date(user?.additionalDetails?.dob || new Date()));
+      setState(user?.additionalDetails?.state || "");
+      setCity(user?.additionalDetails.city || "");
+    });
+  }, []);
 
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || dob;
     setShow(false);
     setDob(currentDate);
   };
+
   let [fontsLoaded, fontError] = useFonts({
     Raleway_600SemiBold,
     Raleway_700Bold,
@@ -115,32 +110,27 @@ const {user} = useUser()
     router.push("/(routes)/login");
   };
 
-
-
   const updateCity = (newCity: string) => {
-    // console.log(newCity);
     setCity(newCity);
   };
-  // console.log(user?._id)
+
   const handleUpdateAdditionalDetails = async () => {
     try {
-
       const user = await AsyncStorage.getItem("user");
       const isUser = JSON.parse(user);
       const response = await axios.post(
-
         `${SERVER_URI}/api/v1/auth/additionalDetails/${isUser._id}`,
         {
           dob,
           state,
-          city : usercity,
+          city: usercity,
         }
       );
 
       if (response.status === 200) {
         Toast.show("Additional details updated successfully!", {
           type: "success",
-        })
+        });
       } else {
         alert("Error updating additional details!");
       }
@@ -150,168 +140,154 @@ const {user} = useUser()
     }
   };
 
-
   return (
     <>
-     
-        <LinearGradient
-          colors={["#E5ECF9", "#F6F7F9"]}
-          style={{ flex: 1, paddingTop: 80 }}
-        >
-          <ScrollView>
-            <View style={{ flexDirection: "row", justifyContent: "center" }}>
-              <View style={{ position: "relative" }}>
-                <Image
-                  source={{
-                    uri: `https://api.dicebear.com/5.x/initials/svg?seed=${user?.name}`,
-                  }}
-                  style={{
-                    width: 100,
-                    height: 100,
-                    marginRight: 8,
-                    borderRadius: 100,
-                  }}
-                />
-              </View>
+      <LinearGradient
+        colors={["#E5ECF9", "#F6F7F9"]}
+        style={{ flex: 1, paddingTop: 80 }}
+      >
+        <ScrollView>
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <View style={{ position: "relative" }}>
+              <Image
+                source={{
+                  uri: `https://api.dicebear.com/5.x/initials/svg?seed=${user?.name}`,
+                }}
+                style={{
+                  width: 100,
+                  height: 100,
+                  marginRight: 8,
+                  borderRadius: 100,
+                }}
+              />
             </View>
+          </View>
 
-            <View style={{ marginTop: 36, paddingHorizontal: 16, gap: 8 }}>
-              <Text style={{ fontSize: 16 }}>Name:</Text>
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  paddingHorizontal: 4,
-                  borderColor: "#c4c4c4",
-                  fontSize: 16,
-                  paddingVertical: 3,
-                }}
-                value={user?.name}
-                editable={false}
-                placeholder="Name"
-              />
+          <View style={{ marginTop: 36, paddingHorizontal: 16, gap: 8 }}>
+            <Text style={{ fontSize: 16 }}>Name:</Text>
+            <TextInput
+              style={{
+                borderWidth: 1,
+                borderRadius: 5,
+                paddingHorizontal: 4,
+                borderColor: "#c4c4c4",
+                fontSize: 16,
+                paddingVertical: 3,
+              }}
+              value={user?.name}
+              editable={false}
+              placeholder="Name"
+            />
 
-              <Text style={{ fontSize: 16 }}>Mobile No:</Text>
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  paddingHorizontal: 4,
-                  borderColor: "#c4c4c4",
-                  fontSize: 16,
-                  paddingVertical: 3,
-                }}
-                value={`${user?.phoneNumber}`}
-                editable={false}
-                placeholder="Mobile Number"
-                keyboardType="numeric"
-              />
+            <Text style={{ fontSize: 16 }}>Mobile No:</Text>
+            <TextInput
+              style={{
+                borderWidth: 1,
+                borderRadius: 5,
+                paddingHorizontal: 4,
+                borderColor: "#c4c4c4",
+                fontSize: 16,
+                paddingVertical: 3,
+              }}
+              value={`${user?.phoneNumber}`}
+              editable={false}
+              placeholder="Mobile Number"
+              keyboardType="numeric"
+            />
 
-              <Text style={{ fontSize: 16 }}>Email:</Text>
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  paddingHorizontal: 4,
-                  borderColor: "#c4c4c4",
-                  fontSize: 16,
-                  paddingVertical: 3,
-                }}
-                value={user?.email}
-                editable={false}
-                placeholder="Email"
-                keyboardType="email-address"
-              />
+            <Text style={{ fontSize: 16 }}>Email:</Text>
+            <TextInput
+              style={{
+                borderWidth: 1,
+                borderRadius: 5,
+                paddingHorizontal: 4,
+                borderColor: "#c4c4c4",
+                fontSize: 16,
+                paddingVertical: 3,
+              }}
+              value={user?.email}
+              editable={false}
+              placeholder="Email"
+              keyboardType="email-address"
+            />
 
-              <Text style={{ fontSize: 16 }}>DOB:</Text>
-              <View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    borderRadius: 5,
-                    borderWidth: 1,
-                    paddingVertical: 12,
-                    paddingHorizontal: 10,
-                    borderColor: "#c4c4c4",
-                  }}
-                >
-                  <Text style={{ flex: 1, color: "gray" }}>
-                    {/* {dob.toLocaleDateString()} */}
-                    {user?.additionalDetails?.dob ? user?.additionalDetails?.dob.slice(0,10) : dob.toLocaleDateString() } 
-                  </Text>
-                  <TouchableOpacity onPress={() => setShow(true)}>
-                    <Text style={{ color: "black" }}>Select date</Text>
-                  </TouchableOpacity>
-                </View>
-                {show && (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={dob}
-                    mode="date"
-                    display="default"
-                    onChange={onChange}
-                  />
-                )}
-              </View>
-
-              <Text style={{ fontSize: 16 }}>State:</Text>
+            <Text style={{ fontSize: 16 }}>DOB:</Text>
+            <View>
               <View
                 style={{
-                  borderWidth: 1,
+                  flexDirection: "row",
+                  alignItems: "center",
                   borderRadius: 5,
-                  paddingHorizontal: 4,
+                  borderWidth: 1,
+                  paddingVertical: 12,
+                  paddingHorizontal: 10,
                   borderColor: "#c4c4c4",
-
-                  paddingVertical: 0,
                 }}
               >
-                <Picker
-                  selectedValue={ state === "" ? user?.additionalDetails?.state : state } 
-                  
-                  // enabled={false}
-                  onValueChange={(itemValue, itemIndex) => setState(itemValue)}
-                >
-                  <Picker.Item label="Select a state" value={user?.state} />
-                  {states.map((state: any) => (
-                    <Picker.Item label={state} value={state} key={state} />
-                  ))}
-                </Picker>
+                <Text style={{ flex: 1, color: "gray" }}>
+                  {dob.toLocaleDateString()}
+                </Text>
+                <TouchableOpacity onPress={() => setShow(true)}>
+                  <Text style={{ color: "black" }}>Select date</Text>
+                </TouchableOpacity>
               </View>
-
-              <Text style={{ fontSize: 16 }}>City:</Text>
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  paddingHorizontal: 4,
-                  borderColor: '#c4c4c4',
-                  fontSize: 16,
-                  paddingVertical: 3,
-                }}
-                value={user?.additionalDetails?.city ? user?.additionalDetails?.city : usercity} 
-                editable={true}
-                placeholder="City"
-                onChangeText={updateCity}
-              />
+              {show && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={dob}
+                  mode="date"
+                  display="default"
+                  onChange={onChange}
+                />
+              )}
             </View>
 
-            <View style={{ paddingVertical: 24 }}>
-              <Button title="Update" onPress={handleUpdateAdditionalDetails} />
+            <Text style={{ fontSize: 16 }}>State:</Text>
+            <View
+              style={{
+                borderWidth: 1,
+                borderRadius: 5,
+                paddingHorizontal: 4,
+                borderColor: "#c4c4c4",
+                paddingVertical: 0,
+              }}
+            >
+              <Picker
+                selectedValue={state}
+                onValueChange={(itemValue) => setState(itemValue)}
+              >
+                <Picker.Item label="Select a state" value="" />
+                {states.map((state) => (
+                  <Picker.Item label={state} value={state} key={state} />
+                ))}
+              </Picker>
             </View>
-            <View style={{ paddingVertical: 10 }}>
-              <Button
-                title="Logout"
-                onPress={() => {
-                  AsyncStorage.removeItem("token");
-                  AsyncStorage.removeItem("refresh_token");
-                  router.push("/(routes)/login");
-                }}
-              />
-            </View>
-          </ScrollView>
-        </LinearGradient>
 
+            <Text style={{ fontSize: 16 }}>City:</Text>
+            <TextInput
+              style={{
+                borderWidth: 1,
+                borderRadius: 5,
+                paddingHorizontal: 4,
+                borderColor: "#c4c4c4",
+                fontSize: 16,
+                paddingVertical: 3,
+              }}
+              value={usercity}
+              editable={true}
+              placeholder="City"
+              onChangeText={updateCity}
+            />
+          </View>
+
+          <View style={{ paddingVertical: 24 }}>
+            <Button title="Update" onPress={handleUpdateAdditionalDetails} />
+          </View>
+          <View style={{ paddingVertical: 10 }}>
+            <Button title="Logout" onPress={logoutHandler} />
+          </View>
+        </ScrollView>
+      </LinearGradient>
     </>
   );
 }

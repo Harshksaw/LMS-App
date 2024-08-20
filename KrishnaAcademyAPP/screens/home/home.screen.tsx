@@ -32,6 +32,7 @@ export default function HomeScreen() {
    style={{
     flex: 1,
     paddingTop: 50,
+    
    }}
    >
 
@@ -43,7 +44,7 @@ export default function HomeScreen() {
         {
           // flex:1,
           backgroundColor: "white",
-          // padding: 10,
+  
           // paddingHorizontal: 10,
         }
       }
