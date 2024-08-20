@@ -215,15 +215,16 @@ export default function QuizScreen() {
   const [savedCount, setSavedCount] = useState(0);
 
   useEffect(() => {
-    const attempted = questions.filter(q => q.answered).length;
-    const unanswered = questions.filter(q => !q.answered).length;
+
+    console.log(questions, "questions");
+    const attempted = questions.filter(q => q.selectedOption !== undefined).length;
+    const unanswered = questions.filter(q => q.selectedOption === undefined).length;
     const saved = questions.filter(q => q.saved).length;
 
     setAttemptedCount(attempted);
     setUnansweredCount(unanswered);
     setSavedCount(saved);
   }, [questions]);
-
 
   const handleMenuPress = () => {
     setVisible(true);
@@ -275,7 +276,9 @@ export default function QuizScreen() {
   const handleSave = () => {
 
     if (count < questions.length - 1) {
+
       if (questions[count].correctAnswer[language] === userAnswer) {
+        console.log(userScore, "userScore");
         setUserScore((userScore) => userScore + 1);
       }
       setCount((count) => count + 1);
@@ -304,14 +307,28 @@ export default function QuizScreen() {
 
 
   const toggleColor = (index: number | null, count: number) => {
-    const optionsArray = Object.values(questions[count]?.options);
-    console.log(optionsArray[index][language], "----l", index);
     if (index === null) return;
+
+    const optionsArray = Object.values(questions[count]?.options);
+    // console.log(optionsArray[index][language], "----l", index);
+    const selectedAnswer = optionsArray[index][language];
     setSelectedBox(index);
-    setAnswered((prev) => [...prev, count]);
-    console.log(optionsArray[index][language], "----l");
-    setUserAnswer(optionsArray[index][language]);
-     setUserAnswers(prevAnswers => [...prevAnswers, optionsArray[index][language]]);
+    // setAnswered((prev) => [...prev, count]);
+    setAnswered((prev) => {
+      if (!prev.includes(count)) {
+          return [...prev, count];
+      }
+      return prev;
+  });
+  setUserAnswer(selectedAnswer);
+  setUserAnswers((prevAnswers) => {
+    const newAnswers = [...prevAnswers];
+    newAnswers[count] = selectedAnswer; // Ensure the answer is recorded at the correct index
+    return newAnswers;
+});
+    // console.log(optionsArray[index][language], "----l");
+    // setUserAnswer(optionsArray[index][language]);
+    //  setUserAnswers(prevAnswers => [...prevAnswers, optionsArray[index][language]]);
 
   };
 
@@ -1086,26 +1103,7 @@ export default function QuizScreen() {
                 </View>
                 <Text style={{ fontSize: 14, color: "gray" }}>{unansweredCount}</Text>
               </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  borderBottomColor: "#e2e2e2",
-                  borderBottomWidth: 1,
-                  width: "100%",
-                }}
-              >
-                <View style={{ flexDirection: "row", gap: 3 }}>
-                  <MaterialCommunityIcons
-                    style={{ alignSelf: "center" }}
-                    name="timer"
-                    size={20}
-                    color="black"
-                  />
-                  <Text style={{ fontSize: 14, color: "gray" }}>Saved</Text>
-                </View>
-                <Text style={{ fontSize: 14, color: "gray" }}>{savedCount}</Text>
-              </View>
+           
             </View>
             <Text style={{ alignSelf: "center" }}>
               You are submitting the quiz
