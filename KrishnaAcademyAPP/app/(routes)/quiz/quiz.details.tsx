@@ -27,147 +27,147 @@ import { Toast } from "react-native-toast-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { usePreventScreenCapture } from 'expo-screen-capture';
 
-const renderItem = ({ item }) => {
-  // console.log(item, "item");
-  return (
-    <TouchableOpacity
-      style={{
-        backgroundColor: "#fff",
-        borderWidth: 1,
-        borderColor: "#d2cccc",
+// const renderItem = ({ item }) => {
+//   // console.log(item, "item");
+//   return (
+//     <TouchableOpacity
+//       style={{
+//         backgroundColor: "#fff",
+//         borderWidth: 1,
+//         borderColor: "#d2cccc",
 
-        // marginBottom: 10,
-        minWidth: "45%",
-        maxWidth: "50%",
-        marginHorizontal: 5,
-        height: 250, // Ensure this is set to control the size
-        flexDirection: "column",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 4,
+//         // marginBottom: 10,
+//         minWidth: "45%",
+//         maxWidth: "50%",
+//         marginHorizontal: 5,
+//         height: 250, // Ensure this is set to control the size
+//         flexDirection: "column",
+//         justifyContent: "space-between",
+//         alignItems: "center",
+//         gap: 4,
 
-        padding: 4,
-        borderRadius: 20,
-        overflow: "hidden", // Ensure the borderRadius effect applies to children
-      }}
-      onPress={() =>
-        router.push({
-          pathname: "/(routes)/quiz/quiz.details",
-          params: { quizId: item._id },
-        })
-      }
-    >
-      <View
-        style={{
-          position: "absolute",
-          top: 12,
-          left: 12,
-          justifyContent: "flex-start", // Aligns children vertically to the top
-          alignItems: "flex-start", // Aligns children horizontally to the left
-          backgroundColor: "green", // Dark background color
-          borderRadius: 10,
-          alignSelf: "flex-start",
-          padding: 5, // Add padding for better appearance
-        }}
-      >
-        <Text
-          style={{
-            color: "white", // White text color
-            fontSize: 14,
-            // fontWeight: "bold",
-            textAlign: "left", // Align text to the left
-          }}
-        >
-          R100
-        </Text>
-      </View>
+//         padding: 4,
+//         borderRadius: 20,
+//         overflow: "hidden", // Ensure the borderRadius effect applies to children
+//       }}
+//       onPress={() =>
+//         router.push({
+//           pathname: "/(routes)/quiz/quiz.details",
+//           params: { quizId: item._id },
+//         })
+//       }
+//     >
+//       <View
+//         style={{
+//           position: "absolute",
+//           top: 12,
+//           left: 12,
+//           justifyContent: "flex-start", // Aligns children vertically to the top
+//           alignItems: "flex-start", // Aligns children horizontally to the left
+//           backgroundColor: "green", // Dark background color
+//           borderRadius: 10,
+//           alignSelf: "flex-start",
+//           padding: 5, // Add padding for better appearance
+//         }}
+//       >
+//         <Text
+//           style={{
+//             color: "white", // White text color
+//             fontSize: 14,
+//             // fontWeight: "bold",
+//             textAlign: "left", // Align text to the left
+//           }}
+//         >
+//           R100
+//         </Text>
+//       </View>
 
-      <View
-        style={{
-          backgroundColor: "#EBEBEB",
-          borderRadius: 10,
-          width: 150,
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          // marginBottom: 10,
-          marginTop: 48,
-        }}
-      >
-        {!item.image ? (
-          <ImageBackground
-            source={{ uri: "https://picsum.photos/seed/picsum/200/300" }}
-            style={{
-              width: "100%",
-              height: "100%", // Adjusted to fill the TouchableOpacity
-              // justifyContent: "center",
+//       <View
+//         style={{
+//           backgroundColor: "#EBEBEB",
+//           borderRadius: 10,
+//           width: 150,
+//           flexDirection: "row",
+//           justifyContent: "center",
+//           alignItems: "center",
+//           // marginBottom: 10,
+//           marginTop: 48,
+//         }}
+//       >
+//         {!item.image ? (
+//           <ImageBackground
+//             source={{ uri: "https://picsum.photos/seed/picsum/200/300" }}
+//             style={{
+//               width: "100%",
+//               height: "100%", // Adjusted to fill the TouchableOpacity
+//               // justifyContent: "center",
 
-              // alignItems: "center",
-            }}
-            imageStyle={{
-              borderRadius: 20, // Apply borderRadius to the image itself
-            }}
-          />
-        ) : (
-          <Ionicons
-            name="image-outline"
-            size={140}
-            color="red"
-            style={
-              {
-                // marginVertical: 10,
-              }
-            }
-          />
-        )}
-      </View>
-      <View
-        style={{
-          backgroundColor: "#fff",
-          // marginTop: -15,
-          width: "100%",
-          marginVertical: 10,
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          paddingHorizontal: 10,
+//               // alignItems: "center",
+//             }}
+//             imageStyle={{
+//               borderRadius: 20, // Apply borderRadius to the image itself
+//             }}
+//           />
+//         ) : (
+//           <Ionicons
+//             name="image-outline"
+//             size={140}
+//             color="red"
+//             style={
+//               {
+//                 // marginVertical: 10,
+//               }
+//             }
+//           />
+//         )}
+//       </View>
+//       <View
+//         style={{
+//           backgroundColor: "#fff",
+//           // marginTop: -15,
+//           width: "100%",
+//           marginVertical: 10,
+//           flexDirection: "column",
+//           justifyContent: "flex-start",
+//           alignItems: "flex-start",
+//           paddingHorizontal: 10,
 
-          // position: "absolute",
-          // bottom: 0,
-          // left: 0,
-          // right: 0,
-          // height: 80, // Adjust the height for your shadow effect
-          // backgroundColor: "rgba(0,0,0,0.4)", // Semi-transparent view for shadow effect
-          // flexDirection: "column",
-          // justifyContent: "flex-start",
-          // alignItems: "center",
-          // gap: 10,
-        }}
-      >
-        <Text
-          style={{
-            // color: "white",
-            fontSize: 16,
-            fontWeight: "600",
-            textAlign: "left",
-          }}
-        >
-          {item.name}
-        </Text>
-        <Text
-          style={{
-            // color: "white",
-            fontSize: 12,
-            fontWeight: "condensed",
-            textAlign: "left",
-          }}
-        >
-          {item.shortDescription.slice(0, 10)}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
+//           // position: "absolute",
+//           // bottom: 0,
+//           // left: 0,
+//           // right: 0,
+//           // height: 80, // Adjust the height for your shadow effect
+//           // backgroundColor: "rgba(0,0,0,0.4)", // Semi-transparent view for shadow effect
+//           // flexDirection: "column",
+//           // justifyContent: "flex-start",
+//           // alignItems: "center",
+//           // gap: 10,
+//         }}
+//       >
+//         <Text
+//           style={{
+//             // color: "white",
+//             fontSize: 16,
+//             fontWeight: "600",
+//             textAlign: "left",
+//           }}
+//         >
+//           {item.name}
+//         </Text>
+//         <Text
+//           style={{
+//             // color: "white",
+//             fontSize: 12,
+//             fontWeight: "condensed",
+//             textAlign: "left",
+//           }}
+//         >
+//           {item.shortDescription.slice(0, 10)}
+//         </Text>
+//       </View>
+//     </TouchableOpacity>
+//   );
+// };
 
 function secondsToHms(seconds) {
   const pad = (num, size) => ("00" + num).slice(-size);
@@ -210,6 +210,20 @@ export default function QuizScreen() {
   const [timeUp, setTimeUp] = useState(false);
   const [visible, setVisible] = useState(false);
   const [remainderTime ,setRemainderTime] = useState(0)
+  const [attemptedCount, setAttemptedCount] = useState(0);
+  const [unansweredCount, setUnansweredCount] = useState(questions.length);
+  const [savedCount, setSavedCount] = useState(0);
+
+  useEffect(() => {
+    const attempted = questions.filter(q => q.answered).length;
+    const unanswered = questions.filter(q => !q.answered).length;
+    const saved = questions.filter(q => q.saved).length;
+
+    setAttemptedCount(attempted);
+    setUnansweredCount(unanswered);
+    setSavedCount(saved);
+  }, [questions]);
+
 
   const handleMenuPress = () => {
     setVisible(true);
@@ -1048,7 +1062,7 @@ export default function QuizScreen() {
                   />
                   <Text style={{ fontSize: 14, color: "gray" }}>Answered</Text>
                 </View>
-                <Text style={{ fontSize: 14, color: "gray" }}>{"7"}</Text>
+                <Text style={{ fontSize: 14, color: "gray" }}>{attemptedCount}</Text>
               </View>
               <View
                 style={{
@@ -1070,7 +1084,7 @@ export default function QuizScreen() {
                     Unanswered
                   </Text>
                 </View>
-                <Text style={{ fontSize: 14, color: "gray" }}>{"2"}</Text>
+                <Text style={{ fontSize: 14, color: "gray" }}>{unansweredCount}</Text>
               </View>
               <View
                 style={{
@@ -1090,7 +1104,7 @@ export default function QuizScreen() {
                   />
                   <Text style={{ fontSize: 14, color: "gray" }}>Saved</Text>
                 </View>
-                <Text style={{ fontSize: 14, color: "gray" }}>{"5"}</Text>
+                <Text style={{ fontSize: 14, color: "gray" }}>{savedCount}</Text>
               </View>
             </View>
             <Text style={{ alignSelf: "center" }}>

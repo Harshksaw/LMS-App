@@ -66,14 +66,12 @@ attemptSchema.pre('save', function(next) {
         }
     });
 
-    const totalQuestions = this.questions.length;
-    const currentPercentage = ((correctAnswers / totalQuestions) * 100).toFixed(2);
-
-    if (currentPercentage > this.highestPercentage) {
-        this.highestPercentage = currentPercentage;
-    }
+    this.score = correctAnswers;
+    // Store the count of correct answers as the score
+    this.highestPercentage = correctAnswers;
 
     next();
 });
+
 
 module.exports = mongoose.model("QuizAttempt", attemptSchema);
