@@ -53,7 +53,7 @@ export const sidebarLinks = [
   {
     id: 8,
     name: "Study Materials",
-    path: "/dashboard/studymaterials",
+    path: "/dashboard/allstudymaterials",
     type: ACCOUNT_TYPE.ADMIN,
     icon: "VscNotebook",
   },

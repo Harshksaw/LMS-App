@@ -3,7 +3,7 @@ const express = require("express")
 const router = express.Router()
 
 const { capturePayment, verifyPayment, sendPaymentSuccessEmail } = require("../controllers/Payments")
-const { uploadStudyMaterials,getAllStudyMaterials, getStudyMaterialById, buyStudyMaterial, getAllBoughtStudyMaterials, getAllBundleMaterial } = require("../controllers/CourseMaterials")
+const { uploadStudyMaterials,getAllStudyMaterials, getStudyMaterialById, buyStudyMaterial, getAllBoughtStudyMaterials, getAllBundleMaterial, getAllAdminStudyMaterials } = require("../controllers/CourseMaterials")
 const multer = require("multer");
 
 // const storage = multer.diskStorage({
@@ -21,6 +21,7 @@ const upload = multer({ storage: storage });
 
 router.post("/uploadStudyMaterials",upload.single('file'),  uploadStudyMaterials)
 router.get("/getAllStudyMaterials",  getAllStudyMaterials)
+router.get("/getAllAdminStudyMaterials",  getAllAdminStudyMaterials)
 router.get("/getStudyMaterialbyId/:id",  getStudyMaterialById)
 router.get("/getIsBundledMaterials",  getAllBundleMaterial)
 router.post("/buyStudyMaterial", buyStudyMaterial);

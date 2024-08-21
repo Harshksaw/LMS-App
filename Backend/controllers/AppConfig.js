@@ -89,35 +89,32 @@ cloudinary.config({
   api_key: process.env.API_KEY,
   api_secret:process.env.API_SECRET,
 });
-exports.createOrUpdateConfig = async (req, res) => {
 
-    try {
-      if (req.files && req.files.length > 0) {
-        // Extract URLs from req.files
-        const carouselImages = req.files.map(file => file.path);
-        req.body.carouselImages = carouselImages;
-      }
-      
-  
-      const {message,  socialMediaLinks, aboutUs, rateOthersLink, shareAppLink , carouselImages} = req.body;
-      let config = await Config.findOne();
-      console.log("🚀 ~ exports.createOrUpdateConfig= ~ config:", config)
+exports.createOrUpdateConfig = async (req, res) => {
+  try {
+    if (req.files && req.files.length > 0) {
+      // Extract URLs from req.files
+      const carouselImages = req.files.map(file => file.path);
+      req.body.carouselImages = carouselImages;
+    }
+
+    const { carouselImages } = req.body;
+    let config = await Config.findOne();
+    console.log("🚀 ~ exports.createOrUpdateConfig= ~ config:", config);
 
     if (!config) {
       config = new Config();
     }
 
     if (carouselImages) config.carouselImages = carouselImages;
-    if (socialMediaLinks) config.socialMediaLinks = socialMediaLinks;
-    if (aboutUs) config.aboutUs = aboutUs;
-    if (rateOthersLink) config.rateOthersLink = rateOthersLink;
-    if (shareAppLink) config.shareAppLink = shareAppLink;
 
     await config.save();
     res.status(200).json({ success: true, message: "Configuration updated successfully" });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Failed to update configuration", 
-      erromes: error.message
-     });
+    res.status(500).json({
+      success: false,
+      message: "Failed to update configuration",
+      error: error.message
+    });
   }
 };

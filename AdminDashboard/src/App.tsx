@@ -45,6 +45,7 @@ import Blog from "./pages/Blog";
 import DailyUpdateForm from "./pages/createBlog";
 import EditBlog from "./pages/EditBlog";
 import ViewBlog from "./pages/ViewBlog";
+import GetMaterials from "./pages/getMaterials";
 
 function App() {
   const { user } = useSelector((state) => state.profile);
@@ -190,6 +191,10 @@ function App() {
               <Route
                 path="dashboard/create-studymaterials"
                 element={<StudyMaterials />}
+              />
+              <Route
+                path="dashboard/allstudymaterials"
+                element={<GetMaterials />}
               />
               <Route path="/dashboard/app-config" element={<AppConfig />} />
               <Route path="dashboard/Settings" element={<Settings />} />

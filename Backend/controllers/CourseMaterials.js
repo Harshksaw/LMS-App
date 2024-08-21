@@ -17,7 +17,7 @@ AWS.config.update({
 });
 
 const s3 = new AWS.S3();
-const cloudFrontUrl = "https://d33zqdivlk1hm.cloudfront.net";
+const cloudFrontUrl = process.env.CLOUDFRONT_URL
 
 const uploadFile = async (file) => {
 
@@ -25,7 +25,7 @@ const uploadFile = async (file) => {
 
   const fileKey = `${uuidv4()}-${file.originalname}`;
   const params = {
-    Bucket: "harshexpolms",
+    Bucket: process.env.S3_BUCKET_NAME,
     Key: fileKey,
     Body: file.buffer,
     ContentType: file.mimetype,
@@ -37,7 +37,7 @@ const uploadFile = async (file) => {
 };
 
 exports.uploadStudyMaterials = async (req, res) => {
-  const { title, description, price, isListed, isPartOfBundle } = req.body;
+  const { title, description, isListed, isPartOfBundle } = req.body;
   const file = req.file; // Assuming you're using multer for file uploads
 console.log(file)
   try {
@@ -54,7 +54,7 @@ console.log(file)
       description,
       fileType,
       fileUrl,
-       price,
+
       isListed,
       isPartOfBundle,
     });
@@ -81,6 +81,28 @@ console.log(file)
 exports.getAllStudyMaterials = async (req, res) => {
   try {
     const studyMaterials = await StudyMaterial.find({ isListed:true });
+    if (studyMaterials.length === 0) {
+      return res.status(200).json({
+        success: false,
+        data: [],
+        message: "No study materials found",
+      });
+    }
+    return res.json({
+      success: true,
+      data: studyMaterials,
+    });
+  } catch (error) {
+    console.log("Error", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+exports.getAllAdminStudyMaterials = async (req, res) => {
+  try {
+    const studyMaterials = await StudyMaterial.find();
     if (studyMaterials.length === 0) {
       return res.status(200).json({
         success: false,

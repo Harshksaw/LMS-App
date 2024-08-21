@@ -17,20 +17,21 @@ const StudyMaterials = () => {
 
     try {
       const formData = new FormData();
+      formData.append("title", title);
       formData.append("description", description);
-      formData.append("course", course);
+      // formData.append("course", course);
 
 
-      formData.append("price", price);
+
       formData.append("isListed", isListed);
       formData.append("isPartOfBundle", isPartOfBundle);
 
       console.log("🚀 ~ uploadStudyMaterial ~ formData:", formData);
       console.log("🚀 ~ uploadStudyMaterial ~ file:", file)
 
-      if (course) {
-        formData.append("course", course);
-      }
+      // if (course) {
+      //   formData.append("course", course);
+      // }
 
       // if (file) {
         formData.append("file", file);
@@ -88,7 +89,7 @@ const StudyMaterials = () => {
               className="p-2 border border-yellow-25 rounded-md"
             />
           </div>
-          <div className="flex flex-col space-y-2">
+          {/* <div className="flex flex-col space-y-2">
             <label className="text-richblack-5">Course ID</label>
             <input
               type="text"
@@ -97,7 +98,7 @@ const StudyMaterials = () => {
               onChange={(e) => setCourse(e.target.value)}
               className="p-2 border border-yellow-25 rounded-md"
             />
-          </div>
+          </div> */}
           <div className="flex flex-col space-y-2">
             <label className="text-richblack-5">File</label>
             <input
@@ -140,7 +141,7 @@ const StudyMaterials = () => {
               className='p-2 border border-yellow-25 rounded-md'
             />
           </div>
-          {isPaid && (
+          {/* {isPaid && (
             <div className="flex flex-col space-y-2">
               <label className="text-richblack-5">Price</label>
               <input
@@ -151,7 +152,7 @@ const StudyMaterials = () => {
                 className="p-2 border border-yellow-25 rounded-md"
               />
             </div>
-          )}
+          )} */}
 
           <button
             type="submit"

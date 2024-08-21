@@ -32,7 +32,7 @@ const logRequest = (req, res, next) => {
   next();
 };
 // Create or update config with file upload and logging middleware
-router.post("/config",   upload.array('carousel', 5) , logRequest, createOrUpdateConfig);
+router.post("/config",   upload.array('carousel', 5) ,  createOrUpdateConfig);
 
 router.post("/contact", contactUsController)
 router.get("/carousel", getCarouseImages)

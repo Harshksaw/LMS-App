@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const StudyMaterialSchema = new mongoose.Schema({
   // isPaid: { type: Boolean, required: false, default: false },
-  price: { type: Number, required: false },
+
   title: { type: String, required: true },
   description: { type: String },
   thumbnail: { type: String, required: false },

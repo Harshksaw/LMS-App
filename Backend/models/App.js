@@ -1,5 +1,16 @@
 const mongoose = require("mongoose");
 
+const socialMediaLinkSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  link: {
+    type: String,
+    required: true,
+  },
+});
+
 const configSchema = new mongoose.Schema({
   isUnderMaintenance: {
     type: Boolean,
@@ -18,8 +29,8 @@ const configSchema = new mongoose.Schema({
     default: [],
   },
   socialMediaLinks: {
-    type: [String],
-    default: ["", "", "", ""], // Default array with four empty strings
+    type: [socialMediaLinkSchema],
+    default: [], // Default to an empty array
   },
   aboutUs: {
     type: String,
@@ -33,8 +44,6 @@ const configSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  
-  
 });
 
 const Config = mongoose.model("Config", configSchema);
