@@ -168,7 +168,7 @@ const [loading , setLoading]= useState(true)
   useEffect(() => {
     const getQuizzes = async () => {
       try {
-        const res = await axios.get(`${SERVER_URI}/api/v1/Bundle/course-bundle`);
+        const res = await axios.get(`${SERVER_URI}/api/v1/bundle/course-bundle`);
         setQuizzes(res.data.data);
 
         console.log(res.data.data,'get all quizes');

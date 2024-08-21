@@ -52,7 +52,7 @@ app.use("/api/v1/quiz", quizRoutes);
 app.use("/api/v1/study", studymaterials);
 app.use("/api/v1/payment", paymentRoutes);
 
-app.use("/api/v1/Bundle", CourseBundle)
+app.use("/api/v1/bundle", CourseBundle)
 app.use("/api/v1/DailyUpdate",Dailyupdate)
 
 

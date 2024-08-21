@@ -19,7 +19,7 @@ export default function Search() {
 
       const userI = await AsyncStorage.getItem("user");
       const isUser = JSON.parse(userI);
-      const bundlesRes = await axios.get(`${SERVER_URI}/api/v1/Bundle/getUserBundleQuizzes/${isUser._id}`);
+      const bundlesRes = await axios.get(`${SERVER_URI}/api/v1/bundle/getUserBundleQuizzes/${isUser._id}`);
       // Toast.show("Fetching Quizzes", { type: "success", duration: 1000, placement: 'top' , style: { marginTop:30 } });
       const bundles = bundlesRes.data.data;
       console.log("🚀 ~ fetchQuizzes ~ bundles:", bundles)
@@ -29,7 +29,7 @@ export default function Search() {
       // Iterate over each bundle to fetch quizzes
       // for (const bundle of bundles) {
 
-      //   const res = await axios.get(`${SERVER_URI}/api/v1/Bundle/getUserBundleQuizzes/${bundle._id}`);
+      //   const res = await axios.get(`${SERVER_URI}/api/v1/bundle/getUserBundleQuizzes/${bundle._id}`);
       //   allQuizzes = [...allQuizzes, ...res.data.data.courses];
       // }
       // Toast.show("Fetching Quizzes", { type: "success", duration: 1000, placement: 'top', style: { marginTop: 30 } });

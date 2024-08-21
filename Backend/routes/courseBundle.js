@@ -25,7 +25,7 @@ const courseBundleController = require('../controllers/courseBundleController');
 
 
 
-// /api/v1/Bundle
+// /api/v1/bundle
 router.post('/course-bundle', upload.single('image'), courseBundleController.createCourseBundle);
 
 // // Route to update an existing course bundle

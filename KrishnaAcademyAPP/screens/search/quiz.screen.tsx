@@ -164,7 +164,7 @@ export default function QuizScreen() {
   useEffect(() => {
     const getQuizzes = async () => {
       try {
-        const res = await axios.get(`${SERVER_URI}/api/v1/Bundle/course-bundle`);
+        const res = await axios.get(`${SERVER_URI}/api/v1/bundle/course-bundle`);
         setQuizzes(res.data.data);
 
 

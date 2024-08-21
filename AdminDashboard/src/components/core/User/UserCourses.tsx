@@ -34,7 +34,7 @@ const [refresh, setRefresh] = useState(false);
 
     const fetchCourses = async () => {
       const response = await axios.get(
-        `${BASE_URL}/api/v1/Bundle/get-all-course-bundle`
+        `${BASE_URL}/api/v1/bundle/get-all-course-bundle`
       );
 
       if (!response.data) {
@@ -79,7 +79,7 @@ const [refresh, setRefresh] = useState(false);
 
     toast.loading("Adding course to user");
     const addCourseToUser = async () => {
-      const res = await axios.post(`${BASE_URL}/api/v1/Bundle/assignCourseBundle`, {
+      const res = await axios.post(`${BASE_URL}/api/v1/bundle/assignCourseBundle`, {
         userId: id,
         courseId: selectedCourseId,
 

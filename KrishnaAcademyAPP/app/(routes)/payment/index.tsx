@@ -77,7 +77,7 @@ const PaymentPage = () => {
     try {
       console.log(userId, courseId);
       const response = await axios.post(
-        `${SERVER_URI}/api/v1/Bundle/assignCourseBundle`,
+        `${SERVER_URI}/api/v1/bundle/assignCourseBundle`,
         {
           userId,
           courseId,
@@ -109,7 +109,7 @@ const PaymentPage = () => {
 
   const applyCoupon = async () => {
     try {
-      const response = await axios.post(`${SERVER_URI}/api/v1/Bundle/apply-coupon`, { coupon });
+      const response = await axios.post(`${SERVER_URI}/api/v1/bundle/apply-coupon`, { coupon });
       if (response.data.success) {
         setDiscount(response.data.discount);
         setTotalPrice(totalPrice - response.data.discount);

@@ -35,7 +35,7 @@ const ContentsScreen = ({ data, bundleId, userId, handleBought }) => {
       try {
         console.log("🚀 ~ checkPurchaseStatus ~ userId:", userId,
           bundleId);
-        const response = await axios.post(`${SERVER_URI}/api/v1/Bundle/checkPurchase`,
+        const response = await axios.post(`${SERVER_URI}/api/v1/bundle/checkPurchase`,
           {
             userId,
             courseId : bundleId,
@@ -168,7 +168,7 @@ export default function index() {
     setUserId(isUser._id);
     try {
       const response = await axios.get(
-        `${SERVER_URI}/api/v1/Bundle/course-bundle/${BundleId}`
+        `${SERVER_URI}/api/v1/bundle/course-bundle/${BundleId}`
       );
       console.log(
         "🚀 ~ file: index.tsx ~ line 136 ~ fetchBundleData ~ response",
