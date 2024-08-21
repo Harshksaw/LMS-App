@@ -17,6 +17,7 @@ const {
   findAllUsers,
   findUserById,
   getAllUserCources,
+  sendPasswordotp,
 
 } = require("../controllers/Auth")
 const {
@@ -47,7 +48,10 @@ router.get("/getUserById/:id", getUserById)
 router.get("/updateUserById", updateUserById)
 
 // Route for Changing the password
-router.post("/changepassword", auth, changePassword)
+router.post("/sendPassOtp",  sendPasswordotp)
+router.post("/changepassword",  changePassword)
+
+
 
 // ********************************************************************************************************
 //                                      Reset Password

@@ -209,14 +209,7 @@ exports.signup = async (req, res) => {
       });
     }
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: "User already exists. Please sign in to continue.",
-      });
-    }
+   
 
     // Validate OTP for non-Admin users
     if (accountType !== "Admin") {
@@ -447,79 +440,69 @@ function isDeviceDataMatching(
   return true;
 }
 
-exports.changePassword = async (req, res) => {
+
+exports.sendPasswordotp = async (req, res) => {
+  const { phoneNumber } = req.body;
+
   try {
-    //get data from req body
-    const userDetails = await User.findById(req.user.id);
-
-    //get oldPassword, newPassword, confirmNewPassowrd
-    const { oldPassword, newPassword, confirmNewPassword } = req.body;
-
-    //validation of oldPass
-    const isPasswordMatch = await bcrypt.compare(
-      oldPassword,
-      userDetails.password
-    );
-    if (!isPasswordMatch) {
-      // If old password does not match, return a 401 (Unauthorized) error
-      return res.status(401).json({
-        success: false,
-        message: "The password is incorrect",
-      });
+    const user = await User.findOne({ phoneNumber });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    // Match new password and confirm new password
-    // if (newPassword !== confirmNewPassword) {
-    // 	// If new password and confirm new password do not match, return a 400 (Bad Request) error
-    // 	return res.status(400).json({
-    // 		success: false,
-    // 		message: "The password and confirm password does not match",
-    // 	});
-    // }
+    const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit OTP
+    // user.otp = otp;
+    // user.otpExpires = Date.now() + 10 * 60 * 1000; // OTP expires in 10 minutes
+    const otpPayload = { phoneNumber, otp };
+    //creating... an entry in Database for OTP
+    const otpBody = await OTP.create(otpPayload);
+    // await user.save();
 
-    //update pwd in DB
-    const encryptedPassword = await bcrypt.hash(newPassword, 10);
-    const updatedUserDetails = await User.findByIdAndUpdate(
-      req.user.id,
-      { password: encryptedPassword },
-      { new: true }
-    );
 
-    //send mail - Password updated
-    try {
-      const emailResponse = await mailSender(
-        updatedUserDetails.email,
-        `Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`,
-        passwordUpdated(
-          updatedUserDetails.email,
-          `${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
-        )
-      );
-      console.log("Email sent successfully:", emailResponse.response);
-    } catch (error) {
-      // If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
-      console.error("Error occurred while sending email:", error);
-      return res.status(500).json({
-        success: false,
-        message: "Error occurred while sending email",
-        error: error.message,
-      });
-    }
+    await sendOtp(otp, phoneNumber);
 
-    //return final response
-    return res
-      .status(200)
-      .json({ success: true, message: "Password updated successfully" });
+    res.status(200).json({ success: true, message: 'OTP sent successfully' });
   } catch (error) {
-    // If there's an error updating the password, log the error and return a 500 (Internal Server Error) error
-    console.error("Error occurred while updating password:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Error occurred while updating password",
-      error: error.message,
-    });
+    console.error('Error sending OTP:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+}
+
+exports.changePassword = async (req, res) => {  
+  const { phoneNumber, otp, newPassword } = req.body;
+
+  try {
+
+      const response = await OTP.find({ phoneNumber })
+        .sort({ createdAt: -1 })
+        .limit(1);
+      if (response.length === 0 || otp !== response[0].otp) {
+        return res.status(400).json({
+          success: false,
+          message: "The OTP is not valid",
+        });
+
+    }
+
+
+ 
+    const user = await User.findOne({ phoneNumber });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+
+
 
 exports.updateAdditionalDetails = async (req, res) => {
   const { id: userId } = req.params;

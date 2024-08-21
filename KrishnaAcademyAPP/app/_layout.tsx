@@ -189,6 +189,14 @@ function RootLayoutNav() {
             headerBackTitle: "Back",
           }}
         />
+        <Stack.Screen 
+          name="(routes)/my-account/ChangePassword"
+          options={{
+            headerShown: true,
+            title: "Change Password",
+            headerBackTitle: "Back",
+          }}
+        />
         <Stack.Screen
           name="(routes)/blogs/quiz.solutions"
           options={{

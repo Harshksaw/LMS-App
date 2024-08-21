@@ -225,7 +225,7 @@ export default function LoginScreen() {
 
 
               <TouchableOpacity
-                onPress={() => router.push("/(routes)/forgot-password")}
+                onPress={() => router.push("/(routes)/my-account/ChangePassword")}
               >
                 <Text
                   style={[
