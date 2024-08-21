@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "../services/apis";
 
-import toast from "react-hot-toast";t
+import toast from "react-hot-toast";
 const StudyMaterials = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
