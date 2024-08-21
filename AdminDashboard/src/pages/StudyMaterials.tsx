@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "../services/apis";
 
+import toast from "react-hot-toast";t
 const StudyMaterials = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -13,6 +14,8 @@ const StudyMaterials = () => {
   const [isPartOfBundle, setIsPartOfBundle] = useState(false);
 
   const uploadStudyMaterial = async (e: React.FormEvent) => {
+    toast.loading("Uploading study material..."); 
+
     e.preventDefault();
 
     try {
@@ -48,10 +51,14 @@ const StudyMaterials = () => {
           },
         }
       );
-
+      toast.dismiss()
+    toast.success("Study material uploaded successfully");
       console.log("Upload successful", response.data);
     } catch (error) {
+      toast.dismiss();  
+      toast.error("Error uploading study material");
       console.error("Error uploading study material", error);
+      // toast.error("Error uploading study material");
       if (axios.isAxiosError(error)) {
         console.error("Axios error response:", error.response);
       }
