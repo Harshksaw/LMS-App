@@ -46,6 +46,7 @@ import DailyUpdateForm from "./pages/createBlog";
 import EditBlog from "./pages/EditBlog";
 import ViewBlog from "./pages/ViewBlog";
 import GetMaterials from "./pages/getMaterials";
+import OrderScreen from "./pages/payment";
 
 function App() {
   const { user } = useSelector((state) => state.profile);
@@ -197,6 +198,7 @@ function App() {
                 element={<GetMaterials />}
               />
               <Route path="/dashboard/app-config" element={<AppConfig />} />
+              <Route path="dashboard/payments" element={<OrderScreen />} />
               <Route path="dashboard/Settings" element={<Settings />} />
             </>
           )}

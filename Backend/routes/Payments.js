@@ -9,7 +9,7 @@ router.post("/verifyPayment",auth, isStudent, verifyPayment)
 router.post("/sendPaymentSuccessEmail", auth, isStudent, sendPaymentSuccessEmail);
 
 router.post("/create-order",createOrder)
-router.post("/get-order", getOrder)
+router.get("/get-order", getOrder)
 
 router.get('/getUserOrders/:id', getUserOrders)
 
