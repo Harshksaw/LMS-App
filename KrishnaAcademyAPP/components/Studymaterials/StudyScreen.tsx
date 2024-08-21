@@ -59,7 +59,7 @@ const StudyMaterialsScreen: React.FC = () => {
         `${SERVER_URI}/api/v1/study/getAllStudyMaterials`
       );
       console.log(response.data, "---");
-      setStudyMaterials(response.data.data.slice(0, 5)); // Limit to 5 items
+      setStudyMaterials(response.data.data); // Limit to 5 items
       setLoading(false);
       setRefreshing(false);
     } catch (err) {

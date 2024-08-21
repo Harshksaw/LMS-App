@@ -11,14 +11,12 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 
 import { formatDate } from "../../../../services/formatDate";
-import {
-  deleteCourse,
-  fetchInstructorCourses,
-} from "../../../../services/operations/courseDetailsAPI";
-import { COURSE_STATUS } from "../../../../utils/constants";
+
+
 import ConfirmationModal from "../../../common/ConfirmationModal";
 import Img from "../../../common/Img";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 export default function CoursesTable({
   courses,

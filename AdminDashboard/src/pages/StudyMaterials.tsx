@@ -3,7 +3,12 @@ import axios from "axios";
 import { BASE_URL } from "../services/apis";
 
 import toast from "react-hot-toast";
+import { Route, useNavigate } from "react-router-dom";
+
+
 const StudyMaterials = () => {
+
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [course, setCourse] = useState("");
@@ -15,6 +20,7 @@ const StudyMaterials = () => {
 
   const uploadStudyMaterial = async (e: React.FormEvent) => {
     toast.loading("Uploading study material..."); 
+    const navigation = useNavigate();
 
     e.preventDefault();
 
@@ -53,6 +59,8 @@ const StudyMaterials = () => {
       );
       toast.dismiss()
     toast.success("Study material uploaded successfully");
+
+    navigation.navigate('/dashboard/allstudymaterials'); // Replace 'TargetScreen' with your target screen name
       console.log("Upload successful", response.data);
     } catch (error) {
       toast.dismiss();  

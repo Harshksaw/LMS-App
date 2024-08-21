@@ -15,13 +15,13 @@ export const sidebarLinks = [
     type: ACCOUNT_TYPE.ADMIN,
     icon: "VscAccount",
   },
-  {
-    id: 3,
-    name: "Add User",
-    path: "/dashboard/add-user",
-    type: ACCOUNT_TYPE.ADMIN,
-    icon: "VscAdd",
-  },
+  // {
+  //   id: 3,
+  //   name: "Add User",
+  //   path: "/dashboard/add-user",
+  //   type: ACCOUNT_TYPE.ADMIN,
+  //   icon: "VscAdd",
+  // },
   {
     id: 4,
     name: "All Courses",
