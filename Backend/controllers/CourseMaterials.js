@@ -78,6 +78,34 @@ console.log(file)
   }
 };
 
+
+exports.deleteStudyMaterial = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Fetch the study material from the database
+    const studyMaterial = await StudyMaterial.findById(id);
+    if (!studyMaterial) {
+      return res.status(404).send({ message: 'Study material not found' });
+    }
+
+    // Delete the file from S3
+    const params = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: studyMaterial.fileUrl.split('/').pop() // Extract the S3 key from the file URL
+    };
+
+    await s3.deleteObject(params).promise();
+
+    // Delete the study material from the database
+    await StudyMaterial.findByIdAndDelete(id);
+
+    res.status(200).send({ message: 'Study material deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting study material:', error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
+}
 exports.getAllStudyMaterials = async (req, res) => {
   try {
     const studyMaterials = await StudyMaterial.find({ isListed:true });

@@ -92,11 +92,6 @@ const StudyMaterialsScreen: React.FC = () => {
     setModalVisible(false);
   };
 
-  // const onPaymentSuccess = async (item) => {
-  //   console.log("Payment Success-----105");
-  //   setPaymentStatus(true);
-  //   openPdfModal(item.fileUrl);
-  // };
 
 
 

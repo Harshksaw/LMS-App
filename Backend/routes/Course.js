@@ -4,6 +4,8 @@ const router = express.Router();
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { deleteStudyMaterial } = require("../controllers/CourseMaterials");
 const fs = require("fs");
 cloudinary.config({
   cloud_name: "dzwvmqbv0",
@@ -116,12 +118,17 @@ router.post("/createRating", isStudent, createRating);
 router.get("/getAverageRating", getAverageRating);
 router.get("/getReviews", getAllRating);
 
+
+
+
+router.post("/deleteStudyMaterial/:id", deleteStudyMaterial); 
+
 const {
   S3Client,
   PutObjectCommand,
 
 } = require("@aws-sdk/client-s3");
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+
 
 const uploadVideo = async (filename, contentType, file) => {
   const s3Client = new S3Client({
