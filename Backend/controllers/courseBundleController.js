@@ -81,7 +81,8 @@ console.log(req.params.id, "----60")
 
   exports.deleteCourseBundle = async (req, res) => {
     try {
-      console.log(req.params.id)
+
+      console.log("🚀 ~ exports.deleteCourseBundle ~ id:", req.params.id)
       const bundle = await Bundle.findByIdAndDelete(req.params.id);
       console.log(bundle)
       if (!bundle) {
@@ -107,6 +108,7 @@ console.log(req.params.id, "----60")
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
+    
   }
 
   exports.updateTimenListing = async (req, res) => {

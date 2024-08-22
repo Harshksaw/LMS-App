@@ -24,7 +24,7 @@ export const sidebarLinks = [
   // },
   {
     id: 4,
-    name: "All Courses",
+    name: "All Courses Bundle",
     path: "/dashboard/my-courses",
     type: ACCOUNT_TYPE.ADMIN,
     icon: "VscLibrary",

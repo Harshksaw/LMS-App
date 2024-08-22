@@ -1,22 +1,23 @@
-import { useDispatch, useSelector } from "react-redux";
+import {useSelector } from "react-redux";
 
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 
 import { useState } from "react";
 import { FaCheck, FaTrashAlt } from "react-icons/fa";
-import { FiEdit2 } from "react-icons/fi";
+
 import { HiClock } from "react-icons/hi";
-import { RiDeleteBin6Line } from "react-icons/ri";
+
 import { useNavigate } from "react-router-dom";
 
 import { formatDate } from "../../../../services/formatDate";
 
 
 import ConfirmationModal from "../../../common/ConfirmationModal";
-import Img from "../../../common/Img";
+
 import toast from "react-hot-toast";
 import axios from "axios";
+import { BASE_URL } from "../../../../services/apis";
 
 export default function CoursesTable({
   courses,
@@ -67,13 +68,24 @@ export default function CoursesTable({
 
   //bundle COurses
   
-  const deleteCourse = async ({id}) => {
+  const deleteCourse = async (params) => {
     toast.loading("Deleting course...");
+     const userConfirmed = window.confirm("Are you sure you want to delete this course?");
+  
+    if (!userConfirmed) {
+      return; // Exit the function if the user cancels the action
+    }
     try {
-      await axios.delete(`${BASE_URL}/api/v1/course//${id}`);
+      toast.loading('deleting course.........');
+      // console.log(params)
+      const res = await axios.post(`${BASE_URL}/api/v1/bundle/delete-bundle/${params}`);
+      setCourses(res);
       // Handle successful deletion, e.g., refresh the list or remove the item from state
       toast.dismiss();
       toast.success("Course deleted successfully");
+
+
+      window.location.reload(); // Reload the window after successful deletion
 
     } catch (error) {
       toast.dismiss();
@@ -125,6 +137,7 @@ export default function CoursesTable({
               >
                 <Td className="flex flex-1 gap-x-4 relative">
                   {/* course Thumbnail */}
+               
                   <img
                     src={course?.image}
                     alt={course?.bundleName}

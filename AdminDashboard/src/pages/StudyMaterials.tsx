@@ -3,7 +3,7 @@ import axios from "axios";
 import { BASE_URL } from "../services/apis";
 
 import toast from "react-hot-toast";
-import { Route, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 
 const StudyMaterials = () => {

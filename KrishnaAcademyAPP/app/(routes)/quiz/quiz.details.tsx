@@ -191,7 +191,7 @@ export default function QuizScreen() {
   const [quizDetails, setQuizDetails] = React.useState<any>(null);
 
   const [count, setCount] = useState<number>(0);
-  const [answered, setAnswered] = useState<number>([]);
+
 
 
 
@@ -210,21 +210,11 @@ export default function QuizScreen() {
   const [timeUp, setTimeUp] = useState(false);
   const [visible, setVisible] = useState(false);
   const [remainderTime ,setRemainderTime] = useState(0)
-  const [attemptedCount, setAttemptedCount] = useState(0);
-  const [unansweredCount, setUnansweredCount] = useState(questions.length);
-  const [savedCount, setSavedCount] = useState(0);
 
-  useEffect(() => {
 
-    console.log(questions, "questions");
-    const attempted = questions.filter(q => q.selectedOption !== undefined).length;
-    const unanswered = questions.filter(q => q.selectedOption === undefined).length;
-    const saved = questions.filter(q => q.saved).length;
 
-    setAttemptedCount(attempted);
-    setUnansweredCount(unanswered);
-    setSavedCount(saved);
-  }, [questions]);
+
+
 
   const handleMenuPress = () => {
     setVisible(true);
@@ -313,13 +303,9 @@ export default function QuizScreen() {
     // console.log(optionsArray[index][language], "----l", index);
     const selectedAnswer = optionsArray[index][language];
     setSelectedBox(index);
-    // setAnswered((prev) => [...prev, count]);
-    setAnswered((prev) => {
-      if (!prev.includes(count)) {
-          return [...prev, count];
-      }
-      return prev;
-  });
+    
+  
+
   setUserAnswer(selectedAnswer);
   setUserAnswers((prevAnswers) => {
     const newAnswers = [...prevAnswers];
@@ -333,7 +319,7 @@ export default function QuizScreen() {
   };
 
 
-  // console.log(userAnswers, "--userAnswer");
+
 
   const handleSkip = () => {
     console.log("skip", count);
@@ -1055,54 +1041,14 @@ export default function QuizScreen() {
                     size={20}
                     color="black"
                   />
-                  <Text style={{ fontSize: 14, color: "gray" }}>Time left</Text>
+                  <Text style={{ fontSize: 18, color: "gray" }}>Time left</Text>
                 </View>
-                <Text style={{ fontSize: 14, color: "gray" }}>
+                <Text style={{ fontSize: 18, color: "gray" }}>
                  {secondsToHms(remainderTime)}
                 </Text>
               </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  borderBottomColor: "#e2e2e2",
-                  borderBottomWidth: 1,
-                  width: "100%",
-                }}
-              >
-                <View style={{ flexDirection: "row", gap: 3 }}>
-                  <MaterialCommunityIcons
-                    style={{ alignSelf: "center" }}
-                    name="timer"
-                    size={20}
-                    color="black"
-                  />
-                  <Text style={{ fontSize: 14, color: "gray" }}>Answered</Text>
-                </View>
-                <Text style={{ fontSize: 14, color: "gray" }}>{attemptedCount}</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  borderBottomColor: "#e2e2e2",
-                  borderBottomWidth: 1,
-                  width: "100%",
-                }}
-              >
-                <View style={{ flexDirection: "row", gap: 3 }}>
-                  <MaterialCommunityIcons
-                    style={{ alignSelf: "center" }}
-                    name="timer"
-                    size={20}
-                    color="black"
-                  />
-                  <Text style={{ fontSize: 14, color: "gray" }}>
-                    Unanswered
-                  </Text>
-                </View>
-                <Text style={{ fontSize: 14, color: "gray" }}>{unansweredCount}</Text>
-              </View>
+             
+            
            
             </View>
             <Text style={{ alignSelf: "center" }}>
@@ -1123,14 +1069,16 @@ export default function QuizScreen() {
                   style={{
                     backgroundColor: "white",
                     borderWidth: 1,
-                    padding: 10,
+                    padding: 7,
                     borderRadius: 4,
+                    justifyContent:'center'
                   }}
                   onPress={() => setScoreModalVisible(false)}
                 >
                   <Text
                     style={{
                       color: "black",
+                      fontWeight: "700",
                     }}
                   >
                     Cancel
@@ -1141,7 +1089,7 @@ export default function QuizScreen() {
               <TouchableOpacity
                 style={{
                   backgroundColor: "#f44336",
-                  padding: 10,
+                  padding: 15,
                   borderRadius: 4,
                 }}
                 onPress={() => handleSubmitQuiz()}
@@ -1149,6 +1097,10 @@ export default function QuizScreen() {
                 <Text
                   style={{
                     color: "white",
+                    fontWeight:'700',
+
+
+
                   }}
                 >
                   Yes, submit

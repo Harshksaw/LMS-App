@@ -70,12 +70,15 @@ const StudyMaterialCard = ({ studyMaterials }) => {
                   }}
               />
 
-              <Text style={ {
+              <Text
+              
+              style={ {
         fontSize: 14,
         textAlign:'left',
         fontWeight: "400",
+        
 
-      }}>{item.title}</Text>
+      }}>{item.title.slice(0,10)}</Text>
             </View>
           </TouchableOpacity>
         )}

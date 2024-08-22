@@ -33,12 +33,12 @@ const GetMaterials: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <h1 className="flex flex-row justify-center text-richblack-50 text-xl mb-20">
+      <h1 className="flex flex-row justify-center text-richblack-50 text-4xl mb-20">
         Study Materials
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full rounded-md bg-white">
+      <div className="flex flex-col gap-4 w-full rounded-md  px-10 py-20">
         {Array.isArray(materials) && materials.map((material) => (
-          <div key={material._id} className="  border flex flex-row  p-10  gap-10 justify-center items-center  border-yellow-25 rounded-md shadow-md w-full">
+          <div key={material._id} className="  border flex flex-row bg-white  p-10  gap-10 justify-center items-center  border-yellow-25 rounded-md shadow-md w-full">
             <h3 className="text-2xl font-bold">{material.title}</h3>
             <p className="text-sm text-gray-600">{material.description}</p>
             <a href={material.fileUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">

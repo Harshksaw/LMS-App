@@ -167,9 +167,12 @@ const StudyMaterialsScreen: React.FC = () => {
             }}
             source={{ uri: 'https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png' }}
           />
-          <View style={{ alignContent: 'center', justifyContent:'center' }}>
+          <View style={{ justifyContent:'center',marginTop:15, }}>
 
-              <Text style={{ fontSize: 16, fontWeight: "bold" }}>{item.title.slice(0,50)}</Text>
+              <Text
+              numberOfLines={2}
+              
+              style={{ maxWidth: '90%', fontSize: 16, fontWeight: "bold" , margin: 5}}>{item.title.slice(0,80)}</Text>
               
 
 
