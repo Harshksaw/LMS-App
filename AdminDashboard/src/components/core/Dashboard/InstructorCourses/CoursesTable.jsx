@@ -32,20 +32,6 @@ export default function CoursesTable({
   const [confirmationModal, setConfirmationModal] = useState(null);
   const TRUNCATE_LENGTH = 25;
 
-  // delete course
-  const handleCourseDelete = async (courseId) => {
-    // setLoading(true)
-    // const toastId = toast.loading('Deleting...');
-    // await deleteCourse({ courseId: courseId }, token)
-    // const result = await fetchInstructorCourses(token)
-    // if (result) {
-    //   setCourses(result)
-    // }
-    // setConfirmationModal(null)
-    // setLoading(false)
-    // toast.dismiss(toastId)
-    // console.log("All Course ", courses)
-  };
 
   // Loading Skeleton
   const skItem = () => {

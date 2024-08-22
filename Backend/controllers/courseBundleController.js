@@ -90,7 +90,7 @@ console.log(req.params.id, "----60")
       }
 
         // Delete related quizzes
-    await Quiz.deleteMany({ _id: { $in: bundle.quizes } });
+    // await Quiz.deleteMany({ _id: { $in: bundle.quizes } });
 
     // Delete related study materials
     await StudyMaterial.deleteMany({ _id: { $in: bundle.studyMaterials } });

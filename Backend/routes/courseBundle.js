@@ -41,6 +41,8 @@ router.post('/course-bundle/updateTime/:id', courseBundleController.updateTimenL
 
 // // Route to add quizzes to a course bundle
 router.post('/course-bundle-materials/:id', courseBundleController.addStudyMaterialsToBundle);
+
+
 router.get('/course-bundle', courseBundleController.getCourseBundle);
 router.get('/get-all-course-bundle', courseBundleController.getAllCourseBundle);
 // // Route to add study materials to a course bundle
