@@ -1,139 +1,107 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { BASE_URL } from "../../../services/apis";
 import axios from "axios";
-
 import Button from "@mui/material/Button";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { Box } from "@mui/material";
-import { set } from "mongoose";
+import CircularProgress from "@mui/material/CircularProgress";
 
-export default function UserCourses({ id }: { id: string }) {
+const UserCourses = ({ id }) => {
   const [courses, setCourses] = useState([]);
-  const [selectedTab, setSelectedTab] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [courseBundle, setCourseBundle] = useState([]);
-const [refresh, setRefresh] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        `${BASE_URL}/api/v1/auth/getAllUserCourses/${id}`
-      );
-      if (!response.data) {
-        toast.error("Something went wrong");
-        return;
-      }
-      console.log("🚀 ~ fetchData ~ response:", response.data.courses);
+  const [isLoading, setIsLoading] = useState(false);
 
-      setCourses(response.data.courses);
-    };
-
-    const fetchCourses = async () => {
-      const response = await axios.get(
-        `${BASE_URL}/api/v1/bundle/get-all-course-bundle`
-      );
-
-      if (!response.data) {
-        toast.error("Something went wrong");
-        return;
-      }
-      setCourseBundle(response.data.data);
-      console.log("🚀 ~ fetchCourses ~ response:", response.data.data);
-    };
-
-    fetchData();
-    fetchCourses();
-  }, []);
-  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setSelectedTab(newValue);
+  const getCourses = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`${BASE_URL}/api/v1/bundle/getAllUserBundle/${id}`);
+      console.log(response.data, "---response.data18888");
+      setCourses(response.data.data.courses);
+      toast.success('Courses fetched successfully');
+    } catch (error) {
+      toast.error('Error fetching courses');
+      console.error('Error fetching courses:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   const handleOpenModal = () => {
     setIsModalOpen(true);
+    getCourses();
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-  const addCourse = () => {
-    handleOpenModal();
-    const newCourse = {
-      id: courses.length + 1,
-      name: `Course ${courses.length + 1}`,
-    };
-    setCourses([...courses, newCourse]);
-  };
-
-  const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
-
-  const handleCourseSelect = (id: number) => {
-    setSelectedCourseId(id);
-  };
-
-  const handleConfirmSelection = () => {
-    console.log(`Confirmed course ID: ${selectedCourseId}`);
-
-    toast.loading("Adding course to user");
-    const addCourseToUser = async () => {
-      const res = await axios.post(`${BASE_URL}/api/v1/bundle/assignCourseBundle`, {
-        userId: id,
-        courseId: selectedCourseId,
-
-      })
-      if(res.status == 200){
-        toast.success("Course added to user")
+  const handleremoveCourse = async (courseId) => {
+    const isConfirmed = window.confirm('Are you sure you want to delete this course?');
+    if (isConfirmed) {
+      try {
+        await axios.post(`${BASE_URL}/api/v1/bundle/removeUserBundle`, {
+          userId: id,
+          courseId
+        });
+        setCourses(courses.filter(course => course._id !== courseId));
+        toast.success('Course removed successfully');
+        // window.location.reload();
+      } catch (error) {
+        toast.error('Error removing course');
+        console.error('Error removing course:', error);
       }
     }
-
-    toast.dismiss();
-    addCourseToUser();
-    setRefresh(!refresh);
-    toast.success("Course added to user");
-    handleCloseModal();
-
-
   };
 
   return (
-    <div className="flex justify-center items-center">
-      <Tabs value={selectedTab} onChange={handleTabChange}>
-        {/* {courses.map((course) => (
-          <Tab key={course.id} label={course.BundleName} />
-        ))} */}
-      </Tabs>
-      <Button variant="contained" color="primary" onClick={addCourse}>
-        Add Course
-      </Button>
+    <div className="p-5 bg-blue-400 rounded-md">
+      <div className="text-center text-2xl font-bold text-white cursor-pointer" onClick={handleOpenModal}>
+        User Courses
+      </div>
 
       <Modal
         open={isModalOpen}
         onClose={handleCloseModal}
-        className="flex justify-center items-center"
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
       >
-        <Box sx={{ p: 4, bgcolor: "gray", margin: "auto", width: 800, gap: 30 }}>
-          <Typography variant="h6" component="h2">
-            Courses You wan too add
-          </Typography>
+        <Box className="fixed inset-0 flex items-center justify-center bg-pure-greys-200 bg-opacity-75 p-10">
+          <Box className="bg-pure-greys-600 p-20 rounded-lg shadow-md max-h-full overflow-y-auto w-[60%]">
+            <h2 className="text-4xl p-5">Course Details</h2>
 
-
-          <ul className="bg-richblack-25 w-full self-center gap-5 my-5">
-            {courseBundle.map((course) => (
-              <li
-                key={course._id}
-                className={`p-2 border-b-2 border-gray-200 text-center cursor-pointer ${selectedCourseId === course._id ? 'bg-blue-500 text-white' : ''
-                  }`}
-                onClick={() => handleCourseSelect(course._id)}
-              >
-                {course.bundleName}
-              </li>
-            ))}
-          </ul>
-          <div className="flex justify-between items-center">
-
+            {isLoading ? (
+              <div className="flex justify-center items-center">
+                <CircularProgress />
+              </div>
+            ) : (
+              <>
+                {courses?.length == 0 ? (
+                  <div className="text-center text-2xl py-10 text-richblack-5 mt-4">
+                    No courses found ...........
+                  </div>
+                ) : (
+                  courses?.map((course) => (
+                    <div
+                      key={course?._id}
+                      className="bg-richblack-100 flex mx-auto p-6 bg-gray-400 rounded-lg shadow-md mb-4 w-full"
+                    >
+                      <div className="flex flex-col justify-center">
+                        <h5>Course ID: {course?._id}</h5>
+                        <p>Course Name: {course?.name}</p>
+                      </div>
+                      <Button
+                        onClick={() => handleremoveCourse(course?._id)}
+                        color="error"
+                        className="cursor-pointer bg-pink-300"
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  ))
+                )}
+              </>
+            )}
             <Button
               variant="contained"
               color="secondary"
@@ -141,21 +109,11 @@ const [refresh, setRefresh] = useState(false);
             >
               Close
             </Button>
-            <div className="bg-white rounded-md flex justify-center items-center  shadow-md">
-              {selectedCourseId && (
-                <button
-                  className="mt-2 p-2 bg-green-500 text-xl font-bold text-black rounded-md hover:bg-green-600 transition duration-300"
-                  onClick={handleConfirmSelection}
-                >
-                  Confirm Selection
-                </button>
-              )}
-            </div>
-
-          </div>
-
+          </Box>
         </Box>
       </Modal>
     </div>
   );
-}
+};
+
+export default UserCourses;

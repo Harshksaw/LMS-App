@@ -263,6 +263,35 @@ const dateObject = new Date(req.body.date);
       res.status(500).json({ error: error.message });
     }
   }
+  exports.getAllUserBundles = async (req, res) => {  
+    try {
+      const { id } = req.params;
+      console.log("🚀 ~ exports.getUserQuizzes= ~ id:", id);
+  
+      const user = await User.findById(id).populate('courses');
+  
+      if (!user.courses || user.courses.length === 0) {
+        return res.status(202).json({
+          success: true,
+          message: 'No courses found for this user',
+          data: []
+        });
+      }
+  
+    
+
+  
+
+  
+      res.status(200).json({
+        success: true,
+        data: user
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+
 
   exports.checkPurchase = async (req, res) => {
 
@@ -283,4 +312,34 @@ const dateObject = new Date(req.body.date);
         throw error;
       }
 
+  }
+
+  exports.removeUserBundle = async (req, res)=> {
+    try {
+      const { userId, courseId } = req.body;
+  
+      // Find the user by ID
+      const user = await User.findById(userId).populate('courses');
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+  
+      // Find the course in the user's course bundle
+      const courseIndex = user.courses.findIndex(course => course._id.toString() === courseId);
+  
+      if (courseIndex === -1) {
+        return res.status(404).json({ success: false, message: 'Course not found in user bundle' });
+      }
+  
+      // Remove the course from the user's course bundle
+      user.courses.splice(courseIndex, 1);
+  
+      // Save the updated user document
+      await user.save();
+  
+      res.status(200).json({ success: true, message: 'Course removed from user bundle' });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }

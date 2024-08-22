@@ -48,7 +48,11 @@ router.get('/get-all-course-bundle', courseBundleController.getAllCourseBundle);
 
 router.post("/assignCourseBundle",courseBundleController.assignCourseBundle);
 // // Route to list all course bundles
+
 router.get('/getUserBundleQuizzes/:id', courseBundleController.getUserQuizzes );
+router.get('/getAllUserBundle/:id', courseBundleController.getAllUserBundles );
+
+router.post('/removeUserBundle', courseBundleController.removeUserBundle );
 
 
 router.post('/checkPurchase', courseBundleController.checkPurchase);

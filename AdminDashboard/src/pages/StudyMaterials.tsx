@@ -19,34 +19,29 @@ const StudyMaterials = () => {
   const [isPartOfBundle, setIsPartOfBundle] = useState(false);
 
   const uploadStudyMaterial = async (e: React.FormEvent) => {
-    toast.loading("Uploading study material..."); 
-    const navigation = useNavigate();
-
     e.preventDefault();
+    toast.loading("Uploading study material..."); 
+
+
 
     try {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
-      // formData.append("course", course);
+
 
 
 
       formData.append("isListed", isListed);
       formData.append("isPartOfBundle", isPartOfBundle);
 
-      console.log("🚀 ~ uploadStudyMaterial ~ formData:", formData);
-      console.log("🚀 ~ uploadStudyMaterial ~ file:", file)
 
-      // if (course) {
-      //   formData.append("course", course);
-      // }
 
       // if (file) {
         formData.append("file", file);
       // }
 
-      console.log("formData", formData);
+      // console.log("formData", formData);
 
       const response = await axios.post(
         `${BASE_URL}/api/v1/study/uploadStudyMaterials`,
@@ -57,13 +52,17 @@ const StudyMaterials = () => {
           },
         }
       );
-      toast.dismiss()
-    toast.success("Study material uploaded successfully");
+      
+    toast.success("Study material uploaded successfully", {
+      duration: 3000,
+      icon: "🚀",
 
-    navigation.navigate('/dashboard/allstudymaterials'); // Replace 'TargetScreen' with your target screen name
-      console.log("Upload successful", response.data);
+    });
+
+
+      // console.log("Upload successful", response.data);
     } catch (error) {
-      toast.dismiss();  
+
       toast.error("Error uploading study material");
       console.error("Error uploading study material", error);
       // toast.error("Error uploading study material");
@@ -71,16 +70,17 @@ const StudyMaterials = () => {
         console.error("Axios error response:", error.response);
       }
     }
+   finally{
+    toast.dismiss()
+   }
 
   };
-  // useEffect(() => {
-  //   // Fetch courses if needed
-  // }, []);
+
 
   return (
     <div className="flex flex-col justify-center items-center">
       <h1 className="flex flex-row justify-center text-richblack-50 text-xl mb-20">
-        Upload your study material and set the price
+        Upload your study material 
       </h1>
       <div>
         <form onSubmit={uploadStudyMaterial}>

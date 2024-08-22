@@ -352,6 +352,8 @@ exports.userLogin = async (req, res) => {
 exports.adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("🚀 ~ exports.adminLogin= ~ email, password }:", email, password )
+    
 
     if (!email || !password) {
       return res.status(403).json({

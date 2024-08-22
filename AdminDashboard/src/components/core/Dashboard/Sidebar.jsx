@@ -85,11 +85,11 @@ export default function Sidebar() {
           <div className="mx-auto mt-6 mb-6 h-[1px] w-10/12 bg-richblack-700" />
 
           <div className="flex flex-col">
-            <SidebarLink
+            {/* <SidebarLink
               link={{ name: "Settings", path: "/dashboard/settings" }}
               iconName={"VscSettingsGear"}
               setOpenSideMen={setOpenSideMenu}
-            />
+            /> */}
 
             <button
               onClick={() =>
@@ -104,10 +104,10 @@ export default function Sidebar() {
               }
               className=" "
             >
-              <div className="flex items-center gap-x-2 px-8 py-2 text-sm font-medium text-richblack-300 hover:bg-richblack-700 relative">
+              {/* <div className="flex items-center gap-x-2 px-8 py-2 text-sm font-medium text-richblack-300 hover:bg-richblack-700 relative">
                 <VscSignOut className="text-lg" />
                 <span>Logout</span>
-              </div>
+              </div> */}
             </button>
 
           </div>
