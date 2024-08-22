@@ -67,7 +67,7 @@ const UserCourses = ({ id }) => {
         aria-describedby="modal-description"
       >
         <Box className="fixed inset-0 flex items-center justify-center bg-pure-greys-200 bg-opacity-75 p-10">
-          <Box className="bg-pure-greys-600 p-20 rounded-lg shadow-md max-h-full overflow-y-auto w-[60%]">
+          <Box className="bg-pure-greys-600 p-20 rounded-lg shadow-md max-h-full overflow-y-auto w-[90%]">
             <h2 className="text-4xl p-5">Course Details</h2>
 
             {isLoading ? (
@@ -77,18 +77,18 @@ const UserCourses = ({ id }) => {
             ) : (
               <>
                 {courses?.length == 0 ? (
-                  <div className="text-center text-2xl py-10 text-richblack-5 mt-4">
+                  <div className="text-center text-2xl py-10 text-richblack-5 mt-4 ">
                     No courses found ...........
                   </div>
                 ) : (
                   courses?.map((course) => (
                     <div
                       key={course?._id}
-                      className="bg-richblack-100 flex mx-auto p-6 bg-gray-400 rounded-lg shadow-md mb-4 w-full"
+                      className="bg-richblack-100 flex justify-between mx-auto p-6 bg-gray-400 rounded-lg shadow-md mb-4 w-full"
                     >
                       <div className="flex flex-col justify-center">
                         <h5>Course ID: {course?._id}</h5>
-                        <p>Course Name: {course?.name}</p>
+                        <p>Course Name: {course?.bundleName}</p>
                       </div>
                       <Button
                         onClick={() => handleremoveCourse(course?._id)}
