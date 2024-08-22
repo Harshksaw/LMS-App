@@ -52,16 +52,21 @@ const StudyMaterials = () => {
           },
         }
       );
-      
+      toast.dismiss()
     toast.success("Study material uploaded successfully", {
-      duration: 3000,
+      duration: 4000,
       icon: "🚀",
 
     });
-
+    setTitle("");
+    setDescription("");
+    setIsListed(false);
+    setIsPartOfBundle(false);
+    setFile(null);
 
       // console.log("Upload successful", response.data);
     } catch (error) {
+      toast.dismiss()
 
       toast.error("Error uploading study material");
       console.error("Error uploading study material", error);
@@ -71,7 +76,7 @@ const StudyMaterials = () => {
       }
     }
    finally{
-    toast.dismiss()
+    
    }
 
   };
