@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const { exec } = require('child_process');
 
 const userRoutes = require("./routes/User");
 const profileRoutes = require("./routes/Profile");
@@ -54,6 +55,35 @@ app.use("/api/v1/payment", paymentRoutes);
 
 app.use("/api/v1/bundle", CourseBundle)
 app.use("/api/v1/DailyUpdate",Dailyupdate)
+
+
+app.post('/backup', (req, res) => {
+  // const { sourceUri, targetUri } = req.body;
+  const sourceUri = process.env.MONGODB_URL;
+  const targetUri = process.env.MONGO_URI_BACKUP;
+
+  if(!sourceUri || !targetUri) {
+    return res.status(400).send('Missing sourceUri or targetUri');
+  }
+
+  // Step 1: Create a backup
+  exec(`mongodump --uri="${sourceUri}"`, (err, stdout, stderr) => {
+    if (err) {
+      console.error(`Error creating backup: ${stderr}`);
+      return res.status(500).send('Error creating backup');
+    }
+
+    // Step 2: Restore the backup
+    exec(`mongorestore --uri="${targetUri}" dump/`, (err, stdout, stderr) => {
+      if (err) {
+        console.error(`Error restoring backup: ${stderr}`);
+        return res.status(500).send('Error restoring backup');
+      }
+
+      res.send('Backup and restore completed successfully');
+    });
+  });
+});
 
 
 app.get("/", (req, res) => {

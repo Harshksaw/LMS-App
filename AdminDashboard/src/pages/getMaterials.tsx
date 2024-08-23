@@ -36,6 +36,8 @@ const GetMaterials: React.FC = () => {
 
   const handleDelete = (id) => async () => {
     try {
+
+      
       await axios.post(`${BASE_URL}/api/v1/course/deleteStudyMaterial/${id}`);
       toast.success('Material deleted successfully');
       setMaterials((prev) => prev.filter((material) => material._id !== id));
