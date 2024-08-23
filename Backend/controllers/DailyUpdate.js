@@ -3,11 +3,11 @@ const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 cloudinary.config({
-  // cloud_name: process.env.CLOUD_NAME,
-  cloud_name: "dbnnlqq5v",
-  api_key: "283514623947746",
-  // api_key: process.env.API_KEY,
-  api_secret: "E2s6axKWvXTiJi5_DGiFuPe7Lxo",
+
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key: process.env.API_KEY,
+
+api_secret: process.env.API_SECRET,
 });
 // Get all daily updates
 exports.getAllDailyUpdates = async (req, res) => {
@@ -33,6 +33,7 @@ exports.getDailyUpdate = async (req, res) => {
 
 // Create a new daily update
 exports.createDailyUpdate = async (req, res) => {
+  console.log(req.file, "----")
   const response = await cloudinary.uploader.upload(req.file.path, {
     folder: "images",
   });

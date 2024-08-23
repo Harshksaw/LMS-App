@@ -11,7 +11,7 @@ const Blog = () => {
       const response = await axios.get(
         `${BASE_URL}/api/v1/DailyUpdate/getAllUpdates`
       );
-      console.log(response.data);
+      // console.log(response.data);
       setBlogData(response.data);
     };
     fetchData();
