@@ -57,34 +57,69 @@ app.use("/api/v1/bundle", CourseBundle)
 app.use("/api/v1/DailyUpdate",Dailyupdate)
 
 
-app.post('/backup', (req, res) => {
-  // const { sourceUri, targetUri } = req.body;
+const cron = require('node-cron')
+// Cron job
+let task = cron.schedule('21 16 * * *', () => {
+  console.log('Running backup cron job');
+  runBackup();
+});
+
+// Backup function
+const { spawn } = require('child_process');
+const fs = require('fs');
+
+async function runBackup() {
   const sourceUri = process.env.MONGODB_URL;
   const targetUri = process.env.MONGO_URI_BACKUP;
 
-  if(!sourceUri || !targetUri) {
-    return res.status(400).send('Missing sourceUri or targetUri');
+  if (!sourceUri || !targetUri) {
+    console.error('Missing sourceUri or targetUri');
+    return;
   }
 
   // Step 1: Create a backup
-  exec(`mongodump --uri="${sourceUri}"`, (err, stdout, stderr) => {
-    if (err) {
-      console.error(`Error creating backup: ${stderr}`);
-      return res.status(500).send('Error creating backup');
-    }
+  const dumpProcess = spawn('mongodump', ['--uri', sourceUri]);
+  // dumpProcess.stdout.pipe(fs.createWriteStream('dump.gz'));
+  // dumpProcess.stderr.on('data', (data) => {
+  //   console.error(`Error creating backup: ${data}`);
+  // });
 
-    // Step 2: Restore the backup
-    exec(`mongorestore --uri="${targetUri}" dump/`, (err, stdout, stderr) => {
-      if (err) {
-        console.error(`Error restoring backup: ${stderr}`);
-        return res.status(500).send('Error restoring backup');
+  await new Promise((resolve, reject) => {
+    dumpProcess.on('close', (code) => {
+      if (code !== 0) {
+        reject(new Error(`Error creating backup: Exit code ${code}`));
+      } else {
+        resolve();
       }
-
-      res.send('Backup and restore completed successfully');
     });
   });
-});
 
+  // Step 2: Restore the backup
+  const restoreProcess = spawn('mongorestore', ['--uri', targetUri, 'dump.gz']);
+  restoreProcess.stdout.on('data', (data) => {
+    console.log(data.toString());
+  });
+  restoreProcess.stderr.on('data', (data) => {
+    console.error(`Error restoring backup: ${data}`);
+  });
+
+  await new Promise((resolve, reject) => {
+    restoreProcess.on('close', (code) => {
+      if (code !== 0) {
+        reject(new Error(`Error restoring backup: Exit code ${code}`));
+      } else {
+        resolve();
+      }
+    });
+  });
+
+  console.log('Backup and restore completed successfully');
+}
+// Backup endpoint
+app.get('/backup', async(req, res) => {
+  await runBackup();
+  res.send('Backup process initiated');
+});
 
 app.get("/", (req, res) => {
   return res.json({
