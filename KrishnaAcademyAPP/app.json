@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/SplashScreen.png",
-       "resizeMode": "cover",  
+      "resizeMode": "cover",
       "backgroundColor": "#c0da7f"
     },
     "ios": {
@@ -20,9 +20,7 @@
         "foregroundImage": "./assets/icons/app.jpg",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.harsh10021.lms"
-
-
+      "package": "com.krishna.jythu"
     },
     "web": {
       "bundler": "metro",
@@ -44,6 +42,12 @@
         "projectId": "295d8938-c7a6-49ea-872b-12ea8af7db03"
       }
     },
-    "owner": "harsh10021"
+    "owner": "harsh10021",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/295d8938-c7a6-49ea-872b-12ea8af7db03"
+    }
   }
 }
