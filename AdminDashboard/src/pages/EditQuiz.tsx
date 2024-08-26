@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "../services/apis";
 import toast from "react-hot-toast";
+import TimeInput from "../components/core/Quiz/timer";
 
 const EditQuiz = () => {
   const { id } = useParams();
@@ -234,7 +235,7 @@ const EditQuiz = () => {
       formData.append("shortDescription", quiz.shortDescription);
       formData.append("image", quiz.image);
       formData.append("isPartOfBundle", quiz.isPartOfBundle);
-      
+      formData.append("time", quiz.time);
       const response = await axios.post(
         `${BASE_URL}/api/v1/quiz/editQuizDetails/${id}`,
         formData,
@@ -256,6 +257,14 @@ const EditQuiz = () => {
     }
    
   }
+
+  const handleTimeChange = (totalSeconds) => {
+    console.log("🚀 ~ handleTimeChange ~ totalSeconds:", totalSeconds)
+    setQuiz((prevQuiz) => ({
+      ...prevQuiz,
+      time: totalSeconds,
+    }));
+  };
 console.log(disabled, 'disabled')
   return (
 
@@ -308,6 +317,11 @@ console.log(disabled, 'disabled')
                 className="p-10 border  w-full border-yellow-25 rounded-md"
               />
             </div>
+
+            <div className="p-4  mt-10 bg-richblack-100 rounded-md flex items-center justify-center self-center w-full">
+            {/* Add the TimeInput component here */}
+            <TimeInput onTimeChange={handleTimeChange} />
+          </div>
             <button onClick={()=> handleUpdateQuizDetails()} className={'bg-white border-yellow-25 px-8 py-2 rounded-md my-4 hover:bg-richblack-50'}>Edit quiz details</button>
           </div>
             
@@ -473,6 +487,7 @@ console.log(disabled, 'disabled')
         {/* <button   
         color="primary"
         onClick={handleSaveQuiz}>Save Quiz</button> */}
+          
         <div className="flex flex-row justify-between items-center">
           <button
             className="text-2xl text-white text-bold bg-blue-400 p-2 rounded-md"

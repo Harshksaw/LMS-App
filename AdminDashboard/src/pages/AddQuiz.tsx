@@ -39,10 +39,7 @@ const AddQuiz = (props: Props) => {
   });
 
   const handleTimeChange = (totalSeconds) => {
-    setQuiz((prevQuiz) => ({
-      ...prevQuiz,
-      time: totalSeconds,
-    }));
+    setQuiz(totalSeconds);
   };
   const handleChangeQues = (e, field, index, lang) => {
     const { value } = e.target;

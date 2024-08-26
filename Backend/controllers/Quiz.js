@@ -185,6 +185,7 @@ exports.UpdateQuizDetails = async (req, res) => {
     name,
     shortDescription,
     isPartOfBundle,
+    time
   } = req.body;
 
   // console.log("🚀 ~ file", quizData, typeof quizData);
@@ -204,6 +205,7 @@ exports.UpdateQuizDetails = async (req, res) => {
         shortDescription,
         image: Quizimage,
         isPartOfBundle,
+        timer: time,
       },
       { new: true }
     );
