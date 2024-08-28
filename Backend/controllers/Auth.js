@@ -334,9 +334,9 @@ exports.userLogin = async (req, res) => {
       }
 
       await user.save();
-      throw new Error(
-        "Device data does not match. Login attempts: " + user.loginAttempts
-      );
+      // throw new Error(
+      //   "Device data does not match. Login attempts: " + user.loginAttempts
+      // );
     }
 
     //matching... password && //generating... JWT token
