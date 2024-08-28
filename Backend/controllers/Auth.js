@@ -37,7 +37,7 @@ exports.sendotp = async (req, res) => {
       lowerCaseAlphabets: false,
       specialChars: false,
     });
-    // console.log("OTP GENERATED => ", otp);
+
 
     const result = await OTP.findOne({ otp: otp });
     // console.log("Result is Generate OTP Func");

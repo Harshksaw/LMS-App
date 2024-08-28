@@ -106,11 +106,16 @@ export default function SignUpScreen() {
   };
   const handleOtp = async () => {
     console.log("called otp");
-    Toast.show("Sent Otp")
+   
     setButtonSpinner(true);
     const response = await axios.post(`${SERVER_URI}/api/v1/auth/sendotp`, {
       phoneNumber : userInfo.phoneNumber,
     });
+    if(response.status === 200){
+      Toast.show("Sent Otp")
+    }else{
+      Toast.show("Error in sending otp")
+    }
     console.log("🚀 ~ handleOtp ~ response:", response)
 
     // console.log(response);
