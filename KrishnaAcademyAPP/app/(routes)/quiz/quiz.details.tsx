@@ -287,7 +287,7 @@ export default function QuizScreen() {
   const fetchAttempts = async () => {
 
       
-    const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAttemptQuiz/${attemptId || "66bc38010eb297c55055ed4b"}`);
+    const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAttemptQuiz/${attemptId}`);
     const data = response.data
     console.log("🚀 ~ fetchAttempts ~ data:", data.data.questions)
     setQuestions(data.data.questions);
@@ -413,6 +413,7 @@ export default function QuizScreen() {
 
   const calculateScore = () => {
     return questions.reduce((score, question) => {
+      console.log(question.correctAnswer.hin)
       return score + (userAnswer === question.correctAnswer.en || userAnswer === question.correctAnswer.hin  ? 1 : 0);
     }, 0);
   };
