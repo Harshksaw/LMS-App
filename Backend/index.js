@@ -78,11 +78,10 @@ async function runBackup() {
   }
 
   // Step 1: Create a backup
-  const dumpProcess = spawn('mongodump', ['--uri', sourceUri]);
-  // dumpProcess.stdout.pipe(fs.createWriteStream('dump.gz'));
-  // dumpProcess.stderr.on('data', (data) => {
-  //   console.error(`Error creating backup: ${data}`);
-  // });
+  const dumpProcess = spawn('mongodump', ['--uri', sourceUri, '--archive=dump.gz', '--gzip']);
+  dumpProcess.stderr.on('data', (data) => {
+    console.error(`Error creating backup: ${data}`);
+  });
 
   await new Promise((resolve, reject) => {
     dumpProcess.on('close', (code) => {
@@ -95,7 +94,7 @@ async function runBackup() {
   });
 
   // Step 2: Restore the backup
-  const restoreProcess = spawn('mongorestore', ['--uri', targetUri, 'dump.gz']);
+  const restoreProcess = spawn('mongorestore', ['--uri', targetUri, '--archive=dump.gz', '--gzip']);
   restoreProcess.stdout.on('data', (data) => {
     console.log(data.toString());
   });
@@ -112,15 +111,13 @@ async function runBackup() {
       }
     });
   });
-
-  console.log('Backup and restore completed successfully');
 }
+
 // Backup endpoint
-app.get('/backup', async(req, res) => {
+app.get('/backup', async (req, res) => {
   await runBackup();
   res.send('Backup process initiated');
 });
-
 app.get("/", (req, res) => {
   return res.json({
     success: true,

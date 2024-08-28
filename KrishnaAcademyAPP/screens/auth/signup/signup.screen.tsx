@@ -111,6 +111,7 @@ export default function SignUpScreen() {
     const response = await axios.post(`${SERVER_URI}/api/v1/auth/sendotp`, {
       phoneNumber : userInfo.phoneNumber,
     });
+    console.log("🚀 ~ handleOtp ~ response:", response)
 
     // console.log(response);
     setButtonSpinner(false);

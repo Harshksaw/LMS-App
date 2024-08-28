@@ -43,8 +43,8 @@ export default function LoginScreen() {
   const [userInfo, setUserInfo] = useState({
     phoneNumber: 7991168445,
     // phoneNumber: 7991168442,
-    // phoneNumber: 0,
-    password: "Programmer1*",
+
+    password: "Password123*",
     // password: "",
   });
   const [required, setRequired] = useState("");
@@ -124,7 +124,7 @@ export default function LoginScreen() {
       .catch((error) => {
         setButtonSpinner(false);
         console.log(error);
-        Toast.show("Email or password is not correct!", {
+        Toast.show("PhoneNumber  is not correct!", {
           type: "danger",
         });
       });
@@ -153,18 +153,20 @@ export default function LoginScreen() {
             justifyContent: "center",
 
           }}>
+
             <TextInput
               style={[styles.input, { paddingLeft: 40 }]}
               keyboardType="phonenumber"
               value={userInfo.phoneNumber}
-              placeholder="7991168445"
-              onChangeText={(value) =>
-                setUserInfo({ ...userInfo, phoneNumber: value })
+              placeholder=" 7991168445"
+              onChan
+              onChange={(value) =>
+                setUserInfo({ ...userInfo, phoneNumber : value })
               }
             />
             <Fontisto
               style={{ position: "absolute", left: 26, top: 17.8 }}
-              name="email"
+              name="phone"
               size={20}
               color={"#A1A1A1"}
             />

@@ -14,3 +14,4 @@ CLOUD_NAME=dbnnlqq5v
 API_KEY=283514623947746
 API_SECRET=E2s6axKWvXTiJi5_DGiFuPe7Lxo
 CLOUDINARY_URL=cloudinary://572782272174972:Sx6t5hAG6ynwO6mr8GN-L55A7MI@dzwvmqbv0
+# MONGODB_URL=mongodb+srv://misterharshkumar:fY3anVZhHhWkmcrX@cluster0.cxf5acu.mongodb.net/prod?retryWrites=true&w=majority&appName=Cluster0/test

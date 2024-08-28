@@ -7,7 +7,8 @@
 /dist
 
 # Environment variables
-.env
+.env.*
+
 
 # IDE files
 /.vscode
@@ -24,3 +25,5 @@
 
 **/*.png
 **/*.jpg
+/dump
+*env

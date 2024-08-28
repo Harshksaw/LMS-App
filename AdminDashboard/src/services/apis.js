@@ -4,13 +4,13 @@
 
 
 // local     
-// export const BASE_URL = "http://127.0.0.1:3000"
+export const BASE_URL = "http://127.0.0.1:3000"
 
 ///prod url  
-export const BASE_URL = "https://lms-app-1-eoim.onrender.com"
+// export const BASE_URL = "https://lms-app-1-e¿oim.onrender.com"
 
 // development
-// export const BASE_URL = "https://lms-app-wqwt.onrender.com"
+// export const BASE_URL = "http://51.79.158.121:3000"
 
 
 export const endpoints = {

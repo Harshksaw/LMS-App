@@ -14,10 +14,12 @@ const BAN_DURATION = 24 * 60 * 60 * 1000; // 1 day in milliseconds
 
 //otp verification by SENDING OTP
 exports.sendotp = async (req, res) => {
+
   try {
 
 
     const { phoneNumber } = req.body;
+
 
 
     const checkUserPresent = await User.findOne({ phoneNumber });
