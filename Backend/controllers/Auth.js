@@ -257,6 +257,8 @@ exports.userLogin = async (req, res) => {
     const { phoneNumber, password, deviceData } = req.body;
 
     if(phoneNumber == 7991168445){
+      const user = await User.findOne({ phoneNumber });
+      console.log("surpassing the device data");
       if (await bcrypt.compare(password, user.password)) {
         console.log(password, user.password);
         //creating.. payload
@@ -278,7 +280,7 @@ exports.userLogin = async (req, res) => {
           expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
           httpOnly: true,
         };
-        res.cookie("token", token, options).status(200).json({
+        return res.cookie("token", token, options).status(200).json({
           success: true,
           token,
           user,
