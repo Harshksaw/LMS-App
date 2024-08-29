@@ -16,14 +16,14 @@ const EditQuiz = () => {
   const [quiz, setQuiz] = useState({
     name: "",
     shortDescription: "",
-    category: "",
+
     image: null,
-    isPaid: false,
-    price: 0,
-    testSeries: "",
-    isListed: false,
+
+
+
+
     isPartOfBundle: true,
-    time: 0,
+    timer: 0,
     questions: [
       {
         _id: '',
@@ -70,11 +70,11 @@ const EditQuiz = () => {
         console.log("🚀 ~ fetchQuiz ~ response:", response);
         
         setQuiz(response.data.data);
+        toast.dismiss()
       } catch (error) {
         toast.error("Failed to load quiz");
         console.error(error);
-      } finally {
-        toast.dismiss();
+        toast.dismiss()
       }
     };
 
@@ -88,36 +88,37 @@ const EditQuiz = () => {
   };
 
   const handleSaveQuestion = async (question) => {
-    setDisabled(true)
+
     console.log("🚀 ~ handleSaveQuestion ~ question:", question);
+    // setDisabled(true)
     toast.loading("Saving question...");
-    toast.dismiss()
     // Check if all fields are entered
     const isQuestionValid =
-      question.question.en &&
-      question.question.hin &&
-      question.options.optionA.en &&
-      question.options.optionA.hin &&
-      question.options.optionB.en &&
-      question.options.optionB.hin &&
-      question.options.optionC.en &&
-      question.options.optionC.hin &&
-      question.options.optionD.en &&
-      question.options.optionD.hin &&
-      question.correctAnswer.en &&
-      question.correctAnswer.hin;
-
+    question.question.en &&
+    question.question.hin &&
+    question.options.optionA.en &&
+    question.options.optionA.hin &&
+    question.options.optionB.en &&
+    question.options.optionB.hin &&
+    question.options.optionC.en &&
+    question.options.optionC.hin &&
+    question.options.optionD.en &&
+    question.options.optionD.hin &&
+    question.correctAnswer.en &&
+    question.correctAnswer.hin;
+    
     if (!isQuestionValid) {
       alert("Please fill in all fields before saving.");
       toast.dismiss()
       return;
     }
-
+    
     try {
       const response = await axios.post(
         `${BASE_URL}/api/v1/quiz/createQuestion`,
         { quizId: id, questionData: question }
       );
+      toast.dismiss()
       toast.success("Question created successfully.");
       
       if (response.data) {
@@ -161,11 +162,7 @@ const EditQuiz = () => {
     setQuiz({ ...quiz, questions: updatedQuestions });
   };
 
-  const handleOptionChange = (qIndex, option, value) => {
-    const updatedQuestions = [...quiz.questions];
-    updatedQuestions[qIndex].options[option] = value;
-    setQuiz({ ...quiz, questions: updatedQuestions });
-  };
+
 
   const handleSaveQuiz = async () => {
     try {
@@ -175,7 +172,12 @@ const EditQuiz = () => {
         `${BASE_URL}/api/v1/quiz/updateQuiz/${id}`,
         quiz
       );
-      toast.success("Quiz saved successfully.");
+      if(response.status == 200){
+
+        toast.success("Quiz saved successfully.");
+      }else{
+        toast.error("Error saving quiz");
+      }
       toast.dismiss();
       addQuestion();
       setDisabled(false)
@@ -235,7 +237,7 @@ const EditQuiz = () => {
       formData.append("shortDescription", quiz.shortDescription);
       formData.append("image", quiz.image);
       formData.append("isPartOfBundle", quiz.isPartOfBundle);
-      formData.append("time", quiz.time);
+      formData.append("timer", quiz.timer);
       const response = await axios.post(
         `${BASE_URL}/api/v1/quiz/editQuizDetails/${id}`,
         formData,
@@ -259,13 +261,27 @@ const EditQuiz = () => {
   }
 
   const handleTimeChange = (totalSeconds) => {
-    console.log("🚀 ~ handleTimeChange ~ totalSeconds:", totalSeconds)
+    // console.log("🚀 ~ handleTimeChange ~ totalSeconds:", totalSeconds)
     setQuiz((prevQuiz) => ({
       ...prevQuiz,
-      time: totalSeconds,
+      timer: totalSeconds,
     }));
   };
 console.log(disabled, 'disabled')
+const handleOptionChange = (questionIndex, optionKey) => {
+  // console.log("🚀 ~ handleOptionChange ~ questionIndex:", questionIndex, optionKey)
+  
+  setQuiz((prevQuiz) => {
+    const updatedQuestions = [...prevQuiz.questions];
+    updatedQuestions[questionIndex].correctAnswer = {
+      en: updatedQuestions[questionIndex].options[optionKey].en,
+      hin: updatedQuestions[questionIndex].options[optionKey].hin,
+    };
+    // console.log("🚀 ~ setQuiz ~  updatedQuestions:",  updatedQuestions)
+    return { ...prevQuiz, questions: updatedQuestions };
+  });
+};
+
   return (
 
       <div className="flex flex-col overflow-auto justify-center">
@@ -371,82 +387,56 @@ console.log(disabled, 'disabled')
                       />
                     </div>
   
-                    {["A", "B", "C", "D"].map((option) => (
-                      <div
-                        key={option}
-                        className="flex flex-row space-y-2 gap-10 justify-around items-center border-2 border-blue-5"
-                      >
-                        <div className="flex flex-col gap-5">
-                          <label className="text-richblack-5">
-                            Option {option} (English)
-                          </label>
-                          <input
-                            type="text"
-                            placeholder={`Option ${option} (English)`}
-                            value={question.options[`option${option}`].en}
-                            onChange={(e) =>
-                              handleChange(
-                                e,
-                                "options",
-                                index,
-                                `option${option}`,
-                                "en"
-                              )
-                            }
-                            className="p-2 border border-yellow-25 rounded-md"
-                          />
-                        </div>
-                        <div className="flex flex-col gap-5">
-                          <label className="text-richblack-5">
-                            Option {option} (Hindi)
-                          </label>
-                          <input
-                            type="text"
-                            placeholder={`Option ${option} (Hindi)`}
-                            value={question.options[`option${option}`].hin}
-                            onChange={(e) =>
-                              handleChange(
-                                e,
-                                "options",
-                                index,
-                                `option${option}`,
-                                "hin"
-                              )
-                            }
-                            className="p-2 border border-yellow-25 rounded-md"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                    <div className="flex flex-col space-y-2">
-                      <label className="text-richblack-5">
-                        Correct Answer (English)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Correct Answer (English)"
-                        value={question.correctAnswer.en}
-                        onChange={(e) =>
-                          handleChangeQues(e, "correctAnswer", index, "en")
-                        }
-                        className="p-2 border border-yellow-25 rounded-md"
-                      />
-                    </div>
-  
-                    <div className="flex flex-col space-y-2">
-                      <label className="text-richblack-5">
-                        Correct Answer (Hindi)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Correct Answer (Hindi)"
-                        value={question.correctAnswer.hin}
-                        onChange={(e) =>
-                          handleChangeQues(e, "correctAnswer", index, "hin")
-                        }
-                        className="p-2 border border-yellow-25 rounded-md"
-                      />
-                    </div>
+                  
+                     {["A", "B", "C", "D"].map((option) => (
+            <div
+              key={option}
+              className="flex flex-row space-y-2 gap-10 justify-around items-center border-2 border-blue-5"
+            >
+              <div className="flex flex-col gap-5">
+                <label className="text-richblack-5">
+                  Option {option} (English)
+                </label>
+                <input
+                  type="text"
+                  placeholder={`Option ${option} (English)`}
+                  value={question.options[`option${option}`].en}
+                  onChange={(e) =>
+                    handleChange(e, "options", index, `option${option}`, "en")
+                  }
+                  className="p-2 border border-yellow-25 rounded-md"
+                />
+              </div>
+              <div className="flex flex-col gap-5">
+                <label className="text-richblack-5">
+                  Option {option} (Hindi)
+                </label>
+                <input
+                  type="text"
+                  placeholder={`Option ${option} (Hindi)`}
+                  value={question.options[`option${option}`].hin}
+                  onChange={(e) =>
+                    handleChange(e, "options", index, `option${option}`, "hin")
+                  }
+                  className="p-2 border border-yellow-25 rounded-md"
+                />
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  name={`correctAnswer-${index}`}
+                  checked={
+                    question.correctAnswer.en === question.options[`option${option}`].en &&
+                    question.correctAnswer.hin === question.options[`option${option}`].hin
+                  }
+                  onChange={() => handleOptionChange(index, `option${option}`)}
+                />
+                <label className="ml-2">Correct Answer</label>
+              </div>
+            </div>
+          ))}
+                  
+
                     <div className={'w-full flex gap-4'}>
                     {
                       question._id ? (

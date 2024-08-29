@@ -6,38 +6,32 @@ exports.intialize = async (req, res) => {
   const {
     name,
     shortDescription,
-    category,
+
     isPaid,
     price,
+    timer,
 
-    testSeries,
-    isListed,
     isPartOfBundle,
-    time,
   } = req.body;
   const Quizimage = req.file ? req.file.path : "https://picsum.photos/200";
   try {
-
-    if (!name || !shortDescription || !time) {
+    if (!name || !shortDescription || !timer) {
       return res.status(400).json({
         success: false,
         message: "All fields are required !!",
       });
     }
 
-
     // Create the quiz with references to created questions
     const newQuiz = new Quiz({
       name: name,
       shortDescription: shortDescription,
-      category,
+
       isPaid,
       price,
       image: Quizimage,
 
-      testSeries,
-      isListed,
-      timer: time,
+      timer,
       isPartOfBundle,
     });
 
@@ -56,35 +50,35 @@ exports.intialize = async (req, res) => {
       message: "Canno create Quiz in, try again ",
     });
   }
-};exports.UpdateQuiz = async (req, res) => {
+};
+exports.UpdateQuiz = async (req, res) => {
   const { id } = req.params;
   const {
     name,
     shortDescription,
-    category,
-    isPaid,
+
+
     price,
     quizData,
-    testSeries,
-    isListed,
+
+
     isPartOfBundle,
-    time,
+    timer,
   } = req.body;
 
   console.log("🚀 ~ file", quizData, typeof quizData);
   const Quizimage = req.file ? req.file.path : "https://picsum.photos/200";
 
-  if (!name || !shortDescription || !quizData || !time) {
+  if (!name || !shortDescription || !quizData || !timer) {
     return res.status(400).json({
       success: false,
       message: "All fields are required !!",
     });
   }
 
-  
   let parsedQuizData;
 
-  if (typeof parsedQuizData === 'object' && !Array.isArray(parsedQuizData)) {
+  if (typeof parsedQuizData === "object" && !Array.isArray(parsedQuizData)) {
     parsedQuizData = Object.values(parsedQuizData);
   }
   // try {
@@ -94,10 +88,9 @@ exports.intialize = async (req, res) => {
   //   return res.status(400).json({
   //     success: false,
   //     message: "Invalid quiz data format",
-  //   }); 
+  //   });
   // }
   // Convert parsedQuizData to an array if it is an object
-
 
   // if (!Array.isArray(parsedQuizData)) {
   //   return res.status(400).json({
@@ -178,15 +171,9 @@ exports.intialize = async (req, res) => {
   }
 };
 
-
 exports.UpdateQuizDetails = async (req, res) => {
   const { id } = req.params;
-  const {
-    name,
-    shortDescription,
-    isPartOfBundle,
-    time
-  } = req.body;
+  const { name, shortDescription, isPartOfBundle, timer } = req.body;
 
   // console.log("🚀 ~ file", quizData, typeof quizData);
   const Quizimage = req.file ? req.file.path : "https://picsum.photos/200";
@@ -205,7 +192,7 @@ exports.UpdateQuizDetails = async (req, res) => {
         shortDescription,
         image: Quizimage,
         isPartOfBundle,
-        timer: time,
+        timer: timer,
       },
       { new: true }
     );
@@ -233,8 +220,6 @@ exports.UpdateQuizDetails = async (req, res) => {
 exports.createQuestion = async (req, res) => {
   try {
     const { quizId, questionData } = req.body;
-
-
 
     const newQuestion = new Questions(questionData);
     await newQuestion.save();
@@ -303,7 +288,7 @@ exports.getQuizbyId = async (req, res) => {
 };
 exports.getAllQuiz = async (req, res) => {
   try {
-    const quiz = await Quiz.find().sort({ createdAt: -1 }); 
+    const quiz = await Quiz.find().sort({ createdAt: -1 });
     return res.status(200).json({
       success: true,
       message: "All quizz are here!!",
@@ -474,33 +459,39 @@ exports.updateQuestionOptions = async (req, res) => {
   }
 };
 
-
 exports.updateQuestion = async (req, res) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const { questionData } = req.body;
-console.log(questionData)
-    const updatedQuestion = await Questions.findByIdAndUpdate(id, {
-      $set: {
-        "question.en": questionData.question.en,
-        "question.hin": questionData.question.hin,
-        "options.optionA.en": questionData.options.optionA.en,
-        "options.optionA.hin": questionData.options.optionA.hin,
-        "options.optionB.en": questionData.options.optionB.en,
-        "options.optionB.hin": questionData.options.optionB.hin,
-        "options.optionC.en": questionData.options.optionC.en,
-        "options.optionC.hin": questionData.options.optionC.hin,
-        "options.optionD.en": questionData.options.optionD.en,
-        "options.optionD.hin": questionData.options.optionD.hin,
-        "correctAnswer.en": questionData.correctAnswer.en,
-        "correctAnswer.hin": questionData.correctAnswer.hin,
+    console.log(questionData);
+    const updatedQuestion = await Questions.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          "question.en": questionData.question.en,
+          "question.hin": questionData.question.hin,
+          "options.optionA.en": questionData.options.optionA.en,
+          "options.optionA.hin": questionData.options.optionA.hin,
+          "options.optionB.en": questionData.options.optionB.en,
+          "options.optionB.hin": questionData.options.optionB.hin,
+          "options.optionC.en": questionData.options.optionC.en,
+          "options.optionC.hin": questionData.options.optionC.hin,
+          "options.optionD.en": questionData.options.optionD.en,
+          "options.optionD.hin": questionData.options.optionD.hin,
+          "correctAnswer.en": questionData.correctAnswer.en,
+          "correctAnswer.hin": questionData.correctAnswer.hin,
+        },
       },
-    }, { new: true });
+      { new: true }
+    );
 
     // if (!updatedQuestion) {
     //   return res.status(404).json({ message: "Question not found" });
     // }
-    res.status(200).json({ message: "Question updated successfully", question: updatedQuestion });
+    res.status(200).json({
+      message: "Question updated successfully",
+      question: updatedQuestion,
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
@@ -524,11 +515,12 @@ exports.deleteQuizById = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Quiz and associated questions deleted successfully" });
+      message: "Quiz and associated questions deleted successfully",
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
-}
+};
 
 exports.deleteQuestionById = async (req, res) => {
   try {
@@ -564,13 +556,14 @@ exports.deleteQuestionById = async (req, res) => {
   }
 };
 
-
 exports.addQuestionToUser = async (req, res) => {
   try {
     const { userId, questionId } = req.body;
 
     if (!userId || !questionId) {
-      return res.status(400).json({ error: "User ID and question ID are required" });
+      return res
+        .status(400)
+        .json({ error: "User ID and question ID are required" });
     }
 
     const user = await User.findById(userId);
@@ -583,7 +576,9 @@ exports.addQuestionToUser = async (req, res) => {
       await user.save();
     }
 
-    res.status(201).json({ message: "Question bookmarked successfully", data: user });
+    res
+      .status(201)
+      .json({ message: "Question bookmarked successfully", data: user });
   } catch (error) {
     console.error("Error bookmarking question:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -596,7 +591,9 @@ exports.removeQuestionFromUser = async (req, res) => {
     const { userId, questionId } = req.body;
 
     if (!userId || !questionId) {
-      return res.status(400).json({ error: "User ID and question ID are required" });
+      return res
+        .status(400)
+        .json({ error: "User ID and question ID are required" });
     }
 
     const user = await User.findById(userId);
@@ -604,10 +601,13 @@ exports.removeQuestionFromUser = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    user.questions = user.questions.filter(q => q.toString() !== questionId);
+    user.questions = user.questions.filter((q) => q.toString() !== questionId);
     await user.save();
 
-    res.status(200).json({ message: "Question removed from bookmarks successfully", data: user });
+    res.status(200).json({
+      message: "Question removed from bookmarks successfully",
+      data: user,
+    });
   } catch (error) {
     console.error("Error removing bookmarked question:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -615,17 +615,19 @@ exports.removeQuestionFromUser = async (req, res) => {
 };
 exports.getAllSavedQuestions = async (req, res) => {
   try {
-
-    const {id} = req.params;
-    const savedQuestions = await User.findById(id).populate('questions');
-    console.log("🚀 ~ exports.getAllSavedQuestions= ~ savedQuestions:", savedQuestions)
+    const { id } = req.params;
+    const savedQuestions = await User.findById(id).populate("questions");
+    console.log(
+      "🚀 ~ exports.getAllSavedQuestions= ~ savedQuestions:",
+      savedQuestions
+    );
 
     res.status(200).json({
-      message: 'Saved questions fetched successfully',
-      data: savedQuestions
+      message: "Saved questions fetched successfully",
+      data: savedQuestions,
     });
   } catch (error) {
-    console.error('Error fetching saved questions:', error);
-    res.status(500).json({ message: 'Server error', error });
+    console.error("Error fetching saved questions:", error);
+    res.status(500).json({ message: "Server error", error });
   }
 };

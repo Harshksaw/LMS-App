@@ -8,7 +8,7 @@ type Props = {};
 
 const AddQuiz = (props: Props) => {
   const [loading, setisLoading] = useState(false);
-  const [time, setTime] = useState("10:00:00");
+
   const [savedQuestions, setSavedQuestions] = useState<number[]>([]);
   const [isQuizId, setIsQuizId] = useState(null);
   console.log("🚀 ~ AddQuiz ~ isQuizId:", isQuizId);
@@ -16,14 +16,15 @@ const AddQuiz = (props: Props) => {
   const [quiz, setQuiz] = useState({
     name: "",
     shortDescription: "",
-    category: "",
+
     image: null,
     isPaid: false,
-    price: 0,
+
     testSeries: "",
-    isListed: false,
+
+
     isPartOfBundle: true,
-    time: 0,
+    timer: 0,
     questions: [
       {
         question: { en: "", hin: "" },
@@ -39,7 +40,12 @@ const AddQuiz = (props: Props) => {
   });
 
   const handleTimeChange = (totalSeconds) => {
-    setQuiz(totalSeconds);
+    console.log(totalSeconds)
+    setQuiz({
+      ...quiz,
+      timer: totalSeconds,
+
+    })
   };
   const handleChangeQues = (e, field, index, lang) => {
     const { value } = e.target;
@@ -81,7 +87,7 @@ const AddQuiz = (props: Props) => {
     subField?: string,
     lang?: string
   ) => {
-    console.log(e.target.files);
+    // console.log(e.target.files);
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setQuiz({ ...quiz, [field]: file });
@@ -165,11 +171,11 @@ const AddQuiz = (props: Props) => {
     const formData = new FormData();
     formData.append("name", quiz.name);
     formData.append("shortDescription", quiz.shortDescription);
-    formData.append("category", quiz.category);
+
     formData.append("image", quiz.image);
-    formData.append("isPaid", quiz.isPaid);
-    formData.append("time", quiz.time);
-    formData.append("price", quiz.price);
+
+    formData.append("timer", quiz.timer);
+
     formData.append("isPartOfBundle", quiz.isPartOfBundle);
 
     try {
@@ -203,7 +209,7 @@ const AddQuiz = (props: Props) => {
     formData.append("category", quiz.category);
     formData.append("image", quiz.image);
     formData.append("isPaid", quiz.isPaid);
-    formData.append("time", quiz.time);
+    formData.append("timer", quiz.timer);
     formData.append("price", quiz.price);
 
     formData.append("quizData", JSON.stringify(quiz.questions));
@@ -233,6 +239,25 @@ const AddQuiz = (props: Props) => {
     }
   };
 
+
+  const handleOptionChange = (questionIndex, optionKey) => {
+    setQuiz((prev) => {
+      const updatedQuestions = [...prev.questions];
+      updatedQuestions[questionIndex].correctAnswer.en = updatedQuestions[questionIndex].options[optionKey].en;
+      updatedQuestions[questionIndex].correctAnswer.hin = updatedQuestions[questionIndex].options[optionKey].hin;
+      return { ...prev, questions: updatedQuestions };
+    });
+  };
+
+  // const handleChange = (e, field, questionIndex, optionKey, language) => {
+  //   const value = e.target.value;
+  //   setQuiz((prev) => {
+  //     const updatedQuestions = [...prev.questions];
+  //     updatedQuestions[questionIndex][field][optionKey][language] = value;
+  //     return { ...prev, questions: updatedQuestions };
+  //   });
+  // };
+
   return (
     <div className="flex flex-col overflow-auto justify-center">
       <div className="flex flex-row space-x-10 justify-center items-center">
@@ -249,30 +274,30 @@ const AddQuiz = (props: Props) => {
 
 
 
-              <div className="flex   w-full  flex-col  items-start  mt-5 space-y-2">
-                <label className="text-richblack-5">Enter the quiz name</label>
-                <input
-                  type="text"
-                  placeholder="Quiz Name"
-                  value={quiz.name}
-                  onChange={(e) => handleChange(e, "name")}
-                  className="p-2 w-full border border-yellow-25 rounded-md bg-richblack-800 text-white"
-                />
-              </div>
+            <div className="flex   w-full  flex-col  items-start  mt-5 space-y-2">
+              <label className="text-richblack-5">Enter the quiz name</label>
+              <input
+                type="text"
+                placeholder="Quiz Name"
+                value={quiz.name}
+                onChange={(e) => handleChange(e, "name")}
+                className="p-2 w-full border border-yellow-25 rounded-md bg-richblack-800 text-white"
+              />
+            </div>
 
-              <div className="flex  w-full flex-col items-start  mt-5 space-y-2">
-                <label className="text-richblack-5">
-                  Add short Description
-                </label>
-                <textarea
-                  placeholder="Short Description"
-                  value={quiz.shortDescription}
-                  rows={10}
-                  cols={150}
-                  onChange={(e) => handleChange(e, "shortDescription")}
-                  className="p-5 border  w-full border-yellow-25 rounded-md bg-richblack-800 text-white "
-                />
-              </div>
+            <div className="flex  w-full flex-col items-start  mt-5 space-y-2">
+              <label className="text-richblack-5">
+                Add short Description
+              </label>
+              <textarea
+                placeholder="Short Description"
+                value={quiz.shortDescription}
+                rows={10}
+                cols={150}
+                onChange={(e) => handleChange(e, "shortDescription")}
+                className="p-5 border  w-full border-yellow-25 rounded-md bg-richblack-800 text-white "
+              />
+            </div>
 
 
 
@@ -375,82 +400,57 @@ const AddQuiz = (props: Props) => {
                           />
                         </div>
 
-                        {["A", "B", "C", "D"].map((option) => (
-                          <div
-                            key={option}
-                            className="flex flex-row space-y-2 gap-10 justify-around items-center  border-2 border-blue-5"
-                          >
-                            <div className="flex  flex-col gap-5">
-                              <label className="text-richblack-5">
-                                Option {option} (English)
-                              </label>
-                              <input
-                                type="text"
-                                placeholder={`Option ${option} (English)`}
-                                value={question.options[`option${option}`].en}
-                                onChange={(e) =>
-                                  handleChange(
-                                    e,
-                                    "options",
-                                    index,
-                                    `option${option}`,
-                                    "en"
-                                  )
-                                }
-                                className="p-2 border border-yellow-25 rounded-md"
-                              />
+                        <div key={index}>
+                          {["A", "B", "C", "D"].map((option) => (
+                            <div
+                              key={option}
+                              className="flex flex-row space-y-2 gap-10 justify-around items-center border-2 border-blue-5"
+                            >
+                              <div className="flex flex-col gap-5">
+                                <label className="text-richblack-5">
+                                  Option {option} (English)
+                                </label>
+                                <input
+                                  type="text"
+                                  placeholder={`Option ${option} (English)`}
+                                  value={question.options[`option${option}`].en}
+                                  onChange={(e) =>
+                                    handleChange(e, "options", index, `option${option}`, "en")
+                                  }
+                                  className="p-2 border border-yellow-25 rounded-md"
+                                />
+                              </div>
+                              <div className="flex flex-col gap-5">
+                                <label className="text-richblack-5">
+                                  Option {option} (Hindi)
+                                </label>
+                                <input
+                                  type="text"
+                                  placeholder={`Option ${option} (Hindi)`}
+                                  value={question.options[`option${option}`].hin}
+                                  onChange={(e) =>
+                                    handleChange(e, "options", index, `option${option}`, "hin")
+                                  }
+                                  className="p-2 border border-yellow-25 rounded-md"
+                                />
+                              </div>
+                              <div className="flex items-center">
+                                <input
+                                  type="radio"
+                                  name={`correctAnswer-${index}`}
+                                  checked={
+                                    question.correctAnswer.en === question.options[`option${option}`].en &&
+                                    question.correctAnswer.hin === question.options[`option${option}`].hin
+                                  }
+                                  onChange={() => handleOptionChange(index, `option${option}`)}
+                                />
+                                <label className="ml-2">Correct Answer</label>
+                              </div>
                             </div>
-                            <div className=" flex  flex-col gap-5">
-                              <label className="text-richblack-5">
-                                Option {option} (Hindi)
-                              </label>
-                              <input
-                                type="text"
-                                placeholder={`Option ${option} (Hindi)`}
-                                value={question.options[`option${option}`].hin}
-                                onChange={(e) =>
-                                  handleChange(
-                                    e,
-                                    "options",
-                                    index,
-                                    `option${option}`,
-                                    "hin"
-                                  )
-                                }
-                                className="p-2 border border-yellow-25 rounded-md"
-                              />
-                            </div>
-                          </div>
-                        ))}
-                        <div className="flex flex-col space-y-2">
-                          <label className="text-richblack-5">
-                            Correct Answer (English)
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Correct Answer (English)"
-                            value={question.correctAnswer.en}
-                            onChange={(e) =>
-                              handleChangeQues(e, "correctAnswer", index, "en")
-                            }
-                            className="p-2 border border-yellow-25 rounded-md"
-                          />
+                          ))}
                         </div>
 
-                        <div className="flex flex-col space-y-2">
-                          <label className="text-richblack-5">
-                            Correct Answer (Hindi)
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Correct Answer (Hindi)"
-                            value={question.correctAnswer.hin}
-                            onChange={(e) =>
-                              handleChangeQues(e, "correctAnswer", index, "hin")
-                            }
-                            className="p-2 border border-yellow-25 rounded-md"
-                          />
-                        </div>
+
                         <div key={index}>
                           {/* Other question details */}
                           {!savedQuestions.includes(index) && (

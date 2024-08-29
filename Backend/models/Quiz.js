@@ -11,25 +11,18 @@ const QuizSchema = new mongoose.Schema({
   category: {
     type: String,
   },
-  testSeries:{
-    type:String
-  },
+
   image: {
     type: String,
   },
   timer:{
     type: Number,
   },
-  isPaid: {
-    type: Boolean,
-  },
+ 
   price: {
     type:Number,
   },
-  isListed: {
-    type: Boolean,
-    default: false,
-  },
+  
   isPartOfBundle: {
     type: Boolean,
     default: true,
