@@ -19,6 +19,7 @@ const QuizAttempts = () => {
         const isUser = JSON.parse(userI);
         const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAllAttempt/${isUser._id}`)
         const data = response.data.data;
+        console.log("🚀 ~ fetchAttempts ~  data :",  data[0] )
         setAttempts(data); // Directly set the fetched data
       } catch (error) {
         console.error('Error fetching attempts:', error);
@@ -64,8 +65,8 @@ const renderItem = ({ item }) => (
   onPress={()=> handleSolutions(item._id,item.quiz._id)}
   >
     <View style={styles.cardHeader}>
-      <Text style={styles.quizName}>{item.quiz.name}</Text>
-      <Text style={styles.score}>Score: {item.score}</Text>
+      <Text style={styles.quizName}>{item.quiz?.name}</Text>
+      <Text style={styles.score}>Score: {item?.score}</Text>
     </View>
 
     <View style={styles.cardHeader}>
