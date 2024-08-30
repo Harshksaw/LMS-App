@@ -65,7 +65,7 @@ const renderItem = ({ item }) => (
   onPress={()=> handleSolutions(item._id,item.quiz._id)}
   >
     <View style={styles.cardHeader}>
-      <Text style={styles.quizName}>{item.quiz?.name}</Text>
+      <Text style={styles.quizName}>{item.quiz?.name.slice(0,25)}</Text>
       <Text style={styles.score}>Score: {item?.score}</Text>
     </View>
 

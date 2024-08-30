@@ -8,25 +8,6 @@ import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, ScrollView, BackHandler } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// const arrayOfObjects = [
-//   { color: 'red', title: 'Apple', alpha: 'a' },
-//   { color: 'blue', title: 'Blueberry', alpha: 'b' },
-//   { color: 'green', title: 'Grapes', alpha: 'c' },
-//   { color: 'yellow', title: 'Lemon', alpha: 'd' },
-//   { color: 'orange', title: 'Orange', alpha: 'e' },
-//   { color: 'purple', title: 'Plum', alpha: 'f' }
-// ];
-// const pieData = [
-//   {
-//     value: 47,
-//     color: '#009FFF',
-//     gradientCenterColor: '#006DFF',
-//     focused: true,
-//   },
-//   { value: 40, color: '#93FCF8', gradientCenterColor: '#3BE9DE' },
-//   { value: 16, color: '#BDB2FA', gradientCenterColor: '#8F80F3' },
-//   { value: 3, color: '#FFA5BA', gradientCenterColor: '#FF7F97' },
-// ];
 
 
 const calculateTotals = (data) => {
@@ -41,9 +22,7 @@ const calculateTotals = (data) => {
     { color: 'blue', bgColor: '#009FFF' , title: 'correct', alpha: correctAnswers },
     { color: 'green', bgColor: '#FFA5BA' , title: 'incorrect', alpha: incorrectAnswers},
     { color: 'green', bgColor: '#BDB2FA' , title: 'unanswered', alpha: unansweredQuestions},
-    // { color: 'yellow', title: 'Lemon', alpha: 'd' },
-    // { color: 'orange', title: 'Orange', alpha: 'e' },
-    // { color: 'purple', title: 'Plum', alpha: 'f' }
+
   ];
   return {
     totalQuestions,
