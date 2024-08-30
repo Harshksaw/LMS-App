@@ -297,7 +297,7 @@ export default function QuizScreen() {
       questions: questions.map((question, index) => ({
         question: question._id,
         userAnswer:    userAnswers[index], 
-        correctAnswer: language === "en" ? question.correctAnswer.en : question.correctAnswer.hin,
+        correctAnswer: {en:  question.correctAnswer.en , hin:  question.correctAnswer.hin},
         isCorrect: userAnswers[index] === question.correctAnswer.en || userAnswers[index] === question.correctAnswer.hin,
       }))
     };

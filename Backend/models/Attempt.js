@@ -33,8 +33,14 @@ const attemptSchema = new mongoose.Schema({
                 required:false,
             },
             correctAnswer: {
-                type: String, // Assuming correct answers are strings, adjust if necessary
-                required: true,
+                en:{
+                    type:String,
+    
+                  },
+                  hin:{
+                    type:String,
+    
+                  }
             },
             isCorrect: {
                 type: Boolean,

@@ -53,7 +53,7 @@ const quizsolution = () => {
     }
 
     const { question, options } = data?.question;
-    // console.log("🚀 ~ renderItem ~ options:", options)
+    console.log("🚀 ~ renderItem ~ options:", options)
 
     // Check if question and options exist
     if (!question || !options) {
@@ -110,11 +110,12 @@ const quizsolution = () => {
           }
           return (
             <View style={{
-              flexDirection: 'row',
+              flexDirection: 'column',
+              gap:5,
               // justifyContent: 'space-between',
               // alignItems: 'center',
               // backgroundColor: 'red',
-              padding: 5,
+              padding: 10,
               borderRadius: 10,
               marginVertical: 5,
               backgroundColor: 'rgb(240, 236, 236)',
@@ -123,6 +124,10 @@ const quizsolution = () => {
 
               <Text key={key} style={optionStyle}>
               {`${index + 1}. ${option.en}`}
+
+              </Text>
+              <Text key={key} style={optionStyle}>
+              {`${index + 1}. ${option.hin}`}
 
               </Text>
 
