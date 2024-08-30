@@ -288,8 +288,8 @@ export default function QuizScreen() {
       duration: 3000,
 
     });
-   
-
+    console.log( userAnswers, "------" )
+    
     const attemptData = {
       user: isUser._id, // Assuming you have the current user's ID
       quiz: quizId, // Assuming you have the current quiz's ID
