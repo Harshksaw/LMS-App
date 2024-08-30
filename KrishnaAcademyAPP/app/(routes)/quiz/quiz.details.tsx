@@ -197,7 +197,7 @@ export default function QuizScreen() {
 
   const [questions, setQuestions] = useState<any[]>([]);
   const [savedQuestions, setSavedQuestions] = useState<any[]>([]);
-
+  const [answered, setAnswered] = useState<number>([]);
   const [userScore, setUserScore] = useState<number>(0);
   const [userAnswer, setUserAnswer] = useState<string>("");
   const [selectedBox, setSelectedBox] = useState<number | null>(null);
@@ -209,7 +209,7 @@ export default function QuizScreen() {
   const translateX = useRef(new Animated.Value(280)).current;
   const [timeUp, setTimeUp] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [remainderTime ,setRemainderTime] = useState(0)
+  const [remainderTime, setRemainderTime] = useState(0)
 
 
 
@@ -243,7 +243,7 @@ export default function QuizScreen() {
 
         const quizData = res?.data?.data;
         setQuizDetails(quizData);
-       
+
 
         setRemainingTime(quizData.timer);
 
@@ -260,7 +260,7 @@ export default function QuizScreen() {
     };
 
     getQuizDetails();
-  }, [quizId,refreshing]);
+  }, [quizId, refreshing]);
   // console.log(questions, "questions --------------------")
 
   const handleSave = () => {
@@ -277,7 +277,7 @@ export default function QuizScreen() {
     } else {
       setGetResultClicked(true);
       console.log("userScore", userScore);
-        fetchAttempts()
+      fetchAttempts()
       setScoreModalVisible(true);
     }
     console.log("userScore", userScore, count);
@@ -286,13 +286,13 @@ export default function QuizScreen() {
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const fetchAttempts = async () => {
 
-      
+
     const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAttemptQuiz/${attemptId}`);
     const data = response.data
     console.log("🚀 ~ fetchAttempts ~ data:", data.data.questions)
     setQuestions(data.data.questions);
-    
-    
+
+
   }
 
 
@@ -303,15 +303,15 @@ export default function QuizScreen() {
     // console.log(optionsArray[index][language], "----l", index);
     const selectedAnswer = optionsArray[index][language];
     setSelectedBox(index);
-    
-  
+    setAnswered((prev) => [...prev, count]);
 
-  setUserAnswer(selectedAnswer);
-  setUserAnswers((prevAnswers) => {
-    const newAnswers = [...prevAnswers];
-    newAnswers[count] = selectedAnswer; // Ensure the answer is recorded at the correct index
-    return newAnswers;
-});
+
+    setUserAnswer(selectedAnswer);
+    setUserAnswers((prevAnswers) => {
+      const newAnswers = [...prevAnswers];
+      newAnswers[count] = selectedAnswer; // Ensure the answer is recorded at the correct index
+      return newAnswers;
+    });
     // console.log(optionsArray[index][language], "----l");
     // setUserAnswer(optionsArray[index][language]);
     //  setUserAnswers(prevAnswers => [...prevAnswers, optionsArray[index][language]]);
@@ -369,16 +369,16 @@ export default function QuizScreen() {
       const user = JSON.parse(isUser);
       console.log("🚀 ~ QuizScreen ~ user", questions[count]._id)
 
-      const res = await axios.post(`${SERVER_URI}/api/v1/quiz/saveUserQuestion`,{
-        userId : user._id , questionId : questions[count]._id
+      const res = await axios.post(`${SERVER_URI}/api/v1/quiz/saveUserQuestion`, {
+        userId: user._id, questionId: questions[count]._id
       })
-      if(res.status === 201){
+      if (res.status === 201) {
 
-        
+
         Toast.show("Saved question");
-        setSavedQuestions((prev) => [...prev,questions[count]._id ])
+        setSavedQuestions((prev) => [...prev, questions[count]._id])
         setRefreshing((prev) => !prev)
-      }else{
+      } else {
         Toast.show("Error saving question");
       }
 
@@ -414,7 +414,7 @@ export default function QuizScreen() {
   const calculateScore = () => {
     return questions.reduce((score, question) => {
       console.log(question.correctAnswer.hin)
-      return score + (userAnswer === question.correctAnswer.en || userAnswer === question.correctAnswer.hin  ? 1 : 0);
+      return score + (userAnswer === question.correctAnswer.en || userAnswer === question.correctAnswer.hin ? 1 : 0);
     }, 0);
   };
 
@@ -424,38 +424,38 @@ export default function QuizScreen() {
 
 
 
-      const userI = await AsyncStorage.getItem("user");
-      const isUser = JSON.parse(userI);
-      // console.log("🚀 ~ QuizScreen ~ isUser:", isUser)
+    const userI = await AsyncStorage.getItem("user");
+    const isUser = JSON.parse(userI);
+    // console.log("🚀 ~ QuizScreen ~ isUser:", isUser)
 
 
-      Toast.show("Submitting attempt...",{
-        type: "success",
-        duration: 3000,
+    Toast.show("Submitting attempt...", {
+      type: "success",
+      duration: 3000,
 
-      });
-      // console.log(userAnswers, "userAnswers")
+    });
+    // console.log(userAnswers, "userAnswers")
 
-      const attemptData = {
-        user: isUser._id, // Assuming you have the current user's ID
-        quiz: quizId , // Assuming you have the current quiz's ID
-        score: calculateScore(), // Function to calculate the score
-        questions: questions.map((question, index) => ({
-    question: question._id,
-    userAnswer: userAnswers[index], // Get the user answer for the current question
-    correctAnswer: question.correctAnswer.en,
-    isCorrect: userAnswers[index] === question.correctAnswer.en || userAnswers[index] === question.correctAnswer.hin,
-  }))
-      };
-      // console.log("🚀 ~ handleSubmitQuiz ~ attemptData:", attemptData)
+    const attemptData = {
+      user: isUser._id, // Assuming you have the current user's ID
+      quiz: quizId, // Assuming you have the current quiz's ID
+      score: calculateScore(), // Function to calculate the score
+      questions: questions.map((question, index) => ({
+        question: question._id,
+        userAnswer: userAnswers[index], // Get the user answer for the current question
+        correctAnswer: question.correctAnswer.en,
+        isCorrect: userAnswers[index] === question.correctAnswer.en || userAnswers[index] === question.correctAnswer.hin,
+      }))
+    };
+    // console.log("🚀 ~ handleSubmitQuiz ~ attemptData:", attemptData)
 
-      
-      try {
+
+    try {
       // Make the API call to submit the attempt
 
       // Make the API call to submit the attempt using axios
       const response = await axios.post(`${SERVER_URI}/api/v1/quiz/attempt-quiz`, attemptData
-       );
+      );
       // console.log("🚀 ~ handleSubmitQuiz ~ response:", response)
 
       // Handle the response
@@ -466,7 +466,7 @@ export default function QuizScreen() {
           pathname: "/(routes)/quiz/quiz.result",
           // pathname: "/(routes)/quiz/quiz.solution",
           // params: { quizId: quizId },
-          params: { attemptId: response.data._id,  quizId: quizId  },
+          params: { attemptId: response.data._id, quizId: quizId },
         })
 
       } else {
@@ -483,7 +483,7 @@ export default function QuizScreen() {
 
 
 
-   
+
 
   }
 
@@ -499,8 +499,8 @@ export default function QuizScreen() {
 
 
 
-     {/* TODO: exclude white view to close the modal Modal  */}
-        {visible && (
+      {/* TODO: exclude white view to close the modal Modal  */}
+      {visible && (
         <Modal
           transparent={true}
           onRequestClose={handleClose}
@@ -510,53 +510,53 @@ export default function QuizScreen() {
             onPress={handleClose}
           >
             <View style={{
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'transparent',
-    padding: 20,
-    transform: [{ translateX: visible ? 0 : Dimensions.get('window').width * 0.7 }],
-  }}>
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'transparent',
+              padding: 20,
+              transform: [{ translateX: visible ? 0 : Dimensions.get('window').width * 0.7 }],
+            }}>
 
-<View style={{width: 260, height:"88%", backgroundColor: 'white', alignSelf: 'flex-end', marginTop:100, padding: 12, marginRight:-16}}>
-  <Text style={{marginTop: 4, marginBottom: 4, fontSize: 16, position: 'absolute', right:16, top:12}}>X</Text>
-  <View style={{gap:8 , alignItems: 'flex-start', marginHorizontal: 16, marginTop: 16, marginBottom: 8}}>
-    <View style={{gap:8, flexDirection: 'row', alignItems: 'center'}}>
-      <View style={{backgroundColor: '#66cc00', height: 12, width: 12, borderRadius: 40}}  />
-      <Text>answered</Text>
-    </View>
-    <View style={{gap:8, flexDirection: 'row', alignItems: 'center'}}>
-      <View style={{backgroundColor: '#ccc', height: 12, width: 12, borderRadius: 40}} />
-      <Text>unAnswered</Text>
-    </View>
-  </View>
-  <FlatList
-  showsVerticalScrollIndicator={false}
-    data={questions}
-    numColumns={4} // 5 columns per row
-    renderItem={({item, index}) => (
-      <TouchableOpacity style={styles.menuItem} onPress={() => {
-        setCount(index)
-        setVisible(false)
-      }}>
-        
-        <View style={{
-          width: 40,
-          height: 40,
-          borderRadius: 20,
-          backgroundColor: answered.includes(index) ? '#66CC00' : '#ccc', // conditional color
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}>
-          <Text>{index + 1}</Text>
-        </View>
-      </TouchableOpacity>
-    )}
-    keyExtractor={(item, index) => index.toString()}
-  />
-</View>
+              <View style={{ width: 260, height: "88%", backgroundColor: 'white', alignSelf: 'flex-end', marginTop: 100, padding: 12, marginRight: -16 }}>
+                <Text style={{ marginTop: 4, marginBottom: 4, fontSize: 16, position: 'absolute', right: 16, top: 12 }}>X</Text>
+                <View style={{ gap: 8, alignItems: 'flex-start', marginHorizontal: 16, marginTop: 16, marginBottom: 8 }}>
+                  <View style={{ gap: 8, flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ backgroundColor: '#66cc00', height: 12, width: 12, borderRadius: 40 }} />
+                    <Text>answered</Text>
+                  </View>
+                  <View style={{ gap: 8, flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ backgroundColor: '#ccc', height: 12, width: 12, borderRadius: 40 }} />
+                    <Text>unAnswered</Text>
+                  </View>
+                </View>
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  data={questions}
+                  numColumns={4} // 5 columns per row
+                  renderItem={({ item, index }) => (
+                    <TouchableOpacity style={styles.menuItem} onPress={() => {
+                      setCount(index)
+                      setVisible(false)
+                    }}>
+
+                      <View style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 20,
+                        backgroundColor: answered.includes(index) ? '#66CC00' : '#ccc',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}>
+                        <Text>{index + 1}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              </View>
             </View>
           </TouchableOpacity>
         </Modal>
@@ -592,20 +592,20 @@ export default function QuizScreen() {
               onComplete={() => {
                 handleTimeup();
               }}
-              
+
             >
               {({ remainingTime }) => (
-          
+
                 <Text style={{
-                  fontSize:10
+                  fontSize: 10
                 }}> {secondsToHms(remainingTime)}
-                
-                {
-                scoreModalVisible && setRemainderTime(remainingTime)
-              }</Text>
-                
+
+                  {
+                    scoreModalVisible && setRemainderTime(remainingTime)
+                  }</Text>
+
               )}
-             
+
             </CountdownCircleTimer>
           </View>
 
@@ -662,16 +662,18 @@ export default function QuizScreen() {
       // showsVerticalScrollIndicator={false}
       >
 
-        <View style={{ backgroundColor: "white" , padding:5}}>
+        <View style={{ backgroundColor: "white", padding: 5 }}>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             {/* {left} */}
             <View style={{ flexDirection: "row", paddingVertical: 4 }}>
-              <Text style={{  fontSize: 18,
-                  color: "black",
-                  fontWeight: "800",
-                  alignSelf: "center" }}>{`Q.${count + 1}`}</Text>
+              <Text style={{
+                fontSize: 18,
+                color: "black",
+                fontWeight: "800",
+                alignSelf: "center"
+              }}>{`Q.${count + 1}`}</Text>
               <Text
                 style={{
                   fontSize: 18,
@@ -711,13 +713,13 @@ export default function QuizScreen() {
                 // }}
                 >
                   <TouchableOpacity style={styles.button} onPress={handleMenuPress}>
-        <Ionicons name="menu" size={24} color="black" />
-      </TouchableOpacity>
+                    <Ionicons name="menu" size={24} color="black" />
+                  </TouchableOpacity>
                 </Animated.View>
                 <TouchableOpacity onPress={handleSaveQuestion}>
                   <MaterialCommunityIcons
                     style={{ alignSelf: "center" }}
-                    name={ savedQuestions.includes(questions[count]._id ) ? "bookmark" : "bookmark-outline"}
+                    name={savedQuestions.includes(questions[count]._id) ? "bookmark" : "bookmark-outline"}
                     size={35}
                     color="#d7f776"
                   />
@@ -774,7 +776,7 @@ export default function QuizScreen() {
           >
 
             <ScrollView
-            showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               style={{
                 flex: 1,
                 // backgroundColor: 'pink',
@@ -801,8 +803,8 @@ export default function QuizScreen() {
 
 
 
-{/* Questions */}
-              <View style={{  marginTop: 12,marginBottom:30,paddingBottom:30, padding: 12,minHeight:200 }}>
+              {/* Questions */}
+              <View style={{ marginTop: 12, marginBottom: 30, paddingBottom: 30, padding: 12, minHeight: 200 }}>
                 {currentOptions.map((option, index) => (
                   <TouchableOpacity
                     style={{
@@ -863,114 +865,114 @@ export default function QuizScreen() {
 
 
 
-{/* {button} */}
-            
+              {/* {button} */}
+
             </ScrollView>
             <View
-                style={{
+              style={{
                 // position: "absolute",
                 // bottom: 0,
                 marginTop: 12,
-                marginBottom  :20,
-                  // flex: 1, justifyContent: 'flex-end', marginTop: 50
-                }}
-              >
-                {getResultClicked ? (
-                  <View
+                marginBottom: 20,
+                // flex: 1, justifyContent: 'flex-end', marginTop: 50
+              }}
+            >
+              {getResultClicked ? (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => setScoreModalVisible(true)}
+                    // disabled={true}
                     style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      backgroundColor: "#d1d5db",
+                      padding: 16,
+                      borderRadius: 20,
+                      width: "66%",
+                      flexDirection: "column",
                     }}
                   >
-                    <TouchableOpacity
-                      onPress={() => setScoreModalVisible(true)}
-                      // disabled={true}
+                    <Text
                       style={{
-                        backgroundColor: "#d1d5db",
-                        padding: 16,
-                        borderRadius: 20,
-                        width: "66%",
-                        flexDirection: "column",
+                        fontWeight: "bold",
+                        fontSize: 20,
+                        textAlign: "center",
                       }}
                     >
-                      <Text
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: 20,
-                          textAlign: "center",
-                        }}
-                      >
-                        Your score: {userScore}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          color: "green",
-                          textAlign: "right",
-                        }}
-                      >
-                        View Result
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <View
+                      Your score: {userScore}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        color: "green",
+                        textAlign: "right",
+                      }}
+                    >
+                      View Result
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View
+                  style={{
+                    marginTop: 12,
+                    width: "100%",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    // position: "absolute",
+                    // bottom: 20,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={handleSkip}
                     style={{
-                      marginTop: 12,
-                      width: "100%",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      // position: "absolute",
-                      // bottom: 20,
+                      backgroundColor: "white",
+                      paddingVertical: 12,
+                      paddingHorizontal: 18,
+                      borderRadius: 8,
+                      width: "auto",
                     }}
                   >
-                    <TouchableOpacity
-                      onPress={handleSkip}
+                    <Text
                       style={{
-                        backgroundColor: "white",
-                        paddingVertical: 12,
-                        paddingHorizontal: 18,
-                        borderRadius: 8,
-                        width: "auto",
+                        fontWeight: "800",
+                        fontSize: 14,
+                        color: "black",
+                        textAlign: "center",
                       }}
                     >
-                      <Text
-                        style={{
-                          fontWeight: "800",
-                          fontSize: 14,
-                          color: "black",
-                          textAlign: "center",
-                        }}
-                      >
-                        {" << PREVIOUS"}
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={handleSave}
+                      {" << PREVIOUS"}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleSave}
+                    style={{
+                      backgroundColor: "red",
+                      paddingVertical: 12,
+                      paddingHorizontal: 18,
+                      borderRadius: 8,
+                      width: "33%",
+                    }}
+                  >
+                    <Text
                       style={{
-                        backgroundColor: "red",
-                        paddingVertical: 12,
-                        paddingHorizontal: 18,
-                        borderRadius: 8,
-                        width: "33%",
+                        fontWeight: "800",
+                        fontSize: 14,
+                        color: "white",
+                        textAlign: "center",
                       }}
                     >
-                      <Text
-                        style={{
-                          fontWeight: "800",
-                          fontSize: 14,
-                          color: "white",
-                          textAlign: "center",
-                        }}
-                      >
-                        {count === questions.length - 1 ? "Get Result" : "NEXT >>"}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
+                      {count === questions.length - 1 ? "Get Result" : "NEXT >>"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
 
             {/* <ScrollView
               style={{
@@ -984,7 +986,7 @@ export default function QuizScreen() {
             > */}
 
 
-            
+
             {/* </ScrollView> */}
 
 
@@ -1045,12 +1047,12 @@ export default function QuizScreen() {
                   <Text style={{ fontSize: 18, color: "gray" }}>Time left</Text>
                 </View>
                 <Text style={{ fontSize: 18, color: "gray" }}>
-                 {secondsToHms(remainderTime)}
+                  {secondsToHms(remainderTime)}
                 </Text>
               </View>
-             
-            
-           
+
+
+
             </View>
             <Text style={{ alignSelf: "center" }}>
               You are submitting the quiz
@@ -1072,7 +1074,7 @@ export default function QuizScreen() {
                     borderWidth: 1,
                     padding: 7,
                     borderRadius: 4,
-                    justifyContent:'center'
+                    justifyContent: 'center'
                   }}
                   onPress={() => setScoreModalVisible(false)}
                 >
@@ -1098,7 +1100,7 @@ export default function QuizScreen() {
                 <Text
                   style={{
                     color: "white",
-                    fontWeight:'700',
+                    fontWeight: '700',
 
 
 
