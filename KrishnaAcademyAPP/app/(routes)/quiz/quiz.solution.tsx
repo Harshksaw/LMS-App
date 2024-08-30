@@ -92,16 +92,18 @@ const quizsolution = () => {
             return null;
           }
 
-          if (option.en == item.userAnswer) {
+          console.log("🚀 ~ {Object.keys ~ item.userAnswer:", item.userAnswer)
+          console.log("🚀 ~ {Object.keys ~ option.en:", option.en)
+          if (option.en == item.userAnswer || option.hin == item.userAnswer) {
             console.log("🚀 ~ renderItem", item.userAnswer)
             optionStyle = styles.userAnswerText;
           }
-          if (option.en == item.correctAnswer) {
+          if (option.en == item.correctAnswer.en  || option.hin == item.correctAnswer.hin) {
             console.log("🚀 ~ renderItem ~ key", key)
             optionStyle = styles.correctAnswerText;
           }
 
-          console.log(`Option ${key}: ${option.en} - ${optionStyle}`);
+          console.log(`Option `, item.isCorrect);
 
           if (item.isCorrect) {
             icon = <FontAwesome name="check" size={24} color="green" />;
@@ -127,7 +129,7 @@ const quizsolution = () => {
 
               </Text>
               <Text key={key} style={optionStyle}>
-              {`${index + 1}. ${option.hin}`}
+              {` ${option.hin}`}
 
               </Text>
 
