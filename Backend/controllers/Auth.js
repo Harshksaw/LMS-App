@@ -489,7 +489,7 @@ exports.sendPasswordotp = async (req, res) => {
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit OTP
     // user.otp = otp;
-    // user.otpExpires = Date.now() + 10 * 60 * 1000; // OTP expires in 10 minutes
+    user.otpExpires = Date.now() + 10 * 60 * 1000; // OTP expires in 10 minutes
     const otpPayload = { phoneNumber, otp };
     //creating... an entry in Database for OTP
     const otpBody = await OTP.create(otpPayload);
