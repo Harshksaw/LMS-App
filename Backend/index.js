@@ -1,8 +1,6 @@
 const express = require("express");
 const app = express();
-const { exec } = require('child_process');
-const https = require('https');
-const path = require('path');
+
 
 const userRoutes = require("./routes/User");
 const profileRoutes = require("./routes/Profile");
@@ -22,11 +20,11 @@ const { cloudinaryConnect } = require("./config/cloudinary");
 
 const dotenv = require("dotenv");
 
-const sslOptions = {
-  key: fs.readFileSync(path.resolve(__dirname, 'path/to/your/private.key')),
-  cert: fs.readFileSync(path.resolve(__dirname, 'path/to/your/certificate.crt')),
-  ca: fs.readFileSync(path.resolve(__dirname, 'path/to/your/ca_bundle.crt')) // Optional, if you have a CA bundle
-};
+// const sslOptions = {
+//   key: fs.readFileSync(path.resolve(__dirname, 'path/to/your/private.key')),
+//   cert: fs.readFileSync(path.resolve(__dirname, 'path/to/your/certificate.crt')),
+//   ca: fs.readFileSync(path.resolve(__dirname, 'path/to/your/ca_bundle.crt')) // Optional, if you have a CA bundle
+// };
 
 
 dotenv.config();
