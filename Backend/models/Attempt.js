@@ -65,7 +65,7 @@ attemptSchema.pre('save', function(next) {
             question.isCorrect = false;
         } else {
             question.unanswered = false;
-            question.isCorrect = question.userAnswer === question.correctAnswer;
+            question.isCorrect = question.userAnswer === question.correctAnswer.en || question.userAnswer === question.correctAnswer.hin;
         }
         if (question.isCorrect) {
             correctAnswers++;

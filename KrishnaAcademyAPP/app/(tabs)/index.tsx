@@ -182,6 +182,7 @@ const CustomDrawerContent = (props) => {
           label="About Us"
           onPress={() => {
             /* Add your share app logic here */
+            () => Linking.openURL("https://krishnaacademy.in/about-us")
           }}
           icon={({ focused, size }) => (
             <Ionicons
