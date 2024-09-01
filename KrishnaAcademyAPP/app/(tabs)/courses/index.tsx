@@ -5,8 +5,12 @@ import Header from '@/components/header/header';
 
 export default function Courses() {
   return (
-    <SafeAreaView>
-      {/* <Header /> */}
+    <SafeAreaView 
+    style={{
+      flex:1,
+    }}
+    >
+
 
     <CoursesScreen />
     </SafeAreaView>

@@ -6,11 +6,11 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+
 import Header from "@/components/header/header";
-import SearchInput from "@/components/common/search.input";
+
 import HomeBannerSlider from "@/components/home/home.banner.slider";
-import AllCourses from "@/components/courses/all.courses";
+
 import { useEffect, useState } from "react";
 
 import React from "react";
@@ -21,7 +21,7 @@ import { router } from "expo-router";
 import QuizScreen from "../search/quiz.screen";
 import { usePreventScreenCapture } from 'expo-screen-capture';
 export default function HomeScreen() {
-  // usePreventScreenCapture();
+  usePreventScreenCapture();
   const [videoUri, setVideoUri] = useState(null);
   const videoref = React.useRef(null);
 

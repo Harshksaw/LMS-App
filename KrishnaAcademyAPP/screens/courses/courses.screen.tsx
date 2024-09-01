@@ -26,6 +26,7 @@ const renderCources = ({ item }) => {
       backgroundColor: "#fff",
       borderWidth: 1,
       borderColor: "#d2cccc",
+      // paddingBottom: 150,
 
       // marginBottom: 10,
       minWidth: "45%",
@@ -35,6 +36,7 @@ const renderCources = ({ item }) => {
       flexDirection: "column",
       justifyContent: "space-between",
       alignItems: "center",
+
       gap:4,
 
 
@@ -206,7 +208,13 @@ const [loading , setLoading]= useState(true)
 
 
   return (
-    <View>
+    <View
+    style={{
+      // flex:1
+      // backgroundColor: "red",
+      // paddingBottom: 10,
+    }}
+    >
 
 
       {loading ? (
@@ -216,14 +224,15 @@ const [loading , setLoading]= useState(true)
       <View
       style={{
 
+
         // marginHorizontal: 10,
         // backgroundColor: "red",
 
         flexDirection: "column",
         justifyContent: "center",
         // alignItems: "center",
-        // padding: 10,
-        gap:10
+      
+        // gap:10
 
 
         // height: "100%",
@@ -244,9 +253,12 @@ const [loading , setLoading]= useState(true)
       </Text>
       
       <FlatList
+      style={{
+
+      }}
           data={quizzes}
         renderItem={renderCources}
-        contentContainerStyle={{ width: "100%", gap: 10 }}
+        contentContainerStyle={{ width: "100%", gap: 10,paddingBottom:100 }}
         columnWrapperStyle={{ gap: 10 }}
         showsVerticalScrollIndicator={false}
         numColumns={2}
@@ -254,6 +266,7 @@ const [loading , setLoading]= useState(true)
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+
       />
     </View>
       )}
