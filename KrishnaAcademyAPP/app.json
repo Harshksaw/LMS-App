@@ -2,7 +2,7 @@
   "expo": {
     "name": "Krishna Academy",
     "slug": "lms",
-    "version": "1.0.2",
+    "version": "3.0.2",
     "orientation": "portrait",
     "icon": "./assets/App.png",
     "scheme": "myapp",
@@ -20,7 +20,8 @@
         "foregroundImage": "./assets/icons/app.jpg",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.krishna.jythu"
+      "package": "com.krishna.jythu",
+      "versionCode": 3
     },
     "web": {
       "bundler": "metro",
