@@ -208,6 +208,7 @@ exports.signup = async (req, res) => {
         success: false,
         message:
           "Phone number, OTP, and device data are required for non-Admin users",
+          OtpMessage:"Phone number, OTP, and device data are required for non-Admin users"
       });
     }
 
@@ -222,6 +223,7 @@ exports.signup = async (req, res) => {
         return res.status(400).json({
           success: false,
           message: "The OTP is not valid",
+          OtpMessage: "Invalid Otp | Not matched"
         });
       }
     }
@@ -243,12 +245,14 @@ exports.signup = async (req, res) => {
       success: true,
       data: newUser,
       message: "User registered successfully",
+      OtpMessage : "Phone number, OTP, and device data are required for non-Admin users",
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
       success: false,
       message: "User cannot be registered. Please try again.",
+      OtpMessage:"cannot be registered. Please try after Sometime",
     });
   }
 };

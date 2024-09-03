@@ -114,7 +114,7 @@ export default function SignUpScreen() {
     if(response.status === 200){
       Toast.show("Sent Otp")
     }else{
-      Toast.show("Error in sending otp")
+      Toast.show("response.data.OtpMessage")
     }
     console.log("🚀 ~ handleOtp ~ response:", response)
 

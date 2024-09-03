@@ -82,7 +82,7 @@ export default function ProfileScreen() {
     getUser().then((user) => {
       setDob(new Date(user?.additionalDetails?.dob || new Date()));
       setState(user?.additionalDetails?.state || "");
-      setCity(user?.additionalDetails.city || "");
+      setCity(user?.additionalDetails?.city || "");
     });
   }, []);
 
@@ -273,7 +273,7 @@ export default function ProfileScreen() {
                 fontSize: 16,
                 paddingVertical: 3,
               }}
-              value={usercity}
+              value={usercity || "-"}
               editable={true}
               placeholder="City"
               onChangeText={updateCity}
