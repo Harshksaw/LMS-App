@@ -28,6 +28,7 @@ exports.sendotp = async (req, res) => {
       return res.status(401).json({
         sucess: false,
         message: "User Already Exists",
+        OtpMessage:"User Already Exists",
       });
     }
 
@@ -65,6 +66,7 @@ exports.sendotp = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "OTP Sended SUCCESSFULLY !!",
+      OtpMessage:"OTP Sended SUCCESSFULLY !!"
     });
   } catch (error) {
     console.log(error.message);

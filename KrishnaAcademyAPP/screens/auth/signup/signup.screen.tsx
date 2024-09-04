@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  Button,
 } from "react-native";
 import {
   AntDesign,
@@ -38,7 +39,11 @@ import { Toast } from "react-native-toast-notifications";
 import React from "react";
 import { collectDeviceData } from "@/utils/device.data";
 
+
 export default function SignUpScreen() {
+  const [otpSentCount, setOtpSentCount] = useState(0);
+  const [timer, setTimer] = useState(0);
+  const [isOtpButtonDisabled, setIsOtpButtonDisabled] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [buttonSpinner, setButtonSpinner] = useState(false);
   const [userInfo, setUserInfo] = useState({
@@ -53,11 +58,25 @@ export default function SignUpScreen() {
     password: "",
   });
 
+
   useEffect(() => {
-    if (userInfo.phoneNumber.length == 10) {
-      handleOtp();
+    let interval: NodeJS.Timeout;
+    if (timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    } else {
+      clearInterval(interval);
+      setIsOtpButtonDisabled(false);
     }
-  }, [userInfo.phoneNumber]);
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  // useEffect(() => {
+  //   if (userInfo.phoneNumber.length == 10) {
+  //     handleOtp();
+  //   }
+  // }, [userInfo.phoneNumber]);
 
   let [fontsLoaded, fontError] = useFonts({
     Raleway_600SemiBold,
@@ -104,29 +123,43 @@ export default function SignUpScreen() {
       setUserInfo({ ...userInfo, password: value });
     }
   };
+
   const handleOtp = async () => {
+    Toast.show("sending otp");
     console.log("called otp");
-   
+    if (otpSentCount >= 3) {
+      Toast.show('You can only request OTP 3 times in an hour.');
+      return;
+    }
+
     setButtonSpinner(true);
     const response = await axios.post(`${SERVER_URI}/api/v1/auth/sendotp`, {
-      phoneNumber : userInfo.phoneNumber,
+      phoneNumber: userInfo.phoneNumber,
     });
-    if(response.status === 200){
-      Toast.show("Sent Otp")
-    }else{
-      Toast.show("response.data.OtpMessage")
-    }
-    console.log("🚀 ~ handleOtp ~ response:", response)
+    if (response.status == 200) {
+      Toast.show(`${response.data.OtpMessage}`);
+      setOtpSentCount((prevCount) => prevCount + 1);
+      setButtonSpinner(false);
+      setTimer(120);
+      setIsOtpButtonDisabled(true);
 
-    // console.log(response);
-    setButtonSpinner(false);
+      setTimeout(() => {
+        setOtpSentCount(0);
+      }, 3600000);
+    } else {
+      Toast.show(`${response.data.OtpMessage}`)
+    }
   };
+
+
+
+
 
   const handleSignIn = async () => {
     setButtonSpinner(true);
 
     const deviceData = await collectDeviceData();
-    console.log("🚀 ~ handleSignIn ~ deviceData:",  deviceData);
+    console.log("🚀 ~ handleSignIn ~ deviceData:", deviceData);
     if (!deviceData) {
       Toast.show("Error in collecting device data", {
         type: "danger",
@@ -238,6 +271,12 @@ export default function SignUpScreen() {
             )}
 
             {/* //phone number */}
+
+            <View style={{
+              // backgroundColor:'red',
+              // flexDirection: "row",
+            }}>
+
             <TextInput
               style={[styles.input, { paddingLeft: 40 }]}
               keyboardType="number-pad"
@@ -246,7 +285,20 @@ export default function SignUpScreen() {
               onChangeText={(value) =>
                 setUserInfo({ ...userInfo, phoneNumber: value })
               }
-            />
+              />
+              <TouchableOpacity onPress={handleOtp} style={{
+    position: "absolute",
+    right: 40,
+    top: 20.8,
+    // marginTop: -2,
+  }} >
+
+  <Ionicons name="send-outline" size={20} color={"#000"} 
+  
+  />
+  </TouchableOpacity>
+              </View>
+            
             <Fontisto
               style={{ position: "absolute", left: 26, top: 17.8 }}
               name="email"
@@ -258,13 +310,28 @@ export default function SignUpScreen() {
                 <Entypo name="cross" size={18} color={"red"} />
               </View>
             )}
-            <TextInput
-              style={[styles.input, { paddingLeft: 40 }]}
-              keyboardType="default"
-              value={userInfo.otp}
-              placeholder="OTP"
-              onChangeText={(value) => setUserInfo({ ...userInfo, otp: value })}
-            />
+
+            <View style={{
+              // flexDirection: "row",
+              // justifyContent: "space-between",
+            }}>
+
+              <TextInput
+                style={[styles.input, { paddingLeft: 20, width: '92%', marginTop: 5 }]}
+                keyboardType="default"
+                value={userInfo.otp}
+                placeholder="OTP"
+                onChangeText={(value) => setUserInfo({ ...userInfo, otp: value })}
+              />
+            
+            </View>
+            <View>
+
+              {timer > 0 && (
+                <Text>{`Please wait ${Math.floor(timer / 60)}:${timer % 60} minutes before requesting another OTP.`}</Text>
+              )}
+
+            </View>
             <Fontisto
               style={{ position: "absolute", left: 26, top: 17.8 }}
               name="email"
@@ -308,7 +375,7 @@ export default function SignUpScreen() {
               />
             </View>
             {error.password && (
-              <View style={[commonStyles.errorContainer, { }]}>
+              <View style={[commonStyles.errorContainer, {}]}>
                 <Entypo name="cross" size={18} color={"red"} />
                 <Text style={{ color: "red", fontSize: 11, marginTop: -1 }}>
                   {error.password}
