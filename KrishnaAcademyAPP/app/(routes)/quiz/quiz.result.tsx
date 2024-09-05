@@ -1,5 +1,5 @@
 
-import  PieCharts  from "@/components/charts/PaiCharts";
+import PieCharts from "@/components/charts/PaiCharts";
 import { SERVER_URI } from "@/utils/uri";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
@@ -16,12 +16,12 @@ const calculateTotals = (data) => {
   const incorrectAnswers = data.filter(item => !item.isCorrect && !item.unanswered).length;
   const unansweredQuestions = data.filter(item => item.unanswered).length;
 
-  
+
   const arrayOfObjects = [
-    { color: 'red', bgColor: 'white' , title: 'total', alpha: totalQuestions },
-    { color: 'blue', bgColor: '#009FFF' , title: 'correct', alpha: correctAnswers },
-    { color: 'green', bgColor: '#FFA5BA' , title: 'incorrect', alpha: incorrectAnswers},
-    { color: 'green', bgColor: '#BDB2FA' , title: 'unanswered', alpha: unansweredQuestions},
+    { color: 'red', bgColor: 'white', title: 'total', alpha: totalQuestions },
+    { color: 'blue', bgColor: '#009FFF', title: 'correct', alpha: correctAnswers },
+    { color: 'green', bgColor: '#FFA5BA', title: 'incorrect', alpha: incorrectAnswers },
+    { color: 'green', bgColor: '#BDB2FA', title: 'unanswered', alpha: unansweredQuestions },
 
   ];
   return {
@@ -40,20 +40,20 @@ export default function quizresult() {
   const navigation = useNavigation();
   const router = useRouter()
 
-  useEffect(() => {  
-    const backAction = () => {  
+  useEffect(() => {
+    const backAction = () => {
       // TODO: HARSH
-      router.push('/(tabs)'); 
+      router.push('/(tabs)');
       return true; // Prevent the default back action  
-    };  
+    };
 
-    const backHandler = BackHandler.addEventListener(  
-      'hardwareBackPress',  
-      backAction  
-    );  
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
 
     return () => backHandler.remove(); // Clean up the event listener on unmount  
-  }, [navigation]);  
+  }, [navigation]);
 
 
   const [questions, setQuestions] = useState<any[]>([]);
@@ -62,13 +62,13 @@ export default function quizresult() {
 
     const fetchAttempts = async () => {
 
-      
+
       const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAttemptQuiz/${attemptId || "66bc38010eb297c55055ed4b"}`);
       const data = response.data
       console.log("🚀 ~ fetchAttempts ~ data:", data.data.questions)
       setQuestions(data.data.questions);
-      
-      
+
+
     }
 
     const leaderBoard = async () => {
@@ -87,44 +87,47 @@ export default function quizresult() {
 
   const { correctAnswers, incorrectAnswers, unansweredQuestions, arrayOfObjects } = calculateTotals(questions);
   console.log("🚀 ~ quizresult ~ unansweredQuestions:", unansweredQuestions)
-  
+
   const pieData = [
-    { value: correctAnswers,   color: '#009FFF', gradientCenterColor: '#006DFF', text: 'Correct',title:'Correct answers' },
-    { value: incorrectAnswers,   color: '#FFA5BA', gradientCenterColor: '#FF7F97', text: 'Incorrect' ,title:'Incorrect answers'},
-    { value: unansweredQuestions, color: '#BDB2FA', gradientCenterColor: '#8F80F3', text: 'Unanswered' , title:'unanswers' },
+    { value: correctAnswers, color: '#009FFF', gradientCenterColor: '#006DFF', text: 'Correct', title: 'Correct answers' },
+    { value: incorrectAnswers, color: '#FFA5BA', gradientCenterColor: '#FF7F97', text: 'Incorrect', title: 'Incorrect answers' },
+    { value: unansweredQuestions, color: '#BDB2FA', gradientCenterColor: '#8F80F3', text: 'Unanswered', title: 'unanswers' },
   ];
-  
+
   console.log("🚀 ~ quizresult ~ correctAnswers:", correctAnswers)
 
   return (
-    <ScrollView style={{ flex: 1, padding: 12, flexDirection:'column',
+    <ScrollView style={{
+      flex: 1, padding: 2, flexDirection: 'column',
       gap: 15, backgroundColor: 'lightred',
-      paddingTop: 10, paddingBottom: 100,
+      paddingTop: 20, paddingBottom: 0,
 
-     }}>
+    }}>
 
 
       <FlatList
         data={arrayOfObjects}
         numColumns={3}
         renderItem={({ item }) => (
-          <View style={{ flex: 1, alignItems: 'center', 
-          justifyContent: 'center', padding: 10, margin: 8, borderRadius: 14, height: 100, 
-          borderWidth: 1 , backgroundColor: item.bgColor, paddingBottom:10}}>
+          <View style={{
+            flex: 1, alignItems: 'center',
+            justifyContent: 'center', padding: 10, margin: 8, borderRadius: 14, height: 100,
+            borderWidth: 1, backgroundColor: item.bgColor, paddingBottom: 10
+          }}>
             <Text>{item.alpha}</Text>
             <Text>{item.title}</Text>
           </View>)}
         keyExtractor={(item) => item.title}
       />
 
-      <View style={{flex: 1, backgroundColor:'red' }}> 
-    <PieCharts pieData={pieData} />
+      <View style={{ flex: 1, backgroundColor: 'red', }}>
+        <PieCharts pieData={pieData} />
       </View>
-        
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', position: 'relative',
 
-        
-        bottom: 0, left: 0, right: 0, padding: 12, gap: 12 , marginBottom:20,}}>
+      <View style={{
+        flexDirection: 'row', justifyContent: 'space-between', gap: 12, marginBottom: 0, marginTop: 10,
+        paddingHorizontal: 10, paddingVertical: 10
+      }}>
         <TouchableOpacity
           style={{
             flex: 1,
@@ -133,25 +136,25 @@ export default function quizresult() {
             padding: 16,
             borderRadius: 4,
           }}
-          onPress={()=> {
-    router.push({
-      pathname: "/(routes)/quiz/quiz.details",
-      params: { quizId: quizId }
-    })
+          onPress={() => {
+            router.push({
+              pathname: "/(routes)/quiz/quiz.details",
+              params: { quizId: quizId }
+            })
           }}
         >
           <Text style={{
             textAlign: 'center',
-                color: "black",
+            color: "black",
           }}>Re-attempt Test</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={()=> {
+          onPress={() => {
 
             router.push({
               pathname: '/(routes)/quiz/quiz.solution',
-              params: {attemptId : attemptId}
+              params: { attemptId: attemptId }
             })
           }}
           style={{

@@ -95,7 +95,7 @@ const OrderModal = ({ isVisible, onClose, order }) => {
         <View style={styles.modalContent}>
           <Text style={styles.title}>Order ID: {order._id}</Text>
           <Text>User: {order.user.name}</Text>
-          <Text>Total Amount: ${order.totalAmount}</Text>
+          <Text>Total Amount: ₹{order.totalAmount}</Text>
           <Text>Order Date: {new Date(order.orderDate).toLocaleDateString()}</Text>
         
           
@@ -133,7 +133,7 @@ const OrderModal = ({ isVisible, onClose, order }) => {
         </View>
         <View>
 
-        <Text style={styles.text}>Total Amount: ${order.totalAmount}</Text>
+        <Text style={styles.text}>Total Amount: ₹ {order.totalAmount}</Text>
         <Text style={styles.text}>Order Date: {new Date(order.orderDate).toLocaleDateString()}</Text>
         </View>
 
