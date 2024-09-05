@@ -59,7 +59,7 @@ export default function OnBoardingScreen() {
         </View>
         <TouchableOpacity
           style={styles.buttonWrapper}
-          onPress={() => router.push("/(routes)/login")}
+          onPress={() => router.replace("/(routes)/login")}
         >
           <Text style={[styles.buttonText, { fontFamily: "Nunito_700Bold" }]}>
             Login
@@ -67,13 +67,12 @@ export default function OnBoardingScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.buttonWrapper}
-          onPress={() => router.push("/(routes)/sign-up")}
+          onPress={() => router.replace("/(routes)/sign-up")}
         >
           <Text style={[styles.buttonText, { fontFamily: "Nunito_700Bold" }]}>
-           Signup
+            Signup
           </Text>
         </TouchableOpacity>
-       
       </View>
     </LinearGradient>
   );

@@ -5,49 +5,87 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  BackHandler,
+  Alert,
 } from "react-native";
 
 import Header from "@/components/header/header";
-
+import { Toast } from "react-native-toast-notifications";
 import HomeBannerSlider from "@/components/home/home.banner.slider";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import React from "react";
-import { Video } from "expo-av";
-import StudyMaterialsList from "@/components/studymaterials";
-import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect, usePathname } from "expo-router";
 import QuizScreen from "../search/quiz.screen";
-import { usePreventScreenCapture } from 'expo-screen-capture';
+import { usePreventScreenCapture } from "expo-screen-capture";
 export default function HomeScreen() {
   usePreventScreenCapture();
-  const [videoUri, setVideoUri] = useState(null);
-  const videoref = React.useRef(null);
+  // const [videoUri, setVideoUri] = useState(null);
+  // const videoref = React.useRef(null);
 
+  const [backPressCount, setBackPressCount] = useState(0);
+  const backAction = () => {
+    if (backPressCount === 0) {
+      setBackPressCount((prevCount) => prevCount + 1);
+      setTimeout(() => setBackPressCount(0), 2000);
+      Toast.show("Press again to close the app");
+    } else if (backPressCount === 1) {
+      BackHandler.exitApp();
+    }
+    return true;
+  };
 
+  // const backAction = () => {
+  //   Alert.alert(
+  //     "Are You Sure?",
+  //     "You Want to Exit From the application?",
+  //     [
+  //       {
+  //         text: "Cancel",
+  //         onPress: () => {},
+  //         style: "cancel",
+  //       },
+  //       {
+  //         text: "OK",
+  //         onPress: () => BackHandler.exitApp(),
+  //       },
+  //     ],
+  //     {
+  //       cancelable: false,
+  //     }
+  //   );
+  //   return true;
+  // };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("djkfhdsjkhf");
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+      return () => backHandler.remove();
+    }, [backAction])
+  );
 
   return (
-   <SafeAreaView
-   style={{
-    flex: 1,
-    paddingTop: 50,
-    
-   }}
-   >
-
-   
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingTop: 50,
+      }}
+    >
       <Header />
       {/* <SearchInput homeScreen={true} /> */}
-      <ScrollView showsVerticalScrollIndicator={false}
-      style={
-        {
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{
           // flex:1,
           backgroundColor: "white",
-  
+
           // paddingHorizontal: 10,
-        }
-      }
+        }}
       >
         <HomeBannerSlider />
 
@@ -56,7 +94,13 @@ export default function HomeScreen() {
         {/* <StudyMaterialsList /> */}
 
         <View
-          style={{ height: 'auto', marginHorizontal: 0, paddingHorizontal: 0, gap:5, marginTop:5 }}
+          style={{
+            height: "auto",
+            marginHorizontal: 0,
+            paddingHorizontal: 0,
+            gap: 5,
+            marginTop: 5,
+          }}
         >
           <View
             style={{
@@ -64,7 +108,7 @@ export default function HomeScreen() {
               justifyContent: "space-between",
               alignItems: "center",
               marginBottom: 16,
-              marginHorizontal: 16
+              marginHorizontal: 16,
               // backgroundColor: "lightblue",
             }}
           >
@@ -95,11 +139,10 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
-                <QuizScreen/>
-
+          <QuizScreen />
         </View>
       </ScrollView>
-      </SafeAreaView>
+    </SafeAreaView>
   );
 }
 

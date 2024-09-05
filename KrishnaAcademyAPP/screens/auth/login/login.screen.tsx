@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import {
   Entypo,
-  FontAwesome,
   Fontisto,
   Ionicons,
   SimpleLineIcons,
@@ -43,9 +42,7 @@ export default function LoginScreen() {
   const [userInfo, setUserInfo] = useState({
     phoneNumber: 7991168445,
 
-
     password: "Password123*",
-
   });
   const [required, setRequired] = useState("");
   const [error, setError] = useState({
@@ -115,16 +112,15 @@ export default function LoginScreen() {
         deviceData: deviceData,
       })
       .then(async (res) => {
-        console.log(res.data, "--");
         await AsyncStorage.setItem("token", res.data.token);
         await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
 
-        router.push("/(tabs)");
+        router.dismissAll();
+        router.replace("/(tabs)");
       })
       .catch((error) => {
         setButtonSpinner(false);
-        console.log(error);
-        Toast.show("PhoneNumber  is not correct!", {
+        Toast.show("Wrong Phone Number or Password!", {
           type: "danger",
         });
       });
@@ -148,21 +144,21 @@ export default function LoginScreen() {
           Login to your existing account of LMS
         </Text>
         <View style={styles.inputContainer}>
-          <View style={{
-            flexDirection: "column",
-            justifyContent: "center",
-
-          }}>
-
-<TextInput
-  style={[styles.input, { paddingLeft: 40 }]}
-  keyboardType="phone-pad"
-  value={userInfo.phoneNumber}
-  placeholder="7991168445"
-  onChangeText={(value) =>
-    setUserInfo({ ...userInfo, phoneNumber: value })
-  }
-/>
+          <View
+            style={{
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <TextInput
+              style={[styles.input, { paddingLeft: 40 }]}
+              keyboardType="phone-pad"
+              value={userInfo.phoneNumber}
+              placeholder="7991168445"
+              onChangeText={(value) =>
+                setUserInfo({ ...userInfo, phoneNumber: value })
+              }
+            />
             <Fontisto
               style={{ position: "absolute", left: 26, top: 17.8 }}
               name="phone"
@@ -203,20 +199,16 @@ export default function LoginScreen() {
                 size={20}
                 color={"#A1A1A1"}
               />
-
-
-
-
             </View>
 
             <View
-             style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-             }}>
-
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
               {error.password && (
-                <View style={[commonStyles.errorContainer, {  }]}>
+                <View style={[commonStyles.errorContainer, {}]}>
                   <Entypo name="cross" size={18} color={"red"} />
                   <Text style={{ color: "red", fontSize: 11, marginTop: -1 }}>
                     {error.password}
@@ -224,9 +216,10 @@ export default function LoginScreen() {
                 </View>
               )}
 
-
               <TouchableOpacity
-                onPress={() => router.push("/(routes)/my-account/ChangePassword")}
+                onPress={() =>
+                  router.push("/(routes)/my-account/ChangePassword")
+                }
               >
                 <Text
                   style={[

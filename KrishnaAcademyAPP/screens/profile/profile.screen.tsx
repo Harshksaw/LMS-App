@@ -1,4 +1,3 @@
-import Loader from "@/components/loader/loader";
 import useUser from "@/hooks/auth/useUser";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -8,7 +7,6 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  ActivityIndicator,
 } from "react-native";
 import {
   useFonts,
@@ -73,16 +71,18 @@ async function getUser() {
 
 export default function ProfileScreen() {
   const { user } = useUser();
-  const [dob, setDob] = useState(new Date(user?.additionalDetails?.dob || new Date()));
-  const [state, setState] = useState(user?.additionalDetails?.state || "");
-  const [usercity, setCity] = useState(user?.additionalDetails.city || "");
+  const [dob, setDob] = useState(
+    new Date(user?.additionalDetails?.dob || new Date())
+  );
+  const [state, setState] = useState(user?.additionalDetails?.state ?? "");
+  const [usercity, setCity] = useState(user?.additionalDetails?.city ?? "");
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     getUser().then((user) => {
       setDob(new Date(user?.additionalDetails?.dob || new Date()));
-      setState(user?.additionalDetails?.state || "");
-      setCity(user?.additionalDetails?.city || "");
+      setState(user?.additionalDetails?.state ?? "");
+      setCity(user?.additionalDetails?.city ?? "");
     });
   }, []);
 
@@ -107,7 +107,9 @@ export default function ProfileScreen() {
   const logoutHandler = async () => {
     await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("refresh_token");
-    router.push("/(routes)/login");
+    // router.push("/(routes)/login");
+    router.dismissAll();
+    router.replace("/(routes)/login");
   };
 
   const updateCity = (newCity: string) => {

@@ -39,8 +39,6 @@ import { Toast } from "react-native-toast-notifications";
 import React from "react";
 import { collectDeviceData } from "@/utils/device.data";
 
-
-
 export default function SignUpScreen() {
   const [otpSentCount, setOtpSentCount] = useState(0);
   const [timer, setTimer] = useState(0);
@@ -58,7 +56,6 @@ export default function SignUpScreen() {
   const [error, setError] = useState({
     password: "",
   });
-
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -129,56 +126,65 @@ export default function SignUpScreen() {
     }
   };
   const handleOtp = async () => {
-    Toast.show("sending otp");
-    console.log("called otp");
+    if (userInfo.phoneNumber?.length !== 10) {
+      Toast.show("Please Correct Mobile Number", {
+        type: "danger",
+      });
+      return;
+    }
+
     if (otpSentCount >= 3) {
-      Toast.show('You can only request OTP 3 times in an hour.');
+      Toast.show("You can only request OTP 3 times in an hour.");
       return;
     }
 
     setButtonSpinner(true);
-    const response = await axios.post(`${SERVER_URI}/api/v1/auth/sendotp`, {
-      phoneNumber: userInfo.phoneNumber,
-    });
-    if (response.status == 200) {
-      Toast.show(`${response.data.OtpMessage}`);
-      setOtpSentCount((prevCount) => prevCount + 1);
-      setButtonSpinner(false);
-      setTimer(120);
-      setIsOtpButtonDisabled(true);
+    Toast.show("sending otp");
+    try {
+      const response = await axios.post(`${SERVER_URI}/api/v1/auth/sendotp`, {
+        phoneNumber: userInfo.phoneNumber,
+      });
 
-      setTimeout(() => {
-        setOtpSentCount(0);
-      }, 3600000);
-    } else {
-      Toast.show(`${response.data.OtpMessage}`)
+      if (response.status == 200) {
+        Toast.show(`${response.data.OtpMessage}`);
+        setOtpSentCount((prevCount) => prevCount + 1);
+        setButtonSpinner(false);
+        setTimer(120);
+        setIsOtpButtonDisabled(true);
+
+        setTimeout(() => {
+          setOtpSentCount(0);
+        }, 3600000);
+      } else {
+        Toast.show(`${response.data.OtpMessage}`);
+      }
+    } catch (error: any) {
+      Toast.show(
+        error?.response?.data?.OtpMessage + ", Please Sign-In to continue" ??
+          "something went wrong",
+        {
+          type: "danger",
+        }
+      );
+      setButtonSpinner(false);
     }
   };
 
-
-
-
-
   const handleSignup = async () => {
-    setButtonSpinner(true);
     const validationMessage = handlePasswordValidation(userInfo.password);
     if (validationMessage) {
-      Toast.show(validationMessage, { type: "danger", placement:'top' });
+      Toast.show(validationMessage, { type: "danger", placement: "top" });
       setButtonSpinner(false);
       return;
     }
-    Toast.show("Signup successful", { type: "success" });
+    setButtonSpinner(true);
 
     const deviceData = await collectDeviceData();
-    console.log("🚀 ~ handleSignup ~ deviceData:", deviceData);
     if (!deviceData) {
       Toast.show("Error in collecting device data", {
         type: "danger",
-
       });
     }
-
-
 
     try {
       const response = await axios.post(`${SERVER_URI}/api/v1/auth/signup`, {
@@ -191,9 +197,6 @@ export default function SignUpScreen() {
         deviceData: deviceData,
       });
 
-      console.log(response.data, "0000");
-
-
       Toast.show(response.data.message, {
         type: "success",
       });
@@ -205,15 +208,17 @@ export default function SignUpScreen() {
         otp: "",
       });
       setButtonSpinner(false);
-      router.push("/(routes)/login");
-
-
-
-    } catch (error) {
-      console.error(error); // Log the error for debugging
-      Toast.show(error?.message || "Signup failed. Please try again.", {
-        type: "error",
-      }); // Display an error message to the user
+      Toast.show("Signup successfull, Please sign-in to continue", {
+        type: "success",
+      });
+      router.replace("/(routes)/login");
+    } catch (error: any) {
+      Toast.show(
+        error?.response?.data?.message || "Signup failed. Please try again.",
+        {
+          type: "danger",
+        }
+      ); // Display an error message to the user
       setButtonSpinner(false); // Stop the button spinner if used
     }
   };
@@ -283,33 +288,36 @@ export default function SignUpScreen() {
 
             {/* //phone number */}
 
-            <View style={{
-              // backgroundColor:'red',
-              // flexDirection: "row",
-            }}>
-
-            <TextInput
-              style={[styles.input, { paddingLeft: 40 }]}
-              keyboardType="number-pad"
-              value={userInfo.phoneNumber}
-              placeholder="Phone Number"
-              onChangeText={(value) =>
-                setUserInfo({ ...userInfo, phoneNumber: value })
+            <View
+              style={
+                {
+                  // backgroundColor:'red',
+                  // flexDirection: "row",
+                }
               }
+            >
+              <TextInput
+                style={[styles.input, { paddingLeft: 40 }]}
+                keyboardType="number-pad"
+                value={userInfo.phoneNumber}
+                placeholder="Phone Number"
+                onChangeText={(value) =>
+                  setUserInfo({ ...userInfo, phoneNumber: value })
+                }
               />
-              <TouchableOpacity onPress={handleOtp} style={{
-    position: "absolute",
-    right: 40,
-    top: 20.8,
-    // marginTop: -2,
-  }} >
+              <TouchableOpacity
+                onPress={handleOtp}
+                style={{
+                  position: "absolute",
+                  right: 40,
+                  top: 20.8,
+                  // marginTop: -2,
+                }}
+              >
+                <Ionicons name="send-outline" size={20} color={"#000"} />
+              </TouchableOpacity>
+            </View>
 
-  <Ionicons name="send-outline" size={20} color={"#000"} 
-  
-  />
-  </TouchableOpacity>
-              </View>
-            
             <Fontisto
               style={{ position: "absolute", left: 26, top: 17.8 }}
               name="email"
@@ -322,26 +330,33 @@ export default function SignUpScreen() {
               </View>
             )}
 
-            <View style={{
-              // flexDirection: "row",
-              // justifyContent: "space-between",
-            }}>
-
+            <View
+              style={
+                {
+                  // flexDirection: "row",
+                  // justifyContent: "space-between",
+                }
+              }
+            >
               <TextInput
-                style={[styles.input, { paddingLeft: 20, width: '92%', marginTop: 5 }]}
+                style={[
+                  styles.input,
+                  { paddingLeft: 20, width: "92%", marginTop: 5 },
+                ]}
                 keyboardType="default"
                 value={userInfo.otp}
                 placeholder="OTP"
-                onChangeText={(value) => setUserInfo({ ...userInfo, otp: value })}
+                onChangeText={(value) =>
+                  setUserInfo({ ...userInfo, otp: value })
+                }
               />
-            
             </View>
             <View>
-
               {timer > 0 && (
-                <Text>{`Please wait ${Math.floor(timer / 60)}:${timer % 60} minutes before requesting another OTP.`}</Text>
+                <Text>{`Please wait ${Math.floor(timer / 60)}:${
+                  timer % 60
+                } minutes before requesting another OTP.`}</Text>
               )}
-
             </View>
             <Fontisto
               style={{ position: "absolute", left: 26, top: 17.8 }}
@@ -424,7 +439,10 @@ export default function SignUpScreen() {
               <Text style={{ fontSize: 18, fontFamily: "Raleway_600SemiBold" }}>
                 Already have an account?
               </Text>
-              <TouchableOpacity onPress={() => router.push("/(routes)/login")}>
+              {/* <TouchableOpacity onPress={() => router.push("/(routes)/login")}> */}
+              <TouchableOpacity
+                onPress={() => router.replace("/(routes)/login")}
+              >
                 <Text
                   style={{
                     fontSize: 18,

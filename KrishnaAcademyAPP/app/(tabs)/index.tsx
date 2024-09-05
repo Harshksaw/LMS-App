@@ -3,7 +3,6 @@ import HomeScreen from "@/screens/home/home.screen";
 import { Ionicons } from "@expo/vector-icons";
 import {
   createDrawerNavigator,
-
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
@@ -22,17 +21,17 @@ import { useNavigationState } from "@react-navigation/native";
 import { SERVER_URI } from "@/utils/uri";
 import axios from "axios";
 
-
-
-
 const UserInfoContent = () => {
   const { user, loading, setRefetch } = useUser();
 
   return (
-    <TouchableOpacity style={styles.userInfoWrapper}
-      onPress={() => router.push({
-        pathname:'/(tabs)/profile'
-      })}
+    <TouchableOpacity
+      style={styles.userInfoWrapper}
+      onPress={() =>
+        router.push({
+          pathname: "/(tabs)/profile",
+        })
+      }
     >
       <Image
         source={{
@@ -54,29 +53,20 @@ const CustomDrawerContent = (props) => {
   const [socialMedia, setSocialMedia] = React.useState([]);
 
   useEffect(() => {
-    const fetchBannerData = async () => 
-      {
-        const res = await axios.get(`${SERVER_URI}/api/v1/app/socialMedia`);
-        console.log(res.data, "---response.datwa");
-        // setBannerData(res.data.data);
-        setSocialMedia(res.data);
-      }
-      fetchBannerData();
-
+    const fetchBannerData = async () => {
+      const res = await axios.get(`${SERVER_URI}/api/v1/app/socialMedia`);
+      console.log(res.data, "---response.datwa");
+      // setBannerData(res.data.data);
+      setSocialMedia(res.data);
+    };
+    fetchBannerData();
   }, []);
-
 
   const navigation = useNavigation();
   return (
-    <DrawerContentScrollView {...props}
-   
-
-
-    >
+    <DrawerContentScrollView {...props}>
       {/* User Info Section */}
       <UserInfoContent />
-
-
 
       <View style={styles.section}>
         <Text style={styles.heading}>My Accounts</Text>
@@ -130,8 +120,7 @@ const CustomDrawerContent = (props) => {
         <DrawerItem
           label="My Purchases"
           onPress={() => {
-
-            router.navigate("/(routes)/my-account/OrderScreen")
+            router.navigate("/(routes)/my-account/OrderScreen");
           }}
           icon={({ focused, size }) => (
             <Ionicons
@@ -142,20 +131,23 @@ const CustomDrawerContent = (props) => {
           )}
         />
       </View>
-      <View style={
-        {
+      <View
+        style={{
           marginTop: 10,
           borderTopWidth: 1,
           borderTopColor: "#ccc",
           paddingTop: 5,
-        }
-      }>
+        }}
+      >
         <Text style={styles.heading}>Others</Text>
         <DrawerItem
           label="Share this App"
           onPress={() => {
             /* Add your share app logic here */
-            () => Linking.openURL("https://play.google.com/store/apps/details?id=com.krishna.jythu")
+            () =>
+              Linking.openURL(
+                "https://play.google.com/store/apps/details?id=com.krishna.jythu"
+              );
           }}
           icon={({ focused, size }) => (
             <Ionicons
@@ -170,7 +162,10 @@ const CustomDrawerContent = (props) => {
           label="Rate Others"
           onPress={() => {
             /* Add your rate others logic here */
-            () => Linking.openURL("https://play.google.com/store/apps/details?id=com.krishna.jythu")
+            () =>
+              Linking.openURL(
+                "https://play.google.com/store/apps/details?id=com.krishna.jythu"
+              );
           }}
           icon={({ focused, size }) => (
             <Ionicons
@@ -184,7 +179,7 @@ const CustomDrawerContent = (props) => {
           label="About Us"
           onPress={() => {
             /* Add your share app logic here */
-            () => Linking.openURL("https://krishnaacademy.in/about-us")
+            () => Linking.openURL("https://krishnaacademy.in/about-us");
           }}
           icon={({ focused, size }) => (
             <Ionicons
@@ -205,28 +200,36 @@ const CustomDrawerContent = (props) => {
           }}
         >
           <Ionicons
-          onPress={() => Linking.openURL("https://www.facebook.com/profile.php?id=61564100115978&mibextid=ZbWKwL")}
+            onPress={() =>
+              Linking.openURL(
+                "https://www.facebook.com/profile.php?id=61564100115978&mibextid=ZbWKwL"
+              )
+            }
             name="logo-facebook"
             size={24}
             color="blue"
             style={styles.icon}
           />
           <Ionicons
-          onPress={()=> Linking.openURL("https://t.me/+02hwcfZFdPE3MDVl")}
+            onPress={() => Linking.openURL("https://t.me/+02hwcfZFdPE3MDVl")}
             name="paper-plane-outline"
             size={24}
             color="skyblue"
             style={styles.icon}
           />
           <Ionicons
-          onPress={()=> Linking.openURL("https://www.instagram.com/krishnaacademy_/")}
+            onPress={() =>
+              Linking.openURL("https://www.instagram.com/krishnaacademy_/")
+            }
             name="logo-instagram"
             size={24}
             color="purple"
             style={styles.icon}
           />
           <Ionicons
-          onPress={()=> Linking.openURL("https://twitter.com/krishnaacademy_")}
+            onPress={() =>
+              Linking.openURL("https://twitter.com/krishnaacademy_")
+            }
             name="logo-twitter"
             size={24}
             color="blue"
@@ -234,22 +237,23 @@ const CustomDrawerContent = (props) => {
           />
         </View>
       </View>
-      <View style={[styles.section, {
-        marginBottom: 20,
-      }]}>
-
+      <View
+        style={[
+          styles.section,
+          {
+            marginBottom: 20,
+          },
+        ]}
+      >
         <DrawerItem
           label="Logout"
           onPress={() => {
+            AsyncStorage.removeItem("token");
+            AsyncStorage.removeItem("refresh_token");
+            // router.push("/(routes)/login");
+            router.dismissAll();
+            router.replace("/(routes)/login");
 
-              AsyncStorage.removeItem("token");
-              AsyncStorage.removeItem("refresh_token");
-              router.push("/(routes)/login",
-
-
-              )
-
-          
             /* Add your sign out logic here */
           }}
           icon={({ focused, size }) => (
@@ -257,7 +261,6 @@ const CustomDrawerContent = (props) => {
               name="log-out"
               size={size}
               color={focused ? "blue" : "black"}
-
             />
           )}
         />
@@ -267,13 +270,13 @@ const CustomDrawerContent = (props) => {
 };
 
 export default function index() {
-  const navigationState = useNavigationState(state => state);
+  const navigationState = useNavigationState((state) => state);
 
   useEffect(() => {
     const backAction = () => {
       const currentRoute = navigationState.routes[navigationState.index].name;
 
-      if (currentRoute == 'Home') {
+      if (currentRoute == "Home") {
         BackHandler.exitApp();
         return true;
       } else {
@@ -284,30 +287,23 @@ export default function index() {
       }
     };
 
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
 
     return () => backHandler.remove();
   }, [navigationState]);
 
-
-
-
   const Drawer = createDrawerNavigator();
 
   return (
-
     <Drawer.Navigator
-
-
       initialRouteName="Home" // Start with UserInfo screen
       drawerContent={(props) => <CustomDrawerContent {...props} />}
-
     >
-  
-
       <Drawer.Screen
         name="Home"
-
         component={HomeScreen} // Assuming you still want the Home screen
         options={{
           headerShown: false,
@@ -323,22 +319,16 @@ export default function index() {
         }}
       />
 
-<Drawer.Screen name="UserInfo" component={UserInfoContent}
-
-options={
-  {
-    headerShown: false,
-  }
-}
-/>
-
-
+      <Drawer.Screen
+        name="UserInfo"
+        component={UserInfoContent}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Drawer.Navigator>
-
   );
 }
-
-
 
 const styles = StyleSheet.create({
   section: {
