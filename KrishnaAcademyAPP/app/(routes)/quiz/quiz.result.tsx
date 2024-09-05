@@ -99,7 +99,7 @@ export default function quizresult() {
   return (
     <ScrollView style={{ flex: 1, padding: 12, flexDirection:'column',
       gap: 15, backgroundColor: 'lightred',
-      paddingTop: 50, paddingBottom: 50
+      paddingTop: 10, paddingBottom: 100,
 
      }}>
 
@@ -110,20 +110,21 @@ export default function quizresult() {
         renderItem={({ item }) => (
           <View style={{ flex: 1, alignItems: 'center', 
           justifyContent: 'center', padding: 10, margin: 8, borderRadius: 14, height: 100, 
-          borderWidth: 1 , backgroundColor: item.bgColor}}>
+          borderWidth: 1 , backgroundColor: item.bgColor, paddingBottom:10}}>
             <Text>{item.alpha}</Text>
             <Text>{item.title}</Text>
           </View>)}
         keyExtractor={(item) => item.title}
       />
 
-      <View style={{flex: 1, backgroundColor:'red'}}> 
+      <View style={{flex: 1, backgroundColor:'red' }}> 
     <PieCharts pieData={pieData} />
       </View>
         
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', position: 'relative', 
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', position: 'relative',
+
         
-        bottom: 0, left: 0, right: 0, padding: 12, gap: 12 }}>
+        bottom: 0, left: 0, right: 0, padding: 12, gap: 12 , marginBottom:20,}}>
         <TouchableOpacity
           style={{
             flex: 1,

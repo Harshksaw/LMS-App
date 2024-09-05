@@ -155,6 +155,7 @@ const CustomDrawerContent = (props) => {
           label="Share this App"
           onPress={() => {
             /* Add your share app logic here */
+            () => Linking.openURL("https://play.google.com/store/apps/details?id=com.krishna.jythu")
           }}
           icon={({ focused, size }) => (
             <Ionicons
@@ -169,6 +170,7 @@ const CustomDrawerContent = (props) => {
           label="Rate Others"
           onPress={() => {
             /* Add your rate others logic here */
+            () => Linking.openURL("https://play.google.com/store/apps/details?id=com.krishna.jythu")
           }}
           icon={({ focused, size }) => (
             <Ionicons

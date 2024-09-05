@@ -40,6 +40,7 @@ import React from "react";
 import { collectDeviceData } from "@/utils/device.data";
 
 
+
 export default function SignUpScreen() {
   const [otpSentCount, setOtpSentCount] = useState(0);
   const [timer, setTimer] = useState(0);
@@ -103,27 +104,30 @@ export default function SignUpScreen() {
         password: "Write at least one special character",
       });
       setUserInfo({ ...userInfo, password: "" });
+      return "Password must include at least one special character";
     } else if (!passwordOneNumber.test(password)) {
       setError({
         ...error,
         password: "Write at least one number",
       });
       setUserInfo({ ...userInfo, password: "" });
+      return "Password must include at least one number";
     } else if (!passwordSixValue.test(password)) {
       setError({
         ...error,
         password: "Write at least 6 characters",
       });
       setUserInfo({ ...userInfo, password: "" });
+      return "Password must be at least 6 characters long";
     } else {
       setError({
         ...error,
         password: "",
       });
-      setUserInfo({ ...userInfo, password: value });
+      setUserInfo({ ...userInfo, password });
+      return "";
     }
   };
-
   const handleOtp = async () => {
     Toast.show("sending otp");
     console.log("called otp");
@@ -155,11 +159,18 @@ export default function SignUpScreen() {
 
 
 
-  const handleSignIn = async () => {
+  const handleSignup = async () => {
     setButtonSpinner(true);
+    const validationMessage = handlePasswordValidation(userInfo.password);
+    if (validationMessage) {
+      Toast.show(validationMessage, { type: "danger", placement:'top' });
+      setButtonSpinner(false);
+      return;
+    }
+    Toast.show("Signup successful", { type: "success" });
 
     const deviceData = await collectDeviceData();
-    console.log("🚀 ~ handleSignIn ~ deviceData:", deviceData);
+    console.log("🚀 ~ handleSignup ~ deviceData:", deviceData);
     if (!deviceData) {
       Toast.show("Error in collecting device data", {
         type: "danger",
@@ -200,7 +211,7 @@ export default function SignUpScreen() {
 
     } catch (error) {
       console.error(error); // Log the error for debugging
-      Toast.show(error.message || "Signup failed. Please try again.", {
+      Toast.show(error?.message || "Signup failed. Please try again.", {
         type: "error",
       }); // Display an error message to the user
       setButtonSpinner(false); // Stop the button spinner if used
@@ -229,7 +240,7 @@ export default function SignUpScreen() {
               style={[styles.input, { paddingLeft: 40, marginBottom: -12 }]}
               keyboardType="default"
               value={userInfo.name}
-              placeholder="Harsh"
+              placeholder="Name"
               onChangeText={(value) =>
                 setUserInfo({ ...userInfo, name: value })
               }
@@ -253,7 +264,7 @@ export default function SignUpScreen() {
               style={[styles.input, { paddingLeft: 40 }]}
               keyboardType="email-address"
               value={userInfo.email}
-              placeholder="support@LMS.com"
+              placeholder="email@gmail.com"
               onChangeText={(value) =>
                 setUserInfo({ ...userInfo, email: value })
               }
@@ -281,7 +292,7 @@ export default function SignUpScreen() {
               style={[styles.input, { paddingLeft: 40 }]}
               keyboardType="number-pad"
               value={userInfo.phoneNumber}
-              placeholder="7991168445"
+              placeholder="Phone Number"
               onChangeText={(value) =>
                 setUserInfo({ ...userInfo, phoneNumber: value })
               }
@@ -391,7 +402,7 @@ export default function SignUpScreen() {
                 backgroundColor: "#ED3137",
                 marginTop: 15,
               }}
-              onPress={handleSignIn}
+              onPress={handleSignup}
             >
               {buttonSpinner ? (
                 <ActivityIndicator size="small" color={"white"} />

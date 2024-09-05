@@ -1,20 +1,20 @@
 import { PieChart } from "react-native-gifted-charts";
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
- const PieCharts = ({pieData, total}: any) => {
- console.log("🚀 ~ PieCharts ~ pieData:", pieData)
- console.log(pieData, 'piecharts ----------->')
-const answered = pieData[0].value
+const PieCharts = ({ pieData, total }: any) => {
+  console.log("🚀 ~ PieCharts ~ pieData:", pieData)
+  console.log(pieData, 'piecharts ----------->')
+  const answered = pieData[0].value
 
-const Incorrect = pieData[1].value
-const unanswered = pieData[2].value
-const pieDsata = [
-    {value: pieData[0].value, color: '#177AD5', text: '54%'},
-    {value:pieData[1].value, color: '#79D2DE', text: '30%'},
-    {value: pieData[2].value, color: '#ED6665', text: '26%'},
-];
-  const renderDot = (color : any) => {
+  const Incorrect = pieData[1].value
+  const unanswered = pieData[2].value
+  const pieDsata = [
+    { value: pieData[0].value, color: '#177AD5', text: '54%' },
+    { value: pieData[1].value, color: '#79D2DE', text: '30%' },
+    { value: pieData[2].value, color: '#ED6665', text: '26%' },
+  ];
+  const renderDot = (color: any) => {
     return (
       <View
         style={{
@@ -46,50 +46,64 @@ const pieDsata = [
             {renderDot('#79D2DE')}
             <Text style={styles.legendText}>Incorrect: {pieData[1].value}</Text>
           </View>
-        
+
         </View>
       </>
     );
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.chartContainer}>
-        <Text style={styles.title}>Performance</Text>
-        <View style={styles.chart}>
-          <PieChart
-            data={pieDsata}
-            donut
-            showGradient
-            sectionAutoFocus
-            radius={90}
-            innerRadius={60}
-            innerCircleColor={'#232B5D'}
-            centerLabelComponent={() => {
-              const answeredPercentage = ((answered / (answered + unanswered + Incorrect)) * 100).toFixed(2);
-    return (
-      <View style={styles.centerLabel}>
-        <Text style={styles.centerLabelText}>{answeredPercentage}%</Text>
-        <Text style={styles.centerLabelSubText}>Answered</Text>
-      </View>
-              );
-            }}
-          />
+    <ScrollView style={styles.scrollView}>
+
+      <View style={styles.container}>
+        <View style={styles.chartContainer}>
+          <Text style={styles.title}>Performance</Text>
+          <View style={styles.chart}>
+            <PieChart
+              data={pieDsata}
+              donut
+              showGradient
+              sectionAutoFocus
+              radius={90}
+              innerRadius={60}
+              innerCircleColor={'#232B5D'}
+              centerLabelComponent={() => {
+                const answeredPercentage = ((answered / (answered + unanswered + Incorrect)) * 100).toFixed(2);
+                return (
+                  <View style={styles.centerLabel}>
+                    <Text style={styles.centerLabelText}>{answeredPercentage}%</Text>
+                    <Text style={styles.centerLabelSubText}>Answered</Text>
+                  </View>
+                );
+              }}
+            />
+          </View>
+          {renderLegendComponent()}
+
         </View>
-        {renderLegendComponent()}
       </View>
-    </View>
+
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // paddingVertical: 100,
-    backgroundColor: '#f3f3f3',
+  scrollView: {
     // flex: 1,
+    // height: '150%',
+    backgroundColor: '#f3f3f3',
+
+    paddingBottom: 10,
+
+  },
+
+  container: {
+
+    paddingVertical: 10,
+    paddingBottom: 10,
   },
   chartContainer: {
-    margin: 20,
+    margin: 10,
     padding: 16,
     borderRadius: 20,
     backgroundColor: '#232B5D',

@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+    paddingBottom:40,
     backgroundColor: '#fff',
     flexDirection: 'column',
     gap:10,
@@ -77,10 +78,14 @@ const styles = StyleSheet.create({
   },
   description: {paddingHorizontal: 10,
     fontSize: 16,
+    lineHeight:24,
     marginBottom: 10,
   },
   content: {
     fontSize: 14,
+    lineHeight:20,
+    paddingHorizontal: 10,
+    height: '100%',
   },
 });
 
