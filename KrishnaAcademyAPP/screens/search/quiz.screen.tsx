@@ -1,30 +1,25 @@
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   FlatList,
   RefreshControl,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { SERVER_URI } from "@/utils/uri";
 import React from "react";
-import Header from "@/components/header/header";
-
 import { ImageBackground } from "expo-image";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Toast } from "react-native-toast-notifications";
 
+const { width, height } = Dimensions.get("screen");
 
-
-
-const renderCources = ({ item }) => {
-
-  if (item.status === 'Draft') {
+const renderCources = ({ item }: { item: any }) => {
+  if (item.status === "Draft") {
     return null;
   }
 
@@ -32,22 +27,20 @@ const renderCources = ({ item }) => {
     <TouchableOpacity
       style={{
         backgroundColor: "#fff",
-        borderWidth: 1,
+        borderWidth: 0.5,
+        elevation: 3,
         borderColor: "#d2cccc",
-
-        // marginBottom: 10,
         minWidth: "45%",
         maxWidth: "50%",
         marginHorizontal: 5,
-        height: 250, // Ensure this is set to control the size
+        // height: 250, // Ensure this is set to control the size
         flexDirection: "column",
         justifyContent: "space-between",
         alignItems: "center",
         gap: 4,
-
-
         padding: 4,
         borderRadius: 20,
+        width: width / 2 - 40,
         overflow: "hidden", // Ensure the borderRadius effect applies to children
       }}
       onPress={() =>
@@ -59,7 +52,6 @@ const renderCources = ({ item }) => {
     >
       <View
         style={{
-
           position: "absolute",
           top: 12,
           left: 12,
@@ -87,29 +79,25 @@ const renderCources = ({ item }) => {
         style={{
           backgroundColor: "#EBEBEB",
           borderRadius: 10,
-          width: 150,
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-          // marginBottom: 10,
           marginTop: 48,
+          marginBottom: 15,
         }}
       >
-
-
         {item.image ? (
           <ImageBackground
-          placeholder={{uri : "https://res.cloudinary.com/dbnnlqq5v/image/upload/v1723394487/images/gxtgjwsur0ledawfh8ll.jpg"}}
+            placeholder={{
+              uri: "https://res.cloudinary.com/dbnnlqq5v/image/upload/v1723394487/images/gxtgjwsur0ledawfh8ll.jpg",
+            }}
             source={{ uri: item?.image }}
             style={{
               width: 160,
-              height: 140, // Adjusted to fill the TouchableOpacity
-              // justifyContent: "center",
-
-              // alignItems: "center",
+              height: 140,
             }}
             imageStyle={{
-              paddingHorizontal:5,
+              paddingHorizontal: 5,
               borderRadius: 20, // Apply borderRadius to the image itself
             }}
           />
@@ -128,7 +116,7 @@ const renderCources = ({ item }) => {
       </View>
       <View
         style={{
-          backgroundColor: '#fff',
+          backgroundColor: "#fff",
           // marginTop: -15,
           width: "100%",
           flexDirection: "column",
@@ -147,30 +135,29 @@ const renderCources = ({ item }) => {
           }}
         >
           {item.bundleName}
-
         </Text>
-      
       </View>
     </TouchableOpacity>
-  )
-
-
-}
+  );
+};
 export default function QuizScreen() {
   const [quizzes, setQuizzes] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-
   useEffect(() => {
     const getQuizzes = async () => {
       try {
-        const res = await axios.get(`${SERVER_URI}/api/v1/bundle/course-bundle`);
+        const res = await axios.get(
+          `${SERVER_URI}/api/v1/bundle/course-bundle`
+        );
         setQuizzes(res.data.data);
-
-
-        // console.log(res.data.data,'get all quizes');
       } catch (error) {
-        Toast.show("Error fetching quizzes", { type: "danger", duration: 1000, placement: 'top', style: { marginTop: 30 } });
+        Toast.show("Error fetching quizzes", {
+          type: "danger",
+          duration: 1000,
+          placement: "top",
+          style: { marginTop: 30 },
+        });
         console.log(error);
       }
     };
@@ -179,59 +166,41 @@ export default function QuizScreen() {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    // Place your data fetching logic here
     setTimeout(() => {
-      // Simulate a network request
       setRefreshing(false);
     }, 2000);
   }, []);
 
   if (quizzes.length === 0) {
-    return <ActivityIndicator size="large" color="rgb(224, 21, 21)"
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        // backgroundColor:'red'
-      }}
-    />
+    return (
+      <ActivityIndicator
+        size="large"
+        color="rgb(224, 21, 21)"
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      />
+    );
   }
 
   return (
-
-
     <View
       style={{
         flex: 1,
-        // backgroundColor:'red',
         paddingBottom: 30,
-
       }}
     >
-
-
-
       <View
         style={{
-
-          // marginHorizontal: 10,
-          // backgroundColor: "red",
-
-          flexDirection: "column",
-          justifyContent: "center",
-          // alignItems: "center",
-          padding: 10,
-          gap: 10
-
-
-          // height: "100%",
+          paddingLeft: 15,
         }}
       >
-
         <FlatList
           data={quizzes}
           renderItem={renderCources}
-          contentContainerStyle={{ width: "100%", gap: 5 }}
+          contentContainerStyle={{ width: "100%", gap: 20 }}
           columnWrapperStyle={{ gap: 5 }}
           showsVerticalScrollIndicator={false}
           numColumns={2}
@@ -241,7 +210,6 @@ export default function QuizScreen() {
           }
         />
       </View>
-
     </View>
   );
 }

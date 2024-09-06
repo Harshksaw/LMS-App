@@ -121,12 +121,9 @@ export default function HomeScreen() {
               onPress={() =>
                 router.push({
                   pathname: "/(tabs)/courses",
-                  // params: { study: JSON.stringify(studyMaterials) },
                 })
               }
             >
-              {/* <Ionicons name="arrow-forward" size={30} color="gray" /> */}
-
               <Text
                 style={{
                   color: "red",

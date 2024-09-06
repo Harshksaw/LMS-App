@@ -70,12 +70,6 @@ export default function SignUpScreen() {
     return () => clearInterval(interval);
   }, [timer]);
 
-  // useEffect(() => {
-  //   if (userInfo.phoneNumber.length == 10) {
-  //     handleOtp();
-  //   }
-  // }, [userInfo.phoneNumber]);
-
   let [fontsLoaded, fontError] = useFonts({
     Raleway_600SemiBold,
     Raleway_700Bold,
@@ -173,7 +167,7 @@ export default function SignUpScreen() {
   const handleSignup = async () => {
     const validationMessage = handlePasswordValidation(userInfo.password);
     if (validationMessage) {
-      Toast.show(validationMessage, { type: "danger", placement: "top" });
+      Toast.show(validationMessage, { type: "danger" });
       setButtonSpinner(false);
       return;
     }

@@ -30,8 +30,7 @@ const PaymentPage = () => {
   const [coupon, setCoupon] = useState("");
 
   const [totalPrice, setTotalPrice] = useState(ItemData.price);
-  const [discount, setDiscount] = useState(0);
-  const [couponApplied, setCouponApplied] = useState(40);
+  const [couponApplied, setCouponApplied] = useState(0);
   const [Id, setItemId] = useState("");
 
   const createOrder = async ({ user, totalAmount, purchaseDetails }: any) => {
@@ -43,12 +42,6 @@ const PaymentPage = () => {
       price: totalPrice,
     };
     try {
-      console.log(
-        user,
-        items,
-        totalAmount,
-        purchaseDetails.razorpay_payment_id
-      );
       const response = await axios.post(
         `${SERVER_URI}/api/v1/payment/create-order`,
         {
@@ -58,7 +51,6 @@ const PaymentPage = () => {
           details: purchaseDetails.razorpay_payment_id,
         }
       );
-      console.log(response.data, "response.data");
       Toast.show("Order created successfully", {
         type: "success",
         duration: 5000,
@@ -72,10 +64,7 @@ const PaymentPage = () => {
   };
 
   const assignCourse = async ({ userId, courseId }: any) => {
-    console.log(userId, courseId, "assignCourse");
-
     try {
-      console.log(userId, courseId);
       const response = await axios.post(
         `${SERVER_URI}/api/v1/bundle/assignCourseBundle`,
         {
@@ -83,7 +72,6 @@ const PaymentPage = () => {
           courseId,
         }
       );
-      console.log(response.data, "response.data");
       Toast.show("Order added to users successfully", {
         type: "success",
         duration: 3000,
@@ -91,7 +79,6 @@ const PaymentPage = () => {
       });
       return response.data;
     } catch (error) {
-      console.error(error.message);
       // throw error;
     }
   };
@@ -109,25 +96,27 @@ const PaymentPage = () => {
 
   const applyCoupon = async () => {
     try {
-      const response = await axios.post(`${SERVER_URI}/api/v1/bundle/apply-coupon`, { coupon });
+      const response = await axios.post(
+        `${SERVER_URI}/api/v1/bundle/apply-coupon`,
+        { coupon }
+      );
       if (response.data.success) {
-        setDiscount(response.data.discount);
-        setTotalPrice(totalPrice - response.data.discount);
+        const amt = (totalPrice * response.data.discountPercentage) / 100;
+        setCouponApplied(amt);
+        setTotalPrice(totalPrice - amt);
+        Toast.show("Coupon Applied", { type: "success" });
       } else {
-        alert("Invalid coupon");
+        Toast.show("Invalid coupon", { type: "danger" });
       }
     } catch (error) {
-      console.error("Error applying coupon:", error);
-      alert("Error applying coupon");
+      Toast.show("Error applying coupon", { type: "danger" });
     }
   };
 
   // TODO razorpoay payment
 
   const handlePayment = async () => {
-
     if (!isUser.email || !isUser.phoneNumber || !isUser.name) {
-
       Toast.show("Incomplete user data");
     }
 
@@ -155,13 +144,9 @@ const PaymentPage = () => {
       theme: { color: "rgb(247, 70, 70)" },
     };
 
-
     const data = await RazorpayCheckout.open(options);
-    // console.log("🚀 ~ handlePayment ~ data:", data);
 
     if (data && data.razorpay_payment_id) {
-
-
       const orderData = await createOrder({
         user: isUser,
         totalAmount: ItemData.price,
@@ -175,9 +160,8 @@ const PaymentPage = () => {
         });
         if (assignbundle) {
           router.push({
-            pathname:"/(routes)/enrolled-courses"
-
-          })
+            pathname: "/(routes)/enrolled-courses",
+          });
           Toast.show("you have purchased the bundle", {
             type: "success",
             duration: 1000,
@@ -185,7 +169,6 @@ const PaymentPage = () => {
           });
         }
       }
-
 
       Toast.show("Payment successful", {
         type: "success",
@@ -234,11 +217,11 @@ const PaymentPage = () => {
       </View>
       {couponApplied > 0 && (
         <View style={styles.item}>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+          <Text style={{ fontSize: 16, fontWeight: "500", color: "green" }}>
             {"Coupon discount"}
           </Text>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-            ${couponApplied}
+          <Text style={{ fontSize: 16, fontWeight: "bold", color: "green" }}>
+            ₹{couponApplied}
           </Text>
         </View>
       )}
@@ -251,6 +234,7 @@ const PaymentPage = () => {
           onChangeText={setCoupon}
         />
         <TouchableOpacity
+          disabled={!coupon.length}
           style={{
             backgroundColor: "red",
             padding: 12,
@@ -260,6 +244,7 @@ const PaymentPage = () => {
             alignItems: "center",
             marginHorizontal: "auto",
             width: "80%",
+            opacity: !coupon.length ? 0.6 : 1,
           }}
           onPress={applyCoupon}
         >
@@ -269,7 +254,9 @@ const PaymentPage = () => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.total}>Total Price: ₹{totalPrice}</Text>
+      <Text style={styles.total}>
+        Total Price: ₹{totalPrice - couponApplied}
+      </Text>
 
       <TouchableOpacity
         style={{

@@ -40,9 +40,8 @@ export default function LoginScreen() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [buttonSpinner, setButtonSpinner] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    phoneNumber: 7991168445,
-
-    password: "Password123*",
+    phoneNumber: "",
+    password: "",
   });
   const [required, setRequired] = useState("");
   const [error, setError] = useState({
@@ -96,7 +95,20 @@ export default function LoginScreen() {
   };
 
   const handleSignIn = async () => {
+    if (userInfo.phoneNumber?.length !== 10) {
+      Toast.show("Enter Correct Phone Number", {
+        type: "danger",
+      });
+      return;
+    }
+    if (!userInfo.password) {
+      Toast.show("Enter Password", {
+        type: "danger",
+      });
+      return;
+    }
     setButtonSpinner(true);
+
     const deviceData = await collectDeviceData();
 
     if (!deviceData) {
