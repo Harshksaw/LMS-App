@@ -3,7 +3,7 @@
 //dev
 // export const SERVER_URI = "http://127.0.0.1:3000"
 
-export const SERVER_URI = "https://system.krishnaacademy.in"
+export const SERVER_URI = "https://system.krishnaacademy.in";
 // export const SERVER_URI = "https://lms-app-1-eoim.onrender.com"
 
 // export const SERVER_URI = "https://effective-space-cod-49xp5rgg7gphwg9-3000.app.github.dev"
