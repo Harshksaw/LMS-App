@@ -1,5 +1,6 @@
 const Coupon = require("../models/coupons");
 const moment = require("moment");
+const Logs = require("../models/Logs");
 
 exports.checkCoupon = async (req, res) => {
   const { coupon } = req.body;
@@ -9,14 +10,14 @@ exports.checkCoupon = async (req, res) => {
       return res.status(500).json({ message: "coupon code required" });
     }
     const couponData = await Coupon.findOne({ code: coupon });
-    const expired = moment(couponData.expiryDate).isBefore(new Date());
+    if (!couponData) {
+      return res.status(404).json({ message: "Invalid coupon*" });
+    }
+    const expired = moment(couponData?.expiryDate).isBefore(new Date());
     if (expired) {
       return res.status(404).json({ message: "Invalid coupon*" });
     }
 
-    if (!couponData) {
-      return res.status(404).json({ message: "Invalid coupon*" });
-    }
     res.status(200).json({ message: "coupon Applied", data: couponData });
   } catch (error) {
     throw error;
@@ -35,7 +36,10 @@ exports.createCoupon = async (req, res) => {
     if (!expiryDate) {
       return res.status(500).json({ message: "expiryDate required" });
     }
-    const couponData = await Coupon.create(req.body);
+    const couponData = await Coupon.create({
+      ...req.body,
+      code: code.toUpperCase(),
+    });
     if (!couponData) {
       return res.status(404).json({ message: "coupon not created*" });
     }
@@ -99,6 +103,39 @@ exports.deleteCoupon = async (req, res) => {
       data: couponData,
       success: true,
     });
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.logsCoupon = async (req, res) => {
+  // userId;
+  // action;
+  // description;
+  // title;
+  // courseId;
+  try {
+    const data = await Logs.create(req.body);
+    if (!data) {
+      return res.status(404).json({ message: "something went wrong*" });
+    }
+    res.status(200).json({
+      message: "log created!",
+      data: data,
+      success: true,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.getLogs = async (req, res) => {
+  try {
+    const data = await Logs.find(req.body);
+    if (!data) {
+      return res.status(404).json({ message: "logs not found*" });
+    }
+    res.status(200).json({ message: "logs fetched", data });
   } catch (error) {
     throw error;
   }
