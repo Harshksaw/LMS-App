@@ -104,6 +104,7 @@ const PaymentPage = () => {
       description: "",
       title: coupon,
       courseId: itemId,
+      logType: 1,
     };
     try {
       await axios.post(`${SERVER_URI}/api/v1/app/create-log`, param);
