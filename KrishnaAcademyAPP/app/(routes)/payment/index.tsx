@@ -7,6 +7,7 @@ import {
   FlatList,
   Button,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import axios from "axios";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -31,6 +32,7 @@ const PaymentPage = () => {
 
   const [totalPrice, setTotalPrice] = useState(ItemData.price);
   const [couponApplied, setCouponApplied] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [Id, setItemId] = useState("");
 
   const createOrder = async ({ user, totalAmount, purchaseDetails }: any) => {
@@ -51,6 +53,7 @@ const PaymentPage = () => {
           details: purchaseDetails.razorpay_payment_id,
         }
       );
+      createLog();
       Toast.show("Order created successfully", {
         type: "success",
         duration: 5000,
@@ -94,22 +97,41 @@ const PaymentPage = () => {
     getUser();
   }, []);
 
+  const createLog = async () => {
+    const param = {
+      userId: isUser._id,
+      action: `coupon applied with ${ItemData.bundleName} saved ₹${couponApplied}`,
+      description: "",
+      title: coupon,
+      courseId: itemId,
+    };
+    try {
+      await axios.post(`${SERVER_URI}/api/v1/app/create-log`, param);
+    } catch (error) {}
+  };
+
   const applyCoupon = async () => {
+    setLoading(true);
     try {
       const response = await axios.post(
-        `${SERVER_URI}/api/v1/bundle/apply-coupon`,
+        `${SERVER_URI}/api/v1/coupon/apply-coupon`,
         { coupon }
       );
-      if (response.data.success) {
-        const amt = (totalPrice * response.data.discountPercentage) / 100;
+
+      if (response.status === 200) {
+        const amt =
+          (totalPrice * response.data?.data?.discountPercentage) / 100;
         setCouponApplied(amt);
+
         setTotalPrice(totalPrice - amt);
         Toast.show("Coupon Applied", { type: "success" });
       } else {
         Toast.show("Invalid coupon", { type: "danger" });
       }
+      setLoading(false);
     } catch (error) {
-      Toast.show("Error applying coupon", { type: "danger" });
+      setLoading(false);
+      Toast.show("Invalid coupon*", { type: "danger" });
     }
   };
 
@@ -125,7 +147,6 @@ const PaymentPage = () => {
     }
 
     if (!itemPrice) {
-      console.log(itemPrice, "itemPrice");
       Toast.show("Item price not found");
     }
 
@@ -204,7 +225,7 @@ const PaymentPage = () => {
         <Text style={{ fontSize: 24, fontWeight: "bold" }}>
           {ItemData.bundleName}
         </Text>
-        <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+        <Text style={{ fontSize: 24, fontWeight: "bold", color: "#000" }}>
           {ItemData.shortDescription}
         </Text>
       </View>
@@ -220,43 +241,100 @@ const PaymentPage = () => {
           <Text style={{ fontSize: 16, fontWeight: "500", color: "green" }}>
             {"Coupon discount"}
           </Text>
-          <Text style={{ fontSize: 16, fontWeight: "bold", color: "green" }}>
-            ₹{couponApplied}
-          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              setCoupon("");
+              setTotalPrice(totalPrice + couponApplied);
+              setCouponApplied(0);
+            }}
+            style={{
+              flexDirection: "row",
+              gap: 8,
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: "bold", color: "green" }}>
+              ₹{couponApplied}
+            </Text>
+            <View
+              style={{
+                backgroundColor: "green",
+                borderRadius: 50,
+                width: 20,
+                height: 20,
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: "#fff",
+                  textAlign: "center",
+                }}
+              >
+                x
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )}
+      {!couponApplied && (
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginVertical: 10,
+          }}
+        >
+          <TextInput
+            style={{
+              ...styles.input,
+              width: "80%",
+              borderRadius: 0,
+              marginBottom: 0,
+              borderTopLeftRadius: 10,
+              borderBottomLeftRadius: 10,
+              height: 50,
+              borderRightWidth: 0,
+              fontSize: 25,
+              // textTransform: "uppercase",
+              color: couponApplied ? "green" : "#000",
+            }}
+            editable={!couponApplied}
+            placeholder="Enter coupon code"
+            value={coupon}
+            onChangeText={setCoupon}
+          />
+          <TouchableOpacity
+            disabled={!coupon.length || loading}
+            style={{
+              backgroundColor: couponApplied ? "green" : "red",
+              height: 50,
+              justifyContent: "center",
+              borderRadius: 0,
+              borderWidth: 1,
+              borderColor: "#ccc",
+              alignSelf: "center",
+              borderTopEndRadius: 10,
+              borderBottomEndRadius: 10,
+              elevation: 4,
+              alignItems: "center",
+              marginHorizontal: "auto",
+              width: "20%",
+              opacity: !coupon.length ? 0.6 : 1,
+            }}
+            onPress={applyCoupon}
+          >
+            {loading ? (
+              <ActivityIndicator color="#fff" size={"large"} />
+            ) : (
+              <Text style={{ color: "white", textAlign: "center" }}>
+                {couponApplied ? "Remove" : "Apply"}
+              </Text>
+            )}
+          </TouchableOpacity>
         </View>
       )}
 
-      <View>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter coupon code"
-          value={coupon}
-          onChangeText={setCoupon}
-        />
-        <TouchableOpacity
-          disabled={!coupon.length}
-          style={{
-            backgroundColor: "red",
-            padding: 12,
-            borderRadius: 24,
-            alignSelf: "center",
-            elevation: 4,
-            alignItems: "center",
-            marginHorizontal: "auto",
-            width: "80%",
-            opacity: !coupon.length ? 0.6 : 1,
-          }}
-          onPress={applyCoupon}
-        >
-          <Text style={{ color: "white", textAlign: "center" }}>
-            Apply coupon
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.total}>
-        Total Price: ₹{totalPrice - couponApplied}
-      </Text>
+      <Text style={styles.total}>Total Price: ₹{totalPrice}</Text>
 
       <TouchableOpacity
         style={{
