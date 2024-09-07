@@ -1,84 +1,83 @@
-import { useEffect, useState } from "react"
-import { VscSignOut } from "react-icons/vsc"
-import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { VscSignOut } from "react-icons/vsc";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import { sidebarLinks } from '../../../../data/dashboard-links';
-import { logout } from "../../../services/operations/authAPI"
-import ConfirmationModal from "../../common/ConfirmationModal"
-import SidebarLink from "./SidebarLink"
-import Loading from '../../common/Loading';
+import { sidebarLinks } from "../../../../data/dashboard-links";
+import { logout } from "../../../services/operations/authAPI";
+import ConfirmationModal from "../../common/ConfirmationModal";
+import SidebarLink from "./SidebarLink";
+import Loading from "../../common/Loading";
 
-import { HiMenuAlt1 } from 'react-icons/hi'
-import { IoMdClose } from 'react-icons/io'
+import { HiMenuAlt1 } from "react-icons/hi";
+import { IoMdClose } from "react-icons/io";
 
 import { setOpenSideMenu, setScreenSize } from "../../../slices/sidebarSlice";
 
-
-
-
 export default function Sidebar() {
-  const { user, loading: profileLoading } = useSelector((state) => state.profile)
-  const { loading: authLoading } = useSelector((state) => state.auth)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const { user, loading: profileLoading } = useSelector(
+    (state) => state.profile
+  );
+  const { loading: authLoading } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // to keep track of confirmation modal
-  const [confirmationModal, setConfirmationModal] = useState(null)
-
+  const [confirmationModal, setConfirmationModal] = useState(null);
 
   // handle side bar menu - open / close
   // const [openSideMenu, setOpenSideMenu] = useState(false)
   // const [screenSize, setScreenSize] = useState(undefined)
 
-  const { openSideMenu, screenSize } = useSelector((state) => state.sidebar)
+  const { openSideMenu, screenSize } = useSelector((state) => state.sidebar);
   // console.log('openSideMenu ======' , openSideMenu)
   // console.log('screenSize ======' , screenSize)
 
   useEffect(() => {
-    const handleResize = () => dispatch(setScreenSize(window.innerWidth))
+    const handleResize = () => dispatch(setScreenSize(window.innerWidth));
 
-    window.addEventListener('resize', handleResize)
-    handleResize()
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // If screen size is small then close the side bar
   useEffect(() => {
     if (screenSize <= 640) {
-      dispatch(setOpenSideMenu(false))
-    }
-    else dispatch(setOpenSideMenu(true))
-  }, [screenSize])
-
-
+      dispatch(setOpenSideMenu(false));
+    } else dispatch(setOpenSideMenu(true));
+  }, [screenSize]);
 
   if (profileLoading || authLoading) {
     return (
       <div className="grid h-[calc(100vh-3.5rem)] min-w-[220px] items-center border-r-[1px] border-r-richblack-700 bg-richblack-800">
         <Loading />
       </div>
-    )
+    );
   }
 
   return (
     <>
-      <div className="sm:hidden text-white absolute left-4 top-3 cursor-pointer " onClick={() => dispatch(setOpenSideMenu(!openSideMenu))}>
-        {
-          openSideMenu ? <IoMdClose size={33} /> : <HiMenuAlt1 size={33} />
-        }
+      <div
+        className="sm:hidden text-white absolute left-4 top-3 cursor-pointer "
+        onClick={() => dispatch(setOpenSideMenu(!openSideMenu))}
+      >
+        {openSideMenu ? <IoMdClose size={33} /> : <HiMenuAlt1 size={33} />}
       </div>
 
-
-      {
-        openSideMenu &&
-        <div className="flex h-[calc(100vh-3.5rem)] min-w-[100px] flex-col border-r-[1px] border-r-richblack-700 bg-richblack-800 py-10 ">
+      {openSideMenu && (
+        <div className="flex h-[calc(100vh-5rem)] overflow-y-auto min-w-[100px] flex-col border-r-[1px] border-r-richblack-700 bg-richblack-800">
           <div className="flex flex-col mt-6">
             {sidebarLinks.map((link) => {
-              if (link.type && user?.accountType !== link.type) return null
+              if (link.type && user?.accountType !== link.type) return null;
               return (
-                <SidebarLink key={link.id} link={link} iconName={link.icon} setOpenSideMenu={setOpenSideMenu} />
-              )
+                <SidebarLink
+                  key={link.id}
+                  link={link}
+                  iconName={link.icon}
+                  setOpenSideMenu={setOpenSideMenu}
+                />
+              );
             })}
           </div>
 
@@ -109,13 +108,11 @@ export default function Sidebar() {
                 <span>Logout</span>
               </div> */}
             </button>
-
           </div>
         </div>
-      }
-
+      )}
 
       {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
     </>
-  )
+  );
 }

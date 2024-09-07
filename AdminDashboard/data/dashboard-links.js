@@ -106,4 +106,11 @@ export const sidebarLinks = [
     type: ACCOUNT_TYPE.ADMIN,
     icon: "VscAdd",
   },
+  {
+    id: 16,
+    name: "Coupons",
+    path: "/dashboard/coupons",
+    type: ACCOUNT_TYPE.ADMIN,
+    icon: "VscAdd",
+  },
 ];

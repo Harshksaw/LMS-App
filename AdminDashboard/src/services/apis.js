@@ -2,16 +2,14 @@
 // export const BASE_URL = "https://lrzp6q-4000.csb.app"
 // export const BASE_URL = "https://stunning-robot-5gqr475wv5xpc576-3000.app.github.dev"
 
+// local
+// export const BASE_URL = "http://127.0.0.1:4000"
 
-// local     
-// export const BASE_URL = "http://127.0.0.1:3000"
-
-///prod url  
-export const BASE_URL = "https://system.krishnaacademy.in"
+///prod url
+export const BASE_URL = "https://system.krishnaacademy.in";
 
 // development
 // export const BASE_URL = "http://51.79.158.121:3000"
-
 
 export const endpoints = {
   SENDOTP_API: BASE_URL + "api/v1/auth/sendotp",

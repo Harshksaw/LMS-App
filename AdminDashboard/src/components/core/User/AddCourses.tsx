@@ -5,19 +5,16 @@ import axios from "axios";
 
 import Button from "@mui/material/Button";
 import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { Box } from "@mui/material";
-
 
 export default function AddCourses({ id }: { id: string }) {
   const [courses, setCourses] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [courseBundle, setCourseBundle] = useState([]);
-const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
@@ -79,23 +76,23 @@ const [refresh, setRefresh] = useState(false);
 
     toast.loading("Adding course to user");
     const addCourseToUser = async () => {
-      const res = await axios.post(`${BASE_URL}/api/v1/bundle/assignCourseBundle`, {
-        userId: id,
-        courseId: selectedCourseId,
-
-      })
-      if(res.status == 200){
-        toast.success("Course added to user")
+      const res = await axios.post(
+        `${BASE_URL}/api/v1/bundle/assignCourseBundle`,
+        {
+          userId: id,
+          courseId: selectedCourseId,
+        }
+      );
+      if (res.status == 200) {
+        toast.success("Course added to user");
       }
-    }
+    };
 
     toast.dismiss();
     addCourseToUser();
     setRefresh(!refresh);
     toast.success("Course added to user");
     handleCloseModal();
-
-
   };
 
   return (
@@ -114,18 +111,22 @@ const [refresh, setRefresh] = useState(false);
         onClose={handleCloseModal}
         className="flex justify-center items-center"
       >
-        <Box sx={{ p: 4, bgcolor: "gray", margin: "auto", width: 800, gap: 30 }}>
+        <Box
+          sx={{ p: 4, bgcolor: "gray", margin: "auto", width: 800, gap: 30 }}
+        >
           <Typography variant="h6" component="h2">
             Courses You wan too add
           </Typography>
-
 
           <ul className="bg-richblack-25 w-full self-center gap-5 my-5">
             {courseBundle.map((course) => (
               <li
                 key={course._id}
-                className={`p-2 border-b-2 border-gray-200 text-center cursor-pointer ${selectedCourseId === course._id ? 'bg-blue-500 text-white' : ''
-                  }`}
+                className={`p-2 border-b-2 border-gray-200 text-center cursor-pointer ${
+                  selectedCourseId === course._id
+                    ? "bg-blue-500 text-white"
+                    : ""
+                }`}
                 onClick={() => handleCourseSelect(course._id)}
               >
                 {course.bundleName}
@@ -133,7 +134,6 @@ const [refresh, setRefresh] = useState(false);
             ))}
           </ul>
           <div className="flex justify-between items-center">
-
             <Button
               variant="contained"
               color="secondary"
@@ -151,9 +151,7 @@ const [refresh, setRefresh] = useState(false);
                 </button>
               )}
             </div>
-
           </div>
-
         </Box>
       </Modal>
     </div>

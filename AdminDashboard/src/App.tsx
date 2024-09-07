@@ -47,6 +47,7 @@ import EditBlog from "./pages/EditBlog";
 import ViewBlog from "./pages/ViewBlog";
 import GetMaterials from "./pages/getMaterials";
 import OrderScreen from "./pages/payment";
+import Coupons from "./components/core/Dashboard/Coupons";
 
 function App() {
   const { user } = useSelector((state) => state.profile);
@@ -200,6 +201,7 @@ function App() {
               <Route path="/dashboard/app-config" element={<AppConfig />} />
               <Route path="dashboard/payments" element={<OrderScreen />} />
               <Route path="dashboard/Settings" element={<Settings />} />
+              <Route path="dashboard/coupons" element={<Coupons />} />
             </>
           )}
         </Route>
