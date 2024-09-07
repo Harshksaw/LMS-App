@@ -4,13 +4,16 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
 import moment from "moment/moment";
-import { FaPen, FaTrashAlt } from "react-icons/fa";
+import { FaPen, FaTrashAlt, FaList, FaPlus } from "react-icons/fa";
 import { BASE_URL } from "../../../services/apis";
+import { useNavigate } from "react-router-dom";
 
 const url = `${BASE_URL}/api/v1/coupon/`;
 
 const Coupons = () => {
+  const navigate = useNavigate();
   const [coupons, setCoupons] = useState([]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selected, setSelected] = useState(false);
@@ -110,12 +113,21 @@ const Coupons = () => {
         <h1 className="text-4xl font-medium text-richblack-5 font-boogaloo text-center lg:text-left">
           Coupons
         </h1>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="w-12 h-12 bg-white rounded-full"
-        >
-          Add
-        </button>
+        <div className="flex gap-5">
+          <button
+            // onClick={showLogs}
+            onClick={() => navigate("/dashboard/logs")}
+            className="bg-white flex px-3 py-1 gap-2 justify-center items-center"
+          >
+            <FaList /> Logs
+          </button>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-white flex px-3 py-1 gap-2 justify-center items-center"
+          >
+            <FaPlus /> Add
+          </button>
+        </div>
       </div>
       {coupons.length ? (
         <div className="flex items-center flex-wrap gap-[4rem]">

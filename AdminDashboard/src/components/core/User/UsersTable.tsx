@@ -2,21 +2,15 @@ import { useState } from "react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import { Link } from "react-router-dom";
-import { HiClock } from "react-icons/hi";
 import { FaCheck } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
-
-import toast from "react-hot-toast";
 import React from "react";
 
 const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const options = { year: "numeric", month: "long", day: "numeric" };
   return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
 export default function UserTable({ users, loading, setLoading }) {
-  const [confirmationModal, setConfirmationModal] = useState(null);
-
   // Loading Skeleton
   const skItem = () => {
     return (
@@ -48,7 +42,7 @@ export default function UserTable({ users, loading, setLoading }) {
             <Th className="text-left text-sm font-medium uppercase text-richblack-100">
               Email
             </Th>
-           
+
             <Th className="text-left text-sm font-medium uppercase text-richblack-100">
               Phone Number
             </Th>
@@ -92,7 +86,7 @@ export default function UserTable({ users, loading, setLoading }) {
                   <Td className="text-left text-sm font-medium text-richblack-100">
                     {user.email}
                   </Td>
-                  
+
                   <Td className="text-left text-sm font-medium text-richblack-100">
                     {user.phoneNumber}
                   </Td>

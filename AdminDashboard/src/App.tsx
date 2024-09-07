@@ -39,6 +39,7 @@ import MyQuiz from "./pages/MyQuiz";
 import CourseBundleForm from "./components/core/Dashboard/BundleCourse/CreateBundle";
 import EditQuiz from "./pages/EditQuiz";
 import AllUsers from "./pages/AllUsers";
+import Logs from "./pages/Logs";
 import User from "./components/core/User/User";
 import React from "react";
 import Blog from "./pages/Blog";
@@ -177,6 +178,7 @@ function App() {
               <Route path="dashboard/my-profile" element={<MyProfile />} />
               <Route path="dashboard/add-quiz" element={<AddQuiz />} />
               <Route path="dashboard/all-users" element={<AllUsers />} />
+              <Route path="dashboard/logs" element={<Logs />} />
               <Route path="dashboard/user/:id" element={<User />} />
               <Route path="dashboard/my-quiz" element={<MyQuiz />} />
               <Route path="/dashboard/quiz/:id" element={<EditQuiz />} />
