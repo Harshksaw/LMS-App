@@ -1,5 +1,6 @@
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import React, { useEffect, useState } from "react";
+import { BASE_URL } from "../services/apis";
 
 const logUrl = `${BASE_URL}/api/v1/app/logs`;
 // const logUrl = `http://127.0.0.1:4000/api/v1/app/logs`;
