@@ -1,11 +1,8 @@
-import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
-import { Link } from "react-router-dom";
-import { FaCheck } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 
-// const logUrl = `${BASE_URL}/api/v1/app/logs`;
-const logUrl = `http://127.0.0.1:4000/api/v1/app/logs`;
+const logUrl = `${BASE_URL}/api/v1/app/logs`;
+// const logUrl = `http://127.0.0.1:4000/api/v1/app/logs`;
 
 const Logs = () => {
   const [loading, setLoading] = useState(false);
