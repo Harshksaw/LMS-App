@@ -131,7 +131,7 @@ exports.logsCoupon = async (req, res) => {
 
 exports.getLogs = async (req, res) => {
   try {
-    const data = await Logs.find(req.body);
+    const data = await Logs.find(req.body).populate(["userId", "courseId"]);
     if (!data) {
       return res.status(404).json({ message: "logs not found*" });
     }
