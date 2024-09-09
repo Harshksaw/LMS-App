@@ -106,7 +106,7 @@ const ChangePasswordScreen = () => {
       <Text style={styles.title}>Change Password</Text>
       <TextInput
         style={styles.input}
-        placeholder="Phone Number"
+        placeholder="Enter Your Mobile Number"
         keyboardType="phone-pad"
         value={phoneNumber}
         onChangeText={setPhoneNumber}
@@ -122,7 +122,7 @@ const ChangePasswordScreen = () => {
           />
           <TextInput
             style={styles.input}
-            placeholder="New Password"
+            placeholder="Enter Your Password"
             secureTextEntry
             value={newPassword}
             onChangeText={setNewPassword}

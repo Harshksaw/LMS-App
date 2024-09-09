@@ -78,6 +78,8 @@ export default function ProfileScreen() {
   const [usercity, setCity] = useState(user?.additionalDetails?.city ?? "");
   const [show, setShow] = useState(false);
 
+  // console.log(user._id);
+
   useEffect(() => {
     getUser().then((user) => {
       setDob(new Date(user?.additionalDetails?.dob || new Date()));
@@ -119,7 +121,8 @@ export default function ProfileScreen() {
   const handleUpdateAdditionalDetails = async () => {
     try {
       const user = await AsyncStorage.getItem("user");
-      const isUser = JSON.parse(user);
+      const isUser = JSON.parse(user as any);
+
       const response = await axios.post(
         `${SERVER_URI}/api/v1/auth/additionalDetails/${isUser._id}`,
         {
@@ -133,6 +136,8 @@ export default function ProfileScreen() {
         Toast.show("Additional details updated successfully!", {
           type: "success",
         });
+
+        await AsyncStorage.setItem("user", JSON.stringify(response.data.user));
       } else {
         alert("Error updating additional details!");
       }

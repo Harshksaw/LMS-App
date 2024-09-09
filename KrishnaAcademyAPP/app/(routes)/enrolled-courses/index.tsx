@@ -1,4 +1,3 @@
-
 import useUser from "@/hooks/auth/useUser";
 import { SERVER_URI } from "@/utils/uri";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,15 +7,20 @@ import { ImageBackground } from "expo-image";
 import { router } from "expo-router";
 
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, RefreshControl, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Toast } from "react-native-toast-notifications";
 
-
 const renderCources = ({ item }) => {
-
-  if (item.status === 'Draft') {
+  if (item.status === "Draft") {
     return null;
   }
 
@@ -37,7 +41,6 @@ const renderCources = ({ item }) => {
         alignItems: "center",
         gap: 4,
 
-
         padding: 4,
         borderRadius: 20,
         overflow: "hidden", // Ensure the borderRadius effect applies to children
@@ -49,8 +52,6 @@ const renderCources = ({ item }) => {
         })
       }
     >
- 
-
       <View
         style={{
           // backgroundColor: "#EBEBEB",
@@ -64,11 +65,11 @@ const renderCources = ({ item }) => {
           marginTop: 28,
         }}
       >
-
-
         {item.image ? (
           <ImageBackground
-          placeholder={{uri :"https://res.cloudinary.com/dbnnlqq5v/image/upload/v1723394487/images/gxtgjwsur0ledawfh8ll.jpg"}}
+            placeholder={{
+              uri: "https://res.cloudinary.com/dbnnlqq5v/image/upload/v1723394487/images/gxtgjwsur0ledawfh8ll.jpg",
+            }}
             source={{ uri: item.image }}
             style={{
               width: 150,
@@ -78,7 +79,7 @@ const renderCources = ({ item }) => {
               // alignItems: "center",
             }}
             imageStyle={{
-              paddingHorizontal:5,
+              paddingHorizontal: 5,
               borderRadius: 20, // Apply borderRadius to the image itself
             }}
           />
@@ -97,13 +98,13 @@ const renderCources = ({ item }) => {
       </View>
       <View
         style={{
-          backgroundColor: '#fff',
+          backgroundColor: "#fff",
           marginTop: -10,
           width: "100%",
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          paddingHorizontal:10,
+          paddingHorizontal: 10,
         }}
       >
         <Text
@@ -116,43 +117,37 @@ const renderCources = ({ item }) => {
           }}
         >
           {item.bundleName}
-
         </Text>
-      
       </View>
     </TouchableOpacity>
-  )
-
-
-}
+  );
+};
 export default function index() {
-
-
   const [quizzes, setQuizzes] = useState([]);
 
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true); 
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getQuizzes = async () => {
       const user = await AsyncStorage.getItem("user");
       const isUser = JSON.parse(user);
-      console.log(isUser._id, "------------------");
       try {
-        const res = await axios.get(`${SERVER_URI}/api/v1/Auth/getAllUserCourses/${isUser._id}`);
-        console.log(res.data.data.courses, "------------------153");
+        const res = await axios.get(
+          `${SERVER_URI}/api/v1/Auth/getAllUserCourses/${isUser._id}`
+        );
         setQuizzes(res.data.data.courses);
 
-        if(res.status === 200){
+        if (res.status === 200) {
           setLoading(false);
         }
-
-
-        // console.log(res.data.data,'get all quizes');
       } catch (error) {
-        Toast.show("Error fetching quizzes", { type: "danger", duration: 1000, placement: 'top', style: { marginTop: 30 } });
-        console.log(error);
+        Toast.show("Error fetching quizzes", {
+          type: "danger",
+          duration: 1000,
+          placement: "top",
+          style: { marginTop: 30 },
+        });
       }
     };
     getQuizzes();
@@ -168,19 +163,17 @@ export default function index() {
   }, []);
 
   return (
-    <SafeAreaView 
-    style={{
- 
-      flexDirection: "column",
-      justifyContent: "center",
-      // alignItems: "center",
-      padding: 10,
-      gap: 10
-    }}
+    <SafeAreaView
+      style={{
+        flexDirection: "column",
+        justifyContent: "center",
+        // alignItems: "center",
+        padding: 10,
+        gap: 10,
+      }}
     >
-
-      { loading ? (
-        <ActivityIndicator color={"red"}  />
+      {loading ? (
+        <ActivityIndicator color={"red"} />
       ) : (
         <FlatList
           data={quizzes}
@@ -194,10 +187,7 @@ export default function index() {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         />
-        
       )}
-     
-
     </SafeAreaView>
   );
 }

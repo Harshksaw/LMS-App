@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   BackHandler,
-  Alert,
 } from "react-native";
 
 import Header from "@/components/header/header";
@@ -16,7 +15,7 @@ import HomeBannerSlider from "@/components/home/home.banner.slider";
 import { useState } from "react";
 
 import React from "react";
-import { router, useFocusEffect, usePathname } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import QuizScreen from "../search/quiz.screen";
 import { usePreventScreenCapture } from "expo-screen-capture";
 export default function HomeScreen() {
@@ -60,7 +59,6 @@ export default function HomeScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log("djkfhdsjkhf");
       const backHandler = BackHandler.addEventListener(
         "hardwareBackPress",
         backAction

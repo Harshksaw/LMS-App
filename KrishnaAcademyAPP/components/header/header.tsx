@@ -1,4 +1,4 @@
-import { Modal,View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Raleway_700Bold } from "@expo-google-fonts/raleway";
 import { useFonts } from "expo-font";
 import useUser from "@/hooks/auth/useUser";
@@ -35,12 +35,11 @@ export default function Header() {
 
   return (
     <View style={styles.headerWrapper}>
-       <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+      <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
         <Ionicons name="menu" size={30} color="#000000" />
       </TouchableOpacity>
 
-   
-        {/* <TouchableOpacity onPress={() => router.push("/(routes)/notifications")}>
+      {/* <TouchableOpacity onPress={() => router.push("/(routes)/notifications")}>
       </TouchableOpacity> */}
       <View>
         <Image
@@ -58,99 +57,97 @@ export default function Header() {
       </View>
 
       <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        gap:5
-      }}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 5,
+        }}
       >
-
-           <View>
-      <TouchableOpacity onPress={() => setModalVisible(true)}>
-        <Image
-          source={require('../../assets/icons/customer-service.png')}
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 10
-          }}
-        />
-      </TouchableOpacity>
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-         
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)'
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: '#fff',
-              padding: 30,
-              borderRadius: 10
-            }}
+        <View>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Image
+              source={require("../../assets/icons/customer-service.png")}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 10,
+              }}
+            />
+          </TouchableOpacity>
+          <Modal
+            visible={modalVisible}
+            transparent={true}
+            onRequestClose={() => setModalVisible(false)}
           >
-            <Text style={{ fontSize: 25, fontWeight: 'bold',marginBottom:10 }}>
-              Contact Us
-            </Text>
             <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginVertical: 12,
-                gap:5,
-              }}
-            >
-             <Text style={{ fontSize: 16 }}>
-                Email: {' '}
-              </Text>
-              <Text style={{ fontSize: 16 }}>
-              Help@krishnaacademy.com
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginVertical: 12,
-                gap:5,
-              }}
-            >
-             <Text style={{ fontSize: 16 }}>
-                Phone: {' '}
-              </Text>
-              <Text style={{ fontSize: 16 }}>
-              +91 91169 72045
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#e73131',
-                padding: 10,
-                borderRadius: 15,
-                marginTop:16
-              }}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={{ fontSize: 16, color: '#fff', textAlign: 'center' }}>
-                Close
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    </View>
+                flex: 1,
+                justifyContent: "center",
 
-      <TouchableOpacity onPress={() => router.push("/(routes)/my-account/DailyUpdateScreen")}>
-        <FontAwesome name="bell" size={35} color="rgb(242, 221, 126)" />
-      </TouchableOpacity>
+                alignItems: "center",
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  padding: 30,
+                  borderRadius: 10,
+                }}
+              >
+                <Text
+                  style={{ fontSize: 25, fontWeight: "bold", marginBottom: 10 }}
+                >
+                  Contact Us
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginVertical: 12,
+                    gap: 5,
+                  }}
+                >
+                  <Text style={{ fontSize: 16 }}>Email: </Text>
+                  <Text style={{ fontSize: 16 }}>Help@krishnaacademy.com</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginVertical: 12,
+                    gap: 5,
+                  }}
+                >
+                  <Text style={{ fontSize: 16 }}>Phone: </Text>
+                  <Text style={{ fontSize: 16 }}>+91 91169 72045</Text>
+                </View>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#e73131",
+                    padding: 10,
+                    borderRadius: 15,
+                    marginTop: 16,
+                  }}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text
+                    style={{ fontSize: 16, color: "#fff", textAlign: "center" }}
+                  >
+                    Close
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
+
+        <TouchableOpacity
+          // onPress={() => router.push("/(routes)/my-account/DailyUpdateScreen")}
+          onPress={() => router.push("/(routes)/my-account/daily.updates")}
+        >
+          <FontAwesome name="bell" size={35} color="rgb(242, 221, 126)" />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -176,7 +173,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal:10,
+    paddingHorizontal: 10,
   },
 
   image: {

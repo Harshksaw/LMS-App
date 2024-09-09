@@ -5,10 +5,11 @@ import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItem,
-  DrawerItemList,
 } from "@react-navigation/drawer";
 
-import { BackHandler, Linking, StyleSheet, Text, View } from "react-native";
+import { BackHandler, Share, StyleSheet, Text, View } from "react-native";
+
+import * as Linking from "expo-linking";
 
 import React, { useEffect } from "react";
 import { Image } from "expo-image";
@@ -22,7 +23,7 @@ import { SERVER_URI } from "@/utils/uri";
 import axios from "axios";
 
 const UserInfoContent = () => {
-  const { user, loading, setRefetch } = useUser();
+  const { user } = useUser();
 
   return (
     <TouchableOpacity
@@ -61,6 +62,17 @@ const CustomDrawerContent = (props) => {
     };
     fetchBannerData();
   }, []);
+
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message:
+          "Krishna Academy App: https://play.google.com/store/apps/details?id=com.krishna.jythu",
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
 
   const navigation = useNavigation();
   return (
@@ -142,13 +154,7 @@ const CustomDrawerContent = (props) => {
         <Text style={styles.heading}>Others</Text>
         <DrawerItem
           label="Share this App"
-          onPress={() => {
-            /* Add your share app logic here */
-            () =>
-              Linking.openURL(
-                "https://play.google.com/store/apps/details?id=com.krishna.jythu"
-              );
-          }}
+          onPress={onShare}
           icon={({ focused, size }) => (
             <Ionicons
               name="share-social"
@@ -160,13 +166,11 @@ const CustomDrawerContent = (props) => {
 
         <DrawerItem
           label="Rate Others"
-          onPress={() => {
-            /* Add your rate others logic here */
-            () =>
-              Linking.openURL(
-                "https://play.google.com/store/apps/details?id=com.krishna.jythu"
-              );
-          }}
+          onPress={() =>
+            Linking.openURL(
+              "https://play.google.com/store/apps/details?id=com.krishna.jythu"
+            )
+          }
           icon={({ focused, size }) => (
             <Ionicons
               name="star"
@@ -177,10 +181,7 @@ const CustomDrawerContent = (props) => {
         />
         <DrawerItem
           label="About Us"
-          onPress={() => {
-            /* Add your share app logic here */
-            () => Linking.openURL("https://krishnaacademy.in/about-us");
-          }}
+          onPress={() => Linking.openURL("https://krishnaacademy.in/about-us")}
           icon={({ focused, size }) => (
             <Ionicons
               name="people"

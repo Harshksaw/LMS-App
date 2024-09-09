@@ -370,7 +370,7 @@ export default function SignUpScreen() {
                 keyboardType="default"
                 secureTextEntry={!isPasswordVisible}
                 defaultValue=""
-                placeholder="********"
+                placeholder="Enter Your Password"
                 onChangeText={handlePasswordValidation}
               />
               <TouchableOpacity

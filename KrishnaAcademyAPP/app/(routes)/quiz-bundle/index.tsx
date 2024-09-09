@@ -33,61 +33,60 @@ const ContentsScreen = ({ data, bundleId, userId, handleBought }) => {
   useEffect(() => {
     const checkPurchaseStatus = async () => {
       try {
-        console.log("🚀 ~ checkPurchaseStatus ~ userId:", userId,
-          bundleId);
-        const response = await axios.post(`${SERVER_URI}/api/v1/bundle/checkPurchase`,
+        const response = await axios.post(
+          `${SERVER_URI}/api/v1/bundle/checkPurchase`,
           {
             userId,
-            courseId : bundleId,
+            courseId: bundleId,
           }
         );
-        console.log("🚀 ~ checkPurchaseStatus ~ response:", response);
-        if (response.status === 200 ) {
-
-          setLoading(false)
+        if (response.status === 200) {
+          setLoading(false);
           handleBought();
           setIsBundleBought(true);
         }
-        
+
         // setIsBundleBought(response.data.isPurchased);
       } catch (error) {
-        if (error.response.status === 404 ) {
-
-          setLoading(false)
+        if (error.response.status === 404) {
+          setLoading(false);
           setIsBundleBought(false);
+        } else if (error.response.status === 400) {
+          console.error("Bad request: Missing required parameters");
+        } else if (error.response.status === 401) {
+          console.error("User not authenticated");
+        } else if (error.response.status === 403) {
+          console.error("User not authorized to access this course bundle");
+        } else {
+          console.error("Unexpected status code:", error.response.status);
         }
-       else if (error.response.status === 400) {
-        console.error("Bad request: Missing required parameters");
-      } else if (error.response.status === 401) {
-        console.error("User not authenticated");
-      } else if (error.response.status === 403) {
-        console.error("User not authorized to access this course bundle");
-      } else {
-        console.error("Unexpected status code:", error.response.status);
-      }
         console.error("Error checking purchase status:", error);
-      } 
+      }
     };
 
     checkPurchaseStatus();
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" 
-    style={{
-      flex :1,
-      justifyContent:'center',
-      alignItems:'center'
-    }}
-    />;
+    return (
+      <ActivityIndicator
+        size="large"
+        color="#0000ff"
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      />
+    );
   }
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.tabContent}>
-          <QuizCard quizzes={data.quizes} />
-          {/* //TODO  */}
-          {/* <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} /> */}
+        <QuizCard quizzes={data.quizes} />
+        {/* //TODO  */}
+        {/* <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} /> */}
       </ScrollView>
       {!isBundleBought && (
         <View
@@ -112,7 +111,7 @@ const ContentsScreen = ({ data, bundleId, userId, handleBought }) => {
               textAlign: "center",
             }}
           >
-              Unlock
+            Unlock
           </Text>
           {/* <Button title="Go to Payment" onPress={() => navigate('/(routes)/payment', { itemId: bundleId })} /> */}
         </View>
@@ -152,33 +151,26 @@ export default function index() {
   const [BundleData, setBundleData] = React.useState([]);
 
   const [isBought, setIsBought] = React.useState(false);
-  const handleBought = ()=>{
+  const handleBought = () => {
     setIsBought(true);
-  }
+  };
 
   const route = useRoute();
-  const { BundleId } = route.params;
+  const { BundleId } = route.params as any;
 
   const [userId, setUserId] = React.useState("");
 
-
   const fetchBundleData = async () => {
     const userI = await AsyncStorage.getItem("user");
-    const isUser = JSON.parse(userI);
+    const isUser = JSON.parse(userI as any);
     setUserId(isUser._id);
     try {
       const response = await axios.get(
         `${SERVER_URI}/api/v1/bundle/course-bundle/${BundleId}`
       );
-      console.log(
-        "🚀 ~ file: index.tsx ~ line 136 ~ fetchBundleData ~ response",
-        response.data.data
-      );
 
       if (response.status === 200 && response.data.success) {
         setBundleData(response.data.data);
-      } else {
-        console.error("Failed to fetch bundle data");
       }
     } catch (error) {
       console.error(error);
@@ -199,7 +191,6 @@ export default function index() {
       },
     });
   };
-  // console.log("🚀 ~ index ~ BundleData:", BundleData)
 
   return (
     <SafeAreaView
@@ -218,7 +209,6 @@ export default function index() {
 
           flexDirection: "column",
           justifyContent: "flex-start",
-
         }}
       >
         <Image source={{ uri: BundleData?.image }} style={styles.image} />
@@ -272,13 +262,7 @@ export default function index() {
             component={() => <VideoScreen data={[]} />}
           />
         </Tab.Navigator>
-        {
-          !isBought && (
-            <Button title="Enroll Now" onPress={onPress} />
-          )
-
-        }
-
+        {!isBought && <Button title="Enroll Now" onPress={onPress} />}
       </View>
     </SafeAreaView>
   );

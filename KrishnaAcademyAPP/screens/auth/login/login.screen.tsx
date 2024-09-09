@@ -166,7 +166,7 @@ export default function LoginScreen() {
               style={[styles.input, { paddingLeft: 40 }]}
               keyboardType="phone-pad"
               value={userInfo.phoneNumber}
-              placeholder="7991168445"
+              placeholder="Enter Your Mobile Number"
               onChangeText={(value) =>
                 setUserInfo({ ...userInfo, phoneNumber: value })
               }
@@ -188,7 +188,7 @@ export default function LoginScreen() {
                 keyboardType="default"
                 secureTextEntry={!isPasswordVisible}
                 defaultValue=""
-                placeholder="********"
+                placeholder="Enter Your Password"
                 onChangeText={handlePasswordValidation}
               />
               <TouchableOpacity

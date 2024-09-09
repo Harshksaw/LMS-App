@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
-import axios from 'axios';
-import { SERVER_URI } from '@/utils/uri';
-import { useRoute } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
+import axios from "axios";
+import { SERVER_URI } from "@/utils/uri";
+import { useRoute } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const BlogDetailScreen = () => {
-
   const route = useRoute();
   const { blogId } = route.params;
   const [blog, setBlog] = useState(null);
@@ -15,10 +21,12 @@ const BlogDetailScreen = () => {
   useEffect(() => {
     const fetchBlogDetails = async () => {
       try {
-        const response = await axios.get(`${SERVER_URI}/api/v1/DailyUpdate/getDailyUpdate/${blogId}`);
+        const response = await axios.get(
+          `${SERVER_URI}/api/v1/DailyUpdate/getDailyUpdate/${blogId}`
+        );
         setBlog(response.data);
       } catch (error) {
-        console.error('Failed to fetch blog details:', error);
+        console.error("Failed to fetch blog details:", error);
       } finally {
         setLoading(false);
       }
@@ -36,56 +44,59 @@ const BlogDetailScreen = () => {
   }
 
   return (
-    <SafeAreaView style={{
-      flex: 1,
-      paddingTop: 40,
-      backgroundColor: '#f5f5f5',
-    }}>
-    <ScrollView style={styles.container}>
-      <Image source={{ uri: blog.image }} style={styles.image} />
-      <Text style={styles.title}>{blog.title}</Text>
-      
-      <Text style={styles.description}>{blog.description}</Text>
-      <Text style={styles.content}>{blog.content}</Text>
-    </ScrollView>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        // paddingTop: 40,
+        backgroundColor: "#000",
+      }}
+    >
+      <ScrollView style={styles.container}>
+        <Image source={{ uri: blog.image }} style={styles.image} />
+        <Text style={styles.title}>{blog.title}</Text>
+
+        <Text style={styles.description}>{blog.description}</Text>
+        <Text style={styles.content}>{blog.content}</Text>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 10,
-    paddingBottom:40,
-    backgroundColor: '#fff',
-    flexDirection: 'column',
-    gap:10,
+    padding: 20,
 
+    backgroundColor: "#fff",
+    flexDirection: "column",
+    gap: 10,
   },
   image: {
-    width: '100%',
+    width: "100%",
     height: 200,
     marginBottom: 10,
     borderRadius: 20,
-
-
   },
   title: {
     fontSize: 25,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
     paddingHorizontal: 5,
+    textAlign: "justify",
   },
-  description: {paddingHorizontal: 10,
+  description: {
+    paddingHorizontal: 10,
     fontSize: 16,
-    lineHeight:24,
+    lineHeight: 24,
+    textAlign: "justify",
     marginBottom: 10,
   },
   content: {
     fontSize: 14,
-    lineHeight:20,
+    lineHeight: 20,
     paddingHorizontal: 10,
-    height: '100%',
+    height: "100%",
+    textAlign: "justify",
+    marginBottom: 100,
   },
 });
 

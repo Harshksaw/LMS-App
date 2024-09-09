@@ -13,7 +13,7 @@ import {
 
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { SERVER_URI } from "@/utils/uri";
 import React from "react";
@@ -25,9 +25,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Toast } from "react-native-toast-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { usePreventScreenCapture } from 'expo-screen-capture';
-
-
+import { usePreventScreenCapture } from "expo-screen-capture";
 
 function secondsToHms(seconds) {
   const pad = (num, size) => ("00" + num).slice(-size);
@@ -38,43 +36,35 @@ function secondsToHms(seconds) {
   return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(secondsLeft, 2)}`;
 }
 
-
 export default function QuizScreen() {
   usePreventScreenCapture();
   const route = useRoute();
   const { quizId } = route.params;
 
-
-
-  console.log("🚀 ~ index ~ BundleData:", quizId)
   const [language, setLanguage] = useState<"en" | "hin">("en");
   const [quizDetails, setQuizDetails] = React.useState<any>(null);
 
   const [count, setCount] = useState<number>(0);
 
-
-
-
   const [questions, setQuestions] = useState<any[]>([]);
   const [savedQuestions, setSavedQuestions] = useState<any[]>([]);
-  const [answered, setAnswered] = useState<number>([]);
+  const [answered, setAnswered] = useState<number[]>([]);
+  const [attemptQuestions, setAttemptQuestions] = useState<number[]>([]);
   const [userScore, setUserScore] = useState<number>(0);
+  const [tempId, setTempId] = useState<{ id: string; index: number } | boolean>(
+    false
+  );
   const [userAnswer, setUserAnswer] = useState<string>("");
   const [selectedBox, setSelectedBox] = useState<number | null>(null);
   const [getResultClicked, setGetResultClicked] = useState<boolean>(false);
-  const [timer, setTimer] = useState(0);
   const [scoreModalVisible, setScoreModalVisible] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
-  const translateX = useRef(new Animated.Value(280)).current;
+  // const [isOpen, setIsOpen] = useState(false);
+  // const translateX = useRef(new Animated.Value(280)).current;
+  // const [timer, setTimer] = useState(0);
   const [timeUp, setTimeUp] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [remainderTime, setRemainderTime] = useState(0)
-
-
-
-
-
+  const [remainderTime, setRemainderTime] = useState(0);
 
   const handleMenuPress = () => {
     setVisible(true);
@@ -86,89 +76,65 @@ export default function QuizScreen() {
   const toggleLanguage = () => {
     setLanguage(language === "en" ? "hin" : "en");
   };
-  const [quizzes, setQuizzes] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const [loading, setLoading] = useState(true);
-  console.log(quizId)
-  console.log("hello");
   useEffect(() => {
     const getQuizDetails = async () => {
-      console.log('entered')
       try {
         const res = await axios.get(
           `${SERVER_URI}/api/v1/quiz/getQuizById/${quizId}`
         );
-        console.log("🚀 ~ getQuizDetails ~ res:", res)
 
         const quizData = res?.data?.data;
         setQuizDetails(quizData);
 
-
         setRemainingTime(quizData.timer);
-
 
         setQuestions(quizData.questions);
         setLoading(false);
-      } catch (error) {
-        console.log(error)
-      }
-
-
-      // console.log(quizData);
-
+      } catch (error) {}
     };
 
     getQuizDetails();
   }, [quizId, refreshing]);
-  // console.log(questions, "questions --------------------")
 
   const handleSave = () => {
-
     if (count < questions.length - 1) {
-      console.log(userAnswer)
-      console.log("🚀 ~ handleSave ~ questions[crount].correctAnswer[language]:", questions[count].correctAnswer.en)
-
       if (questions[count].correctAnswer.en === userAnswer) {
-        console.log("correct")
-        console.log(userScore, "userScore");
         setUserScore((userScore) => userScore + 1);
+      }
+      if (tempId) {
+        setAttemptQuestions((preVal) => [...preVal, tempId as any]);
+        setTempId(false);
       }
       setCount((count) => count + 1);
       setSelectedBox(null);
-      // setTime(20);
     } else {
       setGetResultClicked(true);
-      console.log("userScore", userScore);
-      fetchAttempts()
+      fetchAttempts();
       setScoreModalVisible(true);
     }
-    console.log("userScore", userScore, count);
   };
 
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const fetchAttempts = async () => {
-
-
-    const response = await axios.get(`${SERVER_URI}/api/v1/quiz/getAttemptQuiz/${attemptId}`);
-    const data = response.data
-    console.log("🚀 ~ fetchAttempts ~ data:", data.data.questions)
+    const response = await axios.get(
+      `${SERVER_URI}/api/v1/quiz/getAttemptQuiz/${attemptId}`
+    );
+    const data = response.data;
     setQuestions(data.data.questions);
+  };
 
-
-  }
-
-
-  const toggleColor = (index: number | null, count: number) => {
+  const toggleColor = (index: number | null, count: number, id: string) => {
     if (index === null) return;
 
+    setTempId({ id, index });
     const optionsArray = Object.values(questions[count]?.options);
-    // console.log(optionsArray[index][language], "----l", index);
     const selectedAnswer = optionsArray[index][language];
     const selectedAnswer2 = optionsArray[index].en;
     setSelectedBox(index);
     setAnswered((prev) => [...prev, count]);
-
 
     setUserAnswer(selectedAnswer2);
     setUserAnswers((prevAnswers) => {
@@ -176,80 +142,72 @@ export default function QuizScreen() {
       newAnswers[count] = selectedAnswer; // Ensure the answer is recorded at the correct index
       return newAnswers;
     });
-    // console.log(optionsArray[index][language], "----l");
     // setUserAnswer(optionsArray[index][language]);
     //  setUserAnswers(prevAnswers => [...prevAnswers, optionsArray[index][language]]);
-
   };
 
-
-
-
   const handleSkip = () => {
-    console.log("skip", count);
     if (count >= 1) {
       setCount((count) => count - 1);
       setSelectedBox(null);
-      // setTime(15);
     }
-
   };
-
 
   const getOptionsArray = (quizData, language) => {
     if (!quizData || !quizData.options) {
       return [];
     }
+
     return Object.entries(quizData.options).map(([key, value]) => ({
       key,
       value: value[language],
+      _id: quizData._id,
     }));
   };
 
-  // console.log(questions[count + 1]?.question[language], "quizDetails", quizDetails?.questions[0].options);
   // return (<></>)correctAnswer[language]
-  const currentQuestion = questions[count]?.question[language]
-  const currentOptions = getOptionsArray(quizDetails?.questions[count], language);
-
-
-
-
-
+  const currentQuestion = questions[count]?.question[language];
+  const currentOptions = getOptionsArray(
+    quizDetails?.questions[count],
+    language
+  );
 
   const handleSaveQuestion = async () => {
-
     try {
       const isUser = await AsyncStorage.getItem("user");
       const user = JSON.parse(isUser);
-      console.log("🚀 ~ QuizScreen ~ user", questions[count]._id)
 
-      const res = await axios.post(`${SERVER_URI}/api/v1/quiz/saveUserQuestion`, {
-        userId: user._id, questionId: questions[count]._id
-      })
+      const res = await axios.post(
+        `${SERVER_URI}/api/v1/quiz/saveUserQuestion`,
+        {
+          userId: user._id,
+          questionId: questions[count]._id,
+        }
+      );
       if (res.status === 201) {
-
-
         Toast.show("Saved question");
-        setSavedQuestions((prev) => [...prev, questions[count]._id])
-        setRefreshing((prev) => !prev)
+        setSavedQuestions((prev) => [...prev, questions[count]._id]);
+        setRefreshing((prev) => !prev);
       } else {
         Toast.show("Error saving question");
       }
-
-
     } catch (error) {
       Toast.show("Error saving question");
     }
   };
-  // console.log(savedQuestions, 'saved questions')
-
 
   if (loading) {
-    return <ActivityIndicator size="large" color="red" style={{
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-    }} />;
+    return (
+      <ActivityIndicator
+        size="large"
+        color="red"
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      />
+    );
     // return <CustomLoader name="2-curves" color="red" />;
   }
 
@@ -263,83 +221,72 @@ export default function QuizScreen() {
     }
   };
 
-
-
   const calculateScore = () => {
     return questions.reduce((score, question) => {
-      console.log(question.correctAnswer.hin)
-      return score + (userAnswer === question.correctAnswer.en || userAnswer === question.correctAnswer.hin ? 1 : 0);
+      return (
+        score +
+        (userAnswer === question.correctAnswer.en ||
+        userAnswer === question.correctAnswer.hin
+          ? 1
+          : 0)
+      );
     }, 0);
   };
 
-
-
   const handleSubmitQuiz = async () => {
-
-    console.log(userAnswers, "userAnswers", language)
-
     const userI = await AsyncStorage.getItem("user");
     const isUser = JSON.parse(userI);
-    // console.log("🚀 ~ QuizScreen ~ isUser:", isUser)
-
 
     Toast.show("Submitting attempt...", {
       type: "success",
       duration: 3000,
-
     });
-    console.log( userAnswers, "------" )
-    
+
     const attemptData = {
       user: isUser._id, // Assuming you have the current user's ID
       quiz: quizId, // Assuming you have the current quiz's ID
       score: calculateScore(), // Function to calculate the score
       questions: questions.map((question, index) => ({
         question: question._id,
-        userAnswer:    userAnswers[index], 
-        correctAnswer: {en:  question.correctAnswer.en , hin:  question.correctAnswer.hin},
-        isCorrect: userAnswers[index] === question.correctAnswer.en || userAnswers[index] === question.correctAnswer.hin,
-      }))
+        userAnswer: userAnswers[index],
+        correctAnswer: {
+          en: question.correctAnswer.en,
+          hin: question.correctAnswer.hin,
+        },
+        isCorrect:
+          userAnswers[index] === question.correctAnswer.en ||
+          userAnswers[index] === question.correctAnswer.hin,
+      })),
     };
-    // console.log("🚀 ~ handleSubmitQuiz ~ attemptData:", attemptData)
-
 
     try {
       // Make the API call to submit the attempt
 
       // Make the API call to submit the attempt using axios
-      const response = await axios.post(`${SERVER_URI}/api/v1/quiz/attempt-quiz`, attemptData
+      const response = await axios.post(
+        `${SERVER_URI}/api/v1/quiz/attempt-quiz`,
+        attemptData
       );
-      // console.log("🚀 ~ handleSubmitQuiz ~ response:", response)
 
       // Handle the response
       if (response.status === 201) {
-        console.log('Attempt submitted successfully:', response.data._id);
-
         router.push({
           pathname: "/(routes)/quiz/quiz.result",
           // pathname: "/(routes)/quiz/quiz.solution",
           // params: { quizId: quizId },
           params: { attemptId: response.data._id, quizId: quizId },
-        })
-
+        });
       } else {
-        console.error('Error submitting attempt:', response.data);
+        console.error("Error submitting attempt:", response.data);
         // Optionally, show an error message to the user
       }
+      setScoreModalVisible(false);
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       // Optionally, show an error message to the user
+      setScoreModalVisible(false);
     }
-
-
-
-
-
-
-
-
-  }
+  };
 
   return (
     <SafeAreaView
@@ -349,40 +296,92 @@ export default function QuizScreen() {
         padding: 12,
       }}
     >
-
-
-
-
       {/* TODO: exclude white view to close the modal Modal  */}
       {visible && (
-        <Modal
-          transparent={true}
-          onRequestClose={handleClose}
-        >
-          <TouchableOpacity
-            style={styles.overlay}
-            onPress={handleClose}
-          >
-            <View style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'transparent',
-              padding: 20,
-              transform: [{ translateX: visible ? 0 : Dimensions.get('window').width * 0.7 }],
-            }}>
-
-              <View style={{ width: 260, height: "88%", backgroundColor: 'white', alignSelf: 'flex-end', marginTop: 100, padding: 12, marginRight: -16 }}>
-                <Text style={{ marginTop: 4, marginBottom: 4, fontSize: 16, position: 'absolute', right: 16, top: 12 }}>X</Text>
-                <View style={{ gap: 8, alignItems: 'flex-start', marginHorizontal: 16, marginTop: 16, marginBottom: 8 }}>
-                  <View style={{ gap: 8, flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ backgroundColor: '#66cc00', height: 12, width: 12, borderRadius: 40 }} />
+        <Modal transparent={true} onRequestClose={handleClose}>
+          <TouchableOpacity style={styles.overlay} onPress={handleClose}>
+            <View
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "transparent",
+                padding: 20,
+                transform: [
+                  {
+                    translateX: visible
+                      ? 0
+                      : Dimensions.get("window").width * 0.7,
+                  },
+                ],
+              }}
+            >
+              <View
+                style={{
+                  width: 260,
+                  height: "88%",
+                  backgroundColor: "white",
+                  alignSelf: "flex-end",
+                  marginTop: 100,
+                  padding: 12,
+                  marginRight: -16,
+                }}
+              >
+                <Text
+                  style={{
+                    marginTop: 4,
+                    marginBottom: 4,
+                    fontSize: 16,
+                    position: "absolute",
+                    right: 16,
+                    top: 12,
+                  }}
+                >
+                  X
+                </Text>
+                <View
+                  style={{
+                    gap: 8,
+                    alignItems: "flex-start",
+                    marginHorizontal: 16,
+                    marginTop: 16,
+                    marginBottom: 8,
+                  }}
+                >
+                  <View
+                    style={{
+                      gap: 8,
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: "#66cc00",
+                        height: 12,
+                        width: 12,
+                        borderRadius: 40,
+                      }}
+                    />
                     <Text>answered</Text>
                   </View>
-                  <View style={{ gap: 8, flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ backgroundColor: '#ccc', height: 12, width: 12, borderRadius: 40 }} />
+                  <View
+                    style={{
+                      gap: 8,
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: "#ccc",
+                        height: 12,
+                        width: 12,
+                        borderRadius: 40,
+                      }}
+                    />
                     <Text>unAnswered</Text>
                   </View>
                 </View>
@@ -391,19 +390,25 @@ export default function QuizScreen() {
                   data={questions}
                   numColumns={4} // 5 columns per row
                   renderItem={({ item, index }) => (
-                    <TouchableOpacity style={styles.menuItem} onPress={() => {
-                      setCount(index)
-                      setVisible(false)
-                    }}>
-
-                      <View style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 20,
-                        backgroundColor: answered.includes(index) ? '#66CC00' : '#ccc',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}>
+                    <TouchableOpacity
+                      style={styles.menuItem}
+                      onPress={() => {
+                        setCount(index);
+                        setVisible(false);
+                      }}
+                    >
+                      <View
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                          backgroundColor: answered.includes(index)
+                            ? "#66CC00"
+                            : "#ccc",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
                         <Text>{index + 1}</Text>
                       </View>
                     </TouchableOpacity>
@@ -416,9 +421,11 @@ export default function QuizScreen() {
         </Modal>
       )}
       <View
-        style={{
-          //  backgroundColor:'red',
-        }}
+        style={
+          {
+            //  backgroundColor:'red',
+          }
+        }
       >
         {/* {  -- top part including timer, submit, toggle and hambuger  --} */}
         <View
@@ -446,20 +453,18 @@ export default function QuizScreen() {
               onComplete={() => {
                 handleTimeup();
               }}
-
             >
               {({ remainingTime }) => (
-
-                <Text style={{
-                  fontSize: 10
-                }}> {secondsToHms(remainingTime)}
-
-                  {
-                    scoreModalVisible && setRemainderTime(remainingTime)
-                  }</Text>
-
+                <Text
+                  style={{
+                    fontSize: 10,
+                  }}
+                >
+                  {" "}
+                  {secondsToHms(remainingTime)}
+                  {scoreModalVisible && setRemainderTime(remainingTime)}
+                </Text>
               )}
-
             </CountdownCircleTimer>
           </View>
 
@@ -495,12 +500,10 @@ export default function QuizScreen() {
               </Text>
             </TouchableOpacity>
           </View>
-
         </View>
         {/* <View
           style={{ width: "100%", height: 1, backgroundColor: "#D3D4DB" }}
         /> */}
-
       </View>
 
       <View style={{ width: "100%", height: 1, backgroundColor: "#D3D4DB" }} />
@@ -509,25 +512,27 @@ export default function QuizScreen() {
       <View
         // stickyHeaderIndices={[0]}
         style={{
-          flex: 1, marginTop: 12
+          flex: 1,
+          marginTop: 12,
 
           // justifyContent: "flex-end",
         }}
-      // showsVerticalScrollIndicator={false}
+        // showsVerticalScrollIndicator={false}
       >
-
         <View style={{ backgroundColor: "white", padding: 5 }}>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             {/* {left} */}
             <View style={{ flexDirection: "row", paddingVertical: 4 }}>
-              <Text style={{
-                fontSize: 18,
-                color: "black",
-                fontWeight: "800",
-                alignSelf: "center"
-              }}>{`Q.${count + 1}`}</Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: "black",
+                  fontWeight: "800",
+                  alignSelf: "center",
+                }}
+              >{`Q.${count + 1}`}</Text>
               <Text
                 style={{
                   fontSize: 18,
@@ -566,14 +571,21 @@ export default function QuizScreen() {
                 //   transform: [{ translateX }],
                 // }}
                 >
-                  <TouchableOpacity style={styles.button} onPress={handleMenuPress}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleMenuPress}
+                  >
                     <Ionicons name="menu" size={24} color="black" />
                   </TouchableOpacity>
                 </Animated.View>
                 <TouchableOpacity onPress={handleSaveQuestion}>
                   <MaterialCommunityIcons
                     style={{ alignSelf: "center" }}
-                    name={savedQuestions.includes(questions[count]._id) ? "bookmark" : "bookmark-outline"}
+                    name={
+                      savedQuestions.includes(questions[count]._id)
+                        ? "bookmark"
+                        : "bookmark-outline"
+                    }
                     size={35}
                     color="#d7f776"
                   />
@@ -583,13 +595,14 @@ export default function QuizScreen() {
           </View>
         </View>
 
-        <View style={{
-          marginTop: 20, flex: 1,
+        <View
+          style={{
+            marginTop: 20,
+            flex: 1,
 
-
-          flexDirection: "column",
-
-        }}>
+            flexDirection: "column",
+          }}
+        >
           <View
             style={{
               flexDirection: "row",
@@ -615,8 +628,6 @@ export default function QuizScreen() {
                 {language === "en" ? "English" : "Hindi"}
               </Text>
             </TouchableOpacity>
-
-
           </View>
 
           <View
@@ -628,7 +639,6 @@ export default function QuizScreen() {
               // paddingBottom: 15,
             }}
           >
-
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{
@@ -638,8 +648,6 @@ export default function QuizScreen() {
                 // maxHeight: 250,
               }}
             >
-
-
               <Text
                 style={{
                   marginTop: 16,
@@ -649,16 +657,20 @@ export default function QuizScreen() {
                   color: "gray",
                 }}
               >
-
                 {/* {currentQuestion.replace(/[\t\n]/g, " ")} */}
                 {String(currentQuestion).replace(/[\t]/g, "")}
-                {/* {console.log(      {String(currentQuestion).replace(/[\t]/g, " ")})} */}
               </Text>
 
-
-
               {/* Questions */}
-              <View style={{ marginTop: 12, marginBottom: 30, paddingBottom: 30, padding: 12, minHeight: 200 }}>
+              <View
+                style={{
+                  marginTop: 12,
+                  marginBottom: 30,
+                  paddingBottom: 30,
+                  padding: 12,
+                  minHeight: 200,
+                }}
+              >
                 {currentOptions.map((option, index) => (
                   <TouchableOpacity
                     style={{
@@ -672,18 +684,19 @@ export default function QuizScreen() {
                       borderRadius: 8,
                       marginBottom: 8,
                       borderWidth: 1,
-                      borderColor: selectedBox === index ? "#f97316" : "#e2e2e2",
+                      borderColor:
+                        selectedBox === index ? "#f97316" : "#e2e2e2",
                       width: "100%",
                     }}
                     key={index}
-                    onPress={() => toggleColor(index, count)}
+                    onPress={() => toggleColor(index, count, option._id)}
                   >
                     <Text
                       style={{
                         fontWeight: "500",
                         fontSize: 16,
                         textAlign: "left",
-                        maxWidth: 280
+                        maxWidth: 280,
                       }}
                     >
                       {option.value}
@@ -699,7 +712,10 @@ export default function QuizScreen() {
                         justifyContent: "center",
                       }}
                     >
-                      {selectedBox === index ? (
+                      {selectedBox === index ||
+                      attemptQuestions.some(
+                        (i: any) => i.id === option._id && i.index === index
+                      ) ? (
                         <View
                           style={{
                             width: 10,
@@ -714,13 +730,7 @@ export default function QuizScreen() {
                 ))}
               </View>
 
-
-
-
-
-
               {/* {button} */}
-
             </ScrollView>
             <View
               style={{
@@ -783,6 +793,7 @@ export default function QuizScreen() {
                   }}
                 >
                   <TouchableOpacity
+                    disabled={count < 1}
                     onPress={handleSkip}
                     style={{
                       backgroundColor: "white",
@@ -790,6 +801,7 @@ export default function QuizScreen() {
                       paddingHorizontal: 18,
                       borderRadius: 8,
                       width: "auto",
+                      opacity: count < 1 ? 0.5 : 1,
                     }}
                   >
                     <Text
@@ -821,7 +833,9 @@ export default function QuizScreen() {
                         textAlign: "center",
                       }}
                     >
-                      {count === questions.length - 1 ? "Get Result" : "NEXT >>"}
+                      {count === questions.length - 1
+                        ? "Get Result"
+                        : "NEXT >>"}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -839,17 +853,9 @@ export default function QuizScreen() {
               }}
             > */}
 
-
-
             {/* </ScrollView> */}
-
-
-
-
           </View>
-
         </View>
-
       </View>
 
       <Modal
@@ -904,9 +910,6 @@ export default function QuizScreen() {
                   {secondsToHms(remainderTime)}
                 </Text>
               </View>
-
-
-
             </View>
             <Text style={{ alignSelf: "center" }}>
               You are submitting the quiz
@@ -928,7 +931,7 @@ export default function QuizScreen() {
                     borderWidth: 1,
                     padding: 7,
                     borderRadius: 4,
-                    justifyContent: 'center'
+                    justifyContent: "center",
                   }}
                   onPress={() => setScoreModalVisible(false)}
                 >
@@ -954,10 +957,7 @@ export default function QuizScreen() {
                 <Text
                   style={{
                     color: "white",
-                    fontWeight: '700',
-
-
-
+                    fontWeight: "700",
                   }}
                 >
                   Yes, submit
@@ -972,12 +972,12 @@ export default function QuizScreen() {
 }
 const styles = StyleSheet.create({
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     right: 0,
     bottom: 0,
     left: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   // menuContainer: {
   //   position: 'absolute',
@@ -991,11 +991,11 @@ const styles = StyleSheet.create({
   // },
   menu: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 10,
   },
 });

@@ -12,10 +12,11 @@ export const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
 
-  slide: { flex: 1,
-
-    paddingVertical: 10,
-   },
+  slide: {
+    flex: 1,
+    width: "100%",
+    height: 250,
+  },
 
   background: {
     width: "100%",
@@ -25,7 +26,7 @@ export const styles = StyleSheet.create({
   },
 
   dot: {
-    backgroundColor: "#C6C7CC",
+    backgroundColor: "#e9e9e9",
     width: 10,
     height: 10,
     borderRadius: 5,

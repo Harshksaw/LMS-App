@@ -5,7 +5,6 @@ import { styles } from "./styles";
 
 const InfoScreen = ({ data }: any) => (
   <ScrollView style={styles.tabContent}>
-    
     <View>
       <Text style={styles.sectionTitle}>About</Text>
       <View style={styles.descriptionContainer}>
@@ -43,6 +42,7 @@ const InfoScreen = ({ data }: any) => (
       <View
         style={{
           paddingHorizontal: 20,
+          paddingBottom: 100,
         }}
       >
         {data?.quizes?.map((quiz, index) => (
@@ -65,7 +65,6 @@ const InfoScreen = ({ data }: any) => (
         )}
       </View>
     </View>
-
   </ScrollView>
 );
 

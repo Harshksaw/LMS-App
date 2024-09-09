@@ -1,28 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-
-
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 const QuizBundleCard = ({ quizzes }) => {
-
-
-
   const convertSecondsToTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     return `${hours}h ${minutes}m`;
   };
-
-
-
 
   return (
     <View style={styles.container}>
@@ -40,14 +26,10 @@ const QuizBundleCard = ({ quizzes }) => {
           key={quiz._id}
           style={styles.quizCard}
           onPress={() => {
-            router.push(
-              {
-
-                pathname: "/(routes)/quiz/quiz.details",
-                params: { quizId: quiz._id }
-              }
-
-            )
+            router.push({
+              pathname: "/(routes)/quiz/quiz.details",
+              params: { quizId: quiz._id },
+            });
           }}
         >
           <Image
@@ -61,19 +43,6 @@ const QuizBundleCard = ({ quizzes }) => {
           <View style={styles.quizInfo}>
             <View style={{ gap: 4, paddingHorizontal: 2 }}>
               <Text style={styles.itemTitle}>{quiz.name}</Text>
-              {/* <Text
-                style={{
-                  fontSize: 14,
-                  color: "#666",
-                  // width: '100%',
-
-                  overflow: "hidden",
-                  textAlign: "justify",
-                }}
-              >
-                {" "}
-                {quiz.shortDescription.slice(0, 25)}
-              </Text> */}
             </View>
 
             <View
@@ -84,16 +53,13 @@ const QuizBundleCard = ({ quizzes }) => {
                 alignItems: "center",
                 width: "100%",
               }}
-
             >
-              <View style={{
-                flexDirection: 'row'
-
-              }}>
-
-                <Ionicons name="timer"
-                  size={20}
-                />
+              <View
+                style={{
+                  flexDirection: "row",
+                }}
+              >
+                <Ionicons name="timer" size={20} />
                 <Text style={styles.itemTitle}>
                   {convertSecondsToTime(quiz.timer)}
                 </Text>
@@ -116,15 +82,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
+    paddingBottom: 100,
   },
   quizCard: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     // backgroundColor: "#f2eded",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     borderRadius: 10,
-    height: 120,
     width: "100%",
     paddingHorizontal: 20,
     marginVertical: 10,
