@@ -3,28 +3,35 @@ const moment = require("moment");
 const Logs = require("../models/Logs");
 
 exports.checkCoupon = async (req, res) => {
-  const { coupon } = req.body;
+  const { coupon, course } = req.body;
 
   try {
     if (!coupon) {
       return res.status(500).json({ message: "coupon code required" });
     }
+
     const couponData = await Coupon.findOne({ code: coupon });
+
     if (!couponData) {
       return res.status(404).json({ message: "Invalid coupon*" });
     }
     const expired = moment(couponData?.expiryDate).isBefore(new Date());
     if (expired) {
-      return res.status(404).json({ message: "Invalid coupon*" });
+      return res.status(404).json({ message: "coupon expired*" });
     }
 
+    if (!!couponData.courses.length && !couponData.courses.includes(course)) {
+      return res
+        .status(404)
+        .json({ message: "coupon invalid for this course bundle*" });
+    }
     res.status(200).json({ message: "coupon Applied", data: couponData });
   } catch (error) {
     throw error;
   }
 };
 exports.createCoupon = async (req, res) => {
-  const { code, discountPercentage, expiryDate } = req.body;
+  const { code, discountPercentage, expiryDate, courses } = req.body;
 
   try {
     if (!code) {
@@ -53,7 +60,7 @@ exports.createCoupon = async (req, res) => {
   }
 };
 exports.editCoupon = async (req, res) => {
-  const { code, discountPercentage, expiryDate } = req.body;
+  const { code, discountPercentage, expiryDate, courses } = req.body;
   const update = {};
   if (code) {
     update.code = code;
@@ -63,6 +70,9 @@ exports.editCoupon = async (req, res) => {
   }
   if (expiryDate) {
     update.expiryDate = expiryDate;
+  }
+  if (!!courses?.length) {
+    update.courses = courses;
   }
   try {
     const couponData = await Coupon.findOneAndUpdate(

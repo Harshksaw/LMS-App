@@ -33,16 +33,10 @@ const PORT = process.env.PORT || 4000;
 database.connect();
 //middlewares
 
-app.use(express.json({ limit: "16kb" }));
-app.use(express.urlencoded({ extended: true, limit: "16kb" }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
-// app.use(
-// 	cors({
-// 		origin:"http://localhost:3000",
-// 		credentials:true,
-// 	})
-// )
 app.use(
   cors({
     origin: "*",
@@ -68,16 +62,15 @@ app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/bundle", CourseBundle);
 app.use("/api/v1/DailyUpdate", Dailyupdate);
 
-const cron = require("node-cron");
+// const cron = require("node-cron");
 // Cron job
-let task = cron.schedule("21 16 * * *", () => {
-  console.log("Running backup cron job");
-  runBackup();
-});
+// let task = cron.schedule("21 16 * * *", () => {
+//   console.log("Running backup cron job");
+//   runBackup();
+// });
 
 // Backup function
 const { spawn } = require("child_process");
-const fs = require("fs");
 
 async function runBackup() {
   const sourceUri = process.env.MONGODB_URL;
@@ -149,5 +142,3 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`App is running at http://127.0.0.1:${PORT}`);
 });
-
-// D:\CODES-wev-Devolopment\mp-7\server\index.js
