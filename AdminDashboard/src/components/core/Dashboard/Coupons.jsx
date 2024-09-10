@@ -10,8 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 
 const courseUrl = `${BASE_URL}/api/v1/bundle/course-bundle`;
-// const url = `${BASE_URL}/api/v1/coupon/`;
-const url = `http://localhost:4000/api/v1/coupon/`;
+const url = `${BASE_URL}/api/v1/coupon/`;
 
 const Coupons = () => {
   const navigate = useNavigate();
