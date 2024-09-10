@@ -1,32 +1,31 @@
 import React from "react";
-import { FooterLink2 } from "../../../data/footer-links";
+// import { FooterLink2 } from "../../../data/footer-links";
 import { Link } from "react-router-dom";
 import { ImGithub, ImLinkedin2 } from "react-icons/im";
 
 // Images
-import StudyNotionLogo from "../../assets/Logo/Logo-Full-Light.png";
+// import StudyNotionLogo from "../../assets/Logo/Logo-Full-Light.png";
 
 // footer data
 const BottomFooter = ["Privacy Policy", "Cookie Policy", "Terms"];
-const Resources = [
-  "Articles",
-  "Blog",
-  "Chart Sheet",
-  "Code challenges",
-  "Docs",
-  "Projects",
-  "Videos",
-  "Workspaces",
-];
-const Plans = ["Paid memberships", "For students", "Business solutions"];
-const Community = ["Forums", "Chapters", "Events"];
+// const Resources = [
+//   "Articles",
+//   "Blog",
+//   "Chart Sheet",
+//   "Code challenges",
+//   "Docs",
+//   "Projects",
+//   "Videos",
+//   "Workspaces",
+// ];
+// const Plans = ["Paid memberships", "For students", "Business solutions"];
+// const Community = ["Forums", "Chapters", "Events"];
 
 const Footer = () => {
   return (
     <div className="bg-richblack-800 mx-7 rounded-3xl mb-10">
-      <div className="flex lg:flex-row gap-8 items-center justify-between w-11/12 max-w-maxContent text-richblack-400 leading-6 mx-auto relative py-14">
-        <div className="border-b w-[100%] flex flex-col lg:flex-row pb-5 border-richblack-700">
-          {/* Section 1 */}
+      {/* <div className="lg:flex-row hidden gap-8 items-center justify-between w-11/12 max-w-maxContent text-richblack-400 leading-6 mx-auto relative py-14">
+        <div className="border-b w-[100%] flex  flex-col lg:flex-row pb-5 border-richblack-700">
           <div className="lg:w-[50%] flex flex-wrap flex-row justify-between lg:border-r lg:border-richblack-700 pl-3 lg:pr-5 gap-3">
             <div className="w-[30%] flex flex-col gap-3 lg:w-[30%] mb-7 lg:pl-0">
               <img src={StudyNotionLogo} alt="" className="object-contain" />
@@ -45,7 +44,6 @@ const Footer = () => {
                   );
                 })}
               </div>
-              {/* social icons */}
               <div className="flex gap-3 text-lg duration-200">
                 <svg
                   className="w-5 cursor-pointer hover:scale-95 "
@@ -184,7 +182,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Section 2 */}
           <div className="lg:w-[50%] flex flex-wrap flex-row justify-between pl-3 lg:pl-5 gap-3">
             {FooterLink2.map((ele, i) => {
               return (
@@ -209,11 +206,9 @@ const Footer = () => {
             })}
           </div>
         </div>
-      </div>
+      </div> */}
 
-      {/* bottom footer */}
-      <div className="flex flex-row items-center justify-between w-11/12 max-w-maxContent text-richblack-400 mx-auto pb-14 text-sm">
-        {/* Section 1 */}
+      <div className="flex flex-row items-center justify-between w-11/12 max-w-maxContent text-richblack-400 mx-auto py-14 text-sm">
         <div className="flex justify-between lg:items-start items-center flex-col lg:flex-row gap-3 w-full">
           <div className="flex ">
             {BottomFooter.map((ele, ind) => {
@@ -240,11 +235,11 @@ const Footer = () => {
               <span> Made with ❤️</span>
 
               <Link
-                to="https://github.com/Aniruddha-Gade"
+                to="https://jythu.com/"
                 target="__blank"
                 className="text-white hover:underline mr-1"
               >
-                Aniruddha Gade
+                Jythu
               </Link>
             </div>
             <span> © 2023 Kirshna Academy</span>
