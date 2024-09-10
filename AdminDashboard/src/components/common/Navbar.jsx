@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Link, matchPath, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, matchPath, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import { NavbarLinks } from "../../../data/navbar-links";
 import StudyNotionLogo from "../../assets/krishna/krishna.png";
@@ -11,6 +11,8 @@ import MobileProfileDropDown from "../core/Auth/MobileProfileDropDown";
 
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { logout } from "../../services/operations/authAPI";
+import { VscDashboard, VscSignOut } from "react-icons/vsc";
 
 const Navbar = () => {
   // console.log("Printing base url: ", import.meta.env.VITE_APP_BASE_URL);
@@ -36,6 +38,10 @@ const Navbar = () => {
     }
     setLoading(false);
   };
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const ref = useRef(null);
 
   // console.log('data of store  = ', useSelector((state)=> state))
 
@@ -152,23 +158,34 @@ const Navbar = () => {
               )}
             </Link>
           )}
-          {/*               
-                    {
-                        token === null && (
-                            <Link to="/signup">
-                                {/* <button className='border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100 rounded-md'> */}
-          {/* <button className={` px-[12px] py-[8px] text-richblack-100 rounded-md 
-                                 ${matchRoute('/signup') ? 'border-[2.5px] border-yellow-50' : 'border border-richblack-700 bg-richblack-800'} `}
-                                >
-                                    Sign Up
-                                </button>
-                            </Link> */}
-          ){/* } */}
-          {/* } */}
+
           {/* for large devices */}
-          {token !== null && <ProfileDropDown />}
+          {/* {token !== null && <ProfileDropDown />} */}
           {/* for small devices */}
-          {token !== null && <MobileProfileDropDown />}
+          {/* {token !== null && <MobileProfileDropDown />} */}
+
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="flex  gap-5 right-0 z-[1000] divide-y-[1px] divide-richblack-700 overflow-hidden rounded-md border-[1px] border-richblack-700 bg-richblack-800"
+          >
+            <Link to="/dashboard/my-profile">
+              <div className="flex w-full items-center gap-x-1 py-[10px] px-[12px] text-sm text-richblack-100 hover:bg-richblack-700 hover:text-richblack-25">
+                <VscDashboard className="text-lg" />
+                Dashboard
+              </div>
+            </Link>
+            {token !== null && (
+              <div
+                onClick={() => {
+                  dispatch(logout(navigate));
+                }}
+                className="flex w-full items-center gap-x-1 py-[10px] px-[12px] text-sm text-richblack-100 hover:bg-richblack-700 hover:text-richblack-25"
+              >
+                <VscSignOut className="text-lg" />
+                Logout
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

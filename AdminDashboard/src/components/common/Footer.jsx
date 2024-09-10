@@ -7,7 +7,7 @@ import { ImGithub, ImLinkedin2 } from "react-icons/im";
 // import StudyNotionLogo from "../../assets/Logo/Logo-Full-Light.png";
 
 // footer data
-const BottomFooter = ["Privacy Policy", "Cookie Policy", "Terms"];
+// const BottomFooter = ["Privacy Policy", "Cookie Policy", "Terms"];
 // const Resources = [
 //   "Articles",
 //   "Blog",
@@ -210,26 +210,6 @@ const Footer = () => {
 
       <div className="flex flex-row items-center justify-between w-11/12 max-w-maxContent text-richblack-400 mx-auto py-14 text-sm">
         <div className="flex justify-between lg:items-start items-center flex-col lg:flex-row gap-3 w-full">
-          <div className="flex ">
-            {BottomFooter.map((ele, ind) => {
-              return (
-                <div
-                  key={ind}
-                  className={` ${
-                    BottomFooter.length - 1 === ind
-                      ? ""
-                      : "border-r border-richblack-700 "
-                  }
-                   px-3 cursor-pointer hover:text-richblack-50 transition-all duration-200`}
-                >
-                  <Link to={ele.split(" ").join("-").toLocaleLowerCase()}>
-                    {ele}
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
-
           <div className="text-center flex flex-col sm:flex-row ">
             <div className="flex ">
               <span> Made with ❤️</span>
@@ -245,7 +225,7 @@ const Footer = () => {
             <span> © 2023 Kirshna Academy</span>
           </div>
 
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <a
               href="https://www.linkedin.com/in/aniruddha-gade-a48800231/"
               className="text-white p-3 hover:bg-richblack-700 rounded-full duration-300"
@@ -262,7 +242,7 @@ const Footer = () => {
             >
               <ImGithub size={17} />
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
