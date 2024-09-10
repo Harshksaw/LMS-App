@@ -136,7 +136,6 @@ export default function ProfileScreen() {
         Toast.show("Additional details updated successfully!", {
           type: "success",
         });
-
         await AsyncStorage.setItem("user", JSON.stringify(response.data.user));
       } else {
         alert("Error updating additional details!");

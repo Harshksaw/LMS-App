@@ -260,9 +260,8 @@ export default function QuizScreen() {
     };
 
     try {
-      // Make the API call to submit the attempt
-
       // Make the API call to submit the attempt using axios
+
       const response = await axios.post(
         `${SERVER_URI}/api/v1/quiz/attempt-quiz`,
         attemptData
@@ -272,18 +271,13 @@ export default function QuizScreen() {
       if (response.status === 201) {
         router.push({
           pathname: "/(routes)/quiz/quiz.result",
-          // pathname: "/(routes)/quiz/quiz.solution",
-          // params: { quizId: quizId },
           params: { attemptId: response.data._id, quizId: quizId },
         });
       } else {
         console.error("Error submitting attempt:", response.data);
-        // Optionally, show an error message to the user
       }
       setScoreModalVisible(false);
     } catch (error) {
-      console.error("Error:", error);
-      // Optionally, show an error message to the user
       setScoreModalVisible(false);
     }
   };
@@ -611,7 +605,8 @@ export default function QuizScreen() {
           >
             {/* //TODO */}
             <Text style={{ fontWeight: "800" }}>
-              {"SECTION A : ENGLISH LANGUAGE"}
+              SECTION A:{" "}
+              {language === "en" ? "ENGLISH LANGUAGE" : "HINDI LANGUAGE"}
             </Text>
 
             <TouchableOpacity

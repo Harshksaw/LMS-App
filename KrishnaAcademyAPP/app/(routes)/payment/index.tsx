@@ -301,7 +301,7 @@ const PaymentPage = () => {
                 height: 50,
                 borderRightWidth: 0,
                 fontSize: 25,
-                // textTransform: "uppercase",
+                textTransform: "uppercase",
                 color: couponApplied ? "green" : "#000",
               }}
               editable={!couponApplied}
