@@ -209,18 +209,18 @@ exports.signup = async (req, res) => {
     }
 
     // Validate OTP for non-Admin users
-    if (accountType !== "Admin") {
-      const response = await OTP.find({ phoneNumber })
-        .sort({ createdAt: -1 })
-        .limit(1);
-      if (response.length === 0 || otp != response[0].otp) {
-        return res.status(400).json({
-          success: false,
-          message: "The OTP is not valid",
-          OtpMessage: "Invalid Otp | Not matched",
-        });
-      }
-    }
+    // if (accountType !== "Admin") {
+    //   const response = await OTP.find({ phoneNumber })
+    //     .sort({ createdAt: -1 })
+    //     .limit(1);
+    //   if (response.length === 0 || otp != response[0].otp) {
+    //     return res.status(400).json({
+    //       success: false,
+    //       message: "The OTP is not valid",
+    //       OtpMessage: "Invalid Otp | Not matched",
+    //     });
+    //   }
+    // }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -609,8 +609,10 @@ exports.getAllUserCources = async (req, res) => {
 };
 exports.logout = async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
+    const token = req.headers.authorization?.split(" ")[1];
+
     const { id } = jwt.verify(token, process.env.JWT_SECRET);
+
     if (!id) {
       res.status(404).json({ message: "user not found" });
     }
