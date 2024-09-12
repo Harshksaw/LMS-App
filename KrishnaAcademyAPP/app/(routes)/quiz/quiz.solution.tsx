@@ -71,6 +71,7 @@ const quizsolution = () => {
         <Text style={styles.questionText}>
           {index + 1}. {question.en}
         </Text>
+        <Text style={styles.questionText}>{question.hin}</Text>
         <View
           style={{
             flexDirection: "column",
@@ -110,6 +111,7 @@ const quizsolution = () => {
             }
             return (
               <View
+                key={key}
                 style={{
                   flexDirection: "column",
                   gap: 5,
@@ -122,12 +124,8 @@ const quizsolution = () => {
                   backgroundColor: "rgb(240, 236, 236)",
                 }}
               >
-                <Text key={key} style={optionStyle}>
-                  {`${index + 1}. ${option.en}`}
-                </Text>
-                <Text key={key} style={optionStyle}>
-                  {` ${option.hin}`}
-                </Text>
+                <Text style={optionStyle}>{`${index + 1}. ${option.en}`}</Text>
+                <Text style={optionStyle}>{` ${option.hin}`}</Text>
               </View>
             );
           })}
@@ -166,7 +164,7 @@ const quizsolution = () => {
       <FlatList
         data={questions}
         renderItem={renderItem}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(_, ind) => `${ind}`}
       />
     </SafeAreaView>
   );

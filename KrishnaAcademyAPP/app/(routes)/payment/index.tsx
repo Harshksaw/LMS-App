@@ -114,7 +114,7 @@ const PaymentPage = () => {
     try {
       const response = await axios.post(
         `${SERVER_URI}/api/v1/coupon/apply-coupon`,
-        { coupon }
+        { coupon, course: itemId }
       );
 
       if (response.status === 200) {
@@ -129,6 +129,8 @@ const PaymentPage = () => {
       }
       setLoading(false);
     } catch (error) {
+      console.log(error.response.data, "dfsfkl");
+
       setLoading(false);
       Toast.show("Invalid coupon*", { type: "danger" });
     }

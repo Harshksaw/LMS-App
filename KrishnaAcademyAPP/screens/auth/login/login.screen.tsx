@@ -132,6 +132,13 @@ export default function LoginScreen() {
       })
       .catch((error) => {
         setButtonSpinner(false);
+        if (error.response.status == 406) {
+          Toast.show("you can login at on device only", {
+            type: "danger",
+          });
+          return;
+        }
+
         Toast.show("Wrong Phone Number or Password!", {
           type: "danger",
         });

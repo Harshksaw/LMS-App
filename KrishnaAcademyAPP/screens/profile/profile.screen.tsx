@@ -107,7 +107,8 @@ export default function ProfileScreen() {
   }
 
   const logoutHandler = async () => {
-    const token = await AsyncStorage.removeItem("token");
+    const token = await AsyncStorage.getItem("token");
+
     await axios
       .post(
         `${SERVER_URI}/api/v1/auth/logout`,
@@ -125,6 +126,8 @@ export default function ProfileScreen() {
         router.replace("/(routes)/login");
       })
       .catch((error) => {
+        console.log(error.response.data);
+
         Toast.show("Error While Logout!", {
           type: "danger",
         });
