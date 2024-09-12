@@ -1,8 +1,8 @@
-import { View, Text, Image } from "react-native";
+import { View, Image } from "react-native";
 import { styles } from "@/styles/home/banner.style";
 import SwiperFlatList from "react-native-swiper-flatlist";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { SERVER_URI } from "@/utils/uri";
 import axios from "axios";
 import React from "react";
@@ -11,8 +11,10 @@ export default function HomeBannerSlider() {
   const [bannerData, setBannerData] = useState<BannerDataTypes[]>([]);
 
   const fetchBannerData = async () => {
-    const res = await axios.get(`${SERVER_URI}/api/v1/app/carousel`);
-    setBannerData(res.data.data);
+    try {
+      const res = await axios.get(`${SERVER_URI}/api/v1/app/carousel`);
+      setBannerData(res.data.data);
+    } catch (error) {}
   };
 
   // let [fontsLoaded, fontError] = useFonts({
@@ -25,10 +27,10 @@ export default function HomeBannerSlider() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container }}>
       <SwiperFlatList
-        autoplay
-        autoplayDelay={2}
+        // autoplay
+        // autoplayDelay={5}
         autoplayLoop
         showPagination
         paginationStyleItem={styles.dot}
@@ -36,12 +38,12 @@ export default function HomeBannerSlider() {
         paginationDefaultColor="#e9e9e9"
         data={bannerData}
         renderItem={({ item, index }) => (
-          <View key={index} style={styles.slide}>
-            <Image
-              source={{ uri: item } as any}
-              style={{ width: 410, flex: 1 }}
-            />
-          </View>
+          <Image
+            resizeMode="stretch"
+            key={index}
+            source={{ uri: item } as any}
+            style={{ width: 400, height: 250, borderRadius: 5, marginRight: 5 }}
+          />
         )}
       />
     </View>

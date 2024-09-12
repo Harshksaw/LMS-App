@@ -93,7 +93,7 @@ export default function ProfileScreen() {
     setShow(false);
     setDob(currentDate);
   };
-
+  const [buttonSpinner, setButtonSpinner] = useState(false);
   let [fontsLoaded, fontError] = useFonts({
     Raleway_600SemiBold,
     Raleway_700Bold,
@@ -107,11 +107,28 @@ export default function ProfileScreen() {
   }
 
   const logoutHandler = async () => {
-    await AsyncStorage.removeItem("token");
-    await AsyncStorage.removeItem("refresh_token");
-    // router.push("/(routes)/login");
-    router.dismissAll();
-    router.replace("/(routes)/login");
+    const token = await AsyncStorage.removeItem("token");
+    await axios
+      .post(
+        `${SERVER_URI}/api/v1/auth/logout`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(async (res) => {
+        await AsyncStorage.removeItem("token");
+        await AsyncStorage.removeItem("refresh_token");
+        router.dismissAll();
+        router.replace("/(routes)/login");
+      })
+      .catch((error) => {
+        Toast.show("Error While Logout!", {
+          type: "danger",
+        });
+      });
   };
 
   const updateCity = (newCity: string) => {

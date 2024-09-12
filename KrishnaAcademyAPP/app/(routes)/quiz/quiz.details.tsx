@@ -49,7 +49,9 @@ export default function QuizScreen() {
   const [questions, setQuestions] = useState<any[]>([]);
   const [savedQuestions, setSavedQuestions] = useState<any[]>([]);
   const [answered, setAnswered] = useState<number[]>([]);
-  const [attemptQuestions, setAttemptQuestions] = useState<number[]>([]);
+  const [attemptQuestions, setAttemptQuestions] = useState<
+    { id: string; index: number }[]
+  >([]);
   const [userScore, setUserScore] = useState<number>(0);
   const [tempId, setTempId] = useState<{ id: string; index: number } | boolean>(
     false
@@ -133,6 +135,8 @@ export default function QuizScreen() {
     const optionsArray = Object.values(questions[count]?.options);
     const selectedAnswer = optionsArray[index][language];
     const selectedAnswer2 = optionsArray[index].en;
+
+    setAttemptQuestions((preVal) => preVal.filter((i) => i.id !== id));
     setSelectedBox(index);
     setAnswered((prev) => [...prev, count]);
 

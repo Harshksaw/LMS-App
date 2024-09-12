@@ -60,7 +60,6 @@ const PaymentPage = () => {
       });
       return response.data;
     } catch (error) {
-      console.error(error.message);
       // throw error;
     }
   };
@@ -134,7 +133,6 @@ const PaymentPage = () => {
       Toast.show("Invalid coupon*", { type: "danger" });
     }
   };
-  console.log(itemId);
 
   // TODO razorpoay payment
 
@@ -340,7 +338,10 @@ const PaymentPage = () => {
           </View>
         )}
 
-        <Text style={styles.total}>Total Price: ₹{totalPrice}</Text>
+        <View style={styles.item}>
+          <Text style={styles.total}>Total Price:</Text>
+          <Text style={styles.total}>₹{totalPrice}</Text>
+        </View>
 
         <TouchableOpacity
           style={{
@@ -352,8 +353,7 @@ const PaymentPage = () => {
             alignItems: "center",
             marginHorizontal: "auto",
             width: "80%",
-            bottom: 24,
-            marginTop: 200,
+            marginBottom: 10,
           }}
           onPress={handlePayment}
         >

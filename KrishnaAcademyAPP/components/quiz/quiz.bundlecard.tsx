@@ -21,7 +21,7 @@ const QuizBundleCard = ({ quizzes }) => {
       >
         Quizzes
       </Text>
-      {quizzes?.map((quiz) => (
+      {quizzes?.map((quiz: any) => (
         <TouchableOpacity
           key={quiz._id}
           style={styles.quizCard}
@@ -34,9 +34,9 @@ const QuizBundleCard = ({ quizzes }) => {
         >
           <Image
             source={{
-              uri:
-                quiz.image ||
-                "https://img.freepik.com/free-vector/realistic-wooden-brown-judge-gavel_88138-139.jpg?size=626&ext=jpg&ga=GA1.1.1387862008.1722622005&semt=sph",
+              uri: !!quiz.image
+                ? quiz.image
+                : "https://img.freepik.com/free-vector/realistic-wooden-brown-judge-gavel_88138-139.jpg?size=626&ext=jpg&ga=GA1.1.1387862008.1722622005&semt=sph",
             }}
             style={styles.quizImage}
           />

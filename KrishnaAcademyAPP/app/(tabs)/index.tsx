@@ -21,6 +21,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigationState } from "@react-navigation/native";
 import { SERVER_URI } from "@/utils/uri";
 import axios from "axios";
+import { Toast } from "react-native-toast-notifications";
 
 const UserInfoContent = () => {
   const { user } = useUser();
@@ -72,6 +73,31 @@ const CustomDrawerContent = (props) => {
     } catch (error) {
       console.error("Error sharing:", error);
     }
+  };
+
+  const logoutHandler = async () => {
+    const token = await AsyncStorage.removeItem("token");
+    await axios
+      .post(
+        `${SERVER_URI}/api/v1/auth/logout`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(async (res) => {
+        await AsyncStorage.removeItem("token");
+        await AsyncStorage.removeItem("refresh_token");
+        router.dismissAll();
+        router.replace("/(routes)/login");
+      })
+      .catch((error) => {
+        Toast.show("Error While Logout!", {
+          type: "danger",
+        });
+      });
   };
 
   const navigation = useNavigation();
@@ -248,15 +274,7 @@ const CustomDrawerContent = (props) => {
       >
         <DrawerItem
           label="Logout"
-          onPress={() => {
-            AsyncStorage.removeItem("token");
-            AsyncStorage.removeItem("refresh_token");
-            // router.push("/(routes)/login");
-            router.dismissAll();
-            router.replace("/(routes)/login");
-
-            /* Add your sign out logic here */
-          }}
+          onPress={logoutHandler}
           icon={({ focused, size }) => (
             <Ionicons
               name="log-out"
