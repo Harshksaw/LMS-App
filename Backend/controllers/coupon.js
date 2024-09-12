@@ -9,7 +9,6 @@ exports.checkCoupon = async (req, res) => {
     if (!coupon) {
       return res.status(500).json({ message: "coupon code required" });
     }
-
     const couponData = await Coupon.findOne({ code: coupon });
 
     if (!couponData) {
@@ -119,13 +118,16 @@ exports.deleteCoupon = async (req, res) => {
 };
 
 exports.logsCoupon = async (req, res) => {
-  // userId;
-  // action;
-  // description;
-  // title;
-  // courseId;
   try {
     const data = await Logs.create(req.body);
+    if (req.body.logType == 1) {
+      const coupon = await Coupon.findOne({ code: req.body.title });
+
+      if (coupon && coupon?.used !== null) {
+        coupon.used = coupon.used + 1;
+        coupon.save();
+      }
+    }
     if (!data) {
       return res.status(404).json({ message: "something went wrong*" });
     }
@@ -141,7 +143,10 @@ exports.logsCoupon = async (req, res) => {
 
 exports.getLogs = async (req, res) => {
   try {
-    const data = await Logs.find(req.body).populate(["userId", "courseId"]);
+    // const data = await Logs.find(req.body).populate(["userId", "courseId"]);
+    const data = await Logs.find(req.body)
+      .populate("userId", ["_id", "name"])
+      .populate("courseId", ["_id", "bundleName"]);
     if (!data) {
       return res.status(404).json({ message: "logs not found*" });
     }

@@ -1,10 +1,9 @@
 // Import the required modules
-const express = require("express")
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
 // Import the required controllers and middleware functions
 const {
-
   signup,
   sendotp,
   changePassword,
@@ -18,15 +17,15 @@ const {
   findUserById,
   getAllUserCources,
   sendPasswordotp,
-
-} = require("../controllers/Auth")
+  logout,
+} = require("../controllers/Auth");
 const {
   resetPasswordToken,
   resetPassword,
-} = require("../controllers/ResetPassword")
+} = require("../controllers/ResetPassword");
 
-const { auth } = require("../middlewares/auth")
-const { buyQuiz, buyMaterials } = require("../controllers/BuyItem")
+const { auth } = require("../middlewares/auth");
+const { buyQuiz, buyMaterials } = require("../controllers/BuyItem");
 
 // Routes for Login, Signup, and Authentication
 
@@ -35,49 +34,43 @@ const { buyQuiz, buyMaterials } = require("../controllers/BuyItem")
 // ********************************************************************************************************
 
 // Route for user login
-router.post("/login", userLogin)
-router.post("/adminlogin", adminLogin)
+router.post("/login", userLogin);
+router.post("/logout", logout);
+router.post("/adminlogin", adminLogin);
 
 // Route for user signup
-router.post("/adminsignup",signupAdmin)
-router.post("/signup", signup)
+router.post("/adminsignup", signupAdmin);
+router.post("/signup", signup);
 
 // Route for sending OTP to the user's email
-router.post("/sendotp", sendotp)
-router.get("/getUserById/:id", getUserById)
-router.get("/updateUserById", updateUserById)
+router.post("/sendotp", sendotp);
+router.get("/getUserById/:id", getUserById);
+router.get("/updateUserById", updateUserById);
 
 // Route for Changing the password
-router.post("/sendPassOtp",  sendPasswordotp)
-router.post("/changepassword",  changePassword)
-
-
+router.post("/sendPassOtp", sendPasswordotp);
+router.post("/changepassword", changePassword);
 
 // ********************************************************************************************************
 //                                      Reset Password
 // ********************************************************************************************************
 
 // Route for generating a reset password token
-router.post("/reset-password-token", resetPasswordToken)
+router.post("/reset-password-token", resetPasswordToken);
 
 // Route for resetting user's password after verification
-router.post("/reset-password", resetPassword)
+router.post("/reset-password", resetPassword);
 
-router.post("/additionalDetails/:id",updateAdditionalDetails)
+router.post("/additionalDetails/:id", updateAdditionalDetails);
 
-
-router.post("/buyQuiz/:id", buyQuiz)
-router.post("/buyMaterials/:id", buyMaterials)
+router.post("/buyQuiz/:id", buyQuiz);
+router.post("/buyMaterials/:id", buyMaterials);
 /* ****************************************************************************************************** */
 // Route for finding all users
-router.get("/getAllUsers",findAllUsers);
-router.get("/getAllUserCourses/:id",getAllUserCources);
-
-
-
+router.get("/getAllUsers", findAllUsers);
+router.get("/getAllUserCourses/:id", getAllUserCources);
 
 // route for finding user by id
 
-
 // Export the router for use in the main application
-module.exports = router
+module.exports = router;

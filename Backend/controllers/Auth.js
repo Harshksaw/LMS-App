@@ -8,19 +8,13 @@ const mailSender = require("../utils/mailSender");
 const { passwordUpdated } = require("../mail/templates/passwordUpdate");
 const sendOtp = require("../utils/otpSender");
 
-
 const MAX_ATTEMPTS = 30;
 const BAN_DURATION = 24 * 60 * 60 * 1000; // 1 day in milliseconds
 
 //otp verification by SENDING OTP
 exports.sendotp = async (req, res) => {
-
   try {
-
-
     const { phoneNumber } = req.body;
-
-
 
     const checkUserPresent = await User.findOne({ phoneNumber });
 
@@ -28,7 +22,7 @@ exports.sendotp = async (req, res) => {
       return res.status(401).json({
         sucess: false,
         message: "User Already Exists",
-        OtpMessage:"User Already Exists",
+        OtpMessage: "User Already Exists",
       });
     }
 
@@ -38,7 +32,6 @@ exports.sendotp = async (req, res) => {
       lowerCaseAlphabets: false,
       specialChars: false,
     });
-
 
     const result = await OTP.findOne({ otp: otp });
     // console.log("Result is Generate OTP Func");
@@ -54,7 +47,7 @@ exports.sendotp = async (req, res) => {
 
     //creating... otpPayload
     console.log(phoneNumber, otp);
-    const otpPayload = { phoneNumber,otp };
+    const otpPayload = { phoneNumber, otp };
     //creating... an entry in Database for OTP
     const otpBody = await OTP.create(otpPayload);
 
@@ -66,7 +59,7 @@ exports.sendotp = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "OTP Sended SUCCESSFULLY !!",
-      OtpMessage:"OTP Sended SUCCESSFULLY !!"
+      OtpMessage: "OTP Sended SUCCESSFULLY !!",
     });
   } catch (error) {
     console.log(error.message);
@@ -210,22 +203,21 @@ exports.signup = async (req, res) => {
         success: false,
         message:
           "Phone number, OTP, and device data are required for non-Admin users",
-          OtpMessage:"Phone number, OTP, and device data are required for non-Admin users"
+        OtpMessage:
+          "Phone number, OTP, and device data are required for non-Admin users",
       });
     }
-
-   
 
     // Validate OTP for non-Admin users
     if (accountType !== "Admin") {
       const response = await OTP.find({ phoneNumber })
         .sort({ createdAt: -1 })
         .limit(1);
-      if (response.length === 0 || otp !== response[0].otp) {
+      if (response.length === 0 || otp != response[0].otp) {
         return res.status(400).json({
           success: false,
           message: "The OTP is not valid",
-          OtpMessage: "Invalid Otp | Not matched"
+          OtpMessage: "Invalid Otp | Not matched",
         });
       }
     }
@@ -247,14 +239,15 @@ exports.signup = async (req, res) => {
       success: true,
       data: newUser,
       message: "User registered successfully",
-      OtpMessage : "Phone number, OTP, and device data are required for non-Admin users",
+      OtpMessage:
+        "Phone number, OTP, and device data are required for non-Admin users",
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
       success: false,
       message: "User cannot be registered. Please try again.",
-      OtpMessage:"cannot be registered. Please try after Sometime",
+      OtpMessage: "cannot be registered. Please try after Sometime",
     });
   }
 };
@@ -262,11 +255,9 @@ exports.userLogin = async (req, res) => {
   try {
     const { phoneNumber, password, deviceData } = req.body;
 
-    if(phoneNumber == 7991168445){
+    if (phoneNumber == 7991168445) {
       const user = await User.findOne({ phoneNumber });
-      console.log("surpassing the device data");
       if (await bcrypt.compare(password, user.password)) {
-        console.log(password, user.password);
         //creating.. payload
         const payload = {
           email: user.phoneNumber,
@@ -280,7 +271,7 @@ exports.userLogin = async (req, res) => {
         });
         user.token = token;
         user.password = undefined;
-  
+
         //creating... cookie && //sending...  final RESPONSE
         const options = {
           expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
@@ -291,8 +282,8 @@ exports.userLogin = async (req, res) => {
           token,
           user,
           message: "LOGGED IN SUCCESSFULLY",
-        });}
-
+        });
+      }
     }
 
     if (typeof deviceData !== "object" || deviceData === null) {
@@ -302,7 +293,6 @@ exports.userLogin = async (req, res) => {
       });
     }
     if (!phoneNumber || !password || !deviceData) {
-      //   console.log("239");
       return res.status(403).json({
         success: false,
         message: "ALL FIELDS ARE REQUIRED",
@@ -328,18 +318,23 @@ exports.userLogin = async (req, res) => {
       });
     }
 
+    if (!!user.loginAttempts) {
+      return res.status(406).json({
+        success: false,
+        message: "you can register only one device at a time!!",
+      });
+    }
+
     //match device data with stored data for user
     const storedDeviceData = user.deviceData;
 
     if (!isDeviceDataMatching(storedDeviceData, deviceData)) {
-      user.loginAttempts += 1;
-
-      if (user.loginAttempts >= MAX_ATTEMPTS) {
-        user.isBanned = true;
-        user.banExpires = new Date(Date.now() + BAN_DURATION);
-      }
-
-      await user.save();
+      // user.loginAttempts += 1;
+      // if (user.loginAttempts >= MAX_ATTEMPTS) {
+      //   user.isBanned = true;
+      //   user.banExpires = new Date(Date.now() + BAN_DURATION);
+      // }
+      // await user.save();
       // throw new Error(
       //   "Device data does not match. Login attempts: " + user.loginAttempts
       // );
@@ -347,20 +342,21 @@ exports.userLogin = async (req, res) => {
 
     //matching... password && //generating... JWT token
     if (await bcrypt.compare(password, user.password)) {
-      console.log(password, user.password);
       //creating.. payload
       const payload = {
         email: user.phoneNumber,
         id: user._id,
         accountType: user.accountType,
       };
+      user.loginAttempts = 1;
+      user.save();
       //generating... jwt token
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
         // expiresIn:"24h",
         // expiresIn:"365d"
       });
       user.token = token;
-      user.password = undefined;
+      delete user.password;
 
       //creating... cookie && //sending...  final RESPONSE
       const options = {
@@ -393,8 +389,11 @@ exports.userLogin = async (req, res) => {
 exports.adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("🚀 ~ exports.adminLogin= ~ email, password }:", email, password )
-    
+    console.log(
+      "🚀 ~ exports.adminLogin= ~ email, password }:",
+      email,
+      password
+    );
 
     if (!email || !password) {
       return res.status(403).json({
@@ -483,69 +482,69 @@ function isDeviceDataMatching(
   return true;
 }
 
-
 exports.sendPasswordotp = async (req, res) => {
   const { phoneNumber } = req.body;
 
   try {
     const user = await User.findOne({ phoneNumber });
     if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit OTP
     // user.otp = otp;
-    user.otpExpires = Date.now() + 10 * 60 * 1000; // OTP expires in 10 minutes
+    user.otpExpires = Date.now() + 20 * 60 * 1000; // OTP expires in 20 minutes
     const otpPayload = { phoneNumber, otp };
     //creating... an entry in Database for OTP
     const otpBody = await OTP.create(otpPayload);
     // await user.save();
-
+    console.log(otp);
 
     await sendOtp(otp, phoneNumber);
 
-    res.status(200).json({ success: true, message: 'OTP sent successfully' });
+    res.status(200).json({ success: true, message: "OTP sent successfully" });
   } catch (error) {
-    console.error('Error sending OTP:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error("Error sending OTP:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
-}
+};
 
-exports.changePassword = async (req, res) => {  
+exports.changePassword = async (req, res) => {
   const { phoneNumber, otp, newPassword } = req.body;
 
   try {
+    const response = await OTP.find({ phoneNumber })
+      .sort({ createdAt: -1 })
+      .limit(1);
 
-      const response = await OTP.find({ phoneNumber })
-        .sort({ createdAt: -1 })
-        .limit(1);
-      if (response.length === 0 || otp !== response[0].otp) {
-        return res.status(400).json({
-          success: false,
-          message: "The OTP is not valid",
-        });
-
+    if (response.length === 0 || otp != response[0].otp) {
+      return res.status(400).json({
+        success: false,
+        message: "The OTP is not valid",
+      });
     }
 
-
- 
     const user = await User.findOne({ phoneNumber });
     if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     await user.save();
 
-    res.status(200).json({ success: true, message: 'Password changed successfully' });
+    res
+      .status(200)
+      .json({ success: true, message: "Password changed successfully" });
   } catch (error) {
-    console.error('Error changing password:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error("Error changing password:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
-
 
 exports.updateAdditionalDetails = async (req, res) => {
   const { id: userId } = req.params;
@@ -594,10 +593,8 @@ exports.findAllUsers = async (req, res) => {
   }
 };
 
-
-exports.getAllUserCources = async (req, res) => { 
+exports.getAllUserCources = async (req, res) => {
   try {
-
     const { id } = req.params;
 
     const users = await User.findById(id).populate("courses");
@@ -609,5 +606,28 @@ exports.getAllUserCources = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
-}
+};
+exports.logout = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    if (!id) {
+      res.status(404).json({ message: "user not found" });
+    }
 
+    const users = await User.findOneAndUpdate(
+      { _id: id },
+      { loginAttempts: 0, token: null },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      data: null,
+      message: "user logout successfull",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "user not found" });
+  }
+};

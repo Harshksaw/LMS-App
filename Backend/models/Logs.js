@@ -7,7 +7,7 @@ const logsSchema = new Schema({
   description: { type: String, required: false },
   logType: { type: Number, required: false },
   title: { type: String, required: false },
-  courseId: { type: Schema.Types.ObjectId, ref: "Course" },
+  courseId: { type: Schema.Types.ObjectId, ref: "Bundle" },
 });
 
 const Logs = mongoose.model("logs", logsSchema);

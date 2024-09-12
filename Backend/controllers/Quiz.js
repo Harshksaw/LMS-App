@@ -57,10 +57,8 @@ exports.UpdateQuiz = async (req, res) => {
     name,
     shortDescription,
 
-
     price,
     quizData,
-
 
     isPartOfBundle,
     timer,
@@ -175,15 +173,7 @@ exports.UpdateQuizDetails = async (req, res) => {
   const { id } = req.params;
   const { name, shortDescription, isPartOfBundle, timer } = req.body;
 
-  // console.log("🚀 ~ file", quizData, typeof quizData);
   const Quizimage = req.file ? req.file.path : "https://picsum.photos/200";
-
-  // if (!name || !shortDescription ) {
-  //   return res.status(400).json({
-  //     success: false,
-  //     message: "All fields are required !!",
-  //   });
-  // }
   try {
     const updatedQuiz = await Quiz.findByIdAndUpdate(
       id,
@@ -191,7 +181,7 @@ exports.UpdateQuizDetails = async (req, res) => {
         name,
         shortDescription,
         image: Quizimage,
-        isPartOfBundle,
+        isPartOfBundle: Boolean(isPartOfBundle),
         timer: timer,
       },
       { new: true }
