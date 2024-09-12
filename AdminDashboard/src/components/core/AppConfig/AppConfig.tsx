@@ -32,8 +32,8 @@ const AppConfig = () => {
     }
   };
   return (
-    <div className="max-w-full mx-auto mt-10 p-6 bg-gray-600 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center">
+    <div className="max-w-full mx-auto mt-4 p-6 bg-gray-600 rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-center text-white">
         Update Information
       </h2>
       <form onSubmit={handleSubmit}>
@@ -82,6 +82,7 @@ const AppConfig = () => {
             type="file"
             id="carouselImages"
             name="carouselImages"
+            multiple
             value={formData.carouselImages}
             onChange={handleChange}
             required

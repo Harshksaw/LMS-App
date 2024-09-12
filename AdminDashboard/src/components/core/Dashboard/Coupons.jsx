@@ -11,6 +11,7 @@ import Select from "react-select";
 
 const courseUrl = `${BASE_URL}/api/v1/bundle/course-bundle`;
 const url = `${BASE_URL}/api/v1/coupon/`;
+// const url = `http://127.0.0.1:4000/api/v1/coupon/`;
 
 const Coupons = () => {
   const navigate = useNavigate();
@@ -119,7 +120,7 @@ const Coupons = () => {
           "content-type": "application/json",
         },
       });
-      const data = await res.json();
+      await res.json();
       toast.success("coupon details removed successfully");
       getCoupons();
     } catch (error) {
@@ -165,6 +166,12 @@ const Coupons = () => {
                 key={item._id}
                 className="bg-black border from-purple-600 to-indigo-600 text-white text-center py-10 px-16 rounded-lg shadow-md relative"
               >
+                <p
+                  onClick={() => navigate("/dashboard/logs?query=" + item.code)}
+                  className="absolute text-xs top-3 right-3 cursor-pointer text-yellow-25"
+                >
+                  Used: {item.used ?? 0} times
+                </p>
                 <h3 className="text-2xl font-semibold mb-4">
                   {item.discountPercentage}% flat off
                 </h3>
@@ -189,7 +196,7 @@ const Coupons = () => {
                 <p className="text-sm">
                   Valid Till: {moment(item.expiryDate).format("DD MMM, YYYY")}
                 </p>
-                <p className="text-xs text-pink-400">
+                <p className="text-xs text-yellow-300 tracking-wider">
                   Status:{" "}
                   {moment(item.expiryDate).isBefore(new Date())
                     ? "Expired"
@@ -198,13 +205,15 @@ const Coupons = () => {
 
                 {!!item.courses.length ? (
                   <a
-                    className="text-xs text-white underline cursor-pointer"
+                    className="text-xs text-white underline cursor-pointer font-semibold"
                     onClick={() => showModalCourse(item)}
                   >
                     Show Assigned Course
                   </a>
                 ) : (
-                  <p className="text-xs text-pink-400">Not Assigned Course</p>
+                  <p className="text-xs text-yellow-300 font-semibold">
+                    Not Assigned Course
+                  </p>
                 )}
 
                 <button

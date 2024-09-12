@@ -1,6 +1,7 @@
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../services/apis";
+import { useSearchParams } from "react-router-dom";
 
 const logUrl = `${BASE_URL}/api/v1/app/logs`;
 // const logUrl = `http://127.0.0.1:4000/api/v1/app/logs`;
@@ -8,15 +9,26 @@ const logUrl = `${BASE_URL}/api/v1/app/logs`;
 const Logs = () => {
   const [loading, setLoading] = useState(false);
   const [logs, setLogs] = useState([]);
+
+  const [searchParams] = useSearchParams();
+  const coupon = searchParams.get("query");
+  console.log(coupon);
+
   const showLogs = async () => {
     setLoading(true);
+    const param = { logType: 1 };
+    if (coupon) {
+      param.title = coupon;
+    }
+    console.log(param);
+
     try {
       const res = await fetch(logUrl, {
         method: "post",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ logType: 1 }),
+        body: JSON.stringify(param),
       });
       const data = await res.json();
       setLogs(data?.data);
@@ -28,9 +40,12 @@ const Logs = () => {
   useEffect(() => {
     showLogs();
   }, []);
-  const skItem = () => {
+  const skItem = (key) => {
     return (
-      <div className="flex border-b border-richblack-800 px-6 py-8 w-full">
+      <div
+        className="flex border-b border-richblack-800 px-6 py-8 w-full"
+        key={key}
+      >
         <div className="flex flex-1 gap-x-4 ">
           <div className="h-[148px] min-w-[300px] rounded-xl skeleton "></div>
 
@@ -76,9 +91,9 @@ const Logs = () => {
           </thead>
           {loading && (
             <div>
-              {skItem()}
-              {skItem()}
-              {skItem()}
+              {skItem(1)}
+              {skItem(2)}
+              {skItem(3)}
             </div>
           )}
           <tbody>
@@ -94,7 +109,7 @@ const Logs = () => {
                   {log.title}
                 </td>
                 <td className="font-medium p-3 text-richblack-100">
-                  {log.courseId?.courseName ?? "N/A"}
+                  {log.courseId?.bundleName ?? "N/A"}
                 </td>
                 <td className="font-medium p-3 text-richblack-100">
                   {log.description ?? "N/A"}

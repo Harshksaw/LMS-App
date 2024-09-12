@@ -1,4 +1,4 @@
-import {useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
@@ -11,7 +11,6 @@ import { HiClock } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 
 import { formatDate } from "../../../../services/formatDate";
-
 
 import ConfirmationModal from "../../../common/ConfirmationModal";
 
@@ -31,7 +30,6 @@ export default function CoursesTable({
 
   const [confirmationModal, setConfirmationModal] = useState(null);
   const TRUNCATE_LENGTH = 25;
-
 
   // Loading Skeleton
   const skItem = () => {
@@ -53,26 +51,31 @@ export default function CoursesTable({
   };
 
   //bundle COurses
-  
+
   const deleteCourse = async (params) => {
+    if (!window.confirm("are you sure want to delete course bundle")) {
+      return;
+    }
     toast.loading("Deleting course...");
-     const userConfirmed = window.confirm("Are you sure you want to delete this course?");
-  
+    const userConfirmed = window.confirm(
+      "Are you sure you want to delete this course?"
+    );
+
     if (!userConfirmed) {
       return; // Exit the function if the user cancels the action
     }
     try {
-      toast.loading('deleting course.........');
+      toast.loading("deleting course.........");
       // console.log(params)
-      const res = await axios.post(`${BASE_URL}/api/v1/bundle/delete-bundle/${params}`);
+      const res = await axios.post(
+        `${BASE_URL}/api/v1/bundle/delete-bundle/${params}`
+      );
       setCourses(res);
       // Handle successful deletion, e.g., refresh the list or remove the item from state
       toast.dismiss();
       toast.success("Course deleted successfully");
 
-
       window.location.reload(); // Reload the window after successful deletion
-
     } catch (error) {
       toast.dismiss();
       console.error("Error deleting course:", error);
@@ -84,8 +87,8 @@ export default function CoursesTable({
     <>
       <Table className="rounded-2xl border border-richblack-800 ">
         {/* heading */}
-          {/* heading */}
-          <Thead>
+        {/* heading */}
+        <Thead>
           <Tr className="flex gap-x-10 rounded-t-3xl border-b bg-transparent border-b-richblack-800 px-6 py-2">
             <Td className="flex-1 text-left text-sm font-medium text-richblack-100">
               Bundle Courses
@@ -123,7 +126,7 @@ export default function CoursesTable({
               >
                 <Td className="flex flex-1 gap-x-4 relative">
                   {/* course Thumbnail */}
-               
+
                   <img
                     src={course?.image}
                     alt={course?.bundleName}
@@ -148,7 +151,6 @@ export default function CoursesTable({
                       Updated: {formatDate(course?.updatedAt)}
                     </p>
 
-
                     {/* course status */}
                     {course.status === "Draft" ? (
                       <p className="mt-2 flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-pink-100">
@@ -170,13 +172,13 @@ export default function CoursesTable({
                 <Td className="text-sm font-medium text-richblack-100">
                   ₹{course.price}
                 </Td>
-               
+
                 <Td className="text-left text-sm text-richblack-100">
-              <FaTrashAlt
-                className="cursor-pointer text-red-500"
-                onClick={() => deleteCourse(course._id)}
-              />
-            </Td>
+                  <FaTrashAlt
+                    className="cursor-pointer text-red-500"
+                    onClick={() => deleteCourse(course._id)}
+                  />
+                </Td>
               </Tr>
             ))
           )}
@@ -185,8 +187,6 @@ export default function CoursesTable({
 
       {/* Confirmation Modal */}
       {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
-
-     
     </>
   );
 }
