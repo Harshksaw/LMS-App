@@ -14,7 +14,7 @@ const {
   adminLogin,
   signupAdmin,
   findAllUsers,
-  findUserById,
+  // findUserById,
   getAllUserCources,
   sendPasswordotp,
   logout,
@@ -24,7 +24,7 @@ const {
   resetPassword,
 } = require("../controllers/ResetPassword");
 
-const { auth } = require("../middlewares/auth");
+// const { auth } = require("../middlewares/auth");
 const { buyQuiz, buyMaterials } = require("../controllers/BuyItem");
 
 // Routes for Login, Signup, and Authentication

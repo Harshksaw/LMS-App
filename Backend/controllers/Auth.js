@@ -4,12 +4,12 @@ const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const mailSender = require("../utils/mailSender");
-const { passwordUpdated } = require("../mail/templates/passwordUpdate");
+// const mailSender = require("../utils/mailSender");
+// const { passwordUpdated } = require("../mail/templates/passwordUpdate");
 const sendOtp = require("../utils/otpSender");
 
-const MAX_ATTEMPTS = 30;
-const BAN_DURATION = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+// const MAX_ATTEMPTS = 30;
+// const BAN_DURATION = 24 * 60 * 60 * 1000; // 1 day in milliseconds
 
 //otp verification by SENDING OTP
 exports.sendotp = async (req, res) => {
@@ -500,13 +500,11 @@ exports.sendPasswordotp = async (req, res) => {
     //creating... an entry in Database for OTP
     const otpBody = await OTP.create(otpPayload);
     // await user.save();
-    console.log(otp);
 
     await sendOtp(otp, phoneNumber);
 
     res.status(200).json({ success: true, message: "OTP sent successfully" });
   } catch (error) {
-    console.error("Error sending OTP:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };

@@ -4,25 +4,21 @@ const StudyMaterial = require("../models/material"); // Import the StudyMaterial
 
 require("dotenv").config();
 
-
 const { v4: uuidv4 } = require("uuid");
 const { adminId } = require("../utils/env");
 const Attempt = require("../models/Attempt");
-const AWS = require('aws-sdk');
+const AWS = require("aws-sdk");
 
 AWS.config.update({
   accessKeyId: process.env.AWS_KEY,
   secretAccessKey: process.env.AWS_SECRET_KEY,
-  region: 'ap-south-1'
+  region: "ap-south-1",
 });
 
 const s3 = new AWS.S3();
-const cloudFrontUrl = process.env.CLOUDFRONT_URL
+const cloudFrontUrl = process.env.CLOUDFRONT_URL;
 
 const uploadFile = async (file) => {
-
-
-
   const fileKey = `${uuidv4()}-${file.originalname}`;
   const params = {
     Bucket: process.env.S3_BUCKET_NAME,
@@ -39,11 +35,10 @@ const uploadFile = async (file) => {
 exports.uploadStudyMaterials = async (req, res) => {
   const { title, description, isListed, isPartOfBundle } = req.body;
   const file = req.file; // Assuming you're using multer for file uploads
-console.log(file)
+  console.log(file);
   try {
-
     const fileUrl = await uploadFile(file);
-    console.log("🚀 ~ exports.uploadStudyMaterials= ~ fileUrl:", fileUrl)
+    console.log("🚀 ~ exports.uploadStudyMaterials= ~ fileUrl:", fileUrl);
 
     // Upload file to S3 and get the CloudFront URL
     const fileType = file.mimetype;
@@ -78,7 +73,6 @@ console.log(file)
   }
 };
 
-
 exports.deleteStudyMaterial = async (req, res) => {
   try {
     const { id } = req.params;
@@ -86,13 +80,13 @@ exports.deleteStudyMaterial = async (req, res) => {
     // Fetch the study material from the database
     const studyMaterial = await StudyMaterial.findById(id);
     if (!studyMaterial) {
-      return res.status(404).send({ message: 'Study material not found' });
+      return res.status(404).send({ message: "Study material not found" });
     }
 
     // Delete the file from S3
     const params = {
       Bucket: process.env.S3_BUCKET_NAME,
-      Key: studyMaterial.fileUrl.split('/').pop() // Extract the S3 key from the file URL
+      Key: studyMaterial.fileUrl.split("/").pop(), // Extract the S3 key from the file URL
     };
 
     await s3.deleteObject(params).promise();
@@ -100,15 +94,15 @@ exports.deleteStudyMaterial = async (req, res) => {
     // Delete the study material from the database
     await StudyMaterial.findByIdAndDelete(id);
 
-    res.status(200).send({ message: 'Study material deleted successfully' });
+    res.status(200).send({ message: "Study material deleted successfully" });
   } catch (error) {
-    console.error('Error deleting study material:', error);
-    res.status(500).send({ message: 'Internal server error' });
+    console.error("Error deleting study material:", error);
+    res.status(500).send({ message: "Internal server error" });
   }
-}
+};
 exports.getAllStudyMaterials = async (req, res) => {
   try {
-    const studyMaterials = await StudyMaterial.find({ isListed:true });
+    const studyMaterials = await StudyMaterial.find({ isListed: true });
     if (studyMaterials.length === 0) {
       return res.status(200).json({
         success: false,
@@ -153,12 +147,14 @@ exports.getAllAdminStudyMaterials = async (req, res) => {
 
 exports.getAllBundleMaterial = async (req, res) => {
   try {
-    const studyMaterials = await StudyMaterial.find({ isPartOfBundle: true }).sort({ createdAt: -1 });
+    const studyMaterials = await StudyMaterial.find({
+      isPartOfBundle: true,
+    }).sort({ createdAt: -1 });
     if (studyMaterials.length === 0) {
       return res.json({
         success: false,
-        message: 'No study materials found',
-        data: []
+        message: "No study materials found",
+        data: [],
       });
     }
     return res.json({
@@ -220,7 +216,6 @@ exports.buyStudyMaterial = async (req, res) => {
     // Add the course ID to the studyMaterials array
     user.studyMaterials.push(materialId);
     await user.save();
-
   } catch (error) {
     console.log("Error", error);
     return res.status(500).json({
@@ -232,12 +227,12 @@ exports.buyStudyMaterial = async (req, res) => {
 
 //to test
 exports.getAllBoughtStudyMaterials = async (req, res) => {
-
-
   try {
     const { userId } = req.body;
 
-    const user = await User.findById({ _id: userId }).populate("studyMaterials");
+    const user = await User.findById({ _id: userId }).populate(
+      "studyMaterials"
+    );
 
     if (!user) {
       return res.status(403).json({
@@ -250,33 +245,30 @@ exports.getAllBoughtStudyMaterials = async (req, res) => {
       message: "All studyMaterials are here!!",
       data: user.studyMaterials,
     });
-
   } catch (error) {
-
     console.log(error);
     return res.status(500).json({
       success: false,
-      message: "user cannot LOGGED in, try again"
-
-    })
-
-
-
+      message: "user cannot LOGGED in, try again",
+    });
   }
-}
+};
 
 exports.getIsBundledMaterials = async (req, res) => {
-
   try {
-    const studyMaterials = await StudyMaterial.find({ isPartOfBundle: true }).sort({ createdAt: -1 });
-    console.log("🚀 ~ exports.getIsBundledMaterials= ~ studyMaterials:", studyMaterials)
-
+    const studyMaterials = await StudyMaterial.find({
+      isPartOfBundle: true,
+    }).sort({ createdAt: -1 });
+    console.log(
+      "🚀 ~ exports.getIsBundledMaterials= ~ studyMaterials:",
+      studyMaterials
+    );
 
     if (studyMaterials.length === 0) {
       return res.json({
         success: false,
-        message: 'No study materials found',
-        data: []
+        message: "No study materials found",
+        data: [],
       });
     }
     return res.json({
@@ -290,10 +282,7 @@ exports.getIsBundledMaterials = async (req, res) => {
       message: "Internal server error",
     });
   }
-
-}
-
-
+};
 
 exports.attemptQuiz = async (req, res) => {
   try {
@@ -318,58 +307,67 @@ exports.attemptQuiz = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
 exports.getAttemptById = async (req, res) => {
   try {
-    const { id} = req.params
-    console.log("🚀 ~ exports.getAttemptById= ~ id:", id)
+    const { id } = req.params;
+    console.log("🚀 ~ exports.getAttemptById= ~ id:", id);
 
     // Find the attempt by user and quiz
-    const attempt = await Attempt.findById(id).populate('questions.question');
-    console.log("🚀 ~ exports.getAttemptById= ~ attempt:", attempt)
+    const attempt = await Attempt.findById(id).populate("questions.question");
+    console.log("🚀 ~ exports.getAttemptById= ~ attempt:", attempt);
 
     if (!attempt) {
-      return res.status(404).json({ message: 'Attempt not found' });
+      return res.status(404).json({ message: "Attempt not found" });
     }
 
     res.status(200).json({
       success: true,
-      data: attempt
+      data: attempt,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
 //TODO be reviewed
 exports.getQuizAndMarkAttempt = async (req, res) => {
   try {
     const { quizId, attemptId } = req.params;
-    console.log("🚀 ~ exports.getQuizAndMarkAttempt= ~ quizId:", quizId, "attemptId:", attemptId);
+    console.log(
+      "🚀 ~ exports.getQuizAndMarkAttempt= ~ quizId:",
+      quizId,
+      "attemptId:",
+      attemptId
+    );
 
     // Fetch the quiz details
     const quiz = await Quiz.findById(quizId);
     console.log("🚀 ~ exports.getQuizAndMarkAttempt= ~ quiz:", quiz);
 
     // Fetch the attempt details and populate the questions.question field
-    const attempt = await Attempt.findById(attemptId).populate('questions.question');
+    const attempt = await Attempt.findById(attemptId).populate(
+      "questions.question"
+    );
     console.log("🚀 ~ exports.getQuizAndMarkAttempt= ~ attempt:", attempt);
 
     if (!quiz) {
-      return res.status(404).json({ message: 'Quiz not found' });
+      return res.status(404).json({ message: "Quiz not found" });
     }
 
     if (!attempt) {
-      return res.status(404).json({ message: 'Attempt not found' });
+      return res.status(404).json({ message: "Attempt not found" });
     }
 
     // Match the questions in the quiz with the questions in the attempt
-    const markedQuestions = quiz.questions.map(quizQuestion => {
-      const attemptQuestion = attempt.questions.find(aq => aq.question._id.toString() === quizQuestion._id.toString());
+    const markedQuestions = quiz.questions.map((quizQuestion) => {
+      const attemptQuestion = attempt.questions.find(
+        (aq) => aq.question._id.toString() === quizQuestion._id.toString()
+      );
       return {
         question: quizQuestion,
-        answer: attemptQuestion ? attemptQuestion.answer : null
+        answer: attemptQuestion ? attemptQuestion.answer : null,
       };
     });
 
@@ -380,8 +378,8 @@ exports.getQuizAndMarkAttempt = async (req, res) => {
         attemptId: attempt._id,
         user: attempt.user,
         quiz: quiz,
-        questions: markedQuestions
-      }
+        questions: markedQuestions,
+      },
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -407,37 +405,43 @@ exports.getQuizAndMarkAttempt = async (req, res) => {
 exports.getAllAttempById = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("🚀 ~ exports.getAllAttempById= ~ id:", id)
 
-    const attempts = await Attempt.find({ user: id }).populate('quiz');
+    const attempts = await Attempt.find({ user: id }).populate("quiz");
 
     if (!attempts) {
-      return res.status(404).json({ message: 'Attempt not found' });
+      return res.status(404).json({ message: "Attempt not found" });
     }
+
+    let filterAttemps = [];
+    [...attempts].reverse().forEach((item) => {
+      if (!filterAttemps.some((i) => i.quiz?._id == item?.quiz._id)) {
+        filterAttemps.push(item);
+      }
+    });
 
     res.status(200).json({
       success: true,
-      data: attempts
+      data: filterAttemps,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
-
+};
 
 exports.updateLeaderboard = async (req, res) => {
-
   try {
     const { userId, quizId, newScore } = req.body;
 
     // Find the user by userId
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).send({ message: 'User not found' });
+      return res.status(404).send({ message: "User not found" });
     }
 
     // Find the quiz result for the given quizId
-    let quizResult = user.quizResults.find(result => result.quiz.toString() === quizId);
+    let quizResult = user.quizResults.find(
+      (result) => result.quiz.toString() === quizId
+    );
 
     if (quizResult) {
       // If the new score is higher, update the score
@@ -461,25 +465,27 @@ exports.updateLeaderboard = async (req, res) => {
       await Leaderboard.create({ quiz: quizId, user: userId, score: newScore });
     }
 
-    res.status(200).send({ message: 'Leaderboard updated successfully' });
+    res.status(200).send({ message: "Leaderboard updated successfully" });
   } catch (error) {
-    console.error('Error updating leaderboard:', error);
-    res.status(500).send({ message: 'Internal server error' });
+    console.error("Error updating leaderboard:", error);
+    res.status(500).send({ message: "Internal server error" });
   }
-}
+};
 
 exports.getLeaderboard = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const leaderboard = await Leaderboard.find({ quiz: id }).sort({ score: -1 }).limit(10);
+    const leaderboard = await Leaderboard.find({ quiz: id })
+      .sort({ score: -1 })
+      .limit(10);
 
     res.status(200).send({
       success: true,
-      data: leaderboard
+      data: leaderboard,
     });
   } catch (error) {
-    console.error('Error fetching leaderboard:', error);
-    res.status(500).send({ message: 'Internal server error' });
+    console.error("Error fetching leaderboard:", error);
+    res.status(500).send({ message: "Internal server error" });
   }
 };
