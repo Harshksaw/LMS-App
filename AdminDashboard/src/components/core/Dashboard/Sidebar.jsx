@@ -20,10 +20,10 @@ export default function Sidebar() {
   );
   const { loading: authLoading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // to keep track of confirmation modal
-  const [confirmationModal, setConfirmationModal] = useState(null);
+  // const [confirmationModal, setConfirmationModal] = useState(null);
 
   // handle side bar menu - open / close
   // const [openSideMenu, setOpenSideMenu] = useState(false)
@@ -59,15 +59,15 @@ export default function Sidebar() {
   return (
     <>
       <div
-        className="sm:hidden text-white absolute left-4 top-3 cursor-pointer "
+        className="sm:hidden fixed text-white left-4 top-0 cursor-pointer "
         onClick={() => dispatch(setOpenSideMenu(!openSideMenu))}
       >
         {openSideMenu ? <IoMdClose size={33} /> : <HiMenuAlt1 size={33} />}
       </div>
-
+      {/* h-[calc(100vh-5rem)] */}
       {openSideMenu && (
-        <div className="flex h-[calc(100vh-5rem)] overflow-y-auto min-w-[100px] flex-col border-r-[1px] border-r-richblack-700 bg-richblack-800">
-          <div className="flex flex-col mt-6">
+        <div className="flex overflow-y-auto min-w-[100px] flex-col border-r-[1px] border-r-richblack-700 bg-richblack-800">
+          <div className="flex flex-col mt-5">
             {sidebarLinks.map((link) => {
               if (link.type && user?.accountType !== link.type) return null;
               return (
@@ -89,7 +89,7 @@ export default function Sidebar() {
               iconName={"VscSettingsGear"}
               setOpenSideMen={setOpenSideMenu}
             /> */}
-
+            {/* 
             <button
               onClick={() =>
                 setConfirmationModal({
@@ -101,18 +101,16 @@ export default function Sidebar() {
                   btn2Handler: () => setConfirmationModal(null),
                 })
               }
-              className=" "
+              className=""
             >
-              {/* <div className="flex items-center gap-x-2 px-8 py-2 text-sm font-medium text-richblack-300 hover:bg-richblack-700 relative">
+              <div className="flex items-center gap-x-2 px-8 py-2 text-sm font-medium text-richblack-300 hover:bg-richblack-700 relative">
                 <VscSignOut className="text-lg" />
                 <span>Logout</span>
-              </div> */}
-            </button>
+              </div>
+            </button> */}
           </div>
         </div>
       )}
-
-      {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
     </>
   );
 }

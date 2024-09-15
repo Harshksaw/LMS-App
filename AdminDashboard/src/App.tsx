@@ -86,7 +86,6 @@ function App() {
   return (
     <div className="w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
       <Navbar />
-
       {/* go upward arrow */}
       <button
         onClick={() => window.scrollTo(0, 0)}

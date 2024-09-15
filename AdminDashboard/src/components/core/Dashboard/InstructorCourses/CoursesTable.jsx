@@ -1,35 +1,18 @@
-import { useSelector } from "react-redux";
-
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
-
 import { useState } from "react";
 import { FaCheck, FaTrashAlt } from "react-icons/fa";
-
 import { HiClock } from "react-icons/hi";
-
-import { useNavigate } from "react-router-dom";
-
 import { formatDate } from "../../../../services/formatDate";
-
 import ConfirmationModal from "../../../common/ConfirmationModal";
-
 import toast from "react-hot-toast";
 import axios from "axios";
 import { BASE_URL } from "../../../../services/apis";
 
-export default function CoursesTable({
-  courses,
-  setCourses,
-  loading,
-  setLoading,
-}) {
-  console.log(courses);
-  const navigate = useNavigate();
-  const { token } = useSelector((state) => state.auth);
-
-  const [confirmationModal, setConfirmationModal] = useState(null);
-  const TRUNCATE_LENGTH = 25;
+export default function CoursesTable({ courses, setCourses, loading }) {
+  const [confirmationModal, setConfirmationModal] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
   // Loading Skeleton
   const skItem = () => {
@@ -52,35 +35,32 @@ export default function CoursesTable({
 
   //bundle COurses
 
-  const deleteCourse = async (params) => {
-    if (!window.confirm("are you sure want to delete course bundle")) {
-      return;
-    }
-    toast.loading("Deleting course...");
-    const userConfirmed = window.confirm(
-      "Are you sure you want to delete this course?"
-    );
+  const deleteCourse = (id) => {
+    setSelected(id);
+    setConfirmationModal(true);
+  };
 
-    if (!userConfirmed) {
-      return; // Exit the function if the user cancels the action
-    }
+  const deleteCourseSuccess = async () => {
+    setLoadingDelete(true);
     try {
       toast.loading("deleting course.........");
-      // console.log(params)
       const res = await axios.post(
-        `${BASE_URL}/api/v1/bundle/delete-bundle/${params}`
+        `${BASE_URL}/api/v1/bundle/delete-bundle/${selected}`
       );
       setCourses(res);
-      // Handle successful deletion, e.g., refresh the list or remove the item from state
-      toast.dismiss();
+      setSelected(null);
+      setConfirmationModal(false);
       toast.success("Course deleted successfully");
-
-      window.location.reload(); // Reload the window after successful deletion
-    } catch (error) {
+      window.location.reload();
+      setLoadingDelete(false);
       toast.dismiss();
-      console.error("Error deleting course:", error);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.error ?? "error while deleting course*"
+      );
+      setLoadingDelete(false);
+      toast.dismiss();
     }
-    toast.dismiss();
   };
 
   return (
@@ -186,7 +166,19 @@ export default function CoursesTable({
       </Table>
 
       {/* Confirmation Modal */}
-      {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
+      {confirmationModal && (
+        <ConfirmationModal
+          modalData={{
+            text1: "Are you sure?",
+            text2: "do you want to delete?",
+            btn1Text: "Cancel",
+            btn2Text: "Yes",
+            btn1Handler: () => setConfirmationModal(false),
+            btn2Handler: deleteCourseSuccess,
+            loadingDelete,
+          }}
+        />
+      )}
     </>
   );
 }
