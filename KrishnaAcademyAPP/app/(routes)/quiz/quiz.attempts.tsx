@@ -21,7 +21,7 @@ const QuizAttempts = () => {
     const fetchAttempts = async () => {
       try {
         const userI = await AsyncStorage.getItem("user");
-        const isUser = JSON.parse(userI);
+        const isUser = JSON.parse(userI as any);
         const response = await axios.get(
           `${SERVER_URI}/api/v1/quiz/getAllAttempt/${isUser._id}`
         );
@@ -51,14 +51,14 @@ const QuizAttempts = () => {
     );
   }
 
-  const handleSolutions = (id, quizId) => {
+  const handleSolutions = (id: string, quizId: string) => {
     router.push({
       pathname: "/(routes)/quiz/quiz.result",
       params: { attemptId: id, quizId: quizId },
     });
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: any }) => (
     <TouchableOpacity
       style={styles.card}
       onPress={() => handleSolutions(item._id, item.quiz._id)}

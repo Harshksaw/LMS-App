@@ -82,9 +82,7 @@ export default function CourseList({ level }) {
         // setcategories(res.data.layout.categories);
         fetchCourses();
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   }, []);
 
   const fetchCourses = () => {
@@ -97,7 +95,6 @@ export default function CourseList({ level }) {
       })
       .catch((error) => {
         setLoading(false);
-        console.log(error);
       });
   };
 
@@ -113,8 +110,8 @@ export default function CourseList({ level }) {
           style={{
             fontFamily: "outfit-bold",
             fontSize: 24,
-            color: '#000',
-            margin:10,
+            color: "#000",
+            margin: 10,
           }}
         >
           {level.toUpperCase()} Courses

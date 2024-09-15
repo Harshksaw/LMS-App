@@ -41,8 +41,6 @@ const StudyMaterialsList: React.FC = () => {
 
   const openPdfModal = () => {
     setSelectedPdfUri(pdfUri);
-    console.log("openPdfModal");
-    console.log(pdfUri, "pdfUri");
     if (!pdfUri) {
       return;
     }
@@ -62,7 +60,6 @@ const StudyMaterialsList: React.FC = () => {
       const response = await axios.get(
         `${SERVER_URI}/api/v1/study/getAllStudyMaterials`
       );
-      // console.log(response.data, "---");
       setStudyMaterials(response.data.data.slice(0, 5)); // Limit to 5 items
       setLoading(false);
       setRefreshing(false);
@@ -83,24 +80,18 @@ const StudyMaterialsList: React.FC = () => {
   };
 
   const handleOpenMaterial = async () => {
-    // console.log("open========", item) ;
     setModalVisible(true);
-    // console.log(item, "item.description");
     if (paymentStatus) {
       openPdfModal();
-      console.log("Payment Success-----1051");
     } else {
-      console.log("Payment required to open material");
     }
   };
 
   const onCloseMaterial = async () => {
-    console.log("close");
     setModalVisible(false);
   };
 
   const onPaymentSuccess = async (item) => {
-    console.log("Payment Success-----105");
     setPaymentStatus(true);
     openPdfModal(item.fileUrl);
   };
@@ -137,7 +128,6 @@ const StudyMaterialsList: React.FC = () => {
         onPaymentSuccess={() => onPaymentSuccess(selectedPdfUri)}
         itemType="Study Material"
         itemPrice="100"
-        handlePayment={() => console.log("Payment done")}
         handleClose={closePdfModal}
       />
 
@@ -148,15 +138,12 @@ const StudyMaterialsList: React.FC = () => {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.item}
-            // onPress={()=>{console.log(item.fileUrl, "item.description")}}
-
             // onPress={() => router.push({
             //   pathname: '(routes)/pdfviewer',
             //   params: { pdfUri: item.fileUrl },
             // })}
 
             onPress={() => {
-              console.log(item.fileUrl, "item-----");
               setPdfUri(item.fileUrl);
               handleOpenMaterial();
             }}
@@ -200,13 +187,13 @@ const StudyMaterialsList: React.FC = () => {
 
               /> */}
               <Image
-               style={{
-                width: 100,
-                height: 100,
-                borderRadius: 5,
-                alignSelf: "center",
-                objectFit: "cover",
-              }}
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 5,
+                  alignSelf: "center",
+                  objectFit: "cover",
+                }}
                 source={{
                   uri: "https://img.freepik.com/free-vector/realistic-wooden-brown-judge-gavel_88138-139.jpg?size=626&ext=jpg&ga=GA1.1.1387862008.1722622005&semt=sph",
                 }}

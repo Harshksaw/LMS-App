@@ -17,7 +17,6 @@ const StudyMaterials = () => {
   const route = useRoute();
   const { study } = route.params;
   const dataObj = JSON.parse(study);
-  console.log("🚀 ~ StudyMaterials ~ dataObj:", dataObj);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedPdfUri, setSelectedPdfUri] = useState("");
 
@@ -39,97 +38,91 @@ const StudyMaterials = () => {
         data={dataObj}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.item}
-            //   onPress={() => openPdfModal(item.fileUrl)} // Open PDF modal on press
-            //   onPress={() => console.log(item)} // Open PDF modal on press
-            // onPress={() => openPdfModal(item.fileUrl)}
-            //   onPress={() =>router.push('StudyMaterialsScreen', { })}
-          >
+          <TouchableOpacity style={styles.item}>
             {/* <View style={styles.itemContent}> */}
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 15,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "column",
+                  // justifyContent: 'space-between',
+                  alignItems: "center",
+                  width: "40%",
+                }}
+              >
+                <Image
+                  style={{
+                    width: "60%",
+                    height: "70%",
+                    borderRadius: 5,
+                    alignSelf: "center",
+                    objectFit: "cover",
+                  }}
+                  source={{
+                    uri: "https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png",
+                  }}
+                />
+                <Text
+                  style={{
+                    // position: "absolute",
+                    // top: 5,
+                    // right: 0,
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    color: "white",
+                    padding: 5,
+                    borderRadius: 10,
+                    fontSize: 20,
+                  }}
+                >
+                  {item?.isPaid ? item?.price : "free"}
+                </Text>
+              </View>
+
               <View
                 style={{
                   flexDirection: "row",
+                  justifyContent: "space-between",
                   alignItems: "center",
-                  gap: 15,
+                  width: "60%",
                 }}
               >
                 <View
                   style={{
                     flexDirection: "column",
-                    // justifyContent: 'space-between',
-                    alignItems: "center",
-                    width: "40%",
-                  }}
-                >
-                  <Image
-                    style={{
-                      width: "60%",
-                      height: "70%",
-                      borderRadius: 5,
-                      alignSelf: "center",
-                      objectFit: "cover",
-                    }}
-                    source={{
-                      uri: "https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png",
-                    }}
-                  />
-                  <Text
-                    style={{
-                      // position: "absolute",
-                      // top: 5,
-                      // right: 0,
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      color: "white",
-                      padding: 5,
-                      borderRadius: 10,
-                      fontSize: 20,
-                    }}
-                  >
-                    {item?.isPaid ? item?.price : "free"}
-                  </Text>
-                </View>
-
-                <View
-                  style={{
-                    flexDirection: "row",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    width: "60%",
+                    width: "80%",
                   }}
                 >
-                  <View
+                  <Text
+                    style={styles.title}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {item.title}
+                  </Text>
+                  <Text
                     style={{
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      width: "80%",
+                      color: "#575757",
+                      fontFamily: "Nunito_400Regular",
                     }}
                   >
-                    <Text
-                      style={styles.title}
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                    >
-                      {item.title}
-                    </Text>
-                    <Text
-                      style={{
-                        color: "#575757",
-                        fontFamily: "Nunito_400Regular",
-                      }}
-                    >
-                      {item.description.slice(0, 15)}
-                    </Text>
-                  </View>
+                    {item.description.slice(0, 15)}
+                  </Text>
                 </View>
               </View>
-              {/* <PaymentComponent 
+            </View>
+            {/* <PaymentComponent 
                   isVisible={isModalVisible}
                   onClose={closePdfModal}
                   /> */}
 
-              {/* <PaymentComponent item={item} itemType="Study Material" /> */}
+            {/* <PaymentComponent item={item} itemType="Study Material" /> */}
             {/* </View> */}
           </TouchableOpacity>
         )}

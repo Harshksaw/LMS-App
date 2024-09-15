@@ -1,7 +1,16 @@
 import { SERVER_URI } from "@/utils/uri";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, FlatList, ImageBackground, RefreshControl } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+  ImageBackground,
+  RefreshControl,
+} from "react-native";
 import {
   useFonts,
   Raleway_700Bold,
@@ -19,165 +28,153 @@ import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 const renderCources = ({ item }) => {
-
   return (
     <TouchableOpacity
-    style={{
-      backgroundColor: "#fff",
-      borderWidth: 1,
-      borderColor: "#d2cccc",
-      // paddingBottom: 150,
-
-      // marginBottom: 10,
-      minWidth: "45%",
-      maxWidth: "50%",
-      marginHorizontal: 5,
-      height: 250, // Ensure this is set to control the size
-      flexDirection: "column",
-      justifyContent: "space-between",
-      alignItems: "center",
-
-      gap:4,
-
-
-      padding: 4,
-      borderRadius: 20,
-      overflow: "hidden", // Ensure the borderRadius effect applies to children
-    }}
-    onPress={() =>
-      router.push({
-        pathname: "/(routes)/quiz-bundle",
-        params: { BundleId: item._id },
-      })
-    }
-  >
-    <View
       style={{
+        backgroundColor: "#fff",
+        borderWidth: 1,
+        borderColor: "#d2cccc",
+        // paddingBottom: 150,
 
-        position: "absolute",
-        top: 12,
-        left: 12,
-        justifyContent: "flex-start", // Aligns children vertically to the top
-        alignItems: "flex-start", // Aligns children horizontally to the left
-        backgroundColor: "green", // Dark background color
-        borderRadius: 10,
-        alignSelf: "flex-start",
-        padding: 5, // Add padding for better appearance
-      }}
-    >
-      <Text
-        style={{
-          color: "white", // White text color
-          fontSize: 12,
-          // fontWeight: "bold",
-          textAlign: "left", // Align text to the left
-        }}
-      >
-      ₹{item?.price}
-      </Text>
-    </View>
-
-    <View
-      style={{
-        backgroundColor: "#EBEBEB",
-        borderRadius: 10,
-        width: 150,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
         // marginBottom: 10,
-        marginTop: 48,
-      }}
-    >
-
-     
-      {item.image ? (
-        <ImageBackground
-          source={{ uri: item.image }}
-          style={{
-            width: 160,
-            height: 140, // Adjusted to fill the TouchableOpacity
-            // justifyContent: "center",
-
-            // alignItems: "center",
-          }}
-          imageStyle={{
-            borderRadius: 20, // Apply borderRadius to the image itself
-          }}
-        />
-      ) : (
-        <Ionicons
-          name="image-outline"
-          size={140}
-          color="red"
-          style={
-            {
-              // marginVertical: 10,
-            }
-          }
-        />
-      )}
-    </View>
-    <View
-      style={{
-        backgroundColor:'#fff',
-        // marginTop: -15,
-        width: "100%",
-        marginVertical: 10, 
+        minWidth: "45%",
+        maxWidth: "50%",
+        marginHorizontal: 5,
+        height: 250, // Ensure this is set to control the size
         flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "flex-start",
-        paddingHorizontal: 10,
+        justifyContent: "space-between",
+        alignItems: "center",
 
-        // position: "absolute",
-        // bottom: 0,
-        // left: 0,
-        // right: 0,
-        // height: 80, // Adjust the height for your shadow effect
-        // backgroundColor: "rgba(0,0,0,0.4)", // Semi-transparent view for shadow effect
-        // flexDirection: "column",
-        // justifyContent: "flex-start",
-        // alignItems: "center",
-        // gap: 10,
+        gap: 4,
+
+        padding: 4,
+        borderRadius: 20,
+        overflow: "hidden", // Ensure the borderRadius effect applies to children
       }}
+      onPress={() =>
+        router.push({
+          pathname: "/(routes)/quiz-bundle",
+          params: { BundleId: item._id },
+        })
+      }
     >
-      <Text
+      <View
         style={{
-          // color: "white",
-          fontSize: 16,
-          fontWeight: "600",
-          textAlign: "left",
+          position: "absolute",
+          top: 12,
+          left: 12,
+          justifyContent: "flex-start", // Aligns children vertically to the top
+          alignItems: "flex-start", // Aligns children horizontally to the left
+          backgroundColor: "green", // Dark background color
+          borderRadius: 10,
+          alignSelf: "flex-start",
+          padding: 5, // Add padding for better appearance
         }}
       >
-        {item.bundleName}
+        <Text
+          style={{
+            color: "white", // White text color
+            fontSize: 12,
+            // fontWeight: "bold",
+            textAlign: "left", // Align text to the left
+          }}
+        >
+          ₹{item?.price}
+        </Text>
+      </View>
 
-      </Text>
-    
-    </View>
-  </TouchableOpacity>
-  )
+      <View
+        style={{
+          backgroundColor: "#EBEBEB",
+          borderRadius: 10,
+          width: 150,
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          // marginBottom: 10,
+          marginTop: 48,
+        }}
+      >
+        {item.image ? (
+          <ImageBackground
+            source={{ uri: item.image }}
+            style={{
+              width: 160,
+              height: 140, // Adjusted to fill the TouchableOpacity
+              // justifyContent: "center",
 
+              // alignItems: "center",
+            }}
+            imageStyle={{
+              borderRadius: 20, // Apply borderRadius to the image itself
+            }}
+          />
+        ) : (
+          <Ionicons
+            name="image-outline"
+            size={140}
+            color="red"
+            style={
+              {
+                // marginVertical: 10,
+              }
+            }
+          />
+        )}
+      </View>
+      <View
+        style={{
+          backgroundColor: "#fff",
+          // marginTop: -15,
+          width: "100%",
+          marginVertical: 10,
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          paddingHorizontal: 10,
 
-}
-
+          // position: "absolute",
+          // bottom: 0,
+          // left: 0,
+          // right: 0,
+          // height: 80, // Adjust the height for your shadow effect
+          // backgroundColor: "rgba(0,0,0,0.4)", // Semi-transparent view for shadow effect
+          // flexDirection: "column",
+          // justifyContent: "flex-start",
+          // alignItems: "center",
+          // gap: 10,
+        }}
+      >
+        <Text
+          style={{
+            // color: "white",
+            fontSize: 16,
+            fontWeight: "600",
+            textAlign: "left",
+          }}
+        >
+          {item.bundleName}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 export default function CoursesScreen() {
   const [quizzes, setQuizzes] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-const [loading , setLoading]= useState(true)
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getQuizzes = async () => {
       try {
-        const res = await axios.get(`${SERVER_URI}/api/v1/bundle/course-bundle`);
+        const res = await axios.get(
+          `${SERVER_URI}/api/v1/bundle/course-bundle`
+        );
         setQuizzes(res.data.data);
 
-        console.log(res.data.data,'get all quizes');
-        setLoading(false)
-      } catch (error) {
-        console.log(error);
-      }
+        setLoading(false);
+      } catch (error) {}
     };
     getQuizzes();
   }, [refreshing]);
@@ -190,8 +187,6 @@ const [loading , setLoading]= useState(true)
       setRefreshing(false);
     }, 2000);
   }, []);
-
-
 
   let [fontsLoaded, fontError] = useFonts({
     Raleway_700Bold,
@@ -206,69 +201,64 @@ const [loading , setLoading]= useState(true)
     return null;
   }
 
-
   return (
     <View
-    style={{
-      // flex:1
-      // backgroundColor: "red",
-      // paddingBottom: 10,
-    }}
+      style={
+        {
+          // flex:1
+          // backgroundColor: "red",
+          // paddingBottom: 10,
+        }
+      }
     >
-
-
       {loading ? (
         <Loader />
       ) : (
-       
-      <View
-      style={{
+        <View
+          style={{
+            // marginHorizontal: 10,
+            // backgroundColor: "red",
 
+            flexDirection: "column",
+            justifyContent: "center",
+            // alignItems: "center",
 
-        // marginHorizontal: 10,
-        // backgroundColor: "red",
+            // gap:10
 
-        flexDirection: "column",
-        justifyContent: "center",
-        // alignItems: "center",
-      
-        // gap:10
+            // height: "100%",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 24,
+              fontWeight: "bold",
+              fontVariant: ["small-caps"],
+              color: "black",
+              textAlign: "center",
+              marginVertical: 10,
+            }}
+          >
+            Courses
+          </Text>
 
-
-        // height: "100%",
-      }}
-    >
-
-      <Text
-      style={{
-        fontSize: 24,
-        fontWeight: "bold",
-        fontVariant: ["small-caps"],
-        color: "black",
-        textAlign: "center",
-        marginVertical: 10,
-      }}
-      >
-        Courses
-      </Text>
-      
-      <FlatList
-      style={{
-
-      }}
-          data={quizzes}
-        renderItem={renderCources}
-        contentContainerStyle={{ width: "100%", gap: 10,paddingBottom:100 }}
-        columnWrapperStyle={{ gap: 10 }}
-        showsVerticalScrollIndicator={false}
-        numColumns={2}
-        keyExtractor={(item) => item.id}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-
-      />
-    </View>
+          <FlatList
+            style={{}}
+            data={quizzes}
+            renderItem={renderCources}
+            contentContainerStyle={{
+              width: "100%",
+              gap: 10,
+              paddingBottom: 100,
+            }}
+            columnWrapperStyle={{ gap: 10 }}
+            showsVerticalScrollIndicator={false}
+            numColumns={2}
+            keyExtractor={(item) => item.id}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          />
+        </View>
       )}
     </View>
   );
@@ -276,21 +266,21 @@ const [loading , setLoading]= useState(true)
 
 const styles = StyleSheet.create({
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     zIndex: 13,
     bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Transparent gray background
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Transparent gray background
   },
   comingSoonText: {
     fontSize: 30,
-    fontWeight: 'bold',
-    fontVariant: ['small-caps'],
+    fontWeight: "bold",
+    fontVariant: ["small-caps"],
 
-    color: 'white',
+    color: "white",
   },
 });

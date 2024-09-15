@@ -35,8 +35,6 @@ const InfoScreen = ({ data }: any) => (
         paddingVertical: 20,
       }}
     >
-      {/* { console.log("🚀 ~ data------------:", data)} */}
-
       <Text style={styles.sectionTitle}>{data?.bundleName}</Text>
 
       <View

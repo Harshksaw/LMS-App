@@ -116,7 +116,6 @@ export default function LoginScreen() {
         type: "danger",
       });
     }
-
     await axios
       .post(`${SERVER_URI}/api/v1/auth/login`, {
         phoneNumber: userInfo.phoneNumber,
@@ -126,19 +125,17 @@ export default function LoginScreen() {
       .then(async (res) => {
         await AsyncStorage.setItem("token", res.data.token);
         await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
-
         router.dismissAll();
         router.replace("/(tabs)");
       })
       .catch((error) => {
         setButtonSpinner(false);
         if (error.response.status == 406) {
-          Toast.show("you can login at on device only", {
+          Toast.show("you can login at one device only at a time", {
             type: "danger",
           });
           return;
         }
-
         Toast.show("Wrong Phone Number or Password!", {
           type: "danger",
         });

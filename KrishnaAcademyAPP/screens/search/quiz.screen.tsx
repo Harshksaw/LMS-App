@@ -158,7 +158,6 @@ export default function QuizScreen() {
           placement: "top",
           style: { marginTop: 30 },
         });
-        console.log(error);
       }
     };
     getQuizzes();

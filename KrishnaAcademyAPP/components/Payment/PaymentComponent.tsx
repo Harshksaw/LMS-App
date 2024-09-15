@@ -52,18 +52,6 @@ const PaymentComponent = ({
         setPaymentStatus(true);
 
         setPaymentStatus(false);
-        // setPaymentData(error);
-
-        console.log(
-          "Error in payment",
-          error.code,
-          error.description,
-          error.source,
-          error.metadata
-        );
-        // alert(
-        //   `Error: ${error.code} | ${error.description} | ${error.source} | ${error.metadata}`
-        // );
       });
   };
   const handlePayment = async () => {
@@ -76,10 +64,6 @@ const PaymentComponent = ({
 
       await handleRazorPay();
 
-      if (paymentStatus) {
-        console.log("Payment Success75");
-        console.log(paymentData);
-      }
       onClose();
       onPaymentSuccess();
 
@@ -90,12 +74,8 @@ const PaymentComponent = ({
 
       // On successful payment, navigate to the respective item screen
       // navigation.navigate(itemType, { item });
-    } catch (error) {
-      console.error("Payment failed", error);
-    }
+    } catch (error) {}
   };
-
-
 
   return (
     <Modal transparent={true} visible={isVisible} animationType="slide">

@@ -78,8 +78,6 @@ export default function ProfileScreen() {
   const [usercity, setCity] = useState(user?.additionalDetails?.city ?? "");
   const [show, setShow] = useState(false);
 
-  // console.log(user._id);
-
   useEffect(() => {
     getUser().then((user) => {
       setDob(new Date(user?.additionalDetails?.dob || new Date()));
@@ -93,7 +91,6 @@ export default function ProfileScreen() {
     setShow(false);
     setDob(currentDate);
   };
-  const [buttonSpinner, setButtonSpinner] = useState(false);
   let [fontsLoaded, fontError] = useFonts({
     Raleway_600SemiBold,
     Raleway_700Bold,
@@ -126,8 +123,6 @@ export default function ProfileScreen() {
         router.replace("/(routes)/login");
       })
       .catch((error) => {
-        console.log(error.response.data);
-
         Toast.show("Error While Logout!", {
           type: "danger",
         });

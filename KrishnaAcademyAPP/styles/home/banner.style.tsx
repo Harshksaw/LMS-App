@@ -10,6 +10,9 @@ export const styles = StyleSheet.create({
     marginVertical: 10,
     height: hp("25%"),
     marginHorizontal: 16,
+    flex: 1,
+    borderRadius: 7,
+    overflow: "hidden",
   },
 
   slide: {

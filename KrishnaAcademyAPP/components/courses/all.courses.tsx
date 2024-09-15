@@ -22,7 +22,7 @@ import { SERVER_URI } from "@/utils/uri";
 import CourseCard from "@/components/cards/course.card";
 
 export default function AllCourses() {
-  const dummyJson =[
+  const dummyJson = [
     {
       _id: "5f7399d9597c3438287399da",
       courseName: "Introduction to Programming",
@@ -32,24 +32,31 @@ export default function AllCourses() {
       thumbnail: "https://picsum.photos/200",
       tag: ["programming", "beginner"],
       category: "5f7399d9597c3438287399d8",
-      studentsEnrolled: ["5f7399d9597c3438287399d7", "5f7399d9597c3438287399d6"],
+      studentsEnrolled: [
+        "5f7399d9597c3438287399d7",
+        "5f7399d9597c3438287399d6",
+      ],
       instructions: ["Follow the instructions carefully"],
       status: "Published",
-      createdAt: "2021-01-01T00:00:00.000Z"
+      createdAt: "2021-01-01T00:00:00.000Z",
     },
     {
       _id: "5f7399d9597c3438287399db",
       courseName: "Data Structures and Algorithms",
-      courseDescription: "This course covers advanced data structures and algorithms",
+      courseDescription:
+        "This course covers advanced data structures and algorithms",
       instructor: "5f7399d9597c3438287399d9",
       price: 29.99,
       thumbnail: "https://picsum.photos/200",
       tag: ["data structures", "algorithms"],
       category: "5f7399d9597c3438287399d8",
-      studentsEnrolled: ["5f7399d9597c3438287399d5", "5f7399d9597c3438287399d4"],
+      studentsEnrolled: [
+        "5f7399d9597c3438287399d5",
+        "5f7399d9597c3438287399d4",
+      ],
       instructions: ["Complete the exercises carefully"],
       status: "Published",
-      createdAt: "2021-01-02T00:00:00.000Z"
+      createdAt: "2021-01-02T00:00:00.000Z",
     },
     {
       _id: "5f7399d9597c3438287399dc",
@@ -60,10 +67,13 @@ export default function AllCourses() {
       thumbnail: "https://picsum.photos/200",
       tag: ["web development", "beginner"],
       category: "5f7399d9597c3438287399d8",
-      studentsEnrolled: ["5f7399d9597c3438287399d3", "5f7399d9597c3438287399d2"],
+      studentsEnrolled: [
+        "5f7399d9597c3438287399d3",
+        "5f7399d9597c3438287399d2",
+      ],
       instructions: ["Follow the instructions carefully"],
       status: "Draft",
-      createdAt: "2021-01-03T00:00:00.000Z"
+      createdAt: "2021-01-03T00:00:00.000Z",
     },
     {
       _id: "5p0399d9597c73382s73c9rc",
@@ -74,12 +84,15 @@ export default function AllCourses() {
       thumbnail: "https://picsum.photos/200",
       tag: ["machine learning", "beginner"],
       category: "5f7399d9597c3438287399d8",
-      studentsEnrolled: ["5f7399d9597c3438287399d1", "5f7399d9597c3438287399d0"],
+      studentsEnrolled: [
+        "5f7399d9597c3438287399d1",
+        "5f7399d9597c3438287399d0",
+      ],
       instructions: ["Complete the exercises carefully"],
       status: "Published",
-      createdAt: "2021-01-01T00:00:00.000Z"
-    }
-  ]
+      createdAt: "2021-01-01T00:00:00.000Z",
+    },
+  ];
   const [courses, setCourses] = useState<CoursesType[]>(dummyJson);
   const [loading, setLoading] = useState(true);
   const flatListRef = useRef(null);
@@ -90,9 +103,7 @@ export default function AllCourses() {
       .then((res: any) => {
         setCourses(res.data.courses);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   }, []);
 
   let [fontsLoaded, fontError] = useFonts({
@@ -107,15 +118,14 @@ export default function AllCourses() {
   }
 
   return (
-    <View style={{ flex: 1}}>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
           paddingHorizontal: 16,
-          paddingBottom:16
-          
+          paddingBottom: 16,
         }}
       >
         <Text
@@ -147,24 +157,22 @@ export default function AllCourses() {
         keyExtractor={(item) => item._id.toString()}
         renderItem={({ item }) => <CourseCard item={item} />}
       /> */}
-        <FlatList
+      <FlatList
         ref={flatListRef}
         data={courses}
-contentContainerStyle={{ width: "100%", gap: 0, paddingHorizontal: 16}}
-columnWrapperStyle={{ gap: 8 }}
-showsVerticalScrollIndicator={false}
-
-numColumns={2}
-keyExtractor={(item) => item._id.toString()}
-renderItem={({ item }) => <CourseCard item={item} />}
-// refreshControl={
-//   <RefreshControl
-//     refreshing={refreshing}
-//     onRefresh={onRefresh}
-//   />
-// }
-
-/>
+        contentContainerStyle={{ width: "100%", gap: 0, paddingHorizontal: 16 }}
+        columnWrapperStyle={{ gap: 8 }}
+        showsVerticalScrollIndicator={false}
+        numColumns={2}
+        keyExtractor={(item) => item._id.toString()}
+        renderItem={({ item }) => <CourseCard item={item} />}
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={refreshing}
+        //     onRefresh={onRefresh}
+        //   />
+        // }
+      />
     </View>
   );
 }

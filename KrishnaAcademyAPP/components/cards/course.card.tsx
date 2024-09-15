@@ -7,11 +7,9 @@ import {
 } from "react-native-responsive-screen";
 
 export default function CourseCard({ item }: { item: CoursesType }) {
-  console.log(item)
   return (
     <TouchableOpacity
       style={styles.container}
-      
       onPress={() =>
         router.push({
           pathname: "/(routes)/course-details",
@@ -22,13 +20,13 @@ export default function CourseCard({ item }: { item: CoursesType }) {
       <View style={{ paddingHorizontal: 10 }}>
         <Image
           style={{
-            width: '100%',
+            width: "100%",
             height: 220,
             borderRadius: 5,
             alignSelf: "center",
             objectFit: "cover",
           }}
-          source={item.thumbnail }
+          source={item.thumbnail}
         />
         <View style={{ width: wp(85) }}>
           <Text
@@ -124,7 +122,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 }, // Shadow direction and distance for iOS
     shadowOpacity: 0.2, // Shadow opacity for iOS
     shadowRadius: 3.84, // Shadow blur radius for iOS
-    
   },
   ratingText: {
     color: "white",

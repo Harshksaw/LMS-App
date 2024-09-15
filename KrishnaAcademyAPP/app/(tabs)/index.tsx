@@ -57,8 +57,6 @@ const CustomDrawerContent = (props) => {
   useEffect(() => {
     const fetchBannerData = async () => {
       const res = await axios.get(`${SERVER_URI}/api/v1/app/socialMedia`);
-      console.log(res.data, "---response.datwa");
-      // setBannerData(res.data.data);
       setSocialMedia(res.data);
     };
     fetchBannerData();

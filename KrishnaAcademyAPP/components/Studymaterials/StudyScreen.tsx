@@ -11,7 +11,6 @@ import {
 import axios from "axios";
 import { SERVER_URI } from "@/utils/uri";
 
-
 import { router, useNavigation } from "expo-router";
 // import PDFViewerModal from "../app/(routes)/pdfviewer";
 import { Image } from "expo-image";
@@ -37,8 +36,7 @@ const StudyMaterialsScreen: React.FC = () => {
 
   const openPdfModal = () => {
     setSelectedPdfUri(pdfUri);
-    console.log("openPdfModal");
-    console.log(pdfUri, "pdfUri");
+
     if (!pdfUri) {
       return;
     }
@@ -58,7 +56,6 @@ const StudyMaterialsScreen: React.FC = () => {
       const response = await axios.get(
         `${SERVER_URI}/api/v1/study/getAllStudyMaterials`
       );
-      console.log(response.data, "---");
       setStudyMaterials(response.data.data); // Limit to 5 items
       setLoading(false);
       setRefreshing(false);
@@ -79,23 +76,16 @@ const StudyMaterialsScreen: React.FC = () => {
   };
 
   const handleOpenMaterial = async () => {
-    // console.log("open========", item) ;
     setModalVisible(true);
-    // console.log(item, "item.description");
 
-      openPdfModal();
-
+    openPdfModal();
   };
 
   const onCloseMaterial = async () => {
-    console.log("close");
     setModalVisible(false);
   };
 
-
-
-
-  if(studyMaterials.length === 0){
+  if (studyMaterials.length === 0) {
     return (
       <View style={styles.centered}>
         <Text>NO Study materials found</Text>
@@ -130,50 +120,54 @@ const StudyMaterialsScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text
-      style={{
-        fontSize:24,
-        textAlign:'center',
-        fontWeight:'bold',
-      }}
+        style={{
+          fontSize: 24,
+          textAlign: "center",
+          fontWeight: "bold",
+        }}
       >
         Free Study Materials
       </Text>
-     
-    
 
       <FlatList
         data={studyMaterials}
-
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.item}
-              onPress={() => router.push({
-              pathname: '(routes)/pdfviewer',
-              params: { pdfUri: item.fileUrl },
-            })}
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() =>
+              router.push({
+                pathname: "(routes)/pdfviewer",
+                params: { pdfUri: item.fileUrl },
+              })
+            }
           >
-          <Image
-            style={{
-              width: '30%',
-              height: '90%',
-              borderRadius: 5,
-              alignSelf: "center",
-              objectFit: "cover",
-            }}
-            source={{ uri: 'https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png' }}
-          />
-          <View style={{ justifyContent:'center',marginTop:15, }}>
-
+            <Image
+              style={{
+                width: "30%",
+                height: "90%",
+                borderRadius: 5,
+                alignSelf: "center",
+                objectFit: "cover",
+              }}
+              source={{
+                uri: "https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png",
+              }}
+            />
+            <View style={{ justifyContent: "center", marginTop: 15 }}>
               <Text
-              numberOfLines={2}
-              
-              style={{ maxWidth: '90%', fontSize: 16, fontWeight: "bold" , margin: 5}}>{item.title.slice(0,80)}</Text>
-              
-
-
-          </View>
-        </TouchableOpacity>
-          
+                numberOfLines={2}
+                style={{
+                  maxWidth: "90%",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  margin: 5,
+                }}
+              >
+                {item.title.slice(0, 80)}
+              </Text>
+            </View>
+          </TouchableOpacity>
         )}
       />
     </View>
@@ -181,35 +175,32 @@ const StudyMaterialsScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  containercard: {
+    // position: 'relative',
+    backgroundColor: "white",
+    marginBottom: 10,
+    padding: 12,
 
-    containercard: {
-      // position: 'relative',
-      backgroundColor: "white",
-      marginBottom: 10,
-      padding: 12,
-  
-      // minWidth: "49%",
-      // maxWidth: "100%",
-      marginHorizontal: 0,
-      height: 200, // Ensure this is set to control the size
+    // minWidth: "49%",
+    // maxWidth: "100%",
+    marginHorizontal: 0,
+    height: 200, // Ensure this is set to control the size
 
-      // justifyContent: "center",
-      borderRadius: 20,
-      overflow: "hidden", // Ensure the borderRadius effect applies to children
-      elevation: 4, // Adds shadow for Android
-      shadowColor: "#000000", // Shadow color for iOS
-      shadowOffset: { width: 0, height: 2 }, // Shadow direction and distance for iOS
-      shadowOpacity: 0.2, // Shadow opacity for iOS
-      shadowRadius: 3.84, // Shadow blur radius for iOS
-  
-    },
+    // justifyContent: "center",
+    borderRadius: 20,
+    overflow: "hidden", // Ensure the borderRadius effect applies to children
+    elevation: 4, // Adds shadow for Android
+    shadowColor: "#000000", // Shadow color for iOS
+    shadowOffset: { width: 0, height: 2 }, // Shadow direction and distance for iOS
+    shadowOpacity: 0.2, // Shadow opacity for iOS
+    shadowRadius: 3.84, // Shadow blur radius for iOS
+  },
 
   container: {
     flex: 1,
     // paddingTop: 40,
     // justifyContent: "center",
     // alignItems: "center",
-
   },
   heading: {
     fontSize: 24,
@@ -247,4 +238,3 @@ const styles = StyleSheet.create({
 });
 
 export default StudyMaterialsScreen;
-

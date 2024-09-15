@@ -1,4 +1,4 @@
-import { View, Image } from "react-native";
+import { View, Image, Dimensions } from "react-native";
 import { styles } from "@/styles/home/banner.style";
 import SwiperFlatList from "react-native-swiper-flatlist";
 
@@ -13,15 +13,11 @@ export default function HomeBannerSlider() {
   const fetchBannerData = async () => {
     try {
       const res = await axios.get(`${SERVER_URI}/api/v1/app/carousel`);
-      setBannerData(res.data.data);
+      setBannerData([...res.data.data, ...res.data.data]);
+      // setBannerData(res.data.data);
     } catch (error) {}
   };
 
-  // let [fontsLoaded, fontError] = useFonts({
-  //   Raleway_700Bold,
-  //   Nunito_400Regular,
-  //   Nunito_700Bold,
-  // });
   useEffect(() => {
     fetchBannerData();
   }, []);
@@ -29,21 +25,36 @@ export default function HomeBannerSlider() {
   return (
     <View style={{ ...styles.container }}>
       <SwiperFlatList
-        // autoplay
-        // autoplayDelay={5}
+        autoplay
+        autoplayDelay={3}
         autoplayLoop
+        automaticallyAdjustContentInsets
+        autoplayLoopKeepAnimation
         showPagination
+        disableGesture
         paginationStyleItem={styles.dot}
         paginationActiveColor="red"
         paginationDefaultColor="#e9e9e9"
         data={bannerData}
+        removeClippedSubviews
         renderItem={({ item, index }) => (
-          <Image
-            resizeMode="stretch"
-            key={index}
-            source={{ uri: item } as any}
-            style={{ width: 400, height: 250, borderRadius: 5, marginRight: 5 }}
-          />
+          <View
+            style={{
+              width: Dimensions.get("window").width - (5 + index + 3),
+              flex: 1,
+              marginRight: 5,
+            }}
+          >
+            <Image
+              resizeMode="cover"
+              key={index}
+              source={{ uri: item } as any}
+              style={{
+                borderRadius: 7,
+                flex: 1,
+              }}
+            />
+          </View>
         )}
       />
     </View>

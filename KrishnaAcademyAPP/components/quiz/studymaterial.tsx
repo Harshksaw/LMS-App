@@ -1,17 +1,20 @@
-import { Image } from 'expo-image';
-import React from 'react';
-import { View, Text, StyleSheet,  TouchableOpacity, FlatList } from 'react-native';
+import { Image } from "expo-image";
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 
-import { usePreventScreenCapture } from 'expo-screen-capture';
+import { usePreventScreenCapture } from "expo-screen-capture";
 
 const StudyMaterialCard = ({ studyMaterials }) => {
   usePreventScreenCapture();
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Study Materials</Text>
-   
-     
-    
 
       <FlatList
         data={studyMaterials}
@@ -20,35 +23,22 @@ const StudyMaterialCard = ({ studyMaterials }) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={{
-                flex: 1,
-                marginBottom: 16,
-                flexDirection: "column",
-                justifyContent: "space-between",
-                alignItems: "center",
+              flex: 1,
+              marginBottom: 16,
+              flexDirection: "column",
+              justifyContent: "space-between",
+              alignItems: "center",
 
-                height: 150,
-                maxWidth: "50%",
-                gap: 10,
-                padding: 10,
-                margin: 10,
-            
-                backgroundColor: "#f0e5e5",
-                borderRadius: 8,
-              }}
-            // onPress={()=>{console.log(item.fileUrl, "item.description")}}
+              height: 150,
+              maxWidth: "50%",
+              gap: 10,
+              padding: 10,
+              margin: 10,
 
-            // onPress={() => router.push({
-            //   pathname: '(routes)/pdfviewer',
-            //   params: { pdfUri: item.fileUrl },
-            // })}
-
-            onPress={() => {
-            //   console.log(item.fileUrl, "item-----");
-            //   setPdfUri(item.fileUrl);
-            //   handleOpenMaterial();
+              backgroundColor: "#f0e5e5",
+              borderRadius: 8,
             }}
           >
-            
             <View
               style={{
                 flexDirection: "column",
@@ -66,44 +56,43 @@ const StudyMaterialCard = ({ studyMaterials }) => {
                   objectFit: "cover",
                 }}
                 source={{
-                    uri: "https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png",
-                  }}
+                  uri: "https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png",
+                }}
               />
 
               <Text
-              
-              style={ {
-        fontSize: 14,
-        textAlign:'left',
-        fontWeight: "400",
-        
-
-      }}>{item.title.slice(0,10)}</Text>
+                style={{
+                  fontSize: 14,
+                  textAlign: "left",
+                  fontWeight: "400",
+                }}
+              >
+                {item.title.slice(0, 10)}
+              </Text>
             </View>
           </TouchableOpacity>
         )}
       />
     </View>
-
   );
 };
 
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 18,
-        fontWeight: "bold",
-      },
-      centered: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   card: {
     // backgroundColor: '#fff',
     padding: 15,
     marginVertical: 10,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.2,
     // shadowOffset: { width: 0, height: 2 },
     // shadowRadius: 8,
@@ -111,7 +100,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   item: {
@@ -119,8 +108,8 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#1e90ff',
+    fontWeight: "bold",
+    color: "#1e90ff",
   },
 });
 

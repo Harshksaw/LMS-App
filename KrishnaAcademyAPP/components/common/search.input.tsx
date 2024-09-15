@@ -31,9 +31,7 @@ export default function SearchInput({ homeScreen }: { homeScreen?: boolean }) {
           setFilteredCourses(res.data.courses);
         }
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   }, []);
 
   useEffect(() => {
@@ -90,9 +88,11 @@ export default function SearchInput({ homeScreen }: { homeScreen?: boolean }) {
   );
 
   return (
-    <View style={{
-      marginTop:30,
-    }}>
+    <View
+      style={{
+        marginTop: 30,
+      }}
+    >
       <View style={styles.filteringContainer}>
         <View style={styles.searchContainer}>
           <TextInput

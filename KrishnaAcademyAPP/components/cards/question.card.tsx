@@ -50,14 +50,11 @@ export default function QuestionsCard({
         }
       )
       .then((res) => {
-        console.log(res.data);
         setReply("");
         setOpen(!open);
         fetchCourseContent();
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   };
 
   return (

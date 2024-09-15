@@ -1,18 +1,16 @@
 import { PieChart } from "react-native-gifted-charts";
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 
 const PieCharts = ({ pieData, total }: any) => {
-  console.log("🚀 ~ PieCharts ~ pieData:", pieData)
-  console.log(pieData, 'piecharts ----------->')
-  const answered = pieData[0].value
+  const answered = pieData[0].value;
 
-  const Incorrect = pieData[1].value
-  const unanswered = pieData[2].value
+  const Incorrect = pieData[1].value;
+  const unanswered = pieData[2].value;
   const pieDsata = [
-    { value: pieData[0].value, color: '#177AD5', text: '54%' },
-    { value: pieData[1].value, color: '#79D2DE', text: '30%' },
-    { value: pieData[2].value, color: '#ED6665', text: '26%' },
+    { value: pieData[0].value, color: "#177AD5", text: "54%" },
+    { value: pieData[1].value, color: "#79D2DE", text: "30%" },
+    { value: pieData[2].value, color: "#ED6665", text: "26%" },
   ];
   const renderDot = (color: any) => {
     return (
@@ -33,20 +31,21 @@ const PieCharts = ({ pieData, total }: any) => {
       <>
         <View style={styles.legendRow}>
           <View style={styles.legendItem}>
-            {renderDot('#006DFF')}
+            {renderDot("#006DFF")}
             <Text style={styles.legendText}>Answered: {pieData[0].value}</Text>
           </View>
           <View style={styles.legendItem}>
-            {renderDot('#ED6665')}
-            <Text style={styles.legendText}>Unanswered: {pieData[2].value}</Text>
+            {renderDot("#ED6665")}
+            <Text style={styles.legendText}>
+              Unanswered: {pieData[2].value}
+            </Text>
           </View>
         </View>
         <View style={styles.legendRow}>
           <View style={styles.legendItem}>
-            {renderDot('#79D2DE')}
+            {renderDot("#79D2DE")}
             <Text style={styles.legendText}>Incorrect: {pieData[1].value}</Text>
           </View>
-
         </View>
       </>
     );
@@ -54,7 +53,6 @@ const PieCharts = ({ pieData, total }: any) => {
 
   return (
     <ScrollView style={styles.scrollView}>
-
       <View style={styles.container}>
         <View style={styles.chartContainer}>
           <Text style={styles.title}>Performance</Text>
@@ -66,12 +64,17 @@ const PieCharts = ({ pieData, total }: any) => {
               sectionAutoFocus
               radius={90}
               innerRadius={60}
-              innerCircleColor={'#232B5D'}
+              innerCircleColor={"#232B5D"}
               centerLabelComponent={() => {
-                const answeredPercentage = ((answered / (answered + unanswered + Incorrect)) * 100).toFixed(2);
+                const answeredPercentage = (
+                  (answered / (answered + unanswered + Incorrect)) *
+                  100
+                ).toFixed(2);
                 return (
                   <View style={styles.centerLabel}>
-                    <Text style={styles.centerLabelText}>{answeredPercentage}%</Text>
+                    <Text style={styles.centerLabelText}>
+                      {answeredPercentage}%
+                    </Text>
                     <Text style={styles.centerLabelSubText}>Answered</Text>
                   </View>
                 );
@@ -79,10 +82,8 @@ const PieCharts = ({ pieData, total }: any) => {
             />
           </View>
           {renderLegendComponent()}
-
         </View>
       </View>
-
     </ScrollView>
   );
 };
@@ -91,14 +92,12 @@ const styles = StyleSheet.create({
   scrollView: {
     // flex: 1,
     // height: '150%',
-    backgroundColor: '#f3f3f3',
+    backgroundColor: "#f3f3f3",
 
     paddingBottom: 10,
-
   },
 
   container: {
-
     paddingVertical: 10,
     paddingBottom: 10,
   },
@@ -106,43 +105,43 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 16,
     borderRadius: 20,
-    backgroundColor: '#232B5D',
+    backgroundColor: "#232B5D",
   },
   title: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   chart: {
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   centerLabel: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   centerLabelText: {
     fontSize: 22,
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
   centerLabelSubText: {
     fontSize: 14,
-    color: 'white',
+    color: "white",
   },
   legendRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     marginBottom: 10,
   },
   legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     width: 120,
     marginRight: 20,
   },
   legendText: {
-    color: 'white',
+    color: "white",
   },
 });
 

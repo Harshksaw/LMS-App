@@ -129,8 +129,6 @@ const PaymentPage = () => {
       }
       setLoading(false);
     } catch (error) {
-      console.log(error.response.data, "dfsfkl");
-
       setLoading(false);
       Toast.show("Invalid coupon*", { type: "danger" });
     }

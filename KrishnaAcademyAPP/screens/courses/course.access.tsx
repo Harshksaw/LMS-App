@@ -96,9 +96,7 @@ export default function CourseAccessScreen() {
         });
         fetchCourseContent();
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   };
 
   const handleReviewSubmit = async () => {
@@ -127,9 +125,7 @@ export default function CourseAccessScreen() {
           params: { item: JSON.stringify(data) },
         });
       })
-      .catch((error: any) => {
-        console.log(error);
-      });
+      .catch((error: any) => {});
   };
 
   const renderStars = () => {
