@@ -4,7 +4,6 @@ import { BASE_URL } from "../../../services/apis";
 import { useParams } from "react-router-dom";
 import toast, { LoaderIcon } from "react-hot-toast";
 
-
 import UserOrder from "./UserOrders";
 import AddCourses from "./AddCourses";
 import UserCourses from "./UserCourses";
@@ -18,36 +17,63 @@ interface UserProps {
   accountType: string;
   createdAt: string;
   isBanned: boolean;
+  token: string;
+  loginAttempts: boolean;
 }
 
 const User: React.FC<UserProps> = () => {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<UserProps | null>(null);
 
+  const fetchData = async () => {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/auth/getUserById/${id}`
+    );
+    if (!response.data) {
+      toast.error("Something went wrong");
+      return;
+    }
+    setUser(response.data.user);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        `${BASE_URL}/api/v1/auth/getUserById/${id}`
-      );
-      if (!response.data) {
-        toast.error("Something went wrong");
-        return;
-      }
-      console.log("🚀 ~ fetchData ~ response:", response.data.user);
-
-      setUser(response.data.user);
-    };
-
     fetchData();
   }, []);
 
+  const logoutUser = async () => {
+    await axios
+      .post(
+        `${BASE_URL}/api/v1/auth/logout`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + user?.token,
+          },
+        }
+      )
+      .then(async (res) => {
+        toast.success("user logout from his device");
+        fetchData();
+      })
+      .catch((error) => {
+        toast.error("Error While Logout!");
+      });
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md ">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center bg-richblack-50">
-        User Profile
-      </h2>
+      <div className=" text-gray-800 mb-6 text-center bg-richblack-50 flex justify-between px-5 py-2 items-center">
+        <h2>User Profile</h2>
+        {!!user?.loginAttempts && (
+          <button
+            onClick={logoutUser}
+            className="bg-pink-600 text-white rounded px-3 py-1"
+          >
+            Logout user
+          </button>
+        )}
+      </div>
       {user && (
-        <div className="bg-richblack-50 px-10"> 
+        <div className="bg-richblack-50 px-10 pt-3">
           <div className="text-center mb-6">
             <img
               src={user.image}
@@ -89,19 +115,15 @@ const User: React.FC<UserProps> = () => {
         <AddCourses id={id} />
       </div>
       <div className="flex flex-row justify-between items-center mt-10">
-
-      <div>
-      <UserOrder id={id} />
+        <div>
+          <UserOrder id={id} />
+        </div>
+        <div>
+          <UserCourses id={id} />
+        </div>
       </div>
-      <div>
-      <UserCourses id={id} />
-      </div>
-
-      </div>
-
     </div>
   );
 };
-
 
 export default User;
