@@ -30,6 +30,7 @@ router.post(
   "/course-bundle/update/:id",
   courseBundleController.addQuizzesToBundle
 );
+router.put("/course-bundle/:id", courseBundleController.updateBundle);
 
 router.post("/course-bundle/:id", courseBundleController.addQuizzesToBundle);
 

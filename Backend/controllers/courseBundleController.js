@@ -334,3 +334,36 @@ exports.removeUserBundle = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+exports.updateBundle = async (req, res) => {
+  try {
+    const { bundleName, price, aboutDescription } = req.body;
+    const { id } = req.params;
+
+    const update = {};
+    if (!!bundleName) {
+      update.bundleName = bundleName;
+    }
+    if (!!price) {
+      update.price = price;
+    }
+    if (!!aboutDescription) {
+      update.aboutDescription = aboutDescription;
+    }
+    // Find the user by ID
+    const user = await Bundle.findByIdAndUpdate(id, update, { new: true });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "bundle updated successfully!",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
