@@ -14,10 +14,6 @@ const Step2 = ({
   ...props
 }: any) => {
   // const { setValue,getValues} = useForm();
-
-  console.log(courseBundleId, "step-2");
-  const [courses, setCourses] = useState([]);
-
   const [quizzes, setQuizzes] = useState([]);
   const [studyMaterials, setStudyMaterials] = useState([]);
 
@@ -32,23 +28,12 @@ const Step2 = ({
         const quizzesRes = await axios.get(
           `${BASE_URL}/api/v1/quiz/getAllisBundleQuizes`
         );
-
-        // setCourses(coursesRes.data);
         setQuizzes(quizzesRes.data.data);
         setStudyMaterials(studyRes.data.data);
-
-        // console.log("🚀 ~ fetchData ~ studyRes.data.data:", studyRes.data.data);
-
-        //TODO only which as isBundle
-
         toast.dismiss();
-
-        console.log("🚀 ~ fetchData ~ studyRes:", studyRes);
-        console.log("🚀 ~ fetchData ~ quizzesRes:", quizzesRes);
       } catch (error) {
         toast.dismiss();
         toast.error("Failed to fetch data");
-        console.log(error);
       }
     };
 
@@ -73,13 +58,15 @@ const Step2 = ({
       );
     }
   };
-  
 
-  const handleMaterialCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, materialId: string) => {
+  const handleMaterialCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    materialId: string
+  ) => {
     if (e.target.checked) {
       setSelectedMaterials([...selectedMaterials, materialId]);
     } else {
-      setSelectedMaterials(selectedMaterials.filter(id => id !== materialId));
+      setSelectedMaterials(selectedMaterials.filter((id) => id !== materialId));
     }
   };
 
@@ -103,7 +90,9 @@ const Step2 = ({
                 <input
                   type="checkbox"
                   id={`course-${material._id}`}
-                  onChange={(e) => handleMaterialCheckboxChange(e, material._id)}
+                  onChange={(e) =>
+                    handleMaterialCheckboxChange(e, material._id)
+                  }
                 />
                 <label htmlFor={`course-${material.id}?`}>
                   {material.title}
@@ -127,6 +116,7 @@ const Step2 = ({
               >
                 <input
                   type="checkbox"
+                  checked={getValues().quizzes?.some((i) => i == quiz._id)}
                   id={`quiz-${quiz._id}`}
                   onChange={(e) => handleCheckboxChange(e, quiz)}
                 />

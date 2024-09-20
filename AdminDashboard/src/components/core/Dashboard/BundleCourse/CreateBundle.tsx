@@ -6,7 +6,7 @@ import IconBtn from "../../../common/IconBtn";
 import axios from "axios";
 import { BASE_URL } from "../../../../services/apis";
 
-import { Link, Router, useNavigate } from "react-router-dom";
+import { Link, Router, useNavigate, useSearchParams } from "react-router-dom";
 import Step1 from "./StepOne.tsx";
 import Step2 from "./Steptwo.tsx";
 
@@ -25,9 +25,7 @@ const Step3 = ({ register, setValue, errors, courseBundleId }) => {
     setIsListed(checked);
     setValue("isListed", checked);
   };
-  useEffect(() => {
-    console.log(startDate, isListed);
-  }, [startDate, isListed]);
+  useEffect(() => {}, [startDate, isListed]);
   return (
     <div>
       <div className="space-y-8">
@@ -60,11 +58,12 @@ const Step3 = ({ register, setValue, errors, courseBundleId }) => {
 };
 
 export default function CourseBundleForm() {
-
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
   const [step, setStep] = useState(1);
-  const [bundleImage, setBundleImage] = useState(null);
+  const [bundleImage, setBundleImage] = useState(id ?? null);
   const {
     register,
     handleSubmit,
@@ -72,52 +71,61 @@ export default function CourseBundleForm() {
     getValues,
     formState: { errors },
   } = useForm();
-  const dispatch = useDispatch();
   const [courseBundleId, setCourseBundleId] = useState(null);
 
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
 
-
   //   const { token } = useSelector((state) => state.auth);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e: any) => {
     setBundleImage(e.target.files[0]);
   };
 
   const handleStep1Submit = async (data) => {
-    const formData = new FormData();
-    formData.append("bundleName", data.bundleName);
-    formData.append("image", bundleImage);
-    formData.append("price", data.price);
-    formData.append("aboutDescription", data.aboutDescription);
-
     try {
       toast.loading("Please wait...");
-      const res = await axios.post(
-        `${BASE_URL}/api/v1/bundle/course-bundle`,
-        formData
-      );
-      console.log(res);
-      console.log("🚀 ~ handleStep1Submit ~ res:", res?.data?._id);
-      setCourseBundleId(res?.data?._id);
-
+      let res = {};
+      if (!!id) {
+        const param = {
+          bundleName: data.bundleName,
+          price: data.price,
+          aboutDescription: data.aboutDescription,
+        };
+        res = await axios.put(
+          `${BASE_URL}/api/v1/bundle/course-bundle/${id}`,
+          param
+        );
+      } else {
+        const formData = new FormData();
+        formData.append("bundleName", data.bundleName);
+        formData.append("image", bundleImage);
+        formData.append("price", data.price);
+        formData.append("aboutDescription", data.aboutDescription);
+        res = await axios.post(
+          `${BASE_URL}/api/v1/bundle/course-bundle`,
+          formData
+        );
+      }
+      setCourseBundleId(res?.data?._id ?? res?.data?.data?._id);
       toast.dismiss();
-      toast.success("Step 1 completed successfully");
-
+      toast.success(
+        !!id ? "Bundle Details update" : "Step 1 completed successfully"
+      );
+      // if (!!id) {
+      // } else {
+      // }
       setStep(2);
     } catch (error) {
+      toast.dismiss();
       toast.error("Failed to complete Step 1", {
         duration: 2000,
       });
-      console.log(error);
     }
   };
 
   const handleStep2Submit = async () => {
     const formData = getValues();
-    console.log(formData.quizzes);
 
-    console.log(selectedMaterials, "selectedMaterials");
     try {
       toast.loading("Please wait...");
       const res = await axios.post(
@@ -127,16 +135,14 @@ export default function CourseBundleForm() {
 
       const resp = await axios.post(
         `${BASE_URL}/api/v1/bundle/course-bundle-materials/${courseBundleId}`,
-        {studyMaterials : selectedMaterials }
-      )
-      console.log(res);
+        { studyMaterials: selectedMaterials }
+      );
 
       if (res.status != 200) {
         toast.dismiss();
         toast.error("Update failed");
         return;
       }
-      console.log("🚀 ~ handleStep2Submit ~ res:", res?.data?._id);
 
       toast.dismiss();
       toast.success("Step 2 completed successfully");
@@ -145,27 +151,23 @@ export default function CourseBundleForm() {
       toast.error("Failed to complete Step 2", {
         duration: 2000,
       });
-      console.log(error);
     }
   };
 
   const handleStep3Submit = async (data) => {
     const formData = getValues();
-    console.log(formData.date, formData.isListed, courseBundleId);
     try {
       toast.loading("Please wait...");
       const res = await axios.post(
         `${BASE_URL}/api/v1/bundle/course-bundle/updateTime/${courseBundleId}`,
         { date: formData.date, isListed: formData.isListed }
       );
-      console.log(res);
 
-      if (res.status != 200){
+      if (res.status != 200) {
         toast.dismiss();
         toast.error("Update failed");
         return;
       }
-        console.log("🚀 ~ handleStep2Submit ~ res:", res?.data?._id);
       setCourseBundleId(res?.data?._id);
       toast.dismiss();
       toast.success("Step 3 completed successfully");
@@ -176,7 +178,6 @@ export default function CourseBundleForm() {
       toast.error("Failed to complete Step 2", {
         duration: 2000,
       });
-      console.log(error);
     }
 
     // Add publish and set time data to formData
@@ -189,15 +190,47 @@ export default function CourseBundleForm() {
     // }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: any) => {
     if (step === 1) {
       handleStep1Submit(data);
     } else if (step === 2) {
-      handleStep2Submit(data);
+      handleStep2Submit();
     } else if (step === 3) {
       handleStep3Submit(data);
     }
   };
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const res = await axios.get(
+        `${BASE_URL}/api/v1/bundle/course-bundle/${id}`
+      );
+      if (res.status != 200) {
+        toast.dismiss();
+        toast.error("something went wront");
+        return;
+      }
+      const course = res?.data?.data;
+      setValue(
+        "quizzes",
+        course.quizes.map((i) => i._id)
+      );
+      studyMaterials;
+      setValue("date", course.activeListing);
+      setValue("isListed", course.listed);
+      setValue("bundleName", course.bundleName);
+      setValue("aboutDescription", course.aboutDescription);
+      setValue("price", course.price);
+    };
+    if (!!id) {
+      fetchCourses();
+    }
+  }, []);
+
+  // Scroll to the top of the page when the component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     // <div className=" inset-0  !mt-0 grid h-screen w-screen place-items-center overflow-auto bg-white bg-opacity-10 ">
@@ -243,7 +276,9 @@ export default function CourseBundleForm() {
             />
           )}
           <div className="flex justify-end">
-            <IconBtn text={step === 3 ? "Submit" : "Next"} />
+            <IconBtn
+              text={step === 3 ? (!!id ? "Update" : "Submit") : "Next"}
+            />
           </div>
         </form>
       </div>

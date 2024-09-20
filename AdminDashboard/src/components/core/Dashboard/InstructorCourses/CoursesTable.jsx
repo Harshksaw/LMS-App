@@ -8,11 +8,15 @@ import ConfirmationModal from "../../../common/ConfirmationModal";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { BASE_URL } from "../../../../services/apis";
+import { VscEdit } from "react-icons/vsc";
+import { useNavigate } from "react-router-dom";
 
 export default function CoursesTable({ courses, setCourses, loading }) {
   const [confirmationModal, setConfirmationModal] = useState(false);
   const [selected, setSelected] = useState(null);
   const [loadingDelete, setLoadingDelete] = useState(false);
+
+  const navigate = useNavigate();
 
   // Loading Skeleton
   const skItem = () => {
@@ -153,11 +157,22 @@ export default function CoursesTable({ courses, setCourses, loading }) {
                   ₹{course.price}
                 </Td>
 
-                <Td className="text-left text-sm text-richblack-100">
-                  <FaTrashAlt
-                    className="cursor-pointer text-red-500"
+                <Td className="text-left text-md text-richblack-100 flex items-start">
+                  <button
                     onClick={() => deleteCourse(course._id)}
-                  />
+                    className="p-5"
+                  >
+                    <FaTrashAlt className="cursor-pointer text-red-500" />
+                    {/* <button onclick={() => navigate("/dashboard/add-course")}> */}
+                  </button>
+                  <button
+                    className="p-5"
+                    onClick={() =>
+                      navigate("/dashboard/add-course?id=" + course._id)
+                    }
+                  >
+                    <VscEdit className="cursor-pointer text-red-500" />
+                  </button>
                 </Td>
               </Tr>
             ))
