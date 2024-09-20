@@ -49,14 +49,17 @@ exports.createCourseBundle = async (req, res) => {
 exports.addQuizzesToBundle = async (req, res) => {
   try {
     const bundle = await Bundle.findById(req.params.id);
-    console.log(req.params.id, "----60");
-
     if (!bundle) {
       return res.status(404).json({ error: "Course bundle not found" });
     }
 
-    bundle.quizes.push(...req.body.quizzes);
-
+    if (!!req.body.quizzes.length || !!Object.keys(req.body.quizzes).length) {
+      req.body?.quizzes.map((item) => {
+        if (!bundle.quizes.some((i) => i == item)) {
+          bundle.quizes.push(item);
+        }
+      });
+    }
     await bundle.save();
 
     res.status(200).json({

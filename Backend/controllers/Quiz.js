@@ -262,7 +262,6 @@ exports.getQuizbyId = async (req, res) => {
 
     const quiz = await Quiz.findById({ _id: id }).populate("questions");
 
-    console.log("Quiz data:", quiz);
     return res.status(201).json({
       success: true,
       data: quiz,
