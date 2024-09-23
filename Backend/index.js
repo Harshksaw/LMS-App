@@ -12,6 +12,7 @@ const APPRoute = require("./routes/app");
 const CourseBundle = require("./routes/courseBundle");
 const Dailyupdate = require("./routes/Dailyupdate");
 const coupon = require("./routes/coupon");
+const video = require("./routes/video");
 
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
@@ -61,6 +62,9 @@ app.use("/api/v1/payment", paymentRoutes);
 
 app.use("/api/v1/bundle", CourseBundle);
 app.use("/api/v1/DailyUpdate", Dailyupdate);
+
+
+app.use("/api/v1/video" , video)
 
 // const cron = require("node-cron");
 // Cron job
