@@ -12,7 +12,7 @@ const APPRoute = require("./routes/app");
 const CourseBundle = require("./routes/courseBundle");
 const Dailyupdate = require("./routes/Dailyupdate");
 const coupon = require("./routes/coupon");
-const video = require("./routes/video");
+
 
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
@@ -20,6 +20,7 @@ const cors = require("cors");
 const { cloudinaryConnect } = require("./config/cloudinary");
 
 const dotenv = require("dotenv");
+const videoStreamController = require('./controllers/video-stream');
 
 // const sslOptions = {
 //   key: fs.readFileSync(path.resolve(__dirname, 'path/to/your/private.key')),
@@ -64,7 +65,7 @@ app.use("/api/v1/bundle", CourseBundle);
 app.use("/api/v1/DailyUpdate", Dailyupdate);
 
 
-app.use("/api/v1/video" , video)
+app.post("/api/v1/video" ,videoStreamController.uploadVideo)
 
 // const cron = require("node-cron");
 // Cron job
