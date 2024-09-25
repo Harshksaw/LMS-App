@@ -49,6 +49,7 @@ import ViewBlog from "./pages/ViewBlog";
 import GetMaterials from "./pages/getMaterials";
 import OrderScreen from "./pages/payment";
 import Coupons from "./components/core/Dashboard/Coupons";
+import VideoUpload from "./pages/Video";
 
 function App() {
   const { user } = useSelector((state) => state.profile);
@@ -108,6 +109,14 @@ function App() {
           element={
             <OpenRoute>
               <Signup />
+            </OpenRoute>
+          }
+        />
+        <Route
+          path="test"
+          element={
+            <OpenRoute>
+              <VideoUpload />
             </OpenRoute>
           }
         />

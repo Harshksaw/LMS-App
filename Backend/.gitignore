@@ -27,3 +27,5 @@
 **/*.jpg
 /dump
 *env
+routes/uploads
+uploads

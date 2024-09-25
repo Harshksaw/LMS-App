@@ -26,6 +26,7 @@
     "express-fileupload": "^1.4.0",
     "fs": "^0.0.1-security",
     "https": "^1.0.0",
+    "ws": "^7.4.6",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.30.1",
     "mongoose": "^7.1.1",
@@ -36,6 +37,7 @@
     "nodemailer": "^6.9.2",
     "nodemon": "^2.0.22",
     "otp-generator": "^4.0.1",
-    "razorpay": "^2.8.6"
+    "razorpay": "^2.8.6",
+    "uuid": "^10.0.0"
   }
 }
