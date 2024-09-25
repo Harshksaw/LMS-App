@@ -18,15 +18,31 @@ const database = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { cloudinaryConnect } = require("./config/cloudinary");
-
+const { v4: uuidv4 } = require('uuid');
+const WebSocket = require('ws');
 const dotenv = require("dotenv");
 const videoStreamController = require('./controllers/video-stream');
+const http = require('http');
 
-// const sslOptions = {
-//   key: fs.readFileSync(path.resolve(__dirname, 'path/to/your/private.key')),
-//   cert: fs.readFileSync(path.resolve(__dirname, 'path/to/your/certificate.crt')),
-//   ca: fs.readFileSync(path.resolve(__dirname, 'path/to/your/ca_bundle.crt')) // Optional, if you have a CA bundle
-// };
+
+
+const clients = new Map();
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ noServer: true });
+
+
+
+wss.on('connection', (ws, req) => {
+  const urlParams = new URLSearchParams(req.url.split('?')[1]);
+  const clientId = urlParams.get('clientId');
+  if (clientId) {
+    clients.set(clientId, ws);
+
+    ws.on('close', () => {
+      clients.delete(clientId);
+    });
+  }
+});
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -64,8 +80,14 @@ app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/bundle", CourseBundle);
 app.use("/api/v1/DailyUpdate", Dailyupdate);
 
+app.post("/api/v1/video", (req, res) => {
+  const clientId = req.query.clientId; // Assume clientId is passed as a query parameter
+  videoStreamController.uploadVideo(req, res, clientId);
+});
+app.get("/api/v1/checkStatus/:lessonId", (req, res) => {
+  videoStreamController.checkStatus(req, res);
+});
 
-app.post("/api/v1/video" ,videoStreamController.uploadVideo)
 
 // const cron = require("node-cron");
 // Cron job

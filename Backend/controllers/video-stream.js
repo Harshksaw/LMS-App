@@ -127,3 +127,47 @@ function processVideo(videoPath, lessonId) {
     });
   });
 }
+
+exports.checkStatus = async (req, res) => {
+  const { lessonId } = req.params;
+
+  if (!lessonId) {
+    return res.status(400).json({ error: 'lessonId is required' });
+  }
+
+  const checkInterval = 5000; // Check every 5 seconds
+  const timeout = 60000; // Timeout after 60 seconds
+
+  const checkFiles = async () => {
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME_H,
+      Prefix: `courses/${lessonId}/`
+    };
+
+    try {
+      const data = await s3.listObjectsV2(params).promise();
+      if (data.Contents.length > 0) {
+        const files = data.Contents.map(item => item.Key);
+        return files;
+      }
+    } catch (err) {
+      console.error(`Error checking status: ${err}`);
+    }
+    return null;
+  };
+
+  const pollStatus = async (startTime) => {
+    const files = await checkFiles();
+    if (files) {
+      return res.status(200).json({ lessonId, files });
+    } else if (Date.now() - startTime > timeout) {
+      return res.status(408).json({ error: 'Request timeout' });
+    } else {
+      setTimeout(() => pollStatus(startTime), checkInterval);
+    }
+  };
+
+  pollStatus(Date.now());
+};
+
+
