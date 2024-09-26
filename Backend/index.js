@@ -89,6 +89,12 @@ app.get("/api/v1/checkStatus/:lessonId", (req, res) => {
 });
 
 
+app.get('/api/v1/cpu-usage', (req, res) => {
+  os.cpuUsage((v) => {
+    res.json({ cpuUsage: v });
+  });
+});
+
 // const cron = require("node-cron");
 // Cron job
 // let task = cron.schedule("21 16 * * *", () => {
