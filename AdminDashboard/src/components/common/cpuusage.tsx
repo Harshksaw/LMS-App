@@ -22,7 +22,7 @@ const CpuUsageBar = () => {
   }, []);
 
   return (
-    <div className="cpu-usage-bar" style={{ width: '20%', backgroundColor: '#f0f0f0', padding: '5px' }}>
+    <div className="cpu-usage-bar rounded-lg " style={{ width: '25%', backgroundColor: 'rgb(169, 163, 163)', padding: '5px' }}>
       <div
         style={{
           width: `${cpuUsage * 100}%`,
@@ -33,7 +33,7 @@ const CpuUsageBar = () => {
       ></div>
       <p style={{ textAlign: 'center', margin: '0'  , color:'blue'}}>{(cpuUsage * 100).toFixed(2)}% CPU Usage</p>
     </div>
-  );
+  );                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 };
 
 export default CpuUsageBar;
