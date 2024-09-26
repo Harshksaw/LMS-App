@@ -10,6 +10,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { logout } from "../../services/operations/authAPI";
 import { VscDashboard, VscSignOut } from "react-icons/vsc";
 import ConfirmationModal from "./ConfirmationModal";
+import CpuUsageBar from "./cpuusage";
 
 const Navbar = () => {
   // console.log("Printing base url: ", import.meta.env.VITE_APP_BASE_URL);
@@ -85,6 +86,7 @@ const Navbar = () => {
             <img src={StudyNotionLogo} width={50} height={16} loading="lazy" />
           </Link>
 
+          <CpuUsageBar />
           {/* Nav Links - visible for only large devices*/}
           <ul className="hidden sm:flex gap-x-6 text-richblack-25">
             {NavbarLinks.map((link, index) => (

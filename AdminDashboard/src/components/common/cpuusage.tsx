@@ -22,7 +22,7 @@ const CpuUsageBar = () => {
   }, []);
 
   return (
-    <div className="cpu-usage-bar" style={{ width: '100%', backgroundColor: '#f0f0f0', padding: '5px' }}>
+    <div className="cpu-usage-bar" style={{ width: '20%', backgroundColor: '#f0f0f0', padding: '5px' }}>
       <div
         style={{
           width: `${cpuUsage * 100}%`,
@@ -31,7 +31,7 @@ const CpuUsageBar = () => {
           transition: 'width 0.5s',
         }}
       ></div>
-      <p style={{ textAlign: 'center', margin: '0' }}>{(cpuUsage * 100).toFixed(2)}% CPU Usage</p>
+      <p style={{ textAlign: 'center', margin: '0'  , color:'blue'}}>{(cpuUsage * 100).toFixed(2)}% CPU Usage</p>
     </div>
   );
 };
