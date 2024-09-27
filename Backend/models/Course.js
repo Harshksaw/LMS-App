@@ -10,51 +10,37 @@ const courseSchema = new mongoose.Schema({
         type:String,
         // trim:true, 
     },
-    Admin: {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User",
-        required:true,
-    },
-    whatYouWillLearn: {
-        type:String,
-    },
+  
+
     courseContent: [
         {
             type:mongoose.Schema.Types.ObjectId,
             ref:"Section",
         }
     ],
-    ratingAndReviews: [
-        {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"RatingAndReview",
+    videoSegments: [{
+        segmentPath: {
+            type: String,
+            required:false
+        },
+        indexFile: {
+            type: String,
+            required: true
         }
-    ],
-    price:{
-        type:Number,
-    },
+    }],
+ 
+ 
     thumbnail:{
         type:String,
     },
-    tag: {
-		type: [String],
-		// required: true,
-	},
-	category: {
-		type: mongoose.Schema.Types.ObjectId,
-		// required: true,
-		ref: "Category",
-	},
-	studentsEnrolled: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			required: true,
-			ref: "User",
-		},
-	],
-	instructions: {
-		type: [String],
-	},
+    duration:{
+        type:String,
+
+    },
+ 
+
+	
+
 	status: {
 		type: String,
 		enum: ["Draft", "Published"],

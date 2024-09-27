@@ -203,7 +203,7 @@ export default function QuizScreen() {
           columnWrapperStyle={{ gap: 5 }}
           showsVerticalScrollIndicator={false}
           numColumns={2}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => item.id || index.toString()} // Ensure unique keys
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }

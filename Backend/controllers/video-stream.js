@@ -4,6 +4,7 @@ const AWS = require('aws-sdk');
 const path = require('path');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
+const Course = require('../models/Course');
 
 // Multer configuration
 const storage = multer.diskStorage({
@@ -28,7 +29,31 @@ AWS.config.update({
 });
 const s3 = new AWS.S3();
 
+
+exports.createVideo = async (req, res) => {
+  const { courseName, courseDescription,  courseContent, thumbnail, duration, status } = req.body;
+  const course = new Course({
+    courseName,
+    courseDescription,
+
+    courseContent,
+    thumbnail,
+    duration,
+    status
+  });
+
+  try {
+    const newCourse = await course.save();
+    res.status(201).json(newCourse);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
 exports.uploadVideo = (req, res) => {
+
+
+
   upload.single('video')(req, res, (err) => {
     if (err) {
       return res.status(500).json({ error: 'Failed to upload video' });
@@ -43,7 +68,7 @@ exports.uploadVideo = (req, res) => {
     res.json({
       message: 'Video uploaded successfully. Processing will start shortly.',
       lessonId: lessonId
-    });
+    });yk
   });
 };
 
@@ -57,7 +82,7 @@ setInterval(() => {
   }
 }, 1000);
 
-function processVideo(videoPath, lessonId) {
+async function processVideo(videoPath, lessonId) {
   const outputPath = path.join(__dirname, 'uploads', 'courses', lessonId);
   if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, { recursive: true });
@@ -65,6 +90,9 @@ function processVideo(videoPath, lessonId) {
   const hlsPath = `${outputPath}/index.m3u8`;
 
   const ffmpegCommand = `ffmpeg -i ${videoPath} -codec:v libx264 -codec:a aac -hls_time 10 -hls_playlist_type vod -hls_segment_filename "${outputPath}/segment%03d.ts" -start_number 0 ${hlsPath}`;
+
+
+
 
   exec(ffmpegCommand, (error, stdout, stderr) => {
     if (error) {
@@ -125,7 +153,25 @@ function processVideo(videoPath, lessonId) {
           });
       });
     });
+
+    
+
   });
+  
+
+  try {
+    await CourseVideo.findOneAndUpdate(
+      { _id: lessonId },
+      { indexFilePath: hlsPath },
+      { new: true, upsert: true }
+    );
+    console.log(`index.m3u8 path saved to database for lessonId: ${lessonId}`);
+  } catch (err) {
+    console.error(`Failed to save index.m3u8 path to database: ${err.message}`);
+  }
+
+
+
 }
 
 exports.checkStatus = async (req, res) => {
