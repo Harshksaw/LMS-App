@@ -12,6 +12,8 @@ const APPRoute = require("./routes/app");
 const CourseBundle = require("./routes/courseBundle");
 const Dailyupdate = require("./routes/Dailyupdate");
 const coupon = require("./routes/coupon");
+const osUtils = require('os-utils');
+const diskusage = require('diskusage');
 
 
 const database = require("./config/database");
@@ -23,7 +25,7 @@ const WebSocket = require('ws');
 const dotenv = require("dotenv");
 const videoStreamController = require('./controllers/video-stream');
 const http = require('http');
-
+const videocourse = require('./routes/video');
 const os = require('os-utils');
 
 const clients = new Map();
@@ -80,6 +82,8 @@ app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/bundle", CourseBundle);
 app.use("/api/v1/DailyUpdate", Dailyupdate);
 
+
+app.use('/api/v1/videocourse',videocourse )
 app.post("/api/v1/video", (req, res) => {
   const clientId = req.query.clientId; // Assume clientId is passed as a query parameter
   videoStreamController.uploadVideo(req, res, clientId);
@@ -87,20 +91,51 @@ app.post("/api/v1/video", (req, res) => {
 app.get("/api/v1/checkStatus/:lessonId", (req, res) => {
   videoStreamController.checkStatus(req, res);
 });
-
-
-app.get('/api/v1/cpu-usage', (req, res) => {
-  os.cpuUsage((v) => {
-    res.json({ cpuUsage: v });
+const getDiskUsage = (path) => {
+  return new Promise((resolve, reject) => {
+    diskusage.check(path, (err, info) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(info);
+      }
+    });
   });
+};
+
+app.get('/api/v1/cpu-usage',  async (req, res) => {
+  try {
+    const cpuUsage = await new Promise((resolve) => {
+      osUtils.cpuUsage((v) => {
+        resolve(v);
+      });
+    });
+
+    const totalMemory = os.totalmem();
+    const freeMemory = os.freemem();
+    const usedMemory = totalMemory - freeMemory;
+    const memoryUsage = usedMemory / totalMemory;
+
+    const diskInfo = await getDiskUsage('/'); // Root path for disk usage
+
+    const systemInfo = {
+      cpuUsage,
+      memoryUsage,
+      totalMemory,
+      freeMemory,
+      usedMemory,
+      diskInfo,
+      networkInterfaces: os.networkInterfaces(),
+    };
+
+    res.json(systemInfo);
+  } catch (error) {
+    console.error('Error fetching system info:', error);
+    res.status(500).json({ error: 'Error fetching system info' });
+  }
 });
 
-// const cron = require("node-cron");
-// Cron job
-// let task = cron.schedule("21 16 * * *", () => {
-//   console.log("Running backup cron job");
-//   runBackup();
-// });
+
 
 // Backup function
 const { spawn } = require("child_process");
