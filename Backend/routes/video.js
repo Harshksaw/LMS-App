@@ -4,7 +4,7 @@ const router = express.Router();
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const { logsCoupon, getLogs } = require("../controllers/coupon");
-const { uploadVideo, createVideo } = require("../controllers/video-stream");
+const { uploadVideo, createVideo, getVideo } = require("../controllers/video-stream");
 
 const cloudinary = require("cloudinary").v2;
 
@@ -16,7 +16,7 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 
-// // Configure Multer storage using Cloudinary
+
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -36,6 +36,7 @@ api_secret: process.env.API_SECRET,
 
 
 router.post('/createVideo', upload.single("image"),  createVideo);
+router.post('/getVideo', getVideo);
 
 
 module.exports = router;

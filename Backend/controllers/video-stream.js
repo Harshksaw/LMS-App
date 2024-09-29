@@ -61,8 +61,10 @@ exports.createVideo = async (req, res) => {
   try {
     const newCourse = await course.save();
     res.status(201).json(newCourse);
+    clearUploadsFolder()
   } catch (err) {
     res.status(400).json({ message: err.message });
+    clearUploadsFolder()
   }
 };
 
@@ -181,6 +183,7 @@ exports.uploadVideo = (req, res) => {
   });
 };
 
+
 exports.checkStatus = async (req, res) => {
   const { lessonId } = req.params;
 
@@ -222,6 +225,54 @@ exports.checkStatus = async (req, res) => {
 
   pollStatus(Date.now());
 };
+
+
+async function getPresignedUrl(courseId, segmentId) {
+  try {
+
+    const course = await Course.findById(courseId);
+    console.log("🚀 ~ getPresignedUrl ~ course:", course)
+    if (!course) {
+      throw new Error('Course not found');
+    }
+
+    const videoSegment = course.videoSegments.find(segment => segment._id.toString() === segmentId);
+
+    if (!videoSegment) {
+      throw new Error('Video segment not found');
+    }
+
+    const indexFilePath = videoSegment.indexFile; 
+
+    // Generate presigned URL for the index file
+    const params = {
+      Bucket: "krishanacademylms",
+      Key: indexFilePath,
+      Expires: 3600,
+    };
+
+    const presignedUrl = await s3.getSignedUrlPromise('getObject', params);
+    return presignedUrl;
+  } catch (error) {
+    console.error('Error generating presigned URL:', error.message);
+    throw error; // Re-throw for handling in API route or client
+  }
+}
+
+
+exports.getVideo = async (req, res) => {
+  const { courseId, segmentId } = req.body
+
+  try {
+    const presignedUrl = await getPresignedUrl(courseId, segmentId);
+    res.json({ presignedUrl });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get video URL' });
+  }
+};
+
+
+
 
 
 function clearUploadsFolder() {

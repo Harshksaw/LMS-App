@@ -3,21 +3,17 @@ const mongoose = require("mongoose");
 const courseSchema = new mongoose.Schema({
   courseName: {
     type: String,
-    // trim:true,
-    // required:true,
+
   },
   courseDescription: {
     type: String,
-    // trim:true,
+
   },
 
 
   videoSegments: [
     {
-      segmentPath: {
-        type: String,
-        required: false,
-      },
+      
       indexFile: {
         type: String,
         required: false,
