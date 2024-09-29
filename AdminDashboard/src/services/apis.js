@@ -9,7 +9,7 @@
 // export const BASE_URL = "https://system.krishnaacademy.in";
 
 // development
-export const BASE_URL = "https://potential-space-acorn-rvj5qxr7qpwc5xww-4000.app.github.dev"
+export const BASE_URL = "https://upgraded-trout-rvj5qxr79q42xr9q-4000.app.github.dev"
 
 export const endpoints = {
   SENDOTP_API: BASE_URL + "api/v1/auth/sendotp",

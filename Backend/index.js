@@ -26,7 +26,7 @@ const dotenv = require("dotenv");
 const videoStreamController = require('./controllers/video-stream');
 const http = require('http');
 const videocourse = require('./routes/video');
-const os = require('os-utils');
+const os = require('os');
 const { exec } = require('child_process');
 const clients = new Map();
 const server = http.createServer(app);
@@ -109,8 +109,7 @@ const getDiskUsage = (path) => {
     });
   });
 };
-
-app.get('/api/v1/cpu-usage',  async (req, res) => {
+app.get('/api/v1/cpu-usage', async (req, res) => {
   try {
     const cpuUsage = await new Promise((resolve) => {
       osUtils.cpuUsage((v) => {
@@ -123,17 +122,32 @@ app.get('/api/v1/cpu-usage',  async (req, res) => {
     const usedMemory = totalMemory - freeMemory;
     const memoryUsage = usedMemory / totalMemory;
 
-    const diskInfo = await getDiskUsage('/'); // Root path for disk usage// Root path for disk usage
+    const diskInfo = await getDiskUsage('/'); // Root path for disk usage
+
+    const formatBytes = (bytes) => {
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      if (bytes === 0) return '0 Byte';
+      const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+      return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sizes[i]}`;
+    };
+
+    const networkInterfaces = os.networkInterfaces();
+    const networkInterfaceCount = Object.keys(networkInterfaces).length;
 
     const systemInfo = {
-      cpuUsage,
-      memoryUsage,
-      totalMemory,
-      freeMemory,
-      usedMemory,
-      diskInfo,
-      networkInterfaces: os.networkInterfaces(),
+      cpuUsage: (cpuUsage * 100).toFixed(2) + '%',
+      memoryUsage: (memoryUsage * 100).toFixed(2) + '%',
+      totalMemory: formatBytes(totalMemory),
+      freeMemory: formatBytes(freeMemory),
+      usedMemory: formatBytes(usedMemory),
+      diskInfo: {
+        total: formatBytes(diskInfo.total),
+        used: formatBytes(diskInfo.used),
+        free: formatBytes(diskInfo.free),
+      },
+      networkInterfaceCount: networkInterfaceCount,
     };
+    console.log("🚀 ~ app.get ~ systemInfo:", systemInfo);
 
     res.json(systemInfo);
   } catch (error) {
@@ -141,6 +155,7 @@ app.get('/api/v1/cpu-usage',  async (req, res) => {
     res.status(500).json({ error: 'Error fetching system info' });
   }
 });
+
 
 
 

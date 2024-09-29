@@ -8,34 +8,36 @@ const Course = require('../models/Course');
 const ffprobe = require('ffprobe-static'); // Install using `npm install ffprobe-static`
 const { execSync } = require('child_process');
 const mongoose = require('mongoose'); 
-
 exports.createVideo = async (req, res) => {
-
-  console.log("Uploaded file:", req.file); // Add this line
-
-  const { courseName, courseDescription, status } = req.body;
-  console.log("🚀 ~ exports.createVideo= ~ courseName:", courseName)
-  console.log("🚀 ~ exports.createVideo= ~ courseDescription:", courseDescription)
-  console.log("🚀 ~ exports.createVideo= ~ status:", status)
-
-  const thumbnail = req.file.path;
-  const course = new Course({
-    courseName,
-    courseDescription,
-
-    thumbnail,
-
-    status,
-  });
-
   try {
+
+    console.log("Uploaded file:", req.body.courseName);
+
+    // Extract course details from the request body
+    const { courseName, courseDescription, status } = req.body;
+  
+
+    // Get the path of the uploaded thumbnail
+
+
+    const thumbnail = req.file.path;
+
+    const course = new Course({
+      courseName,
+      courseDescription,
+      thumbnail,
+      status,
+    });
+
+    // Save the new course to the database
     const newCourse = await course.save();
+
+    // Send a success response
     res.status(201).json(newCourse);
-    clearUploadsFolder()
   } catch (err) {
+    // Send an error response
     res.status(400).json({ message: err.message });
-    clearUploadsFolder()
-  }
+  } 
 };
 
 

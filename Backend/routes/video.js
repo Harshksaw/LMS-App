@@ -27,7 +27,7 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-console.log("Expected field name: thumbnail");
+
 
 router.post('/createVideo', upload.single("courseImage"),  createVideo);
 router.post('/getVideo', getVideo);
