@@ -9,6 +9,35 @@ const ffprobe = require('ffprobe-static'); // Install using `npm install ffprobe
 const { execSync } = require('child_process');
 const mongoose = require('mongoose'); 
 
+exports.createVideo = async (req, res) => {
+
+  console.log("Uploaded file:", req.file); // Add this line
+
+  const { courseName, courseDescription, status } = req.body;
+  console.log("🚀 ~ exports.createVideo= ~ courseName:", courseName)
+  console.log("🚀 ~ exports.createVideo= ~ courseDescription:", courseDescription)
+  console.log("🚀 ~ exports.createVideo= ~ status:", status)
+
+  const thumbnail = req.file.path;
+  const course = new Course({
+    courseName,
+    courseDescription,
+
+    thumbnail,
+
+    status,
+  });
+
+  try {
+    const newCourse = await course.save();
+    res.status(201).json(newCourse);
+    clearUploadsFolder()
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+    clearUploadsFolder()
+  }
+};
+
 
 async function getVideoDuration(videoPath) {
   try {
@@ -44,29 +73,6 @@ AWS.config.update({
   region: "ca-central-1",
 });
 const s3 = new AWS.S3();
-
-exports.createVideo = async (req, res) => {
-  const { courseName, courseDescription, status } = req.body;
-
-  const thumbnail = req.file.path;
-  const course = new Course({
-    courseName,
-    courseDescription,
-
-    thumbnail,
-
-    status,
-  });
-
-  try {
-    const newCourse = await course.save();
-    res.status(201).json(newCourse);
-    clearUploadsFolder()
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-    clearUploadsFolder()
-  }
-};
 
 
 

@@ -72,7 +72,7 @@ const { isStudent, isAdmin } = require("../middlewares/auth");
 // ********************************************************************************************************
 
 
-router.post("/createCourse", upload.single("file"), createCourse);
+router.post("/createCourse", upload.single("courseImage"), createCourse);
 //Add a Section to a Course 2
 router.post("/addSection", createSection);
 // Update a Section 3
