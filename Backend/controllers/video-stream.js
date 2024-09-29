@@ -176,6 +176,7 @@ exports.uploadVideo = (req, res) => {
         message: 'Video uploaded and processed successfully.',
         lessonId: lessonId
       });
+      
     } catch (err) {
       console.error(`Error during video processing: ${err.message}`);
       res.status(500).json({ error: 'Video processing failed' });
