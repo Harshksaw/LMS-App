@@ -144,10 +144,8 @@ async function processVideo(videoPath, lessonId) {
   try {
     const course = await Course.findById(lessonId);
     if (course) {
-      course.videoSegments.push({
-        // segmentPath: `courses/${lessonId}/segment%03d.ts`,
-        indexFile: `courses/${lessonId}/index.m3u8`
-      });
+      course.indexFile = `courses/${lessonId}/index.m3u8`
+      
       await course.save();
       console.log(`index.m3u8 path saved to database for lessonId: ${lessonId}`);
     } else {
@@ -176,7 +174,7 @@ exports.uploadVideo = (req, res) => {
         message: 'Video uploaded and processed successfully.',
         lessonId: lessonId
       });
-      
+
     } catch (err) {
       console.error(`Error during video processing: ${err.message}`);
       res.status(500).json({ error: 'Video processing failed' });
@@ -237,13 +235,9 @@ async function getPresignedUrl(courseId, segmentId) {
       throw new Error('Course not found');
     }
 
-    const videoSegment = course.videoSegments.find(segment => segment._id.toString() === segmentId);
 
-    if (!videoSegment) {
-      throw new Error('Video segment not found');
-    }
 
-    const indexFilePath = videoSegment.indexFile; 
+    const indexFilePath = course.indexFile; 
 
     // Generate presigned URL for the index file
     const params = {

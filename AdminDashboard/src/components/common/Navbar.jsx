@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { NavbarLinks } from "../../../data/navbar-links";
 import StudyNotionLogo from "../../assets/krishna/krishna.png";
-import { fetchCourseCategories } from "../../services/operations/courseDetailsAPI";
+
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { logout } from "../../services/operations/authAPI";
@@ -24,19 +24,6 @@ const Navbar = () => {
   const [loading, setLoading] = useState(false);
   const [confirmationModal, setConfirmationModal] = useState(null);
 
-  const fetchSublinks = async () => {
-    try {
-      setLoading(true);
-      const res = await fetchCourseCategories();
-      // const result = await apiConnector("GET", categories.CATEGORIES_API);
-      // const result = await apiConnector('GET', 'http://localhost:4000/api/v1/course/showAllCategories');
-      // console.log("Printing Sublinks result:", result);
-      setSubLinks(res);
-    } catch (error) {
-      console.log("Could not fetch the category list = ", error);
-    }
-    setLoading(false);
-  };
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

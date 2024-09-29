@@ -93,12 +93,17 @@ app.get("/api/v1/checkStatus/:lessonId", (req, res) => {
 });
 const getDiskUsage = (path) => {
   return new Promise((resolve, reject) => {
-    diskusage.check(path, (err, info) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(info);
+    exec(`df -k ${path}`, (error, stdout, stderr) => {
+      if (error) {
+        return reject(error);
       }
+      const lines = stdout.trim().split('\n');
+      const diskInfo = lines[1].split(/\s+/);
+      resolve({
+        total: parseInt(diskInfo[1], 10) * 1024,
+        used: parseInt(diskInfo[2], 10) * 1024,
+        free: parseInt(diskInfo[3], 10) * 1024,
+      });
     });
   });
 };
@@ -116,7 +121,7 @@ app.get('/api/v1/cpu-usage',  async (req, res) => {
     const usedMemory = totalMemory - freeMemory;
     const memoryUsage = usedMemory / totalMemory;
 
-    const diskInfo = await getDiskUsage('/'); // Root path for disk usage
+    const diskInfo = await getDiskUsage('/'); // Root path for disk usage// Root path for disk usage
 
     const systemInfo = {
       cpuUsage,

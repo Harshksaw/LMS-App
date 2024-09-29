@@ -10,16 +10,10 @@ const courseSchema = new mongoose.Schema({
 
   },
 
-
-  videoSegments: [
-    {
-      
-      indexFile: {
-        type: String,
-        required: false,
-      },
-    },
-  ],
+  indexFile: {
+    type: String,
+    required: false,
+  },
 
   thumbnail: {
     type: String,

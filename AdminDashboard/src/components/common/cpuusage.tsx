@@ -25,7 +25,7 @@ const CpuUsageBar = () => {
     };
 
     fetchSystemInfo();
-    const interval = setInterval(fetchSystemInfo, 60000); // Fetch every 1 minute
+    const interval = setInterval(fetchSystemInfo, 600000); // Fetch every 1 minute
 
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []);
@@ -33,8 +33,11 @@ const CpuUsageBar = () => {
   const { cpuUsage, memoryUsage, totalMemory, freeMemory, usedMemory, diskInfo, networkInterfaces } = systemInfo;
 
   return (
-    <div>
+    <div className='flex gap-5 justify-around'>
       <div className="cpu-usage-bar rounded-lg" style={{ width: '25%', backgroundColor: 'rgb(169, 163, 163)', padding: '5px' }}>
+
+        <div>
+
         <div
           style={{
             width: `${cpuUsage * 100}%`,
@@ -42,11 +45,13 @@ const CpuUsageBar = () => {
             height: '20px',
             transition: 'width 0.5s',
           }}
-        ></div>
+          ></div>
         <p style={{ textAlign: 'center', margin: '0', color: 'blue' }}>{(cpuUsage * 100).toFixed(2)}% CPU Usage</p>
-      </div>
-      <div className="memory-usage-bar rounded-lg" style={{ width: '25%', backgroundColor: 'rgb(169, 163, 163)', padding: '5px', marginTop: '10px' }}>
-        <div
+
+          </div>
+
+          <div>
+          <div
           style={{
             width: `${memoryUsage * 100}%`,
             backgroundColor: memoryUsage > 0.8 ? 'red' : 'green',
@@ -55,8 +60,13 @@ const CpuUsageBar = () => {
           }}
         ></div>
         <p style={{ textAlign: 'center', margin: '0', color: 'blue' }}>{(memoryUsage * 100).toFixed(2)}% Memory Usage</p>
+          </div>
+
       </div>
-      <div className="disk-info" style={{ marginTop: '10px' }}>
+
+      <div className="disk-info rounded-lg flex " 
+      style={{ width: '45%', backgroundColor: 'rgb(169, 163, 163)', padding: '5px', marginTop: '10px', color: 'blue' }}
+      >
         <p>Total Memory: {(totalMemory / (1024 ** 3)).toFixed(2)} GB</p>
         <p>Free Memory: {(freeMemory / (1024 ** 3)).toFixed(2)} GB</p>
         <p>Used Memory: {(usedMemory / (1024 ** 3)).toFixed(2)} GB</p>
