@@ -178,7 +178,7 @@ exports.uploadVideo = (req, res) => {
       await processVideo(videoPath, lessonId);
 
       // Respond to client with success message and lessonId
-      res.json({
+      res.status(201).json({
         message: 'Video uploaded and processed successfully.',
         lessonId: lessonId
       });
