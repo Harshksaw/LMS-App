@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 const Course = require('../models/Course');
 const ffprobe = require('ffprobe-static'); // Install using `npm install ffprobe-static`
 const { execSync } = require('child_process');
-const mongoose = require('mongoose'); 
+
 exports.createVideo = async (req, res) => {
   try {
 
@@ -33,7 +33,7 @@ exports.createVideo = async (req, res) => {
     const newCourse = await course.save();
 
     // Send a success response
-    res.status(201).json(newCourse);
+    res.status(201).json({data:newCourse});
   } catch (err) {
     // Send an error response
     res.status(400).json({ message: err.message });
@@ -53,7 +53,7 @@ async function getVideoDuration(videoPath) {
     throw error;
   }
 }
-// Multer configuration
+
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     const uploadDir = path.join(__dirname, 'uploads');
@@ -68,7 +68,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Configure AWS SDK
+
 AWS.config.update({
   accessKeyId: process.env.AWS_KEY_H,
   secretAccessKey: process.env.AWS_SECRET_KEY_H,
@@ -81,7 +81,7 @@ const s3 = new AWS.S3();
 
 const queue = [];
 
-// Worker to process the queue
+
 setInterval(() => {
   if (queue.length > 0) {
     const { videoPath, lessonId } = queue.shift();
@@ -90,6 +90,7 @@ setInterval(() => {
 }, 1000);
 
 async function processVideo(videoPath, lessonId) {
+  console.log("🚀 ~ processVideo ~ videoPath", videoPath, lessonId)
   const outputPath = path.join(__dirname, 'uploads', 'courses', lessonId);
   if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, { recursive: true });
@@ -152,6 +153,7 @@ async function processVideo(videoPath, lessonId) {
   try {
     const course = await Course.findById(lessonId);
     if (course) {
+      console.log("🚀 ~ processVideo ~ course:", course)
       course.indexFile = `courses/${lessonId}/index.m3u8`
       
       await course.save();
@@ -172,6 +174,7 @@ exports.uploadVideo = (req, res) => {
 
     const videoPath = req.file.path;
     const lessonId = req.body.lessonId; // Assuming lessonId is passed in the request body
+    console.log("🚀 ~ upload.single ~ lessonId:", lessonId)
 
     try {
       // Process video using ffmpeg
