@@ -3,10 +3,11 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { BASE_URL } from "../../../../../services/apis";
 import toast from "react-hot-toast";
-
+import { useNavigate } from 'react-router-dom';
 
 export default function CourseInformationForm({ step, handleNextStep, handlePrevStep }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [data, setData] = useState({
     courseTitle: '',
@@ -78,6 +79,9 @@ export default function CourseInformationForm({ step, handleNextStep, handlePrev
       if (res.status === 201) {
         toast.success("Video Uploaded successfully!");
         setLoading(false);
+        navigate('/dashboard/course-video'); // Replace with your desired path
+        toast.success("Redirecting to the course page...");
+
       }
     } catch (error) {
       console.error(error);
