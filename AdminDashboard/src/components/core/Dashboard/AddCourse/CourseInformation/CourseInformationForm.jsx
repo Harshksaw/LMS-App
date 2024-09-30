@@ -56,7 +56,7 @@ export default function CourseInformationForm() {
     formData.append("courseImage", data.courseImage);
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/v1/course/createCourse`, formData, {
+      const res = await axios.post(`${BASE_URL}/api/v1/videocourse/createVideo`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data', // Corrected: Only 'Content-Type' header needed
         },
