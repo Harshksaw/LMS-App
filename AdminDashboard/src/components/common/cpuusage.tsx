@@ -24,7 +24,7 @@ const CpuUsageBar = () => {
   };
   useEffect(() => {
     fetchSystemInfo();
-    const interval = setInterval(fetchSystemInfo, 60000); // Fetch every 1 minute
+    const interval = setInterval(fetchSystemInfo, 30000); // Fetch every 1 minute
 
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []);
@@ -43,7 +43,7 @@ const CpuUsageBar = () => {
     <p className="text-center m-0 text-blue-500">{cpuUsage} CPU Usage</p>
   </div>
 
-  <div className="flex flex-col items-center gap-5 mt-10">
+  <div className="flex flex-col items-center gap-5 mt-5">
     <div
       className={`h-5 transition-width duration-500 ${parseFloat(memoryUsage) > 80 ? 'bg-red-500' : 'bg-green-500'}`}
       style={{ width: `${parseFloat(memoryUsage)}%` }}
