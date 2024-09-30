@@ -22,12 +22,12 @@ const CpuUsageBar = () => {
       console.error('Error fetching system info:', error);
     }
   };
-  // useEffect(() => {
-  //   fetchSystemInfo();
-  //   const interval = setInterval(fetchSystemInfo, 60000); // Fetch every 1 minute
+  useEffect(() => {
+    fetchSystemInfo();
+    const interval = setInterval(fetchSystemInfo, 60000); // Fetch every 1 minute
 
-  //   return () => clearInterval(interval); // Cleanup interval on component unmount
-  // }, []);
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, []);
 
   const { cpuUsage, memoryUsage, totalMemory, freeMemory, usedMemory, diskInfo, networkInterfaceCount } = systemInfo;
 
