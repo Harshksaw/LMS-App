@@ -5,7 +5,11 @@ export default function AddCourse() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
+  const steps = [
+    { id: 1, title: 'Step 1: Course Information' },
+    { id: 2, title: 'Step 2: Upload Video' },
+    // Add more steps if needed
+  ];
   return (
     <div className="flex w-full items-start gap-x-6">
       <div className="flex flex-1 flex-col">
@@ -14,7 +18,7 @@ export default function AddCourse() {
         </h1>
 
         <div className="flex-1">
-          <RenderSteps />
+        <RenderSteps steps={steps} />
         </div>
       </div>
 

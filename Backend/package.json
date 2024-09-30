@@ -21,9 +21,11 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto-random-string": "^5.0.0",
+    "diskusage": "^1.2.0",
     "dotenv": "^16.0.3",
-    "express": "^4.19.2",
+    "express": "^4.21.0",
     "express-fileupload": "^1.4.0",
+    "ffprobe-static": "^3.1.0",
     "fs": "^0.0.1-security",
     "https": "^1.0.0",
     "jsonwebtoken": "^9.0.0",
@@ -38,6 +40,7 @@
     "os-utils": "^0.0.14",
     "otp-generator": "^4.0.1",
     "razorpay": "^2.8.6",
+    "react-dropzone": "^14.2.3",
     "uuid": "^10.0.0",
     "ws": "^7.4.6"
   }

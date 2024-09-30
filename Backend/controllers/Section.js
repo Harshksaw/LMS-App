@@ -1,4 +1,4 @@
-const Section = require("../models/Section");
+// const Section = require("../models/Section");
 const Course = require("../models/Course");
 const SubSection = require("../models/SubSection");
 // CREATE a new section
