@@ -87,25 +87,30 @@ const VideoCoursesTable = ({ courses, loading }) => {
     }
   
     return (
-      <div className="overflow-x-auto">
+      <div className="overflow-y-auto h-1/2">
         <table className="min-w-full bg-white border-collapse">
           <thead>
             <tr>
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Course IMAGE</th>
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Course Name</th>
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Description</th>
-              <th className="py-2 px-4 border-b bg-gray-100 text-left">Duration</th>
+              {/* <th className="py-2 px-4 border-b bg-gray-100 text-left">Duration</th> */}
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Status</th>
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Created At</th>
             </tr>
           </thead>
-          <tbody className="gap-5">
+          <tbody className=" space-y-2 gap-5">
             {courses.map((course) => (
-              <tr key={course._id} className="even:bg-gray-50 mt-5 py-5">
+              <tr key={course._id} className="even:bg-richblack-300 odd:bg-richblack-200    mt-5 py-5">
+                <td className="py-2 px-4 border-b">
+                  <img
+                    src={course.thumbnail}
+                    alt={course.courseName}
+                    className="w-40 h-40 rounded-full"/>
+                  </td>
                 <td className="py-2 px-4 border-b">{course.courseName}</td>
-                <td className="py-2 px-4 border-b">{course.courseName}</td>
-                <td className="py-2 px-4 border-b">{course.courseDescription}</td>
-                <td className="py-2 px-4 border-b">{course.duration}</td>
+                <td className="py-2 px-4 border-b">{course.courseDescription.slice(0,40)}</td>
+                {/* <td className="py-2 px-4 border-b">{course.duration}</td> */}
                 <td className="py-2 px-4 border-b">{course.status}</td>
                 <td className="py-2 px-4 border-b">
                   {new Date(course.createdAt).toLocaleDateString()}
