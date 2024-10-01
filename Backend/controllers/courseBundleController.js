@@ -85,7 +85,7 @@ exports.deleteCourseBundle = async (req, res) => {
     // await Quiz.deleteMany({ _id: { $in: bundle.quizes } });
 
     // Delete related study materials
-    await StudyMaterial.deleteMany({ _id: { $in: bundle.studyMaterials } });
+    // await StudyMaterial.deleteMany({ _id: { $in: bundle.studyMaterials } });
 
     // Delete the related course
     await Course.findByIdAndDelete(bundle.course);
