@@ -15,31 +15,40 @@ const CpuUsageBar = () => {
     networkInterfaceCount: '0',
   });
 
-  const fetchSystemInfo = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/api/v1/cpu-usage`);
-      setSystemInfo(response.data);
-      toast.success('System info updated successfully!');
-    } catch (error) {
-      toast.error('Failed to fetch system info.');
-      console.error(error);
-    }
-  };
-  // useEffect(() => {
-  //   fetchSystemInfo();
-  //   const interval = setInterval(fetchSystemInfo, 30000); // Fetch every 1 minute
+  useEffect(() => {
+    const ws = new WebSocket(`ws://${BASE_URL}`); // Adjust the URL to match your backend WebSocket URL
 
-  //   return () => clearInterval(interval); // Cleanup interval on component unmount
-  // }, []);
+    ws.onopen = () => {
+      console.log('WebSocket connection established');
+      toast.success('WebSocket connection established');
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      setSystemInfo(data);
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      toast.error('WebSocket error');
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket connection closed');
+      toast.error('WebSocket connection closed');
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   const { cpuUsage, memoryUsage, totalMemory, freeMemory, usedMemory, diskInfo, networkInterfaceCount } = systemInfo;
 
  
   return (
     <div className='flex flex-row gap-5 justify-around'>
-    <button onClick={fetchSystemInfo} className="btn btn-primary mb-0  text-white w-5 h-4 " >
-      Refresh System Info
-    </button>
+   
     <div className="cpu-usage-bar rounded-lg items-center justify-center pt-1 w-1/4 bg-richblack-200 p-2">
       <div className="flex flex-col items-center gap-2">
         <div
