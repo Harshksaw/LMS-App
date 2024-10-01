@@ -191,8 +191,8 @@ exports.uploadVideo = (req, res) => {
     } catch (err) {
       console.error(`Error during video processing: ${err.message}`);
       res.status(500).json({ error: 'Video processing failed' });
+      clearUploadsFolder();
     }
-    clearUploadsFolder();
   });
 };
 
@@ -310,3 +310,17 @@ function clearUploadsFolder() {
     console.log('Uploads directory does not exist.');
   }
 }
+
+
+
+exports.listAllVideos = async (req, res) => {
+  try {
+    const videos = await Course.find().sort({ createdAt: -1 });
+
+
+    res.status(200).json(videos);
+  } catch (error) {
+    console.error(`Failed to list videos: ${error.message}`);
+    res.status(500).json({ error: 'Failed to list videos' });
+  }
+};

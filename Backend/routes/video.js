@@ -4,7 +4,7 @@ const router = express.Router();
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
-const { createVideo, getVideo } = require("../controllers/video-stream");
+const { createVideo, getVideo, listAllVideos } = require("../controllers/video-stream");
 
 const cloudinary = require("cloudinary").v2;
 
@@ -31,6 +31,8 @@ const upload = multer({ storage });
 
 router.post('/createVideo', upload.single("courseImage"),  createVideo);
 router.post('/getVideo', getVideo);
+router.get('/getAllVideo',listAllVideos);
+
 
 
 module.exports = router;

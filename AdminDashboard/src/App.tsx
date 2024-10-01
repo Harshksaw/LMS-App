@@ -50,6 +50,7 @@ import GetMaterials from "./pages/getMaterials";
 import OrderScreen from "./pages/payment";
 import Coupons from "./components/core/Dashboard/Coupons";
 import VideoUpload from "./pages/Video";
+import VideoCoursesList from "./components/core/Dashboard/AddCourse/AllVideo";
 
 function App() {
   const { user } = useSelector((state) => state.profile);
@@ -177,7 +178,10 @@ function App() {
                 element={<CourseBundleForm />}
               />
               //for video cources
+
               <Route path="dashboard/course-video" element={<AddCourse />} />
+              <Route path="dashboard/all-course-video" element={<VideoCoursesList />} />
+
               <Route
                 path="dashboard/edit-course/:courseId"
                 element={<EditCourse />}

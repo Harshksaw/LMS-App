@@ -11,7 +11,7 @@ import {
 import { usePreventScreenCapture } from "expo-screen-capture";
 
 const StudyMaterialCard = ({ studyMaterials }) => {
-  usePreventScreenCapture();
+  // usePreventScreenCapture();
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Study Materials</Text>

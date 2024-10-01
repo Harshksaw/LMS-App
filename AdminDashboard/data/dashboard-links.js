@@ -69,7 +69,7 @@ export const sidebarLinks = [
     name: "All Course Video",
     path: "/dashboard/all-course-video",
     type: ACCOUNT_TYPE.ADMIN,
-    icon: "VscAdd",
+    icon: "VscLibrary",
   },
   {
     id: 11,

@@ -58,7 +58,7 @@ export default function CourseInformationForm({ step, handleNextStep, handlePrev
       toast.dismiss(); 
     } catch (error) {
       toast.dismiss(); // Dismiss toast on error
-      toast.error("An error occurred. Please try again.");
+      // toast.error("An error occurred. Please try again.");
       setLoading(false); // Reset loading state on error
     }
   };
@@ -85,7 +85,7 @@ export default function CourseInformationForm({ step, handleNextStep, handlePrev
       }
     } catch (error) {
       console.error(error);
-      toast.error("An error occurred. Please try again.");
+      // toast.error("An error occurred. Please try again.");
       setLoading(false); // Reset loading state on error
     }
   };

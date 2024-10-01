@@ -37,7 +37,7 @@ function secondsToHms(seconds) {
 }
 
 export default function QuizScreen() {
-  usePreventScreenCapture();
+  // usePreventScreenCapture();
   const route = useRoute();
   const { quizId } = route.params;
 
