@@ -7,6 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 const Course = require('../models/Course');
 const ffprobe = require('ffprobe-static'); // Install using `npm install ffprobe-static`
 const { execSync } = require('child_process');
+const Bundle = require('../models/CourseBundle');
 
 exports.createVideo = async (req, res) => {
   try {
@@ -267,6 +268,22 @@ async function getPresignedUrl(courseId, segmentId) {
     throw error; // Re-throw for handling in API route or client
   }
 }
+
+
+exports.getBundleVideo = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const course = await Bundle.findById(id).populate('Videos')
+
+    return res.status(200).json(course);
+    // const presignedUrl = await getPresignedUrl(courseId, segmentId);
+    // res.json({ presignedUrl });
+  } catch (error) {
+    res.status(404).json({ error: 'Failed to get Course Videos' });
+  }
+};
+
 
 
 exports.getVideo = async (req, res) => {
