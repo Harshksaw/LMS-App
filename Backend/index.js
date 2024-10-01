@@ -36,18 +36,6 @@ const wss = new WebSocket.Server({ server });
 
 
 
-wss.on('connection', (ws, req) => {
-  const urlParams = new URLSearchParams(req.url.split('?')[1]);
-  const clientId = urlParams.get('clientId');
-  if (clientId) {
-    clients.set(clientId, ws);
-
-    ws.on('close', () => {
-      clients.delete(clientId);
-    });
-  }
-});
-
 dotenv.config();
 const PORT = process.env.PORT || 4000;
 
