@@ -16,7 +16,9 @@ const CpuUsageBar = () => {
   });
 
   useEffect(() => {
-    const ws = new WebSocket(`ws://${BASE_URL.replace(/^https?:\/\//, '')}`); // Adjust the URL to match your backend WebSocket URL
+    const wsUrl = `ws://${BASE_URL.replace(/^http?:\/\//, '')}`;
+    console.log(`Connecting to WebSocket at ${wsUrl}`);
+    const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
       console.log('WebSocket connection established');
