@@ -23,6 +23,7 @@ import Button from "@/components/button/button";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import VideoScreen from "./ViewScreen";
 
 const { height, width } = Dimensions.get("window");
 
@@ -120,35 +121,14 @@ const ContentsScreen = ({ data, bundleId, userId, handleBought }) => {
   );
 };
 
-const VideoScreen = ({ data }) => {
-  const [videodata, setvideoData] = React.useState([]);
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      {videodata.length === 0 ? (
-        <View style={styles.noVideoContainer}>
-          {/* <Image
-            source={{
-              uri: "https://unbridledwealth.com/wp-content/uploads/2017/08/video-placeholder.jpg",
-            }} // Replace with your image URL
-            style={styles.noVideoImage}
-          /> */}
-          <Text style={styles.noVideoText}>No video available</Text>
-        </View>
-      ) : (
-        // Render your video content here
-        <View>
-          {/* Replace this with your actual video rendering logic */}
-          <Text>Video Content</Text>
-        </View>
-      )}
-    </View>
-  );
-};
+
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function index() {
   const [BundleData, setBundleData] = React.useState([]);
+
+
 
   const [isBought, setIsBought] = React.useState(false);
   const handleBought = () => {
@@ -171,6 +151,7 @@ export default function index() {
 
       if (response.status === 200 && response.data.success) {
         setBundleData(response.data.data);
+        console.log("🚀 ~ fetchBundleData ~ response.data.data:", response.data.data)
       }
     } catch (error) {
       console.error(error);
@@ -191,6 +172,7 @@ export default function index() {
       },
     });
   };
+
 
   return (
     <SafeAreaView
@@ -259,7 +241,7 @@ export default function index() {
           />
           <Tab.Screen
             name="Video"
-            component={() => <VideoScreen data={[]} />}
+            component={() => <VideoScreen data={BundleData?.Videos} />}
           />
         </Tab.Navigator>
         {!isBought && <Button title="Enroll Now" onPress={onPress} />}

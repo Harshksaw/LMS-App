@@ -185,7 +185,8 @@ exports.getCourseBundleById = async (req, res) => {
   try {
     const bundle = await Bundle.findById(req.params.id)
       .populate("quizes")
-      .populate("studyMaterials");
+      .populate("studyMaterials")
+      .populate("Videos");
 
     res.status(200).json({
       success: true,

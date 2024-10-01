@@ -30,7 +30,10 @@ const upload = multer({ storage });
 
 
 router.post('/createVideo', upload.single("courseImage"),  createVideo);
+
+router.get('/getBundleVideo/:id',);
 router.post('/getVideo', getVideo);
+
 router.get('/getAllVideo',listAllVideos);
 
 
