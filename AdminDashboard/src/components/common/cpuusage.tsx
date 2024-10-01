@@ -16,7 +16,7 @@ const CpuUsageBar = () => {
   });
 
   useEffect(() => {
-    const wsUrl = `ws://${BASE_URL.replace(/^http?:\/\//, '')}`;
+    const wsUrl = `wss://${BASE_URL.replace(/^http?:\/\//, '')}`;
     console.log(`Connecting to WebSocket at ${wsUrl}`);
     const ws = new WebSocket(wsUrl);
 
@@ -30,7 +30,7 @@ const CpuUsageBar = () => {
       setSystemInfo(data);
     };
 
-    ws.onerror = (error) => {
+    ws.onerror = (error) => {re
       console.error('WebSocket error:', error);
       toast.error('WebSocket error');
     };
