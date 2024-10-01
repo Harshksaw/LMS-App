@@ -30,7 +30,7 @@ const os = require('os');
 const { exec } = require('child_process');
 const clients = new Map();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ noServer: true });
+const wss = new WebSocket.Server({ server });
 
 
 
@@ -109,54 +109,63 @@ const getDiskUsage = (path) => {
     });
   });
 };
-app.get('/api/v1/cpu-usage', async (req, res) => {
-  try {
-    const cpuUsage = await new Promise((resolve) => {
-      osUtils.cpuUsage((v) => {
-        resolve(v);
-      });
+const getSystemInfo = async () => {
+  const cpuUsage = await new Promise((resolve) => {
+    osUtils.cpuUsage((v) => {
+      resolve(v);
     });
+  });
 
-    const totalMemory = os.totalmem();
-    const freeMemory = os.freemem();
-    const usedMemory = totalMemory - freeMemory;
-    const memoryUsage = usedMemory / totalMemory;
+  const totalMemory = os.totalmem();
+  const freeMemory = os.freemem();
+  const usedMemory = totalMemory - freeMemory;
+  const memoryUsage = usedMemory / totalMemory;
 
-    const diskInfo = await getDiskUsage('/'); // Root path for disk usage
+  const diskInfo = await getDiskUsage('/'); // Root path for disk usage
 
-    const formatBytes = (bytes) => {
-      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-      if (bytes === 0) return '0 Byte';
-      const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-      return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sizes[i]}`;
-    };
+  const formatBytes = (bytes) => {
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes === 0) return '0 Byte';
+    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sizes[i]}`;
+  };
 
-    const networkInterfaces = os.networkInterfaces();
-    const networkInterfaceCount = Object.keys(networkInterfaces).length;
+  const networkInterfaces = os.networkInterfaces();
+  const networkInterfaceCount = Object.keys(networkInterfaces).length;
 
-    const systemInfo = {
-      cpuUsage: (cpuUsage * 100).toFixed(2) + '%',
-      memoryUsage: (memoryUsage * 100).toFixed(2) + '%',
-      totalMemory: formatBytes(totalMemory),
-      freeMemory: formatBytes(freeMemory),
-      usedMemory: formatBytes(usedMemory),
-      diskInfo: {
-        total: formatBytes(diskInfo.total),
-        used: formatBytes(diskInfo.used),
-        free: formatBytes(diskInfo.free),
-      },
-      networkInterfaceCount: networkInterfaceCount,
-    };
-    console.log("🚀 ~ app.get ~ systemInfo:", systemInfo);
+  return {
+    cpuUsage: (cpuUsage * 100).toFixed(2) + '%',
+    memoryUsage: (memoryUsage * 100).toFixed(2) + '%',
+    totalMemory: formatBytes(totalMemory),
+    freeMemory: formatBytes(freeMemory),
+    usedMemory: formatBytes(usedMemory),
+    diskInfo: {
+      total: formatBytes(diskInfo.total),
+      used: formatBytes(diskInfo.used),
+      free: formatBytes(diskInfo.free),
+    },
+    networkInterfaceCount: networkInterfaceCount,
+  };
+};
 
-    res.json(systemInfo);
-  } catch (error) {
-    console.error('Error fetching system info:', error);
-    res.status(500).json({ error: 'Error fetching system info' });
-  }
+// WebSocket connection
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+
+  const sendSystemInfo = async () => {
+    if (ws.readyState === WebSocket.OPEN) {
+      const systemInfo = await getSystemInfo();
+      ws.send(JSON.stringify(systemInfo));
+    }
+  };
+
+  const interval = setInterval(sendSystemInfo, 1000);
+
+  ws.on('close', () => {
+    clearInterval(interval);
+    console.log('Client disconnected');
+  });
 });
-
-
 
 
 // Backup function

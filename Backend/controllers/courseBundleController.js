@@ -7,6 +7,7 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const User = require("../models/User");
 const Coupon = require("../models/coupons");
+const { default: mongoose } = require("mongoose");
 
 console.log(
   process.env.CLOUD_NAME,
@@ -84,7 +85,7 @@ exports.deleteCourseBundle = async (req, res) => {
     // await Quiz.deleteMany({ _id: { $in: bundle.quizes } });
 
     // Delete related study materials
-    await StudyMaterial.deleteMany({ _id: { $in: bundle.studyMaterials } });
+    // await StudyMaterial.deleteMany({ _id: { $in: bundle.studyMaterials } });
 
     // Delete the related course
     await Course.findByIdAndDelete(bundle.course);
@@ -368,5 +369,30 @@ exports.updateBundle = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+
+exports.updateVideo = async (req, res) => {
+  try {
+    const bundle = await Bundle.findById(req.params.id);
+
+    if (!bundle) {
+      return res.status(404).json({ error: "Course bundle not found" });
+    }
+
+    // Ensure each video ID is cast to ObjectId
+    const videoIds = req.body.video.map(videoId => new  mongoose.Types.ObjectId(videoId));
+
+    bundle.Videos.push(...videoIds);
+
+    await bundle.save();
+
+    res.status(200).json({
+      message: "Video added to course bundle successfully",
+      data: bundle,
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };

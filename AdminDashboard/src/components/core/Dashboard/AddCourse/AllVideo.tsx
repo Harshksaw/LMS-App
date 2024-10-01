@@ -91,7 +91,7 @@ const VideoCoursesTable = ({ courses, loading }) => {
         <table className="min-w-full bg-white border-collapse">
           <thead>
             <tr>
-              <th className="py-2 px-4 border-b bg-gray-100 text-left">Course Thumbnail</th>
+              <th className="py-2 px-4 border-b bg-gray-100 text-left">Course IMAGE</th>
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Course Name</th>
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Description</th>
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Duration</th>
@@ -102,6 +102,7 @@ const VideoCoursesTable = ({ courses, loading }) => {
           <tbody className="gap-5">
             {courses.map((course) => (
               <tr key={course._id} className="even:bg-gray-50 mt-5 py-5">
+                <td className="py-2 px-4 border-b">{course.courseName}</td>
                 <td className="py-2 px-4 border-b">{course.courseName}</td>
                 <td className="py-2 px-4 border-b">{course.courseDescription}</td>
                 <td className="py-2 px-4 border-b">{course.duration}</td>
