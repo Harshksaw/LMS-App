@@ -18,6 +18,10 @@ const bundleSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'StudyMaterial'
   }],
+  Videos:[{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course'
+  }],
   course: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Course',

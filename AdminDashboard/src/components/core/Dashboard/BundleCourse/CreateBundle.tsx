@@ -9,11 +9,86 @@ import { BASE_URL } from "../../../../services/apis";
 import { Link, Router, useNavigate, useSearchParams } from "react-router-dom";
 import Step1 from "./StepOne.tsx";
 import Step2 from "./Steptwo.tsx";
+const VideoSelection = ({ selectedVideos, setSelectedVideos }) => {
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(`${BASE_URL}/api/v1/videocourse/getAllVideo`);
+        if (res.data) {
+          setVideos(res.data);
+        } else {
+          toast.error("Failed to fetch videos");
+        }
+      } catch (error) {
+        toast.error("Failed to fetch videos");
+      }
+      setLoading(false);
+    };
+    fetchVideos();
+  }, []);
+
+  const handleVideoSelect = (videoId) => {
+    if (selectedVideos.includes(videoId)) {
+      setSelectedVideos(selectedVideos.filter((id) => id !== videoId));
+    } else {
+      setSelectedVideos([...selectedVideos, videoId]);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="overflow-y-auto h-full border border-white">
+      <h3 className="text-2xl font-semibold mb-4 text-richblack-25 text-center">Select Videos</h3>
+      <div className="flex flex-wrap gap-4 justify-center ">
+        {videos.map((video) => (
+          
+          <div
+            key={video._id}
+            className={`w-2/5 p-4 border rounded-lg cursor-pointer  my-10 mx-5   ${
+              selectedVideos.includes(video._id) ? "bg-blue-100 border-blue-500" : "bg-richblack-500"
+            }`}
+            onClick={() => handleVideoSelect(video._id)}
+          >
+            <img
+              src={video?.thumbnail}
+              alt={video.courseName}
+              className="w-full h-32 object-cover mb-2"
+            />
+            <h4 className="text-sm font-medium">{video?.courseName}</h4>
+            <select
+              className="mt-2 p-2 border rounded"
+              value={selectedVideos.includes(video._id) ? "selected" : ""}
+              onChange={() => handleVideoSelect(video._id)}
+            >
+              <option value="">Select</option>
+              <option value="selected">Selected</option>
+            </select>
+            {
+              console.log(video)
+            }
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const Step3 = ({ register, setValue, errors, courseBundleId }) => {
   const [startDate, setStartDate] = React.useState("");
   const [isListed, setIsListed] = React.useState(false);
+  const [selectedVideos, setSelectedVideos] = useState([]);
+  useEffect(() => {
+    setValue("videos", selectedVideos);
+  }, [selectedVideos, setValue]);
 
+  
   const handleDateChange = (event) => {
     const date = event.target.value;
     setStartDate(date);
@@ -28,7 +103,17 @@ const Step3 = ({ register, setValue, errors, courseBundleId }) => {
   useEffect(() => {}, [startDate, isListed]);
   return (
     <div>
-      <div className="space-y-8">
+
+
+      <div className="space-y-2 flex flex-col justify-between gap-10 ">
+
+      <VideoSelection
+        selectedVideos={selectedVideos}
+        setSelectedVideos={setSelectedVideos}
+      />
+
+<div>
+
         <div className="flex gap-3">
           <label className="text-white">Publish Date:</label>
           <input
@@ -36,7 +121,7 @@ const Step3 = ({ register, setValue, errors, courseBundleId }) => {
             value={startDate}
             onChange={handleDateChange}
             className="form-control"
-          />
+            />
           {errors.publishDate && (
             <div className="error">{errors.publishDate.message}</div>
           )}
@@ -47,12 +132,13 @@ const Step3 = ({ register, setValue, errors, courseBundleId }) => {
             type="checkbox"
             checked={isListed}
             onChange={handleListedChange}
-          />
+            />
           {errors.isListed && (
             <div className="error">{errors.isListed.message}</div>
           )}
         </div>
       </div>
+          </div>
     </div>
   );
 };
@@ -180,14 +266,7 @@ export default function CourseBundleForm() {
       });
     }
 
-    // Add publish and set time data to formData
-    // const result = await publishCourseBundle(formData, token);
-    // if (result) {
-    // //   dispatch(setCourseBundle(result));
-    //   toast.success("Course bundle published successfully");
-    // } else {
-    //   toast.error("Failed to publish course bundle");
-    // }
+
   };
 
   const onSubmit = (data: any) => {
@@ -199,6 +278,8 @@ export default function CourseBundleForm() {
       handleStep3Submit(data);
     }
   };
+
+
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -215,7 +296,7 @@ export default function CourseBundleForm() {
         "quizzes",
         course.quizes.map((i) => i._id)
       );
-      studyMaterials;
+      // studyMaterials;
       setValue("date", course.activeListing);
       setValue("isListed", course.listed);
       setValue("bundleName", course.bundleName);

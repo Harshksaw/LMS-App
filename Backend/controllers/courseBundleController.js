@@ -370,3 +370,26 @@ exports.updateBundle = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+exports.updateVideo = async (req, res) => {
+  try {
+    const bundle = await Bundle.findById(req.params.id);
+
+    if (!bundle) {
+      return res.status(404).json({ error: "Course bundle not found" });
+    }
+
+
+    bundle.Videos.push(req.body.video);
+
+    await bundle.save();
+
+    res.status(200).json({
+      message: "Video added to course bundle successfully",
+      data: bundle,
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};

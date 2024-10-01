@@ -63,4 +63,10 @@ router.post("/removeUserBundle", courseBundleController.removeUserBundle);
 
 router.post("/checkPurchase", courseBundleController.checkPurchase);
 
+
+
+//for video update
+
+router.post("/updateVideo/:id", courseBundleController.updateVideo);
+
 module.exports = router;
