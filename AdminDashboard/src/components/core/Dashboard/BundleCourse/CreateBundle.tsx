@@ -9,6 +9,7 @@ import { BASE_URL } from "../../../../services/apis";
 import { Link, Router, useNavigate, useSearchParams } from "react-router-dom";
 import Step1 from "./StepOne.tsx";
 import Step2 from "./Steptwo.tsx";
+
 const VideoSelection = ({ selectedVideos, setSelectedVideos }) => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -20,6 +21,7 @@ const VideoSelection = ({ selectedVideos, setSelectedVideos }) => {
         const res = await axios.get(`${BASE_URL}/api/v1/videocourse/getAllVideo`);
         if (res.data) {
           setVideos(res.data);
+          toast.success("Videos fetched successfully");
         } else {
           toast.error("Failed to fetch videos");
         }
@@ -70,9 +72,7 @@ const VideoSelection = ({ selectedVideos, setSelectedVideos }) => {
               <option value="">Select</option>
               <option value="selected">Selected</option>
             </select>
-            {
-              console.log(video)
-            }
+          
           </div>
         ))}
       </div>
@@ -80,10 +80,10 @@ const VideoSelection = ({ selectedVideos, setSelectedVideos }) => {
   );
 };
 
-const Step3 = ({ register, setValue, errors, courseBundleId }) => {
+const Step3 = ({ register, setValue, errors, courseBundleId, setSelectedVideos,selectedVideos }) => {
   const [startDate, setStartDate] = React.useState("");
   const [isListed, setIsListed] = React.useState(false);
-  const [selectedVideos, setSelectedVideos] = useState([]);
+  // const [selectedVideos, setSelectedVideos] = useState([]);
   useEffect(() => {
     setValue("videos", selectedVideos);
   }, [selectedVideos, setValue]);
@@ -150,6 +150,10 @@ export default function CourseBundleForm() {
   const id = searchParams.get("id");
   const [step, setStep] = useState(1);
   const [bundleImage, setBundleImage] = useState(id ?? null);
+
+  const [selectedVideos, setSelectedVideos] = useState<string[]>([]);
+
+
   const {
     register,
     handleSubmit,
@@ -248,8 +252,12 @@ export default function CourseBundleForm() {
         `${BASE_URL}/api/v1/bundle/course-bundle/updateTime/${courseBundleId}`,
         { date: formData.date, isListed: formData.isListed }
       );
+      const resVideo = await axios.post(
+        `${BASE_URL}/api/v1/bundle/updateVideo/${courseBundleId}`,
+        { video: selectedVideos  }
+      );
 
-      if (res.status != 200) {
+      if (res.status != 200 || resVideo.status != 200) {
         toast.dismiss();
         toast.error("Update failed");
         return;
@@ -294,7 +302,7 @@ export default function CourseBundleForm() {
       const course = res?.data?.data;
       setValue(
         "quizzes",
-        course.quizes.map((i) => i._id)
+        course.quizes?.map((i) => i._id)
       );
       // studyMaterials;
       setValue("date", course.activeListing);
@@ -349,12 +357,14 @@ export default function CourseBundleForm() {
             />
           )}
           {step === 3 && (
-            <Step3
-              register={register}
-              setValue={setValue}
-              courseBundleId={courseBundleId}
-              errors={errors}
-            />
+           <Step3
+           register={register}
+           setValue={setValue}
+           courseBundleId={courseBundleId}
+           errors={errors}
+           selectedVideos={selectedVideos}
+           setSelectedVideos={setSelectedVideos}
+         />
           )}
           <div className="flex justify-end">
             <IconBtn

@@ -7,6 +7,7 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const User = require("../models/User");
 const Coupon = require("../models/coupons");
+const { default: mongoose } = require("mongoose");
 
 console.log(
   process.env.CLOUD_NAME,
@@ -380,8 +381,10 @@ exports.updateVideo = async (req, res) => {
       return res.status(404).json({ error: "Course bundle not found" });
     }
 
+    // Ensure each video ID is cast to ObjectId
+    const videoIds = req.body.video.map(videoId => new  mongoose.Types.ObjectId(videoId));
 
-    bundle.Videos.push(req.body.video);
+    bundle.Videos.push(...videoIds);
 
     await bundle.save();
 
