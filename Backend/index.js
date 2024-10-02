@@ -29,50 +29,62 @@ const videocourse = require('./routes/video');
 const os = require('os');
 const { exec } = require('child_process');
 const clients = new Map();
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+// const server = http.createServer(app);
+
+
+dotenv.config();
+const PORT = process.env.PORT || 4000;
+
+// Create WebSocket server
+const wss = new WebSocket.Server({ port: 4001 });
+
+
+// Function to get disk usage
+const getDiskUsage = (path) => {
+  return new Promise((resolve) => {
+    exec(`df -h ${path} | tail -1 | awk '{print $2, $3, $4}'`, (error, stdout) => {
+      if (error) {
+        resolve({ total: '0', used: '0', free: '0' });
+      } else {
+        const [total, used, free] = stdout.trim().split(' ');
+        resolve({ total, used, free });
+      }
+    });
+  });
+};
 
 // Function to get system info
 const getSystemInfo = async () => {
   const cpuUsage = await new Promise((resolve) => {
-    osUtils.cpuUsage((v) => {
-      resolve(v);
+    exec("top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\\([0-9.]*\\)%* id.*/\\1/' | awk '{print 100 - $1}'", (error, stdout) => {
+      if (error) {
+        resolve('0');
+      } else {
+        resolve(stdout.trim());
+      }
     });
   });
 
   const totalMemory = os.totalmem();
   const freeMemory = os.freemem();
   const usedMemory = totalMemory - freeMemory;
-  const memoryUsage = usedMemory / totalMemory;
 
-  const diskInfo = await getDiskUsage('/'); // Root path for disk usage
-
-  const formatBytes = (bytes) => {
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes === 0) return '0 Byte';
-    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-    return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sizes[i]}`;
-  };
+  const diskInfo = await getDiskUsage('/');
 
   const networkInterfaces = os.networkInterfaces();
   const networkInterfaceCount = Object.keys(networkInterfaces).length;
 
   return {
-    cpuUsage: (cpuUsage * 100).toFixed(2) + '%',
-    memoryUsage: (memoryUsage * 100).toFixed(2) + '%',
-    totalMemory: formatBytes(totalMemory),
-    freeMemory: formatBytes(freeMemory),
-    usedMemory: formatBytes(usedMemory),
-    diskInfo: {
-      total: formatBytes(diskInfo.total),
-      used: formatBytes(diskInfo.used),
-      free: formatBytes(diskInfo.free),
-    },
-    networkInterfaceCount: networkInterfaceCount,
+    cpuUsage,
+    memoryUsage: (usedMemory / totalMemory * 100).toFixed(2),
+    totalMemory: (totalMemory / (1024 * 1024 * 1024)).toFixed(2), // in GB
+    freeMemory: (freeMemory / (1024 * 1024 * 1024)).toFixed(2), // in GB
+    usedMemory: (usedMemory / (1024 * 1024 * 1024)).toFixed(2), // in GB
+    diskInfo,
+    networkInterfaceCount
   };
 };
 
-// WebSocket connection
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
@@ -85,16 +97,25 @@ wss.on('connection', (ws) => {
 
   const interval = setInterval(sendSystemInfo, 1000);
 
+  ws.on('message', (message) => {
+    console.log('Received message:', message);
+  });
+
   ws.on('close', () => {
     clearInterval(interval);
     console.log('Client disconnected');
   });
+
+  ws.on('error', (error) => {
+    console.error('WebSocket error:', error);
+  });
+});
+
+wss.on('error', (error) => {
+  console.error('WebSocket server error:', error);
 });
 
 
-
-dotenv.config();
-const PORT = process.env.PORT || 4000;
 
 //database connect
 database.connect();
@@ -138,22 +159,7 @@ app.post("/api/v1/video", (req, res) => {
 app.get("/api/v1/checkStatus/:lessonId", (req, res) => {
   videoStreamController.checkStatus(req, res);
 });
-const getDiskUsage = (path) => {
-  return new Promise((resolve, reject) => {
-    exec(`df -k ${path}`, (error, stdout, stderr) => {
-      if (error) {
-        return reject(error);
-      }
-      const lines = stdout.trim().split('\n');
-      const diskInfo = lines[1].split(/\s+/);
-      resolve({
-        total: parseInt(diskInfo[1], 10) * 1024,
-        used: parseInt(diskInfo[2], 10) * 1024,
-        free: parseInt(diskInfo[3], 10) * 1024,
-      });
-    });
-  });
-};
+
 
 
 
