@@ -240,31 +240,29 @@ exports.checkStatus = async (req, res) => {
   pollStatus(Date.now());
 };
 
-
 async function getPresignedUrl(courseId, segmentId) {
   try {
-
     const course = await Course.findById(courseId);
-    console.log("🚀 ~ getPresignedUrl ~ course:", course)
+    console.log("🚀 ~ getPresignedUrl ~ course:", course);
     if (!course) {
       throw new Error('Course not found');
     }
 
-
-
     const indexFilePath = course.indexFile; 
+    const cloudfrontDomain = process.env.CLOUDFRONT_VIDEO; // Replace with your CloudFront domain
+    const videoUrl = `${cloudfrontDomain}/${indexFilePath}`;
 
-    // Generate presigned URL for the index file
-    const params = {
-      Bucket: "krishanacademylms",
-      Key: indexFilePath,
-      Expires: 3600,
+    console.log("🚀 ~ getPresignedUrl ~ videoUrl:", videoUrl)
+    // Generate CloudFront signed URL
+    const options = {
+      url: videoUrl,
+      expires: Math.floor((Date.now() + 3600 * 1000) / 1000), // URL valid for 1 hour
     };
 
-    const presignedUrl = await s3.getSignedUrlPromise('getObject', params);
-    return presignedUrl;
+    const signedUrl = cloudfront.getSignedUrl(options);
+    return signedUrl;
   } catch (error) {
-    console.error('Error generating presigned URL:', error.message);
+    console.error('Error generating signed URL:', error.message);
     throw error; // Re-throw for handling in API route or client
   }
 }
