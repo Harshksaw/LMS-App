@@ -252,15 +252,15 @@ async function getPresignedUrl(courseId, segmentId) {
     const cloudfrontDomain = process.env.CLOUDFRONT_VIDEO; // Replace with your CloudFront domain
     const videoUrl = `${cloudfrontDomain}/${indexFilePath}`;
 
-    console.log("🚀 ~ getPresignedUrl ~ videoUrl:", videoUrl)
-    // Generate CloudFront signed URL
-    const options = {
-      url: videoUrl,
-      expires: Math.floor((Date.now() + 3600 * 1000) / 1000), // URL valid for 1 hour
-    };
+    // console.log("🚀 ~ getPresignedUrl ~ videoUrl:", videoUrl)
+    // // Generate CloudFront signed URL
+    // const options = {
+    //   url: videoUrl,
+    //   expires: Math.floor((Date.now() + 3600 * 1000) / 1000), // URL valid for 1 hour
+    // };
 
-    const signedUrl = cloudfront.getSignedUrl(options);
-    return signedUrl;
+    // const signedUrl = cloudfront.getSignedUrl(options);
+    return videoUrl
   } catch (error) {
     console.error('Error generating signed URL:', error.message);
     throw error; // Re-throw for handling in API route or client

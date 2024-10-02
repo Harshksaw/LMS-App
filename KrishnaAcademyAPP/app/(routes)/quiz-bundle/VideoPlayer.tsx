@@ -13,7 +13,7 @@ const VideoPlayer = () => {
   const videoData = JSON.parse(video);
 
   console.log("🚀 ~ file: VideoPlayer.tsx ~ line 10 ~ VideoPlayer ~ videoData", videoData._id, id)
-  const [videoUrl, setVideoUrl] = useState(null);
+  const [videoUrl, setVideoUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -23,12 +23,14 @@ const VideoPlayer = () => {
         courseId: videoData._id,
         segmentId: videoData.indexFile,
     });
-    console.log("🚀 ~ getVideoUrl ~ res:", res.data.presignedUrl)
+
       setVideoUrl(res.data.presignedUrl);
+      //   setVideoUrl("https://d3794hgjnt5o1l.cloudfront.net/courses/66fb8faa9c05a15f580186a5/index.m3u8");
+      console.log("🚀 ~ getVideoUrl ~ res.data.presignedUrl:", res.data)
       setLoading(false);
     } catch (err) {
       console.error(err);
-      setError(true);
+    //   setError(true);
       setLoading(false);
     }
   };
@@ -70,6 +72,7 @@ const VideoPlayer = () => {
   return (
     <View style={styles.container}>
       <Video
+        // source={{ uri: videoUrl }}
         source={{ uri: videoUrl }}
         rate={1.0}
         volume={1.0}
