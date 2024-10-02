@@ -241,7 +241,7 @@ export default function index() {
           />
           <Tab.Screen
             name="Video"
-            component={() => <VideoScreen data={BundleData?.Videos} />}
+            component={() => <VideoScreen data={BundleData} />}
           />
         </Tab.Navigator>
         {!isBought && <Button title="Enroll Now" onPress={onPress} />}

@@ -221,14 +221,24 @@ function RootLayoutNav() {
             headerBackTitle: "Back",
           }}
         />
+     
         <Stack.Screen
-          name="(routes)/video/index"
+          name="(routes)/quiz-bundle/VideoPlayer"
           options={{
             headerShown: true,
             title: "Video Player",
             headerBackTitle: "Back",
           }}
         />
+        <Stack.Screen
+          name="(routes)/quiz-bundle/VideoScreen"
+          options={{
+            headerShown: true,
+            title: "Video Screen",
+            headerBackTitle: "Back",
+          }}
+        />
+        
       </Stack>
     </ToastProvider>
   );

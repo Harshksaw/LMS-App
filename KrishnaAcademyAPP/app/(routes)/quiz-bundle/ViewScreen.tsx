@@ -1,118 +1,131 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
-import { ScrollView, Text, View } from "react-native";
-import { styles } from "./styles";
-import { SERVER_URI } from "@/utils/uri";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, ScrollView, Text, View, Image, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 
 const VideoScreen = ({ data }) => {
-  console.log("🚀 ~ VideoScreen ~ data:", data)
-  const [videodata, setvideoData] = React.useState([]);
+  console.log("🚀 ~ VideoScreen ~ data:", data._id)
+  const [videodata, setvideoData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    setvideoData(data?.Videos);
+    setLoading(false);
+  }, [data]);
 
-//   const getVideoData = async () => {
-//     try {
-//       const response = await axios.get(
-//         `${SERVER_URI}/api/v1/bundle/${data.id}/videos`
-//       );
-//       if (response.data && response.data.Videos && response.data.Videos.length > 0) {
-//         setvideoData(response.data.Videos);
-//       } else {
-//         setvideoData([]);
-//       }
-//     } catch (error) {
-//       console.error(error);
-//       setvideoData([]);
-//     }
-//   };
+  const navigation = useNavigation();
 
+  const handlePress = (video) => {
+    // navigation.navigate("VideoDetail", { video });
+    router.push({
+        pathname: "/(routes)/quiz-bundle/VideoPlayer",
+        params: { video: JSON.stringify(video), id: data._id },
+      });
+  };
 
+  if (loading) {
+    return (
+      <ActivityIndicator
+        size="large"
+        color="#0000ff"
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      />
+    );
+  }
 
-//   useEffect(() => {
-//     getVideoData();
-//   }, [data.id]);
   return (
     <ScrollView style={{ flex: 1 }}>
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        {videodata.length === 0 ? (
-          <View style={styles.noVideoContainer}>
-            {/* <Image
-              source={{
-                uri: "https://unbridledwealth.com/wp-content/uploads/2017/08/video-placeholder.jpg",
-              }} // Replace with your image URL
-              style={styles.noVideoImage}
-            /> */}
-            <Text style={styles.noVideoText}>No video available</Text>
+      <View style={{ justifyContent: "center" }}>
+        {videodata?.length === 0 ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 20,
+              backgroundColor: "#f4f4f4",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                color: "#333",
+                textAlign: "center",
+              }}
+            >
+              No video available
+            </Text>
           </View>
         ) : (
-          // Render your video content here
-          <View>
-            {/* Replace this with your actual video rendering logic */}
-            <Text>Video Content</Text>
-          </View>
+          videodata?.map((video, index) => (
+            <TouchableOpacity key={index} onPress={() => handlePress(video)}
+            style={{ width: "100%" }}
+            >
+              <VideoCard video={video} />
+            </TouchableOpacity>
+          ))
         )}
-      </View>
-
-      <View style={styles.tabContent}>
-        <Text style={styles.sectionTitle}>About</Text>
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.description}>
-            {data?.aboutDescription?.split("\n").map((paragraph, index) => {
-              const isBulletPoint = paragraph.trim().startsWith("-");
-              return (
-                <Text
-                  key={index}
-                  style={isBulletPoint ? styles.bulletPoint : styles.paragraph}
-                >
-                  {isBulletPoint
-                    ? `• ${paragraph.trim().substring(1).trim()}`
-                    : paragraph.trim()}
-                  {"\n"}
-                </Text>
-              );
-            })}
-          </Text>
-        </View>
-      </View>
-
-      <View
-        style={{
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          paddingVertical: 20,
-        }}
-      >
-        <Text style={styles.sectionTitle}>{data?.bundleName}</Text>
-
-        <View
-          style={{
-            paddingHorizontal: 20,
-            paddingBottom: 100,
-          }}
-        >
-          {data?.quizes?.map((quiz, index) => (
-            <View key={index} style={styles.itemContainer}>
-              <Ionicons name="extension-puzzle" size={24} color="black" />
-              <Text style={styles.itemText}>{quiz.name}</Text>
-            </View>
-          ))}
-
-          {data?.studyMaterials?.length > 0 && (
-            <>
-              <Text style={styles.sectionTitle}>Study Materials</Text>
-              {data.studyMaterials.map((material, index) => (
-                <View key={index} style={styles.itemContainer}>
-                  <Ionicons name="book-outline" size={24} color="black" />
-                  <Text style={styles.itemText}>{material.name}</Text>
-                </View>
-              ))}
-            </>
-          )}
-        </View>
       </View>
     </ScrollView>
   );
 };
 
 export default VideoScreen;
+
+const VideoCard = ({ video }) => {
+  return (
+    <View style={styles.cardContainer}>
+      <Image source={{ uri: video.thumbnail }} style={styles.thumbnail} />
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>{video.courseName}</Text>
+        <Text style={styles.description}>{video.courseDescription.slice(0, 50)}</Text>
+        <Text style={styles.title}>{video.createdAt.slice(0, 10)}</Text>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    flexDirection: "row",
+
+    marginHorizontal: 20,
+    marginVertical: 15,
+    marginBottom: 10,
+    padding: 10,
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "rgb(143, 137, 137)",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  thumbnail: {
+    width: 150,
+    height: 120,
+    borderRadius: 8,
+  },
+  infoContainer: {
+    flex: 1,
+    marginLeft: 10,
+    justifyContent: "space-around",
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  description: {
+    fontSize: 14,
+    color: "#666",
+    lineHeight: 20,
+  },
+});
