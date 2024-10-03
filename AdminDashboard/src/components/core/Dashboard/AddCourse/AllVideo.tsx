@@ -94,7 +94,7 @@ const VideoCoursesTable = ({ courses, loading }) => {
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Course IMAGE</th>
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Course Name</th>
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Description</th>
-              {/* <th className="py-2 px-4 border-b bg-gray-100 text-left">Duration</th> */}
+              <th className="py-2 px-4 border-b bg-gray-100 text-left">Duration</th>
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Status</th>
               <th className="py-2 px-4 border-b bg-gray-100 text-left">Created At</th>
             </tr>
@@ -110,7 +110,7 @@ const VideoCoursesTable = ({ courses, loading }) => {
                   </td>
                 <td className="py-2 px-4 border-b">{course.courseName}</td>
                 <td className="py-2 px-4 border-b">{course.courseDescription.slice(0,40)}</td>
-                {/* <td className="py-2 px-4 border-b">{course.duration}</td> */}
+                <td className="py-2 px-4 border-b">{course?.duration}</td>
                 <td className="py-2 px-4 border-b">{course.status}</td>
                 <td className="py-2 px-4 border-b">
                   {new Date(course.createdAt).toLocaleDateString()}

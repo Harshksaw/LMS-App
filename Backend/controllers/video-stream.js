@@ -147,7 +147,7 @@ async function processVideo(videoPath, lessonId) {
 
   await Promise.all(uploadPromises);
 
-  // Convert lessonId to ObjectId
+
 
 
 
@@ -157,6 +157,7 @@ async function processVideo(videoPath, lessonId) {
     if (course) {
       console.log("🚀 ~ processVideo ~ course:", course)
       course.indexFile = `courses/${lessonId}/index.m3u8`
+      course.duration = videoDuration;
       
       await course.save();
       console.log(`index.m3u8 path saved to database for lessonId: ${lessonId}`);
