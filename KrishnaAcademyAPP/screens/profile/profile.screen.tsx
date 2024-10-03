@@ -306,12 +306,7 @@ export default function ProfileScreen() {
           </View>
 
 
-          <View style={{ paddingVertical: 24 }}>
-            <Button title="Test" onPress={()=> router.push({
-              pathname: "/(routes)/video",
-
-            })} />
-          </View>
+       
           <View style={{ paddingVertical: 10 }}>
             <Button title="Logout" onPress={logoutHandler} />
           </View>
