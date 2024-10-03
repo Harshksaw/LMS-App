@@ -19,7 +19,7 @@ import { router, useFocusEffect } from "expo-router";
 import QuizScreen from "../search/quiz.screen";
 import { usePreventScreenCapture } from "expo-screen-capture";
 export default function HomeScreen() {
-  // usePreventScreenCapture();
+  usePreventScreenCapture();
   // const [videoUri, setVideoUri] = useState(null);
   // const videoref = React.useRef(null);
 
