@@ -1,25 +1,22 @@
-const multer = require('multer');
-const { exec } = require('child_process');
-const AWS = require('aws-sdk');
-const path = require('path');
-const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
-const Course = require('../models/Course');
-const ffprobe = require('ffprobe-static'); // Install using `npm install ffprobe-static`
-const { execSync } = require('child_process');
-const Bundle = require('../models/CourseBundle');
+const multer = require("multer");
+const { exec } = require("child_process");
+const AWS = require("aws-sdk");
+const path = require("path");
+const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
+const Course = require("../models/Course");
+const ffprobe = require("ffprobe-static"); // Install using `npm install ffprobe-static`
+const { execSync } = require("child_process");
+const Bundle = require("../models/CourseBundle");
 
 exports.createVideo = async (req, res) => {
   try {
-
     console.log("Uploaded file:", req.body.courseName);
 
     // Extract course details from the request body
     const { courseName, courseDescription, status } = req.body;
-  
 
     // Get the path of the uploaded thumbnail
-
 
     const thumbnail = req.file.path;
 
@@ -34,13 +31,12 @@ exports.createVideo = async (req, res) => {
     const newCourse = await course.save();
 
     // Send a success response
-    res.status(201).json({data:newCourse});
+    res.status(201).json({ data: newCourse });
   } catch (err) {
     // Send an error response
     res.status(400).json({ message: err.message });
-  } 
+  }
 };
-
 
 async function getVideoDuration(videoPath) {
   try {
@@ -56,19 +52,18 @@ async function getVideoDuration(videoPath) {
 }
 
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    const uploadDir = path.join(__dirname, 'uploads');
+  destination: function (req, file, cb) {
+    const uploadDir = path.join(__dirname, "uploads");
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
     cb(null, uploadDir);
   },
-  filename: function(req, file, cb) {
-    cb(null, file.fieldname + '-' + uuidv4() + path.extname(file.originalname));
-  }
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + "-" + uuidv4() + path.extname(file.originalname));
+  },
 });
 const upload = multer({ storage: storage });
-
 
 AWS.config.update({
   accessKeyId: process.env.AWS_KEY_H,
@@ -77,11 +72,7 @@ AWS.config.update({
 });
 const s3 = new AWS.S3();
 
-
-
-
 const queue = [];
-
 
 setInterval(() => {
   if (queue.length > 0) {
@@ -91,8 +82,8 @@ setInterval(() => {
 }, 1000);
 
 async function processVideo(videoPath, lessonId) {
-  console.log("🚀 ~ processVideo ~ videoPath", videoPath, lessonId)
-  const outputPath = path.join(__dirname, 'uploads', 'courses', lessonId);
+  console.log("🚀 ~ processVideo ~ videoPath", videoPath, lessonId);
+  const outputPath = path.join(__dirname, "uploads", "courses", lessonId);
   if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, { recursive: true });
   }
@@ -108,11 +99,11 @@ async function processVideo(videoPath, lessonId) {
 
   // const segmentDuration = videoDuration ? Math.min(10, Math.floor(videoDuration / 6)) : 10; // Default or calculated segment
   const segmentDuration = 2700; // 45 minutes in seconds
-  console.log("🚀 ~ processVideo ~ segmentDuration:", segmentDuration)
+  console.log("🚀 ~ processVideo ~ segmentDuration:", segmentDuration);
   const ffmpegCommand = `ffmpeg -i ${videoPath} -codec:v libx264 -codec:a aac -hls_time ${segmentDuration} -hls_playlist_type vod -hls_segment_filename "${outputPath}/segment%03d.ts" -start_number 0 ${hlsPath}`;
 
   try {
-    const ffmpegOutput = execSync(ffmpegCommand, { stdio: 'pipe' }).toString();
+    const ffmpegOutput = execSync(ffmpegCommand, { stdio: "pipe" }).toString();
     console.log(`FFmpeg output: ${ffmpegOutput}`);
   } catch (error) {
     console.error(`FFmpeg command failed: ${error.message}`);
@@ -124,14 +115,16 @@ async function processVideo(videoPath, lessonId) {
     Bucket: "krishanacademylms",
     Key: `courses/${lessonId}/index.m3u8`,
     Body: fs.readFileSync(hlsPath),
-    ContentType: 'application/vnd.apple.mpegurl'
+    ContentType: "application/vnd.apple.mpegurl",
   };
 
   await s3.upload(params).promise();
 
   // Upload segment files to S3 in parallel using Promise.all
-  const segmentFiles = fs.readdirSync(outputPath).filter(file => file.endsWith('.ts'));
-  const uploadPromises = segmentFiles.map(file => {
+  const segmentFiles = fs
+    .readdirSync(outputPath)
+    .filter((file) => file.endsWith(".ts"));
+  const uploadPromises = segmentFiles.map((file) => {
     const filePath = path.join(outputPath, file);
     const fileData = fs.readFileSync(filePath);
 
@@ -139,7 +132,7 @@ async function processVideo(videoPath, lessonId) {
       Bucket: process.env.AWS_S3_BUCKET_NAME_H,
       Key: `courses/${lessonId}/${file}`,
       Body: fileData,
-      ContentType: 'video/MP2T'
+      ContentType: "video/MP2T",
     };
 
     return s3.upload(segmentParams).promise();
@@ -147,20 +140,18 @@ async function processVideo(videoPath, lessonId) {
 
   await Promise.all(uploadPromises);
 
-
-
-
-
   // Save index file URL to database
   try {
     const course = await Course.findById(lessonId);
     if (course) {
-      console.log("🚀 ~ processVideo ~ course:", course)
-      course.indexFile = `courses/${lessonId}/index.m3u8`
+      console.log("🚀 ~ processVideo ~ course:", course);
+      course.indexFile = `courses/${lessonId}/index.m3u8`;
       course.duration = videoDuration;
-      
+
       await course.save();
-      console.log(`index.m3u8 path saved to database for lessonId: ${lessonId}`);
+      console.log(
+        `index.m3u8 path saved to database for lessonId: ${lessonId}`
+      );
     } else {
       console.error(`Course with id ${lessonId} not found`);
     }
@@ -170,14 +161,14 @@ async function processVideo(videoPath, lessonId) {
 }
 
 exports.uploadVideo = (req, res) => {
-  upload.single('video')(req, res, async (err) => {
+  upload.single("video")(req, res, async (err) => {
     if (err) {
-      return res.status(500).json({ error: 'Failed to upload video' });
+      return res.status(500).json({ error: "Failed to upload video" });
     }
 
     const videoPath = req.file.path;
     const lessonId = req.body.lessonId; // Assuming lessonId is passed in the request body
-    console.log("🚀 ~ upload.single ~ lessonId:", lessonId)
+    console.log("🚀 ~ upload.single ~ lessonId:", lessonId);
 
     try {
       // Process video using ffmpeg
@@ -185,25 +176,23 @@ exports.uploadVideo = (req, res) => {
 
       // Respond to client with success message and lessonId
       res.status(201).json({
-        message: 'Video uploaded and processed successfully.',
-        lessonId: lessonId
+        message: "Video uploaded and processed successfully.",
+        lessonId: lessonId,
       });
       clearUploadsFolder();
-      
     } catch (err) {
       console.error(`Error during video processing: ${err.message}`);
-      res.status(500).json({ error: 'Video processing failed' });
+      res.status(500).json({ error: "Video processing failed" });
       clearUploadsFolder();
     }
   });
 };
 
-
 exports.checkStatus = async (req, res) => {
   const { lessonId } = req.params;
 
   if (!lessonId) {
-    return res.status(400).json({ error: 'lessonId is required' });
+    return res.status(400).json({ error: "lessonId is required" });
   }
 
   const checkInterval = 5000; // Check every 5 seconds
@@ -212,13 +201,13 @@ exports.checkStatus = async (req, res) => {
   const checkFiles = async () => {
     const params = {
       Bucket: process.env.AWS_S3_BUCKET_NAME_H,
-      Prefix: `courses/${lessonId}/`
+      Prefix: `courses/${lessonId}/`,
     };
 
     try {
       const data = await s3.listObjectsV2(params).promise();
       if (data.Contents.length > 0) {
-        const files = data.Contents.map(item => item.Key);
+        const files = data.Contents.map((item) => item.Key);
         return files;
       }
     } catch (err) {
@@ -232,7 +221,7 @@ exports.checkStatus = async (req, res) => {
     if (files) {
       return res.status(200).json({ lessonId, files });
     } else if (Date.now() - startTime > timeout) {
-      return res.status(408).json({ error: 'Request timeout' });
+      return res.status(408).json({ error: "Request timeout" });
     } else {
       setTimeout(() => pollStatus(startTime), checkInterval);
     }
@@ -246,10 +235,10 @@ async function getPresignedUrl(courseId, segmentId) {
     const course = await Course.findById(courseId);
     console.log("🚀 ~ getPresignedUrl ~ course:", course);
     if (!course) {
-      throw new Error('Course not found');
+      throw new Error("Course not found");
     }
 
-    const indexFilePath = course.indexFile; 
+    const indexFilePath = course.indexFile;
     const cloudfrontDomain = process.env.CLOUDFRONT_VIDEO; // Replace with your CloudFront domain
     const videoUrl = `${cloudfrontDomain}/${indexFilePath}`;
 
@@ -261,48 +250,41 @@ async function getPresignedUrl(courseId, segmentId) {
     // };
 
     // const signedUrl = cloudfront.getSignedUrl(options);
-    return videoUrl
+    return videoUrl;
   } catch (error) {
-    console.error('Error generating signed URL:', error.message);
+    console.error("Error generating signed URL:", error.message);
     throw error; // Re-throw for handling in API route or client
   }
 }
-
 
 exports.getBundleVideo = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const course = await Bundle.findById(id).populate('Videos')
+    const course = await Bundle.findById(id).populate("Videos");
 
     return res.status(200).json(course);
     // const presignedUrl = await getPresignedUrl(courseId, segmentId);
     // res.json({ presignedUrl });
   } catch (error) {
-    res.status(404).json({ error: 'Failed to get Course Videos' });
+    res.status(404).json({ error: "Failed to get Course Videos" });
   }
 };
 
-
-
 exports.getVideo = async (req, res) => {
-  const { courseId, segmentId } = req.body
+  const { courseId, segmentId } = req.body;
 
   try {
     const presignedUrl = await getPresignedUrl(courseId, segmentId);
     res.json({ presignedUrl });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to get video URL' });
+    res.status(500).json({ error: "Failed to get video URL" });
   }
 };
 
-
-
-
-
 function clearUploadsFolder() {
-  const uploadDir = path.join(__dirname, 'uploads');
-  
+  const uploadDir = path.join(__dirname, "uploads");
+
   if (fs.existsSync(uploadDir)) {
     const deleteFolderRecursive = (folderPath) => {
       if (fs.existsSync(folderPath)) {
@@ -321,22 +303,66 @@ function clearUploadsFolder() {
     };
 
     deleteFolderRecursive(uploadDir);
-    console.log('All files and folders in the uploads directory have been deleted.');
+    console.log(
+      "All files and folders in the uploads directory have been deleted."
+    );
   } else {
-    console.log('Uploads directory does not exist.');
+    console.log("Uploads directory does not exist.");
   }
 }
-
-
 
 exports.listAllVideos = async (req, res) => {
   try {
     const videos = await Course.find().sort({ createdAt: -1 });
 
-
     res.status(200).json(videos);
   } catch (error) {
     console.error(`Failed to list videos: ${error.message}`);
-    res.status(500).json({ error: 'Failed to list videos' });
+    res.status(500).json({ error: "Failed to list videos" });
+  }
+};
+
+// to delete a video
+// const s3 = require('./aws-config'); // Adjust the path as necessary
+
+const deleteVideo = async (videoId) => {
+  const params = {
+    Bucket: process.env.AWS_S3_BUCKET_NAME_H,
+    Key: videoId,
+  };
+
+  try {
+    await s3.deleteObject(params).promise();
+    console.log(`Video with ID ${videoId} deleted successfully.`);
+  } catch (err) {
+    console.error(`Failed to delete video with ID ${videoId}: ${err.message}`);
+    throw err;
+  }
+};
+
+module.exports = deleteVideo;
+exports.removeVideo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const video = await Course.findById(id);
+    if (!video) {
+      return res.status(404).json({
+        success: false,
+        message: "Video not found",
+      });
+    }
+    // await s3.deleteObject({ id });
+    await deleteVideo(id);
+    await video.remove(id);
+    return res.status(200).json({
+      success: true,
+      message: "Video deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };
