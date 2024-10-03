@@ -225,7 +225,7 @@ function RootLayoutNav() {
         <Stack.Screen
           name="(routes)/quiz-bundle/VideoPlayer"
           options={{
-            headerShown: true,
+            headerShown:false,
             title: "Video Player",
             headerBackTitle: "Back",
           }}
