@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Video } from 'expo-av';
 import * as ScreenOrientation from 'expo-screen-orientation';
@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import axios from "axios";
 import { SERVER_URI } from "@/utils/uri";
 import { useRoute } from "@react-navigation/native";
+import { useFocusEffect } from 'expo-router';
 
 
 const { width, height } = Dimensions.get('window');
@@ -19,10 +20,20 @@ const VideoPlayer = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [status, setStatus] = useState({});
 
-  console.log("🚀 ~ file: VideoPlayer.tsx ~ line 10 ~ VideoPlayer ~ videoData", videoData._id, id)
+  // console.log("🚀 ~ file: VideoPlayer.tsx ~ line 10 ~ VideoPlayer ~ videoData", videoData._id, id)
   const [videoUrl, setVideoUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        if (isFullscreen) {
+          ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+          setIsFullscreen(false);
+        }
+      };
+    }, [isFullscreen])
+  );
 
   const getVideoUrl = async () => {
     try {
@@ -114,7 +125,7 @@ const VideoPlayer = () => {
         volume={1.0}
         isMuted={false}
         resizeMode="contain"
-        shouldPlay
+        shouldPlay={false}
         useNativeControls
         style={isFullscreen ? styles.fullscreenVideo : styles.video}
         onLoad={handleLoad}
