@@ -241,7 +241,11 @@ export default function index() {
           />
           <Tab.Screen
             name="Video"
-            component={() => <VideoScreen data={BundleData} />}
+            component={() => <VideoScreen data={BundleData} 
+            bundleId={BundleId}
+            userId={userId}
+            handleBought={handleBought}
+            />}
           />
         </Tab.Navigator>
         {!isBought && <Button title="Enroll Now" onPress={onPress} />}
