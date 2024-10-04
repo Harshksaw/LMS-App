@@ -71,10 +71,8 @@ const CpuUsageBar = () => {
   </div>
   <div className="relative flex flex-row">
 
-    <p className="text-center m-0 text-blue-500 font-bold text-2xl">
-    USERS  {networkInterfaceCount}
-    </p>
-    <p className="text-center m-0 text-blue-500 font-bold text-2xl">
+
+    <p className="text-center m-0 text-blue-500 font-bold text-xl">
     Request Count  { requestCount}
     </p>
   </div>
@@ -90,6 +88,7 @@ const CpuUsageBar = () => {
         <p>Disk Used: {diskInfo.used}</p>
         <p>Disk Free: {diskInfo.free}</p>
         <p>Memory Usage: {formatUsage(memoryUsage)}</p>
+        <p>    USERS  {networkInterfaceCount}</p>
       </div>
     </div>
   );
