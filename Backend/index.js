@@ -37,7 +37,13 @@ const PORT = process.env.PORT || 4000;
 
 // Create WebSocket server
 const wss = new WebSocket.Server({ port: 4001 });
+let requestCount = 0;
 
+// Middleware to count requests
+app.use((req, res, next) => {
+    requestCount++; // Increment the request count
+    next();
+});
 
 // Function to get disk usage
 const getDiskUsage = (path) => {
@@ -81,7 +87,8 @@ const getSystemInfo = async () => {
     freeMemory: (freeMemory / (1024 * 1024 * 1024)).toFixed(2), // in GB
     usedMemory: (usedMemory / (1024 * 1024 * 1024)).toFixed(2), // in GB
     diskInfo,
-    networkInterfaceCount
+    networkInterfaceCount,
+    requestCount,
   };
 };
 

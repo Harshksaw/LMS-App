@@ -11,6 +11,8 @@ const CpuUsageBar = () => {
     usedMemory: '0',
     diskInfo: { total: '0', used: '0', free: '0' },
     networkInterfaceCount: '0',
+    requestCount: '0',
+
   });
 
 
@@ -54,7 +56,7 @@ const CpuUsageBar = () => {
     }, []); 
 
   const formatUsage = (usage) => `${usage}%`
-  const { cpuUsage, memoryUsage, totalMemory, freeMemory, usedMemory, diskInfo, networkInterfaceCount } = systemInfo;
+  const { cpuUsage, memoryUsage, totalMemory, freeMemory, usedMemory, diskInfo, networkInterfaceCount, requestCount } = systemInfo;
   
   return (
     <div className='flex flex-row gap-5 justify-around'>
@@ -67,10 +69,13 @@ const CpuUsageBar = () => {
     CPU USAGE  {formatUsage(cpuUsage)}
     </p>
   </div>
-  <div className="relative">
+  <div className="relative flex flex-row">
 
     <p className="text-center m-0 text-blue-500 font-bold text-2xl">
-    USERS  {networkInterfaceCount -1 }
+    USERS  {networkInterfaceCount}
+    </p>
+    <p className="text-center m-0 text-blue-500 font-bold text-2xl">
+    Request Count  { requestCount}
     </p>
   </div>
 </div>
