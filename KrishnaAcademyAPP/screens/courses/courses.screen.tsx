@@ -171,7 +171,13 @@ export default function CoursesScreen() {
         const res = await axios.get(
           `${SERVER_URI}/api/v1/bundle/course-bundle`
         );
-        setQuizzes(res.data.data);
+        const currentDate = new Date();
+        const filteredQuizzes = res.data.data.filter(
+          (quiz) => new Date(quiz.activeListing) <= currentDate
+        );
+
+        setQuizzes(filteredQuizzes);
+
 
         setLoading(false);
       } catch (error) {}

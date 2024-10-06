@@ -88,20 +88,20 @@ const VideoCoursesTable = ({ courses, loading }) => {
   
     return (
       <div className="overflow-y-auto h-1/2">
-        <table className="min-w-full bg-white border-collapse">
+        <table className="min-w-full bg-richblue-700 border-collapse">
           <thead>
             <tr>
-              <th className="py-2 px-4 border-b bg-gray-100 text-left">Course IMAGE</th>
-              <th className="py-2 px-4 border-b bg-gray-100 text-left">Course Name</th>
-              <th className="py-2 px-4 border-b bg-gray-100 text-left">Description</th>
-              <th className="py-2 px-4 border-b bg-gray-100 text-left">Duration</th>
-              <th className="py-2 px-4 border-b bg-gray-100 text-left">Status</th>
-              <th className="py-2 px-4 border-b bg-gray-100 text-left">Created At</th>
+              <th className="py-2 px-4 border-b text-white text-left">Course Image</th>
+              <th className="py-2 px-4 border-b text-white text-left">Course Name</th>
+              <th className="py-2 px-4 border-b text-white text-left">Description</th>
+              <th className="py-2 px-4 border-b text-white text-left">Duration</th>
+              <th className="py-2 px-4 border-b text-white text-left">Status</th>
+              <th className="py-2 px-4 border-b text-white text-left">Created At</th>
             </tr>
           </thead>
           <tbody className=" space-y-2 gap-5">
             {courses.map((course) => (
-              <tr key={course._id} className="even:bg-richblack-300 odd:bg-richblack-200    mt-5 py-5">
+              <tr key={course._id} className="even:bg-richblack-400 odd:bg-richblack-300    mt-5 py-5">
                 <td className="py-2 px-4 border-b">
                   <img
                     src={course.thumbnail}
