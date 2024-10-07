@@ -153,7 +153,7 @@ const PaymentPage = () => {
       description: `Buying ${ItemData.bundleName} for ${ItemData.price}`,
       image: `${ItemData.image}`,
       currency: "INR",
-      key: "rzp_test_frHyAhT1IdPBwO", // Your api key
+      key: "rzp_live_Gym5HlILQT2v86", 
       amount: `${totalPrice * 100}`,
       name: `${ItemData.bundleName}`,
       prefill: {

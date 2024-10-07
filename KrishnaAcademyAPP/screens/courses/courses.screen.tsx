@@ -28,6 +28,7 @@ import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 const renderCources = ({ item }) => {
+
   return (
     <TouchableOpacity
       style={{
@@ -171,12 +172,9 @@ export default function CoursesScreen() {
         const res = await axios.get(
           `${SERVER_URI}/api/v1/bundle/course-bundle`
         );
-        const currentDate = new Date();
-        const filteredQuizzes = res.data.data.filter(
-          (quiz) => new Date(quiz.activeListing) <= currentDate
-        );
+    
 
-        setQuizzes(filteredQuizzes);
+        setQuizzes(res.data.data);
 
 
         setLoading(false);
@@ -189,6 +187,7 @@ export default function CoursesScreen() {
     setRefreshing(true);
     // Place your data fetching logic here
     setTimeout(() => {
+      
       // Simulate a network request
       setRefreshing(false);
     }, 2000);

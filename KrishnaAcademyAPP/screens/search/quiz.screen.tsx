@@ -150,7 +150,15 @@ export default function QuizScreen() {
         const res = await axios.get(
           `${SERVER_URI}/api/v1/bundle/course-bundle`
         );
-        setQuizzes(res.data.data);
+        console.log(res.data.data);
+             const currentDate = new Date();
+        const filteredQuizzes = res.data.data.filter(
+          (quiz) => new Date(quiz.activeListing) <= currentDate
+        );
+        console.log("🚀 ~ getQuizzes ~ filteredQuizzes:", filteredQuizzes)
+
+        setQuizzes(filteredQuizzes);
+        // setQuizzes(res.data.data);
       } catch (error) {
         Toast.show("Error fetching quizzes", {
           type: "danger",
