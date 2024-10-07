@@ -52,7 +52,7 @@ export default function AllVideo() {
       <div>
         <div className="mb-14 flex justify-between items-center">
           <h1 className="text-4xl font-medium text-richblack-5 font-boogaloo text-center lg:text-left">
-            My Courses
+            My Videos
           </h1>
           {/* <input
             type="search"
