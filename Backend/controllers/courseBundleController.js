@@ -153,11 +153,13 @@ exports.addStudyMaterialsToBundle = async (req, res) => {
 
 exports.getCourseBundle = async (req, res) => {
   try {
-
+    const currentDate = new Date();
     const bundles = await Bundle.find({
       status: "Published",
-      
-    }).sort({ created: -1 });
+      activeListingDate: { $lte: currentDate }
+    })
+
+    .sort({ created: -1 });
     // const bundles = await Bundle.find({status:"Published"}).sort({created:-1}).populate('quizes').populate('studyMaterials');
     res.status(200).json({
       success: true,

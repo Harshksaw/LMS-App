@@ -24,7 +24,7 @@ const PaymentComponent = ({
         "https://res.cloudinary.com/dgheyg3iv/image/upload/v1720931194/dmym7wh5u0vvhp2i1tki.png", //logo
 
       currency: "INR",
-      key: "rzp_test_lmy83ka5bsXLz8",
+      key: "rzp_live_Gym5HlILQT2v86",
       amount: 1000000,
       name: "KrishnaAcademy",
       order_id: "333",
