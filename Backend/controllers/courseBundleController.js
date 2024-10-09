@@ -156,7 +156,7 @@ exports.getCourseBundle = async (req, res) => {
     const currentDate = new Date();
     const bundles = await Bundle.find({
       status: "Published",
-      activeListingDate: { $lte: currentDate }
+      activeListingDate: { $gte: currentDate }
     })
 
     .sort({ created: -1 });
