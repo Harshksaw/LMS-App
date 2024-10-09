@@ -156,7 +156,26 @@ exports.getCourseBundle = async (req, res) => {
     const currentDate = new Date();
     const bundles = await Bundle.find({
       status: "Published",
-      activeListingDate: { $gte: currentDate }
+      activeListing: { $lte: currentDate }
+    })
+
+    .sort({ created: -1 });
+    // const bundles = await Bundle.find({status:"Published"}).sort({created:-1}).populate('quizes').populate('studyMaterials');
+    res.status(200).json({
+      success: true,
+      message: "Cours ebundles",
+      data: bundles || [],
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+exports.getAdminCourseBundle = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    const bundles = await Bundle.find({
+      status: "Published",
+
     })
 
     .sort({ created: -1 });
