@@ -26,6 +26,8 @@ router.post(
 
 // // Route to update an existing course bundle
 router.get("/course-bundle/:id", courseBundleController.getCourseBundleById);
+
+
 router.post(
   "/course-bundle/update/:id",
   courseBundleController.addQuizzesToBundle
@@ -48,7 +50,7 @@ router.post(
   courseBundleController.addStudyMaterialsToBundle
 );
 
-router.get("/course-bundle/:id", courseBundleController.getCourseBundle);
+router.post("/course-bundle/:id", courseBundleController.getCourseBundle);
 router.get("/courseAdmin-bundle", courseBundleController.getAdminCourseBundle);
 router.get("/get-all-course-bundle", courseBundleController.getAllCourseBundle);
 // // Route to add study materials to a course bundle

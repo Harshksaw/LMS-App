@@ -153,15 +153,18 @@ exports.addStudyMaterialsToBundle = async (req, res) => {
 
 exports.getCourseBundle = async (req, res) => {
   try {
-    const currentDate = new Date();
-    const userId = req.params.id; // Assuming us
+
+    const userId = req.params.id; 
+
     const user = await User.findById(userId).populate('courses');
     const userCourseIds = user.courses.map(course => course._id);
 
+
+    
+    const currentDate = new Date();
     const bundles = await Bundle.find({
       status: "Published",
-      activeListing: { $lte: currentDate },
-      _id: { $nin: userCourseIds }
+  
     }).sort({ created: -1 });
 
     res.status(200).json({
@@ -170,9 +173,11 @@ exports.getCourseBundle = async (req, res) => {
       data: bundles || [],
     });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message }); 
   }
 };
+
+
 exports.getAdminCourseBundle = async (req, res) => {
   try {
     const currentDate = new Date();

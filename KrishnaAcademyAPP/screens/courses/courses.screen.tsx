@@ -174,7 +174,7 @@ export default function CoursesScreen() {
         const user = await AsyncStorage.getItem("user");
         const isUser = JSON.parse(user);
 
-        const res = await axios.get(
+        const res = await axios.post(
           `${SERVER_URI}/api/v1/bundle/course-bundle/${isUser._id}`
         );
     
