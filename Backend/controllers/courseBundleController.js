@@ -154,16 +154,6 @@ exports.addStudyMaterialsToBundle = async (req, res) => {
 exports.getCourseBundle = async (req, res) => {
   try {
 
-    const userId = req.params.id; 
-    console.log("🚀 ~ exports.getCourseBundle= ~ userId:", userId)
-    const user = await User.findById(userId)?.populate('courses');
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-    const userCourseIds = user?.courses.map(course => course._id);
 
 
     

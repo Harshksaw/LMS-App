@@ -155,7 +155,7 @@ export default function QuizScreen() {
         console.log("🚀 ~ getQuizzes ~ isUser:", isUser._id)
       
         const res = await axios.post(
-          `${SERVER_URI}/api/v1/bundle/getAllcourse-bundle/${isUser._id}`
+          `${SERVER_URI}/api/v1/bundle/getAllcourse-bundle`
         );
 
              const currentDate = new Date();
