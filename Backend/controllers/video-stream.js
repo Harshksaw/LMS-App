@@ -340,3 +340,64 @@ exports.listAllVideos = async (req, res) => {
     res.status(500).json({ error: 'Failed to list videos' });
   }
 };
+
+async function deleteFolder(bucketName, folderPath) {
+  try {
+    // List all objects in the folder
+    const listParams = {
+      Bucket: bucketName,
+      Prefix: folderPath,
+    };
+
+    const listedObjects = await s3.listObjectsV2(listParams).promise();
+
+    if (listedObjects.Contents.length === 0) {
+      return;
+    }
+
+    // Create a list of objects to delete
+    const deleteParams = {
+      Bucket: bucketName,
+      Delete: { Objects: [] },
+    };
+
+    listedObjects.Contents.forEach(({ Key }) => {
+      deleteParams.Delete.Objects.push({ Key });
+    });
+
+    // Delete all objects in the folder
+    await s3.deleteObjects(deleteParams).promise();
+
+    // If there are more objects to delete, recursively call the function
+    if (listedObjects.IsTruncated) {
+      await deleteFolder(bucketName, folderPath);
+    }
+
+    console.log(`Folder ${folderPath} deleted successfully`);
+  } catch (error) {
+    console.error(`Failed to delete folder ${folderPath}:`, error);
+  }
+}
+
+
+exports.deleteVideo = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const video = await Course.findByIdAndDelete(id);
+
+    if (!video) {
+      return res.status(404).json({ error: 'Video not found' });
+    }
+    const folderPath = video.indexFile.substring(0, video.indexFile.lastIndexOf('/') + 1);
+
+
+    await deleteFolder(process.env.AWS_S3_BUCKET_NAME_H, folderPath);
+
+    return res.status(200).json({ message: 'Video and associated files deleted successfully' });
+
+  } catch (error) {
+    console.error(`Failed to delete video: ${error.message}`);
+    res.status(500).json({ error: 'Failed to delete video' });
+  }
+};

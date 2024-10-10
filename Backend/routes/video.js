@@ -4,7 +4,7 @@ const router = express.Router();
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
-const { createVideo, getVideo, listAllVideos } = require("../controllers/video-stream");
+const { createVideo, getVideo, listAllVideos, deleteVideo } = require("../controllers/video-stream");
 
 const cloudinary = require("cloudinary").v2;
 
@@ -35,6 +35,8 @@ router.get('/getBundleVideo/:id',);
 router.post('/getVideo', getVideo);
 
 router.get('/getAllVideo',listAllVideos);
+
+router.delete('/deleteVideo/:id',deleteVideo);
 
 
 
