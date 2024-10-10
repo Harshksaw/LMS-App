@@ -154,19 +154,32 @@ exports.addStudyMaterialsToBundle = async (req, res) => {
 exports.getCourseBundle = async (req, res) => {
   try {
 
-    // const userId = req.params.id; 
-
-    // const user = await User.findById(userId).populate('courses');
-    // const userCourseIds = user.courses.map(course => course._id);
+    const userId = req.params.id; 
+    console.log("🚀 ~ exports.getCourseBundle= ~ userId:", userId)
+    const user = await User.findById(userId)?.populate('courses');
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    const userCourseIds = user?.courses.map(course => course._id);
 
 
     
     const currentDate = new Date();
     const bundles = await Bundle.find({
       status: "Published",
+      activeListing: { $lte: currentDate },
+      _id: { $nin: userCourseIds } // Exclude bundles already in user's courses
       
     }).sort({ created: -1 });
-
+    if (bundles.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Course bundle not found",
+      });
+    }
     res.status(200).json({
       success: true,
       message: "Cours ebundles",
