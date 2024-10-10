@@ -27,6 +27,7 @@ import Loader from "@/components/loader/loader";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const renderCources = ({ item }) => {
 
   return (
@@ -166,16 +167,21 @@ export default function CoursesScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     const getQuizzes = async () => {
       try {
+        const user = await AsyncStorage.getItem("user");
+        const isUser = JSON.parse(user);
+
         const res = await axios.get(
-          `${SERVER_URI}/api/v1/bundle/course-bundle`
+          `${SERVER_URI}/api/v1/bundle/course-bundle/${isUser._id}`
         );
     
 
         setQuizzes(res.data.data);
 
+        console.log("🚀 ~ getQuizzes ~ res.data.data:", res.data.data)
 
         setLoading(false);
       } catch (error) {}

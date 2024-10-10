@@ -154,9 +154,12 @@ exports.addStudyMaterialsToBundle = async (req, res) => {
 exports.getCourseBundle = async (req, res) => {
   try {
     const currentDate = new Date();
+    const userId = req.user._id; // Assuming us
+
     const bundles = await Bundle.find({
       status: "Published",
-      activeListing: { $lte: currentDate }
+      activeListing: { $lte: currentDate },
+      _id: { $nin: userCourseIds }
     })
 
     .sort({ created: -1 });
