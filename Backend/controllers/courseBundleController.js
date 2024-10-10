@@ -154,7 +154,7 @@ exports.addStudyMaterialsToBundle = async (req, res) => {
 exports.getCourseBundle = async (req, res) => {
   try {
     const currentDate = new Date();
-    const userId = req.user.id; // Assuming us
+    const userId = req.params.id; // Assuming us
     const user = await User.findById(userId).populate('courses');
     const userCourseIds = user.courses.map(course => course._id);
 
