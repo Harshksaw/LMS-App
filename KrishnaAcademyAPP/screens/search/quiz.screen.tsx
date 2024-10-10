@@ -154,10 +154,10 @@ export default function QuizScreen() {
         const isUser = JSON.parse(user);
         console.log("🚀 ~ getQuizzes ~ isUser:", isUser._id)
       
-        const res = await axios.get(
-          `${SERVER_URI}/api/v1/bundle/course-bundle/${isUser._id}`
+        const res = await axios.post(
+          `${SERVER_URI}/api/v1/bundle/getAllcourse-bundle/${isUser._id}`
         );
-        console.log(res.data.data);
+
              const currentDate = new Date();
         const filteredQuizzes = res.data.data.filter(
           (quiz) => new Date(quiz.activeListing) <= currentDate

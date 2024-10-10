@@ -167,21 +167,20 @@ export default function CoursesScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     const getQuizzes = async () => {
       try {
+
         const user = await AsyncStorage.getItem("user");
         const isUser = JSON.parse(user);
-
+      
         const res = await axios.post(
-          `${SERVER_URI}/api/v1/bundle/getAllcourse-bundle/${isUser._id}`
+          `${SERVER_URI}/api/v1/bundle/getAllcourse-bundle`
         );
     
 
         setQuizzes(res.data.data);
 
-        console.log("🚀 ~ getQuizzes ~ res.data.data:", res.data.data)
 
         setLoading(false);
       } catch (error) {}

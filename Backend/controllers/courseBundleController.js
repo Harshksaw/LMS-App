@@ -171,7 +171,7 @@ exports.getCourseBundle = async (req, res) => {
     const bundles = await Bundle.find({
       status: "Published",
       activeListing: { $lte: currentDate },
-      _id: { $nin: userCourseIds } // Exclude bundles already in user's courses
+      
       
     }).sort({ created: -1 });
     if (bundles.length === 0) {
