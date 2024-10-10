@@ -8,6 +8,7 @@ const { v4: uuidv4 } = require("uuid");
 const { adminId } = require("../utils/env");
 const Attempt = require("../models/Attempt");
 const AWS = require("aws-sdk");
+const Quiz = require("../models/Quiz");
 
 AWS.config.update({
   accessKeyId: process.env.AWS_KEY,
@@ -102,7 +103,7 @@ exports.deleteStudyMaterial = async (req, res) => {
 };
 exports.getAllStudyMaterials = async (req, res) => {
   try {
-    const studyMaterials = await StudyMaterial.find({ isListed: true });
+    const studyMaterials = await StudyMaterial.find({ isListed: true }).sort({ createdAt: -1 });  
     if (studyMaterials.length === 0) {
       return res.status(200).json({
         success: false,
@@ -124,7 +125,7 @@ exports.getAllStudyMaterials = async (req, res) => {
 };
 exports.getAllAdminStudyMaterials = async (req, res) => {
   try {
-    const studyMaterials = await StudyMaterial.find();
+    const studyMaterials = await StudyMaterial.find().sort({ createdAt: -1 });
     if (studyMaterials.length === 0) {
       return res.status(200).json({
         success: false,
@@ -232,8 +233,7 @@ exports.getAllBoughtStudyMaterials = async (req, res) => {
 
     const user = await User.findById({ _id: userId }).populate(
       "studyMaterials"
-    );
-
+    ).sort({ createdAt: -1 });
     if (!user) {
       return res.status(403).json({
         success: false,
@@ -335,12 +335,12 @@ exports.getAttemptById = async (req, res) => {
 exports.getQuizAndMarkAttempt = async (req, res) => {
   try {
     const { quizId, attemptId } = req.params;
-    console.log(
-      "🚀 ~ exports.getQuizAndMarkAttempt= ~ quizId:",
-      quizId,
-      "attemptId:",
-      attemptId
-    );
+    // console.log(
+    //   "🚀 ~ exports.getQuizAndMarkAttempt= ~ quizId:",
+    //   quizId,
+    //   "attemptId:",
+    //   attemptId
+    // );
 
     // Fetch the quiz details
     const quiz = await Quiz.findById(quizId);
@@ -406,7 +406,7 @@ exports.getAllAttempById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const attempts = await Attempt.find({ user: id }).populate("quiz");
+    const attempts = await Attempt.find({ user: id }).populate("quiz").sort({ createdAt: -1 });
 
     if (!attempts) {
       return res.status(404).json({ message: "Attempt not found" });

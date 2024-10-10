@@ -34,6 +34,7 @@ const ContentsScreen = ({ data, bundleId, userId, handleBought }) => {
   useEffect(() => {
     const checkPurchaseStatus = async () => {
       try {
+        setLoading(true);
         const response = await axios.post(
           `${SERVER_URI}/api/v1/bundle/checkPurchase`,
           {

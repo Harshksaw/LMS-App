@@ -187,9 +187,7 @@ exports.getAdminCourseBundle = async (req, res) => {
     const bundles = await Bundle.find({
       status: "Published",
 
-    })
-
-    .sort({ created: -1 });
+    }).sort({ created: -1 });
     // const bundles = await Bundle.find({status:"Published"}).sort({created:-1}).populate('quizes').populate('studyMaterials');
     res.status(200).json({
       success: true,
@@ -272,6 +270,7 @@ exports.getUserQuizzes = async (req, res) => {
         },
       })
       .select("courses")
+      .sort({ created: -1 })
       .lean();
 
     let allQuizzes = [];
@@ -296,7 +295,7 @@ exports.getAllUserBundles = async (req, res) => {
     const { id } = req.params;
     console.log("🚀 ~ exports.getUserQuizzes= ~ id:", id);
 
-    const user = await User.findById(id).populate("courses");
+    const user = await User.findById(id).populate("courses").sort({ created: -1 });
 
     if (!user.courses || user.courses.length === 0) {
       return res.status(202).json({
