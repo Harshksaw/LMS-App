@@ -154,17 +154,17 @@ exports.addStudyMaterialsToBundle = async (req, res) => {
 exports.getCourseBundle = async (req, res) => {
   try {
 
-    const userId = req.params.id; 
+    // const userId = req.params.id; 
 
-    const user = await User.findById(userId).populate('courses');
-    const userCourseIds = user.courses.map(course => course._id);
+    // const user = await User.findById(userId).populate('courses');
+    // const userCourseIds = user.courses.map(course => course._id);
 
 
     
     const currentDate = new Date();
     const bundles = await Bundle.find({
       status: "Published",
-  
+      
     }).sort({ created: -1 });
 
     res.status(200).json({
