@@ -6,8 +6,9 @@ import {
   RefreshControl,
   ActivityIndicator,
   Dimensions,
+  ScrollView,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { SERVER_URI } from "@/utils/uri";
 import React from "react";
@@ -15,6 +16,7 @@ import { ImageBackground } from "expo-image";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Toast } from "react-native-toast-notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -144,11 +146,16 @@ export default function QuizScreen() {
   const [quizzes, setQuizzes] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
+
   useEffect(() => {
     const getQuizzes = async () => {
       try {
+        const user = await AsyncStorage.getItem("user");
+        const isUser = JSON.parse(user);
+        console.log("🚀 ~ getQuizzes ~ isUser:", isUser._id)
+      
         const res = await axios.get(
-          `${SERVER_URI}/api/v1/bundle/course-bundle`
+          `${SERVER_URI}/api/v1/bundle/course-bundle/${isUser._id}`
         );
         console.log(res.data.data);
              const currentDate = new Date();
@@ -171,11 +178,12 @@ export default function QuizScreen() {
     getQuizzes();
   }, [refreshing]);
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
+    // Your refresh logic here, e.g., fetching data
     setTimeout(() => {
       setRefreshing(false);
-    }, 2000);
+    }, 2000); // Simulate a network request
   }, []);
 
   if (quizzes.length === 0) {
@@ -193,11 +201,14 @@ export default function QuizScreen() {
   }
 
   return (
-    <View
+    <ScrollView
       style={{
-        flex: 1,
+        flexGrow: 1,
         paddingBottom: 30,
       }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       <View
         style={{
@@ -217,6 +228,6 @@ export default function QuizScreen() {
           }
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }

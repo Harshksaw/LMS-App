@@ -155,6 +155,8 @@ exports.getCourseBundle = async (req, res) => {
   try {
     const currentDate = new Date();
     const userId = req.user._id; // Assuming us
+    const user = await User.findById(userId).populate('courses');
+    const userCourseIds = user.courses.map(course => course._id);
 
     const bundles = await Bundle.find({
       status: "Published",
