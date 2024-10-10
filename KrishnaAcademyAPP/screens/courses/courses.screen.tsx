@@ -175,7 +175,7 @@ export default function CoursesScreen() {
         const isUser = JSON.parse(user);
 
         const res = await axios.post(
-          `${SERVER_URI}/api/v1/bundle/course-bundle/${isUser._id}`
+          `${SERVER_URI}/api/v1/bundle/getAllcourse-bundle/${isUser._id}`
         );
     
 
