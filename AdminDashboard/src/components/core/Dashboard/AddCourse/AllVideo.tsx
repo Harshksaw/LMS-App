@@ -137,13 +137,13 @@ const VideoCoursesTable = ({ courses, loading }) => {
                   {new Date(course.createdAt).toLocaleDateString()}
                 </td>
                 <td className="py-2 px-4 border-b">
-                  <button className="bg-red-500 text-white p-2 rounded-md"
+                  <button className="bg-red-500 text-white text-xl p-2 rounded-md"
                   onClick={() => {
                     deleteCourse(course._id);
                   }}
                   
                   >
-                    <FaImage  />
+                    Delete
                   </button>
                 </td>
               </tr>
