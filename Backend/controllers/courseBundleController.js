@@ -163,7 +163,7 @@ exports.getCourseBundle = async (req, res) => {
       activeListing: { $lte: currentDate },
       
       
-    }).sort({ created: -1 });
+    }).sort({ createdAt: -1 });
     if (bundles.length === 0) {
       return res.status(404).json({
         success: false,
