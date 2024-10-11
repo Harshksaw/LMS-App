@@ -6,6 +6,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { BASE_URL } from "../../../../services/apis";
 import IconBtn from "../../../common/IconBtn";
+import { IconButton } from "@mui/material";
+import { FaImage } from "react-icons/fa";
 
 export default function AllVideo() {
     const navigate = useNavigate();
@@ -97,6 +99,7 @@ const VideoCoursesTable = ({ courses, loading }) => {
               <th className="py-2 px-4 border-b text-white text-left">Duration</th>
               <th className="py-2 px-4 border-b text-white text-left">Status</th>
               <th className="py-2 px-4 border-b text-white text-left">Created At</th>
+              <th className="py-2 px-4 border-b text-white text-left">Delete</th>
             </tr>
           </thead>
           <tbody className=" space-y-2 gap-5">
@@ -114,6 +117,13 @@ const VideoCoursesTable = ({ courses, loading }) => {
                 <td className="py-2 px-4 border-b">{course.status}</td>
                 <td className="py-2 px-4 border-b">
                   {new Date(course.createdAt).toLocaleDateString()}
+                </td>
+                <td className="py-2 px-4 border-b">
+                  <button className="bg-red-500 text-white p-2 rounded-md"
+                  
+                  >
+                    <FaImage  />
+                  </button>
                 </td>
               </tr>
             ))}
