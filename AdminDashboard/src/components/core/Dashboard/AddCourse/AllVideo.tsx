@@ -98,6 +98,7 @@ const VideoCoursesTable = ({ courses, loading }) => {
         if (res) {
           courses.filter((course) => course._id !== id)
           toast.success("Course deleted successfully");
+          window.location.reload();
         } else {
           toast.error("Failed to delete course");
         }
