@@ -270,7 +270,7 @@ exports.getUserQuizzes = async (req, res) => {
         },
       })
       .select("courses")
-      .sort({ created: -1 })
+      .sort({ createdAt : -1 })
       .lean();
 
     let allQuizzes = [];
@@ -295,7 +295,7 @@ exports.getAllUserBundles = async (req, res) => {
     const { id } = req.params;
     console.log("🚀 ~ exports.getUserQuizzes= ~ id:", id);
 
-    const user = await User.findById(id).populate("courses").sort({ created: -1 });
+    const user = await User.findById(id).populate("courses").sort({ createdAt: -1 });
 
     if (!user.courses || user.courses.length === 0) {
       return res.status(202).json({

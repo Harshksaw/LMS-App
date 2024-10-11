@@ -12,7 +12,7 @@ api_secret: process.env.API_SECRET,
 // Get all daily updates
 exports.getAllDailyUpdates = async (req, res) => {
   try {
-    const dailyUpdates = await DailyUpdate.find().sort({ createdAt: -1 });
+    const dailyUpdates = await DailyUpdate.find().sort({ createdAt : -1 });
     res.json(dailyUpdates);
   } catch (err) {
     res.status(500).json({ message: err.message });

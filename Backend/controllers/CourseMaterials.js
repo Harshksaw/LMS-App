@@ -103,7 +103,7 @@ exports.deleteStudyMaterial = async (req, res) => {
 };
 exports.getAllStudyMaterials = async (req, res) => {
   try {
-    const studyMaterials = await StudyMaterial.find({ isListed: true }).sort({ createdAt: -1 });  
+    const studyMaterials = await StudyMaterial.find({ isListed: true }).sort({ createdAt : -1 });  
     if (studyMaterials.length === 0) {
       return res.status(200).json({
         success: false,
