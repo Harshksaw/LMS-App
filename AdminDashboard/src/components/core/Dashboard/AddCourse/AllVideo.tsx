@@ -8,6 +8,7 @@ import { BASE_URL } from "../../../../services/apis";
 import IconBtn from "../../../common/IconBtn";
 import { IconButton } from "@mui/material";
 import { FaImage } from "react-icons/fa";
+import { deleteCourse } from '../../../../services/operations/courseDetailsAPI';
 
 export default function AllVideo() {
     const navigate = useNavigate();
@@ -85,7 +86,24 @@ export default function AllVideo() {
 
 const VideoCoursesTable = ({ courses, loading }) => {
     if (loading) {
-      return <div>Loading...</div>;
+      return <div className="flex justify-center items-center h-full">
+      <div className="loader"></div>
+      </div>
+    }
+
+    const deleteCourse = async (id) => {
+
+      try {
+        const res = await axios.delete(`${BASE_URL}/api/v1/videocourse/deleteVideo/${id}`);
+        if (res) {
+          courses.filter((course) => course._id !== id)
+          toast.success("Course deleted successfully");
+        } else {
+          toast.error("Failed to delete course");
+        }
+      } catch (error) {
+        toast.error("Failed to delete course");
+      }
     }
   
     return (
@@ -120,6 +138,9 @@ const VideoCoursesTable = ({ courses, loading }) => {
                 </td>
                 <td className="py-2 px-4 border-b">
                   <button className="bg-red-500 text-white p-2 rounded-md"
+                  onClick={() => {
+                    deleteCourse(course._id);
+                  }}
                   
                   >
                     <FaImage  />
