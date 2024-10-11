@@ -107,7 +107,7 @@ async function processVideo(videoPath, lessonId) {
   }
 
   // const segmentDuration = videoDuration ? Math.min(10, Math.floor(videoDuration / 6)) : 10; // Default or calculated segment
-  const segmentDuration = 2700; // 45 minutes in seconds
+  const segmentDuration = 1800; // 45 minutes in seconds
   console.log("🚀 ~ processVideo ~ segmentDuration:", segmentDuration)
   const ffmpegCommand = `ffmpeg -i ${videoPath} -codec:v libx264 -codec:a aac -hls_time ${segmentDuration} -hls_playlist_type vod -hls_segment_filename "${outputPath}/segment%03d.ts" -start_number 0 ${hlsPath}`;
 
