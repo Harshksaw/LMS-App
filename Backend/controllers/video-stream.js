@@ -73,7 +73,7 @@ const upload = multer({ storage: storage });
 AWS.config.update({
   accessKeyId: process.env.AWS_KEY_H,
   secretAccessKey: process.env.AWS_SECRET_KEY_H,
-  region: "ca-central-1",
+  region: "ap-south-1",
 });
 const s3 = new AWS.S3();
 
@@ -121,7 +121,7 @@ async function processVideo(videoPath, lessonId) {
 
   // Upload index.m3u8 to S3 with proper ContentType
   const params = {
-    Bucket: "krishanacademylms",
+    Bucket: process.env.AWS_S3_BUCKET_NAME_H,
     Key: `courses/${lessonId}/index.m3u8`,
     Body: fs.readFileSync(hlsPath),
     ContentType: 'application/vnd.apple.mpegurl'
