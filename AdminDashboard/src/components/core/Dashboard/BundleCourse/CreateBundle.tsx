@@ -166,7 +166,14 @@ export default function CourseBundleForm() {
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
 
   //   const { token } = useSelector((state) => state.auth);
+useEffect(() => {
+  console.log(id)
+  const res = axios.get(`${BASE_URL}/api/v1/bundle/getAllUserBundle/${id}`);
+  console.log(res.data)
+  // setSelectedMaterials(res.data.data.studyMaterials)
 
+
+}, []);
   const handleImageChange = (e: any) => {
     setBundleImage(e.target.files[0]);
   };
@@ -324,7 +331,7 @@ export default function CourseBundleForm() {
   return (
     // <div className=" inset-0  !mt-0 grid h-screen w-screen place-items-center overflow-auto bg-white bg-opacity-10 ">
     <div className="flex-1 w-full gap-x-6 justify-center items-center max-h-full">
-      <div className="my-10 w-full rounded-lg border border-richblack-400 bg-richblack-800">
+      <div className="my-2 w-full rounded-lg border border-richblack-400 bg-richblack-800">
         <div className="flex items-center justify-between rounded-t-lg bg-richblack-700 p-5">
           <p className="text-xl font-semibold text-richblack-5">
             {step === 1 && "Step 1: Initial Data Collection"}
@@ -334,7 +341,7 @@ export default function CourseBundleForm() {
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="space-y-2  px-4 py-32 "
+          className="space-y-0  px-4 py-20 "
         >
           {step === 1 && (
             <Step1

@@ -2,7 +2,7 @@ import React from "react";
 
 const Step1 = ({ register, errors, setValue, handleImageChange }) => (
     <div>
-        <h2>Step 1: Initial Data Collection</h2>
+
         <div className="flex flex-col space-y-2">
             <label className="text-sm text-richblack-5" htmlFor="bundleName">
                 Bundle Name <sup className="text-pink-200">*</sup>
