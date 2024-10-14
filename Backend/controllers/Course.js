@@ -218,7 +218,7 @@ exports.getAllCourses = async (req, res) => {
       }
     )
       .populate("Admin")
-      .exec();
+      .sort({ createdAt: -1 })
 
     return res.status(200).json({
       success: true,

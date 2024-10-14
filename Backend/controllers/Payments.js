@@ -236,7 +236,7 @@ exports.getUserOrders = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const orders = await Order.find({ user: id })
+    const orders = await Order.findOne({ user: id })
       .populate("user")
       .populate("items.item")
       .sort({ createdAt : -1 });
