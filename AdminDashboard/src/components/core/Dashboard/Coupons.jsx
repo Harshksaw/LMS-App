@@ -9,7 +9,7 @@ import { BASE_URL } from "../../../services/apis";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 
-const courseUrl = `${BASE_URL}/api/v1/bundle/course-bundle`;
+const courseUrl = `${BASE_URL}/api/v1/bundle/courseAdmin-bundle`;
 const url = `${BASE_URL}/api/v1/coupon/`;
 // const url = `http://127.0.0.1:4000/api/v1/coupon/`;
 

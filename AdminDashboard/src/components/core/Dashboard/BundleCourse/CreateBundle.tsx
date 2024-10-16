@@ -18,7 +18,9 @@ const VideoSelection = ({ selectedVideos, setSelectedVideos }) => {
     const fetchVideos = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${BASE_URL}/api/v1/videocourse/getAllVideo`);
+        const res = await axios.get(
+          `${BASE_URL}/api/v1/videocourse/getAllVideo`
+        );
         if (res.data) {
           setVideos(res.data);
           toast.success("Videos fetched successfully");
@@ -47,14 +49,17 @@ const VideoSelection = ({ selectedVideos, setSelectedVideos }) => {
 
   return (
     <div className="overflow-y-auto h-full border border-white">
-      <h3 className="text-2xl font-semibold mb-4 text-richblack-25 text-center">Select Videos</h3>
+      <h3 className="text-2xl font-semibold mb-4 text-richblack-25 text-center">
+        Select Videos
+      </h3>
       <div className="flex flex-wrap gap-4 justify-center ">
         {videos.map((video) => (
-          
           <div
             key={video._id}
             className={`w-2/5 p-4 border rounded-lg cursor-pointer  my-10 mx-5   ${
-              selectedVideos.includes(video._id) ? "bg-blue-100 border-blue-500" : "bg-richblack-500"
+              selectedVideos.includes(video._id)
+                ? "bg-blue-100 border-blue-500"
+                : "bg-richblack-500"
             }`}
             onClick={() => handleVideoSelect(video._id)}
           >
@@ -72,7 +77,6 @@ const VideoSelection = ({ selectedVideos, setSelectedVideos }) => {
               <option value="">Select</option>
               <option value="selected">Selected</option>
             </select>
-          
           </div>
         ))}
       </div>
@@ -80,7 +84,14 @@ const VideoSelection = ({ selectedVideos, setSelectedVideos }) => {
   );
 };
 
-const Step3 = ({ register, setValue, errors, courseBundleId, setSelectedVideos,selectedVideos }) => {
+const Step3 = ({
+  register,
+  setValue,
+  errors,
+  courseBundleId,
+  setSelectedVideos,
+  selectedVideos,
+}) => {
   const [startDate, setStartDate] = React.useState("");
   const [isListed, setIsListed] = React.useState(false);
   // const [selectedVideos, setSelectedVideos] = useState([]);
@@ -88,7 +99,6 @@ const Step3 = ({ register, setValue, errors, courseBundleId, setSelectedVideos,s
     setValue("videos", selectedVideos);
   }, [selectedVideos, setValue]);
 
-  
   const handleDateChange = (event) => {
     const date = event.target.value;
     setStartDate(date);
@@ -103,42 +113,38 @@ const Step3 = ({ register, setValue, errors, courseBundleId, setSelectedVideos,s
   useEffect(() => {}, [startDate, isListed]);
   return (
     <div>
-
-
       <div className="space-y-2 flex flex-col justify-between gap-10 ">
+        <VideoSelection
+          selectedVideos={selectedVideos}
+          setSelectedVideos={setSelectedVideos}
+        />
 
-      <VideoSelection
-        selectedVideos={selectedVideos}
-        setSelectedVideos={setSelectedVideos}
-      />
-
-<div>
-
-        <div className="flex gap-3">
-          <label className="text-white">Publish Date:</label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={handleDateChange}
-            className="form-control"
+        <div>
+          <div className="flex gap-3">
+            <label className="text-white">Publish Date:</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={handleDateChange}
+              className="form-control"
             />
-          {errors.publishDate && (
-            <div className="error">{errors.publishDate.message}</div>
-          )}
-        </div>
-        <div className="flex gap-3">
-          <label className="text-white"> Listed:</label>
-          <input
-            type="checkbox"
-            checked={isListed}
-            onChange={handleListedChange}
+            {errors.publishDate && (
+              <div className="error">{errors.publishDate.message}</div>
+            )}
+          </div>
+          <div className="flex gap-3">
+            <label className="text-white"> Listed:</label>
+            <input
+              type="checkbox"
+              checked={isListed}
+              onChange={handleListedChange}
             />
-          {errors.isListed && (
-            <div className="error">{errors.isListed.message}</div>
-          )}
+            {errors.isListed && (
+              <div className="error">{errors.isListed.message}</div>
+            )}
+          </div>
         </div>
       </div>
-          </div>
     </div>
   );
 };
@@ -153,7 +159,6 @@ export default function CourseBundleForm() {
 
   const [selectedVideos, setSelectedVideos] = useState<string[]>([]);
 
-
   const {
     register,
     handleSubmit,
@@ -166,14 +171,12 @@ export default function CourseBundleForm() {
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
 
   //   const { token } = useSelector((state) => state.auth);
-useEffect(() => {
-  console.log(id)
-  const res = axios.get(`${BASE_URL}/api/v1/bundle/getAllUserBundle/${id}`);
-  console.log(res.data)
-  // setSelectedMaterials(res.data.data.studyMaterials)
-
-
-}, []);
+  useEffect(() => {
+    console.log(id);
+    const res = axios.get(`${BASE_URL}/api/v1/bundle/getAllUserBundle/${id}`);
+    console.log(res.data);
+    // setSelectedMaterials(res.data.data.studyMaterials)
+  }, []);
   const handleImageChange = (e: any) => {
     setBundleImage(e.target.files[0]);
   };
@@ -261,7 +264,7 @@ useEffect(() => {
       );
       const resVideo = await axios.post(
         `${BASE_URL}/api/v1/bundle/updateVideo/${courseBundleId}`,
-        { video: selectedVideos  }
+        { video: selectedVideos }
       );
 
       if (res.status != 200 || resVideo.status != 200) {
@@ -280,8 +283,6 @@ useEffect(() => {
         duration: 2000,
       });
     }
-
-
   };
 
   const onSubmit = (data: any) => {
@@ -293,8 +294,6 @@ useEffect(() => {
       handleStep3Submit(data);
     }
   };
-
-
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -364,14 +363,14 @@ useEffect(() => {
             />
           )}
           {step === 3 && (
-           <Step3
-           register={register}
-           setValue={setValue}
-           courseBundleId={courseBundleId}
-           errors={errors}
-           selectedVideos={selectedVideos}
-           setSelectedVideos={setSelectedVideos}
-         />
+            <Step3
+              register={register}
+              setValue={setValue}
+              courseBundleId={courseBundleId}
+              errors={errors}
+              selectedVideos={selectedVideos}
+              setSelectedVideos={setSelectedVideos}
+            />
           )}
           <div className="flex justify-end">
             <IconBtn
