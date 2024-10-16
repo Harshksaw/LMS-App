@@ -4,15 +4,14 @@ import { BASE_URL } from "../../../services/apis";
 
 const AppConfig = () => {
   const [formData, setFormData] = useState({
+    maintenanceMode: false,
     message: "",
-    carouselImages: "",
-    socialMediaLinks: "",
-    aboutUs: "",
-    rateOthersLink: "",
-    shareAppLink: "",
+    carouselImages: [],
+
   });
 
   const [responseMessage, setResponseMessage] = useState("");
+  const [previewImages, setPreviewImages] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,154 +20,129 @@ const AppConfig = () => {
       [name]: value,
     });
   };
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    setFormData({
+      ...formData,
+      carouselImages: files,
+    });
+    setPreviewImages(files.map(file => URL.createObjectURL(file)));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+      if (key === "carouselImages") {
+        formData[key].forEach((file) => {
+          formDataToSend.append("carousel", file);
+        });
+      } else {
+        formDataToSend.append(key, formData[key]);
+      }
+    }
+
     try {
-      const response = await axios.post(`${BASE_URL}/api/v1`, formData);
+      const response = await axios.post(`${BASE_URL}/api/v1/app/config`, formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       setResponseMessage(response.data.message);
     } catch (error) {
       setResponseMessage("Failed to update information. Please try again.");
       console.error("Error updating information:", error);
     }
   };
+
+  const handleSwitchChange = (e) => {
+    const { name, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: checked,
+    });
+  };
+
   return (
-    <div className="max-w-full mx-auto mt-4 p-6 bg-gray-600 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center text-white">
+    <div className="max-w-4xl mx-auto mt-8 p-8 bg-gray-800 rounded-lg shadow-lg bg-richblack-400" >
+      <h2 className="text-3xl font-bold mb-8 text-center text-white">
         Update Information
       </h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
+      <div className="mb-6 flex items-center">
+          <label
+            htmlFor="maintenanceMode"
+            className="block text-sm font-medium text-gray-300 mr-4"
+          >
+            Maintenance Mode:
+          </label>
+          <input
+            type="checkbox"
+            id="maintenanceMode"
+            name="maintenanceMode"
+            checked={formData.maintenanceMode}
+            onChange={handleSwitchChange}
+            className="toggle-checkbox h-6 w-6 rounded-full bg-gray-700 border border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+          />
+        </div>
+        <div className="mb-6">
           <label
             htmlFor="message"
-            className="block text-sm font-medium text-white"
+            className="block text-sm font-medium text-gray-300"
           >
-            Under Maintaince Message:
+            Under Maintenance Message:
           </label>
-          <div className="mt-1">
-            <label className="inline-flex">
-              <input
-                type="radio"
-                id="message-true"
-                name="message"
-                value="true"
-                checked={formData.message === "true"}
-                defaultChecked={false}
-                className="mt-1 block w-full px-3 py-2 text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-              <span className="ml-2 text-white">True</span>
-            </label>
-            <label className="inline-flex ml-4">
-              <input
-                type="radio"
-                id="message-false"
-                name="message"
-                value="false"
-                checked={formData.message === "false"}
-                // defaultChecked={false}
-                className="mt-1 block w-full px-3 py-2 border text-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-              <span className="ml-2 text-white">False</span>
-            </label>
-          </div>
+          <input
+            type="text"
+            id="message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            className="mt-2 p-3 block w-full rounded-md bg-gray-700 border border-gray-600 text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+          />
         </div>
-        <div className="mb-4">
+        <div className="mb-6">
           <label
             htmlFor="carouselImages"
-            className="block text-sm font-medium text-white"
+            className="block text-sm font-medium text-gray-300"
           >
-            Carousel Images (multiple images can be selected):
+            Carousel Images:
           </label>
           <input
             type="file"
             id="carouselImages"
             name="carouselImages"
+            accept="image/*"
+            max={5}
             multiple
-            value={formData.carouselImages}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            onChange={handleFileChange}
+            className="mt-2 p-3 block w-full rounded-md bg-gray-700 border border-gray-600 text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
           />
+       <div className="mt-4 grid grid-cols-2 gap-4">
+            {previewImages.map((src, index) => (
+              <img
+                key={index}
+                src={src}
+                alt={`Selected ${index}`}
+                className="h-48 w-full object-cover rounded-md"
+              />
+            ))}
+          </div>
         </div>
-        <div className="mb-4">
-          <label
-            htmlFor="socialMediaLinks"
-            className="block text-sm font-medium text-white"
-          >
-            Social Media Links (JSON format):
-          </label>
-          <textarea
-            id="socialMediaLinks"
-            name="socialMediaLinks"
-            value={formData.socialMediaLinks}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="aboutUs"
-            className="block text-sm font-medium text-white"
-          >
-            About Us:
-          </label>
-          <textarea
-            id="aboutUs"
-            name="aboutUs"
-            value={formData.aboutUs}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="rateOthersLink"
-            className="block text-sm font-medium text-white"
-          >
-            Rate Others Link:
-          </label>
-          <input
-            type="text"
-            id="rateOthersLink"
-            name="rateOthersLink"
-            value={formData.rateOthersLink}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="shareAppLink"
-            className="block text-sm font-medium text-white"
-          >
-            Share App Link:
-          </label>
-          <input
-            type="text"
-            id="shareAppLink"
-            name="shareAppLink"
-            value={formData.shareAppLink}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
+       
         <button
           type="submit"
-          className="w-full bg-indigo-600 text-white border-black py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="w-full py-3 px-4 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
-          Submit
+          Update Information
         </button>
       </form>
       {responseMessage && (
-        <p className="mt-4 text-center text-sm text-gray-600">
-          {responseMessage}
-        </p>
+        <p className="mt-6 text-center text-white">{responseMessage}</p>
       )}
     </div>
   );
 };
+
 
 export default AppConfig;
