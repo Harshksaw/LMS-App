@@ -220,7 +220,7 @@ exports.createOrder = async (req, res) => {
 // Get an order by ID
 exports.getOrder = async (req, res) => {
   try {
-    const order = await Order.find().populate("user").populate("items.item");
+    const order = await Order.find().populate("user").populate("items.item").sort({ createdAt : -1 });
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
