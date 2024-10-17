@@ -239,7 +239,7 @@ exports.getUserOrders = async (req, res) => {
     const orders = await Order.findOne({ user: id })
       .populate("user")
       .populate("items.item")
-      .sort({ orderDate : -1 });
+
 
     if (!orders) {
       return res.status(404).json({ error: "Orders not found" });

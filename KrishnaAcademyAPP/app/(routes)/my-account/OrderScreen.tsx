@@ -3,6 +3,7 @@ import axios from "axios";
 
 import {
   ActivityIndicator,
+  FlatList,
   Modal,
   ScrollView,
   StyleSheet,
@@ -18,6 +19,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Order {
   _id: string;
+  bundleName: string;
   user: { name: string };
   items: { itemType: string; item: { name: string }; price: number }[];
   totalAmount: number;
@@ -25,28 +27,28 @@ interface Order {
 }
 
 const OrderScreen: React.FC = () => {
-  const [orders, setOrders] = useState<any>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const fetchOrders = async () => {
+    const userI = await AsyncStorage.getItem("user");
+    const isUser = JSON.parse(userI);
+    try {
+      const response = await axios.get(
+        `${SERVER_URI}/api/v1/payment/getUserOrders/${isUser._id}`
+      );
+      const ordersArray = Object.values(response.data.data); // Convert object to array
+      const sortedOrders = ordersArray.sort((a: Order, b: Order) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
+      console.log("🚀 ~ fetchOrders ~ sortedOrders:", sortedOrders)
+      setOrders(sortedOrders);
+      setLoading(false);
+    } catch (error) {
+      Toast.show("Error fetching orders");
+    }
+  };
   useEffect(() => {
-    const fetchOrders = async () => {
-      const userI = await AsyncStorage.getItem("user");
-      const isUser = JSON.parse(userI);
-      try {
-        const response = await axios.get(
-          `${SERVER_URI}/api/v1/payment/getUserOrders/${isUser._id}`
-        );
-        const sortedOrders = response.data.data.sort((a: Order, b: Order) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
-        // setOrders(response.data.data);
-        setOrders(sortedOrders);
-        // console.log("🚀 ~ fetchOrders ~ response.data.data:", response.data.data)
-        setLoading(false);
-      } catch (error) {
-        Toast.show("Error fetching orders");
-      }
-    };
+
 
     fetchOrders();
   }, []);
@@ -74,24 +76,57 @@ const OrderScreen: React.FC = () => {
       />
     );
   }
+  // console.log("🚀 ~ file: OrderScreen.tsx ~ line 77 ~ OrderScreen ~ orders", orders.map((orde)=> orde))
+  orders.map((orde)=> console.log("🚀 ~ file: OrderScreen.tsx ~ line 77 ~ OrderScreen ~ orders", orde))
   return (
-    <SafeAreaView style={{ paddingHorizontal: 20 }}>
-      <ScrollView>
-        {orders?.map((order: any) => (
-          <TouchableOpacity
-            key={order._id}
-            onPress={() => handleCardClick(order)}
-          >
-            <OrderCard order={order} />
-          </TouchableOpacity>
-        ))}
-        <OrderModal
-          isVisible={isModalVisible}
-          onClose={closeModal}
-          order={selectedOrder}
-        />
-      </ScrollView>
-    </SafeAreaView>
+    <View style={{ flex: 1, padding: 20 }}>
+    <FlatList
+      data={orders}
+      keyExtractor={(item) => item._id}
+      renderItem={({ item }) => (
+        <TouchableOpacity onPress={() => handleCardClick(item)}>
+            <View style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: "bold",
+                marginVertical: 10,
+              }}>{item?.bundleName}</Text>
+
+              <Text>{item?.totalAmount}</Text>
+              <Text>{new Date(item.orderDate).toLocaleDateString()}</Text>
+            </View>
+        </TouchableOpacity>
+      )}
+    />
+    <Modal
+      visible={isModalVisible}
+      onRequestClose={closeModal}
+      animationType="slide"
+    >
+      <View style={{ flex: 1, padding: 20 }}>
+        {selectedOrder && (
+          <>
+            <Text>User: {selectedOrder.user.name}</Text>
+            <Text>Total Amount: {selectedOrder.totalAmount}</Text>
+            <Text>Order Date: {new Date(selectedOrder.orderDate).toLocaleDateString()}</Text>
+            <FlatList
+              data={selectedOrder.items}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
+                  <Text>{item.item ? item.item.name : 'Item not found'}</Text>
+                  <Text>{item.price}</Text>
+                </View>
+              )}
+            />
+            <TouchableOpacity onPress={closeModal}>
+              <Text style={{ color: 'blue', marginTop: 20 }}>Close</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
+    </Modal>
+  </View>
   );
 };
 
