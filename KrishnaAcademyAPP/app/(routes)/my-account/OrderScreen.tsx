@@ -38,8 +38,8 @@ const OrderScreen: React.FC = () => {
         const response = await axios.get(
           `${SERVER_URI}/api/v1/payment/getUserOrders/${isUser._id}`
         );
-        const sortedOrders = response.data.data.sort((a: Order, b: Order) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
-        setOrders(sortedOrders);
+        // const sortedOrders = response.data.data.sort((a: Order, b: Order) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
+        setOrders(response.data.data);
         setLoading(false);
       } catch (error) {
         Toast.show("Error fetching orders");
