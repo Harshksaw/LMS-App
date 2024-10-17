@@ -13,7 +13,7 @@ export default function HomeBannerSlider() {
   const fetchBannerData = async () => {
     try {
       const res = await axios.get(`${SERVER_URI}/api/v1/app/carousel`);
-      setBannerData([...res.data.data, ...res.data.data]);
+      setBannerData([...res.data.data]);
       // setBannerData(res.data.data);
     } catch (error) {}
   };
@@ -39,24 +39,25 @@ export default function HomeBannerSlider() {
         removeClippedSubviews
         renderItem={({ item, index }) => (
           <View
+          style={{
+            width: Dimensions.get("window").width,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Image
+            resizeMode="cover"
+            key={index}
+            source={{ uri: item } as any}
             style={{
-              width: Dimensions.get("window").width - (5 + index + 3),
-              flex: 1,
-              marginRight: 5,
+              width: '100%',
+              height: Dimensions.get("window").width * 0.5625, // 16:9 aspect ratio
+              borderRadius: 7,
             }}
-          >
-            <Image
-              resizeMode="cover"
-              key={index}
-              source={{ uri: item } as any}
-              style={{
-                borderRadius: 7,
-                flex: 1,
-              }}
-            />
-          </View>
-        )}
-      />
-    </View>
+          />
+        </View>
+      )}
+    />
+  </View>
   );
 }
