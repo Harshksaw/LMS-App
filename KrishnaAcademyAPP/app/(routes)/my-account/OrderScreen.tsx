@@ -38,8 +38,10 @@ const OrderScreen: React.FC = () => {
         const response = await axios.get(
           `${SERVER_URI}/api/v1/payment/getUserOrders/${isUser._id}`
         );
-        // const sortedOrders = response.data.data.sort((a: Order, b: Order) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
-        setOrders(response.data.data);
+        const sortedOrders = response.data.data.sort((a: Order, b: Order) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
+        // setOrders(response.data.data);
+        setOrders(sortedOrders);
+        // console.log("🚀 ~ fetchOrders ~ response.data.data:", response.data.data)
         setLoading(false);
       } catch (error) {
         Toast.show("Error fetching orders");
@@ -75,7 +77,7 @@ const OrderScreen: React.FC = () => {
   return (
     <SafeAreaView style={{ paddingHorizontal: 20 }}>
       <ScrollView>
-        {orders.map((order: any) => (
+        {orders?.map((order: any) => (
           <TouchableOpacity
             key={order._id}
             onPress={() => handleCardClick(order)}
