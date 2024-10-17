@@ -13,7 +13,7 @@ const orderSchema = new Schema({
   details: {type: String},
   totalAmount: { type: Number, required: true },
   orderDate: { type: Date, default: Date.now }
-});
+},{timestamps: true});
 
 const Order = mongoose.model('Order', orderSchema);
 module.exports = Order;
