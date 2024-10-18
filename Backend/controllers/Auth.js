@@ -595,7 +595,8 @@ exports.getAllUserCources = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const users = await User.findById(id).populate("courses").sort({createdAt:-1});
+    const users = await User.findById(id).populate("courses")
+    users.courses.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.status(200).json({
       success: true,
       data: users,
