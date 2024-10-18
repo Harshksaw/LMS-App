@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   container: {
     marginVertical: 10,
     height: carouselHeight,
-    marginHorizontal: 16,
+    marginHorizontal: 12,
     flex: 1,
     borderRadius: 7,
     overflow: "hidden",
@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
 
   slide: {
     flex: 1,
-    width: 410,
+    width: 420,
     height: 250,
   },
 

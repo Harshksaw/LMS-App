@@ -42,8 +42,9 @@ export default function HomeBannerSlider() {
           style={{
             width: Dimensions.get("window").width,
             justifyContent: "center",
-            // alignItems: "center",
-            paddingVertical: 20,
+            alignItems: "center",
+            paddingVertical: 10,
+            // paddingRight: 10,
           }}
         >
           <Image
@@ -53,7 +54,7 @@ export default function HomeBannerSlider() {
             style={{
 
               width: '100%',
-              height: Dimensions.get("window").width * 0.5725, // 16:9 aspect ratio
+              height: Dimensions.get("window").width , // 16:9 aspect ratio
               borderRadius: 7,
             }}
           />
