@@ -236,9 +236,9 @@ exports.getUserOrders = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const orders = await Order.findOne({ user: id })
-      .populate("user")
-      .populate("items.item")
+    const orders = await Order.find({ user: id })
+    .populate("items.item")
+
 
 
     if (!orders) {

@@ -34,6 +34,7 @@ const OrderScreen: React.FC = () => {
       const userI = await AsyncStorage.getItem("user");
       const isUser = JSON.parse(userI || '{}');
       if (!isUser?._id) throw new Error("User ID not found");
+      console.log("🚀 ~ fetchOrders ~ isUser._id:", isUser._id)
 
       const response = await axios.get(
         `${SERVER_URI}/api/v1/payment/getUserOrders/${isUser._id}`
