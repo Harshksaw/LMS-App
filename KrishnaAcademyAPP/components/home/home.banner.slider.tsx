@@ -42,16 +42,18 @@ export default function HomeBannerSlider() {
           style={{
             width: Dimensions.get("window").width,
             justifyContent: "center",
-            alignItems: "center",
+            // alignItems: "center",
+            paddingVertical: 20,
           }}
         >
           <Image
-            resizeMode="cover"
+            resizeMode="contain"
             key={index}
             source={{ uri: item } as any}
             style={{
+
               width: '100%',
-              height: Dimensions.get("window").width * 0.5625, // 16:9 aspect ratio
+              height: Dimensions.get("window").width * 0.5725, // 16:9 aspect ratio
               borderRadius: 7,
             }}
           />

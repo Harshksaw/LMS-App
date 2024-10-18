@@ -237,7 +237,7 @@ exports.getUserOrders = async (req, res) => {
     const { id } = req.params;
 
     const orders = await Order.find({ user: id })
-    .populate("items.item")
+    .populate("items.item").sort({ orderDate : -1 });
 
 
 

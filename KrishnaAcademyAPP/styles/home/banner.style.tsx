@@ -1,14 +1,16 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { responsiveWidth } from "react-native-responsive-dimensions";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+const { width: screenWidth } = Dimensions.get("window");
+const carouselHeight = (screenWidth * 9) / 16; // Calculate height based on 16:9 aspect ratio
 
 export const styles = StyleSheet.create({
   container: {
     marginVertical: 10,
-    height: hp("25%"),
+    height: carouselHeight,
     marginHorizontal: 16,
     flex: 1,
     borderRadius: 7,
