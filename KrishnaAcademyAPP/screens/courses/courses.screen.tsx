@@ -10,6 +10,7 @@ import {
   FlatList,
   ImageBackground,
   RefreshControl,
+  Dimensions,
 } from "react-native";
 import {
   useFonts,
@@ -28,27 +29,21 @@ import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const renderCources = ({ item }) => {
-
+const { width } = Dimensions.get("screen");
+const renderCources = ({ item }: { item: any }) => {
   return (
     <TouchableOpacity
       style={{
         backgroundColor: "#fff",
         borderWidth: 1,
         borderColor: "#d2cccc",
-        // paddingBottom: 150,
-
-        // marginBottom: 10,
-        minWidth: "45%",
-        maxWidth: "50%",
+        width: width / 2 - 20,
         marginHorizontal: 5,
-        height: 250, // Ensure this is set to control the size
+        maxHeight: 260, // Ensure this is set to control the size
         flexDirection: "column",
         justifyContent: "space-between",
         alignItems: "center",
-
-        gap: 4,
-
+        gap: 3,
         padding: 4,
         borderRadius: 20,
         overflow: "hidden", // Ensure the borderRadius effect applies to children
@@ -170,17 +165,14 @@ export default function CoursesScreen() {
   useEffect(() => {
     const getQuizzes = async () => {
       try {
-
         const user = await AsyncStorage.getItem("user");
         const isUser = JSON.parse(user);
-      
+
         const res = await axios.post(
           `${SERVER_URI}/api/v1/bundle/getAllcourse-bundle`
         );
-    
 
         setQuizzes(res.data.data);
-
 
         setLoading(false);
       } catch (error) {}
@@ -192,7 +184,6 @@ export default function CoursesScreen() {
     setRefreshing(true);
     // Place your data fetching logic here
     setTimeout(() => {
-      
       // Simulate a network request
       setRefreshing(false);
     }, 2000);
@@ -226,16 +217,8 @@ export default function CoursesScreen() {
       ) : (
         <View
           style={{
-            // marginHorizontal: 10,
-            // backgroundColor: "red",
-
             flexDirection: "column",
             justifyContent: "center",
-            // alignItems: "center",
-
-            // gap:10
-
-            // height: "100%",
           }}
         >
           <Text
@@ -252,15 +235,15 @@ export default function CoursesScreen() {
           </Text>
 
           <FlatList
-            style={{}}
             data={quizzes}
             renderItem={renderCources}
             contentContainerStyle={{
               width: "100%",
-              gap: 10,
+              gap: 12,
               paddingBottom: 100,
+              marginLeft: 5,
             }}
-            columnWrapperStyle={{ gap: 10 }}
+            columnWrapperStyle={{ gap: 5 }}
             showsVerticalScrollIndicator={false}
             numColumns={2}
             keyExtractor={(item) => item.id}
