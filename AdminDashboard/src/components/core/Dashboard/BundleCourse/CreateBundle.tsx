@@ -185,22 +185,17 @@ export default function CourseBundleForm() {
     try {
       toast.loading("Please wait...");
       let res = {};
+      const formData = new FormData();
+      formData.append("bundleName", data.bundleName);
+      formData.append("image", bundleImage);
+      formData.append("price", data.price);
+      formData.append("aboutDescription", data.aboutDescription);
       if (!!id) {
-        const param = {
-          bundleName: data.bundleName,
-          price: data.price,
-          aboutDescription: data.aboutDescription,
-        };
         res = await axios.put(
           `${BASE_URL}/api/v1/bundle/course-bundle/${id}`,
-          param
+          formData
         );
       } else {
-        const formData = new FormData();
-        formData.append("bundleName", data.bundleName);
-        formData.append("image", bundleImage);
-        formData.append("price", data.price);
-        formData.append("aboutDescription", data.aboutDescription);
         res = await axios.post(
           `${BASE_URL}/api/v1/bundle/course-bundle`,
           formData
