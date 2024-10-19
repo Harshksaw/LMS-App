@@ -34,7 +34,6 @@ exports.createCourseBundle = async (req, res) => {
     const bundle = new Bundle({
       bundleName: req.body.bundleName,
       image: response.secure_url,
-
       price: req.body.price,
       aboutDescription: req.body.aboutDescription,
       status: "Draft",
@@ -153,16 +152,10 @@ exports.addStudyMaterialsToBundle = async (req, res) => {
 
 exports.getCourseBundle = async (req, res) => {
   try {
-
-
-
-    
     const currentDate = new Date();
     const bundles = await Bundle.find({
       status: "Published",
       activeListing: { $lte: currentDate },
-      
-      
     }).sort({ createdAt: -1 });
     if (bundles.length === 0) {
       return res.status(404).json({
@@ -176,18 +169,16 @@ exports.getCourseBundle = async (req, res) => {
       data: bundles || [],
     });
   } catch (error) {
-    res.status(400).json({ error: error.message }); 
+    res.status(400).json({ error: error.message });
   }
 };
-
 
 exports.getAdminCourseBundle = async (req, res) => {
   try {
     const currentDate = new Date();
     const bundles = await Bundle.find({
       status: "Published",
-
-    }).sort({ createdAt : -1 });
+    }).sort({ createdAt: -1 });
     // const bundles = await Bundle.find({status:"Published"}).sort({created:-1}).populate('quizes').populate('studyMaterials');
     res.status(200).json({
       success: true,
@@ -270,7 +261,7 @@ exports.getUserQuizzes = async (req, res) => {
         },
       })
       .select("courses")
-      .sort({ createdAt : -1 })
+      .sort({ createdAt: -1 });
 
     let allQuizzes = [];
     courses.forEach((item) => {
@@ -294,9 +285,10 @@ exports.getAllUserBundles = async (req, res) => {
     const { id } = req.params;
     console.log("🚀 ~ exports.getUserQuizzes= ~ id:", id);
 
-    const user = await User.findById(id).populate("courses")
-    .populate("quizes")
-    .sort({ createdAt: -1 });
+    const user = await User.findById(id)
+      .populate("courses")
+      .populate("quizes")
+      .sort({ createdAt: -1 });
 
     if (!user.courses || user.courses.length === 0) {
       return res.status(202).json({
@@ -317,7 +309,6 @@ exports.getAllUserBundles = async (req, res) => {
 
 exports.checkPurchase = async (req, res) => {
   const { userId, courseId } = req.body;
-
 
   try {
     const user = await User.findOne({ _id: userId, courses: courseId }).lean();
@@ -384,6 +375,13 @@ exports.updateBundle = async (req, res) => {
     if (!!aboutDescription) {
       update.aboutDescription = aboutDescription;
     }
+
+    const response = await cloudinary.uploader.upload(req.file.path, {
+      folder: "images",
+    });
+    if (response) {
+      update.image = response.secure_url;
+    }
     // Find the user by ID
     const user = await Bundle.findByIdAndUpdate(id, update, { new: true });
 
@@ -403,7 +401,6 @@ exports.updateBundle = async (req, res) => {
   }
 };
 
-
 exports.updateVideo = async (req, res) => {
   try {
     const bundle = await Bundle.findById(req.params.id);
@@ -413,7 +410,9 @@ exports.updateVideo = async (req, res) => {
     }
 
     // Ensure each video ID is cast to ObjectId
-    const videoIds = req.body.video.map(videoId => new  mongoose.Types.ObjectId(videoId));
+    const videoIds = req.body.video.map(
+      (videoId) => new mongoose.Types.ObjectId(videoId)
+    );
 
     bundle.Videos.push(...videoIds);
 

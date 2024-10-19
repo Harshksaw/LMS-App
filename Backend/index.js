@@ -12,25 +12,23 @@ const APPRoute = require("./routes/app");
 const CourseBundle = require("./routes/courseBundle");
 const Dailyupdate = require("./routes/Dailyupdate");
 const coupon = require("./routes/coupon");
-const osUtils = require('os-utils');
-const diskusage = require('diskusage');
-
+// const osUtils = require('os-utils');
+// const diskusage = require('diskusage');
 
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
-const { v4: uuidv4 } = require('uuid');
-const WebSocket = require('ws');
+// const { v4: uuidv4 } = require('uuid');
+const WebSocket = require("ws");
 const dotenv = require("dotenv");
-const videoStreamController = require('./controllers/video-stream');
-const http = require('http');
-const videocourse = require('./routes/video');
-const os = require('os');
-const { exec } = require('child_process');
-const clients = new Map();
+const videoStreamController = require("./controllers/video-stream");
+// const http = require('http');
+const videocourse = require("./routes/video");
+const os = require("os");
+const { exec } = require("child_process");
+// const clients = new Map();
 // const server = http.createServer(app);
-
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -41,48 +39,54 @@ let requestCount = 0;
 
 // Middleware to count requests
 app.use((req, res, next) => {
-    requestCount++; // Increment the request count
-    next();
+  requestCount++; // Increment the request count
+  next();
 });
 
 // Function to get disk usage
 const getDiskUsage = (path) => {
   return new Promise((resolve) => {
-    exec(`df -h ${path} | tail -1 | awk '{print $2, $3, $4}'`, (error, stdout) => {
-      if (error) {
-        resolve({ total: '0', used: '0', free: '0' });
-      } else {
-        const [total, used, free] = stdout.trim().split(' ');
-        resolve({ total, used, free });
+    exec(
+      `df -h ${path} | tail -1 | awk '{print $2, $3, $4}'`,
+      (error, stdout) => {
+        if (error) {
+          resolve({ total: "0", used: "0", free: "0" });
+        } else {
+          const [total, used, free] = stdout.trim().split(" ");
+          resolve({ total, used, free });
+        }
       }
-    });
+    );
   });
 };
 
 // Function to get system info
 const getSystemInfo = async () => {
   const cpuUsage = await new Promise((resolve) => {
-    exec("top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\\([0-9.]*\\)%* id.*/\\1/' | awk '{print 100 - $1}'", (error, stdout) => {
-      if (error) {
-        resolve('0');
-      } else {
-        resolve(stdout.trim());
+    exec(
+      "top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\\([0-9.]*\\)%* id.*/\\1/' | awk '{print 100 - $1}'",
+      (error, stdout) => {
+        if (error) {
+          resolve("0");
+        } else {
+          resolve(stdout.trim());
+        }
       }
-    });
+    );
   });
 
   const totalMemory = os.totalmem();
   const freeMemory = os.freemem();
   const usedMemory = totalMemory - freeMemory;
 
-  const diskInfo = await getDiskUsage('/');
+  const diskInfo = await getDiskUsage("/");
 
   const networkInterfaces = os.networkInterfaces();
   const networkInterfaceCount = Object.keys(networkInterfaces).length;
 
   return {
     cpuUsage,
-    memoryUsage: (usedMemory / totalMemory * 100).toFixed(2),
+    memoryUsage: ((usedMemory / totalMemory) * 100).toFixed(2),
     totalMemory: (totalMemory / (1024 * 1024 * 1024)).toFixed(2), // in GB
     freeMemory: (freeMemory / (1024 * 1024 * 1024)).toFixed(2), // in GB
     usedMemory: (usedMemory / (1024 * 1024 * 1024)).toFixed(2), // in GB
@@ -92,8 +96,8 @@ const getSystemInfo = async () => {
   };
 };
 
-wss.on('connection', (ws) => {
-  console.log('Client connected');
+wss.on("connection", (ws) => {
+  console.log("Client connected");
 
   const sendSystemInfo = async () => {
     if (ws.readyState === WebSocket.OPEN) {
@@ -104,25 +108,23 @@ wss.on('connection', (ws) => {
 
   const interval = setInterval(sendSystemInfo, 1000);
 
-  ws.on('message', (message) => {
-    console.log('Received message:', message);
+  ws.on("message", (message) => {
+    console.log("Received message:", message);
   });
 
-  ws.on('close', () => {
+  ws.on("close", () => {
     clearInterval(interval);
-    console.log('Client disconnected');
+    console.log("Client disconnected");
   });
 
-  ws.on('error', (error) => {
-    console.error('WebSocket error:', error);
+  ws.on("error", (error) => {
+    console.error("WebSocket error:", error);
   });
 });
 
-wss.on('error', (error) => {
-  console.error('WebSocket server error:', error);
+wss.on("error", (error) => {
+  console.error("WebSocket server error:", error);
 });
-
-
 
 //database connect
 database.connect();
@@ -157,8 +159,7 @@ app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/bundle", CourseBundle);
 app.use("/api/v1/DailyUpdate", Dailyupdate);
 
-
-app.use('/api/v1/videocourse',videocourse )
+app.use("/api/v1/videocourse", videocourse);
 app.post("/api/v1/video", (req, res) => {
   const clientId = req.query.clientId; // Assume clientId is passed as a query parameter
   videoStreamController.uploadVideo(req, res, clientId);
@@ -166,10 +167,6 @@ app.post("/api/v1/video", (req, res) => {
 app.get("/api/v1/checkStatus/:lessonId", (req, res) => {
   videoStreamController.checkStatus(req, res);
 });
-
-
-
-
 
 // Backup function
 const { spawn } = require("child_process");

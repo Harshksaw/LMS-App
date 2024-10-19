@@ -27,12 +27,17 @@ router.post(
 // // Route to update an existing course bundle
 router.get("/course-bundle/:id", courseBundleController.getCourseBundleById);
 
-
 router.post(
   "/course-bundle/update/:id",
   courseBundleController.addQuizzesToBundle
 );
-router.put("/course-bundle/:id", courseBundleController.updateBundle);
+// router.put("/course-bundle/:id", courseBundleController.);
+
+router.put(
+  "/course-bundle/:id",
+  upload.single("image"),
+  courseBundleController.updateBundle
+);
 
 router.post("/course-bundle/:id", courseBundleController.addQuizzesToBundle);
 
@@ -65,8 +70,6 @@ router.get("/getAllUserBundle/:id", courseBundleController.getAllUserBundles);
 router.post("/removeUserBundle", courseBundleController.removeUserBundle);
 
 router.post("/checkPurchase", courseBundleController.checkPurchase);
-
-
 
 //for video update
 
