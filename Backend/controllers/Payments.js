@@ -174,26 +174,45 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
   }
 };
 
-// Create a new order
+// Create a new order with Razorpay auto-capture
 exports.createOrder = async (req, res) => {
   try {
-    const { user, items, totalAmount, details } = req.body;
+    const { totalAmount, receipt } = req.body;
 
-    const orderCreated = new Order({
-      user,
-      items,
-      totalAmount,
-      details,
+    // Razorpay order creation options with auto-capture
+    const options = {
+      amount: totalAmount * 100, // amount in the smallest currency unit (paise for INR)
+      currency: "INR",  // Assuming INR as currency
+      receipt: receipt,
+      payment_capture: 1  // 1 for auto-capture
+    };
+
+    // Create the order with Razorpay
+    const razorpayOrder = await instance.orders.create(options);
+
+    // Save order details in your database
+    const newOrder = new Order({
+      user: req.user.id,  // Assuming user is logged in and the user ID is available
+      items: req.body.items,  // Items being ordered
+      totalAmount: totalAmount,  // Total amount of the order
+      razorpayOrderId: razorpayOrder.id,  // Save Razorpay Order ID
+      receipt: receipt  // Store receipt
     });
 
-    await orderCreated.save();
+    await newOrder.save();
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
-      data: orderCreated,
+      data: newOrder,  // Return the saved order details
+      razorpayOrder: razorpayOrder  // Include Razorpay order details
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error creating Razorpay order:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error creating Razorpay order",
+      error: error.message
+    });
   }
 };
 
