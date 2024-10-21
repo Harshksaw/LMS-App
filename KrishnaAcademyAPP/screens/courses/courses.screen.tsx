@@ -39,7 +39,7 @@ const renderCources = ({ item }: { item: any }) => {
         borderColor: "#d2cccc",
         width: width / 2 - 20,
         marginHorizontal: 5,
-        maxHeight: 260, // Ensure this is set to control the size
+        // maxHeight: 260, // Ensure this is set to control the size
         flexDirection: "column",
         justifyContent: "space-between",
         alignItems: "center",

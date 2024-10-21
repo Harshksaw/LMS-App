@@ -153,7 +153,7 @@ const PaymentPage = () => {
       description: `Buying ${ItemData.bundleName} for ${ItemData.price}`,
       image: `${ItemData.image}`,
       currency: "INR",
-      key: "rzp_live_Gym5HlILQT2v86", 
+      key: "rzp_live_Gym5HlILQT2v86",
       amount: `${totalPrice * 100}`,
       name: `${ItemData.bundleName}`,
       prefill: {
@@ -164,44 +164,48 @@ const PaymentPage = () => {
       theme: { color: "rgb(247, 70, 70)" },
     };
 
-    const data = await RazorpayCheckout.open(options);
+    try {
+      const data = await RazorpayCheckout.open(options);
 
-    if (data && data.razorpay_payment_id) {
-      const orderData = await createOrder({
-        user: isUser,
-        totalAmount: ItemData.price,
-        purchaseDetails: data,
-      });
-
-      if (orderData) {
-        const assignbundle = await assignCourse({
-          userId: isUser._id,
-          courseId: itemId,
+      if (data && data.razorpay_payment_id) {
+        const orderData = await createOrder({
+          user: isUser,
+          totalAmount: ItemData.price,
+          purchaseDetails: data,
         });
-        if (assignbundle) {
-          router.push({
-            pathname: "/(routes)/enrolled-courses",
-          });
-          Toast.show("you have purchased the bundle", {
-            type: "success",
-            duration: 1000,
-            placement: "top",
-          });
-        }
-      }
 
-      Toast.show("Payment successful", {
-        type: "success",
-        duration: 1000,
-        placement: "bottom",
-      });
-    } else {
-      Toast.show("Payment failed", {
-        type: "error",
-        duration: 1000,
-        placement: "top",
-      });
-      throw new Error("Payment data is null");
+        if (orderData) {
+          const assignbundle = await assignCourse({
+            userId: isUser._id,
+            courseId: itemId,
+          });
+          if (assignbundle) {
+            router.push({
+              pathname: "/(routes)/enrolled-courses",
+            });
+            Toast.show("you have purchased the bundle", {
+              type: "success",
+              duration: 1000,
+              placement: "top",
+            });
+          }
+        }
+
+        Toast.show("Payment successful", {
+          type: "success",
+          duration: 1000,
+          placement: "bottom",
+        });
+      } else {
+        Toast.show("Payment failed", {
+          type: "error",
+          duration: 1000,
+          placement: "top",
+        });
+        throw new Error("Payment data is null");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

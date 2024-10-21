@@ -1,6 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, View, Image, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  View,
+  Image,
+  StyleSheet,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { router } from "expo-router";
@@ -56,9 +63,9 @@ const VideoScreen = ({ data, bundleId, userId, handleBought }) => {
   const handlePress = (video) => {
     // navigation.navigate("VideoDetail", { video });
     router.push({
-        pathname: "/(routes)/quiz-bundle/VideoPlayer",
-        params: { video: JSON.stringify(video), id: data._id },
-      });
+      pathname: "/(routes)/quiz-bundle/VideoPlayer",
+      params: { video: JSON.stringify(video), id: data._id },
+    });
   };
 
   if (loading) {
@@ -143,7 +150,6 @@ const VideoScreen = ({ data, bundleId, userId, handleBought }) => {
   );
 };
 
-
 export default VideoScreen;
 
 const VideoCard = ({ video }) => {
@@ -152,7 +158,9 @@ const VideoCard = ({ video }) => {
       <Image source={{ uri: video.thumbnail }} style={styles.thumbnail} />
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{video.courseName}</Text>
-        <Text style={styles.description}>{video.courseDescription.slice(0, 50)}</Text>
+        <Text style={styles.description}>
+          {video.courseDescription.slice(0, 50)}
+        </Text>
         <Text style={styles.title}>{video.createdAt.slice(0, 10)}</Text>
       </View>
     </View>
