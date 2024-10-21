@@ -20,7 +20,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const WebSocket = require("ws");
-const { exec } = require("child_process");
+const { exec, spawn } = require("child_process");
 const videoStreamController = require("./controllers/video-stream");
 
 dotenv.config();
@@ -149,7 +149,7 @@ app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/bundle", CourseBundle);
 app.use("/api/v1/DailyUpdate", Dailyupdate);
 app.use("/api/v1/videocourse", videocourse);
-app.use("/api/webhook/razorpay", razorpayWebhook); // Add webhook route
+app.use("/api/webhook", razorpayWebhook); // Updated webhook route
 
 // Video stream upload
 app.post("/api/v1/video", (req, res) => {
@@ -158,8 +158,6 @@ app.post("/api/v1/video", (req, res) => {
 });
 
 // Backup function
-const { spawn } = require("child_process");
-
 async function runBackup() {
   const sourceUri = process.env.MONGODB_URL;
   const targetUri = process.env.MONGO_URI_BACKUP;
