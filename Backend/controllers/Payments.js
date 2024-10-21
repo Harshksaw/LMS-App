@@ -48,18 +48,25 @@ exports.capturePayment = async (req, res) => {
     amount: totalAmount * 100,
     currency,
     receipt: Math.random(Date.now()).toString(),
-    capture: true,
   };
 
   try {
     const paymentResponse = await instance.orders.create(options);
-    return res.json({
+    console.log("Order created:", paymentResponse);
+
+    // Explicitly capture the payment after order creation
+    const paymentId = paymentResponse.id;
+    const captureResponse = await instance.payments.capture(paymentId, totalAmount * 100, currency);
+    console.log("Payment captured:", captureResponse);
+
+    res.json({
       success: true,
-      message: paymentResponse,
+      message: "Payment created and captured successfully",
+      paymentResponse: captureResponse,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false, message: "Could not Initiate Order" });
+    return res.status(500).json({ success: false, message: "Could not Initiate or Capture Order" });
   }
 };
 
