@@ -49,7 +49,7 @@ exports.capturePayment = async (req, res) => {
     amount: totalAmount * 100,
     currency,
     receipt: Math.random(Date.now()).toString(),
-    payment_capture: 1,  // Enable auto payment capture by Razorpay
+    payment_capture: 1, // Auto capture payment upon authorization
   };
 
   try {
@@ -67,13 +67,12 @@ exports.capturePayment = async (req, res) => {
   }
 };
 
-// verify the payment
+// verify the payment using webhook (updated for better reliability)
 exports.verifyPayment = async (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, courses } = req.body;
-  const userId = req.user.id;
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body.payload.payment.entity;
 
-  if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !courses || !userId) {
-    return res.status(400).json({ success: false, message: "Payment Failed" });
+  if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+    return res.status(400).json({ success: false, message: "Payment Verification Failed" });
   }
 
   const body = razorpay_order_id + "|" + razorpay_payment_id;
@@ -85,10 +84,15 @@ exports.verifyPayment = async (req, res) => {
   if (expectedSignature === razorpay_signature) {
     try {
       console.log("Payment verified successfully.");
-      await enrollStudents(courses, userId);
-      return res.status(200).json({ success: true, message: "Payment Verified and Enrollment Successful" });
+      const order = await Order.findOne({ orderId: razorpay_order_id });
+      if (order) {
+        await enrollStudents(order.courses, order.userId);
+        return res.status(200).json({ success: true, message: "Payment Verified and Enrollment Successful" });
+      } else {
+        return res.status(404).json({ success: false, message: "Order not found" });
+      }
     } catch (error) {
-      console.error('Error enrolling students:', error);
+      console.error("Error enrolling students:", error);
       return res.status(500).json({ success: false, message: "Enrollment Failed" });
     }
   }
