@@ -265,4 +265,4 @@ async function runBackup() {
   const targetUri = process.env.MONGO_URI_BACKUP;
 
   if (!sourceUri || !targetUri) {
-    console.error("Missing sourceUri or
+    console.error("Missing sourceUri or targetUri");
