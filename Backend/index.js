@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
-const os = require("os"); // Added missing os import
+
 const Order = require("../models/order");
 const Course = require("../models/Course");
 const User = require("../models/User");
@@ -91,8 +91,7 @@ module.exports = router;
 
 // index.js file update
 
-const express = require("express");
-const app = express();
+
 const os = require("os"); // Added missing os import
 
 const userRoutes = require("./routes/User");
