@@ -376,11 +376,13 @@ exports.updateBundle = async (req, res) => {
       update.aboutDescription = aboutDescription;
     }
 
-    const response = await cloudinary.uploader.upload(req.file.path, {
-      folder: "images",
-    });
-    if (response) {
-      update.image = response.secure_url;
+    if (!!req?.file && !!req?.file?.path) {
+      const response = await cloudinary.uploader.upload(req.file.path, {
+        folder: "images",
+      });
+      if (response) {
+        update.image = response.secure_url;
+      }
     }
     // Find the user by ID
     const user = await Bundle.findByIdAndUpdate(id, update, { new: true });

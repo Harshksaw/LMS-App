@@ -94,6 +94,7 @@ exports.verifyPayment = async (req, res) => {
 
   if (expectedSignature === razorpay_signature) {
     //enroll karwao student ko
+
     await enrollStudents(courses, userId, res);
     //return res
     return res.status(200).json({ success: true, message: "Payment Verified" });
@@ -103,12 +104,10 @@ exports.verifyPayment = async (req, res) => {
 
 const enrollStudents = async (courses, userId, res) => {
   if (!courses || !userId) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        message: "Please Provide data for Courses or UserId",
-      });
+    return res.status(400).json({
+      success: false,
+      message: "Please Provide data for Courses or UserId",
+    });
   }
 
   for (const courseId of courses) {
@@ -206,6 +205,16 @@ exports.createOrder = async (req, res) => {
       details,
     });
 
+    try {
+      fetch(`https://api.razorpay.com/v1/payments/${details}/capture`, {
+        method: "POST",
+        body: JSON.stringify({
+          amount: totalAmount * 1000,
+          currency: "INR",
+        }),
+      });
+    } catch (error) {}
+
     await orderCreated.save();
 
     res.status(201).json({
@@ -220,7 +229,10 @@ exports.createOrder = async (req, res) => {
 // Get an order by ID
 exports.getOrder = async (req, res) => {
   try {
-    const order = await Order.find().populate("user").populate("items.item").sort({ orderDate : -1 });
+    const order = await Order.find()
+      .populate("user")
+      .populate("items.item")
+      .sort({ orderDate: -1 });
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
@@ -237,9 +249,8 @@ exports.getUserOrders = async (req, res) => {
     const { id } = req.params;
 
     const orders = await Order.find({ user: id })
-    .populate("items.item").sort({ orderDate : -1 });
-
-
+      .populate("items.item")
+      .sort({ orderDate: -1 });
 
     if (!orders) {
       return res.status(404).json({ error: "Orders not found" });
