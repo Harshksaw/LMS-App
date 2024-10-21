@@ -53,17 +53,17 @@ exports.capturePayment = async (req, res) => {
   };
 
   try {
-    const paymentResponse = await instance.orders.create(options);
-    console.log("Order created with auto capture:", paymentResponse);
+    const orderResponse = await instance.orders.create(options);
+    console.log("Order created with auto capture:", orderResponse);
 
     res.json({
       success: true,
-      message: "Payment created and will be auto captured",
-      paymentResponse,
+      message: "Payment order created and will be auto captured",
+      orderResponse,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false, message: "Could not Initiate Order" });
+    return res.status(500).json({ success: false, message: "Could not initiate order" });
   }
 };
 
