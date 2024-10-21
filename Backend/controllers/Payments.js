@@ -49,16 +49,20 @@ exports.capturePayment = async (req, res) => {
     amount: totalAmount * 100,
     currency,
     receipt: Math.random(Date.now()).toString(),
-    payment_capture: 1,  // Auto capture payment upon authorization
   };
 
   try {
     const paymentResponse = await instance.orders.create(options);
-    console.log("Order created with auto capture:", paymentResponse);
+    console.log("Order created:", paymentResponse);
+
+    // Explicitly capture the payment after order creation
+    const paymentId = paymentResponse.id;
+    const captureResponse = await instance.payments.capture(paymentId, totalAmount * 100, currency);
+    console.log("Payment captured:", captureResponse);
 
     res.json({
       success: true,
-      message: "Payment created and auto captured successfully",
+      message: "Payment created and captured successfully",
       paymentResponse,
     });
   } catch (error) {
@@ -84,6 +88,10 @@ exports.verifyPayment = async (req, res) => {
 
   if (expectedSignature === razorpay_signature) {
     try {
+      console.log("Payment verified, capturing payment...");
+      const captureResponse = await instance.payments.capture(razorpay_payment_id, totalAmount * 100, "INR");
+      console.log('Payment captured:', captureResponse);
+
       await enrollStudents(courses, userId);
       return res.status(200).json({ success: true, message: "Payment Verified and Captured" });
     } catch (error) {
