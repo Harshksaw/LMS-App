@@ -94,9 +94,18 @@ exports.verifyPayment = async (req, res) => {
     .digest("hex");
 
   if (expectedSignature === razorpay_signature) {
-    // enroll the student
-    await enrollStudents(courses, userId, res);
-    return res.status(200).json({ success: true, message: "Payment Verified" });
+    try {
+      // Capture the payment after verification
+      const captureResponse = await instance.payments.capture(razorpay_payment_id, totalAmount * 100, "INR");
+      console.log('Payment captured:', captureResponse);
+
+      // Enroll the student after successful capture
+      await enrollStudents(courses, userId, res);
+      return res.status(200).json({ success: true, message: "Payment Verified and Captured" });
+    } catch (error) {
+      console.error('Error in payment capture:', error);
+      return res.status(500).json({ success: false, message: "Payment Capture Failed" });
+    }
   }
   return res.status(200).json({ success: "false", message: "Payment Failed" });
 };
