@@ -13,7 +13,7 @@ const crypto = require("crypto");
 const CourseProgress = require("../models/CourseProgress");
 const Order = require("../models/order");
 
-//initiate the razorpay order
+// initiate the razorpay order
 exports.capturePayment = async (req, res) => {
   const { courses } = req.body;
   const userId = req.user.id;
@@ -52,6 +52,7 @@ exports.capturePayment = async (req, res) => {
     amount: totalAmount * 100,
     currency,
     receipt: Math.random(Date.now()).toString(),
+    capture: true,  // Enable auto payment capture
   };
 
   try {
@@ -64,11 +65,11 @@ exports.capturePayment = async (req, res) => {
     console.log(error);
     return res
       .status(500)
-      .json({ success: false, mesage: "Could not Initiate Order" });
+      .json({ success: false, message: "Could not Initiate Order" });
   }
 };
 
-//verify the payment
+// verify the payment
 exports.verifyPayment = async (req, res) => {
   const razorpay_order_id = req.body?.razorpay_order_id;
   const razorpay_payment_id = req.body?.razorpay_payment_id;
@@ -93,10 +94,8 @@ exports.verifyPayment = async (req, res) => {
     .digest("hex");
 
   if (expectedSignature === razorpay_signature) {
-    //enroll karwao student ko
-
+    // enroll the student
     await enrollStudents(courses, userId, res);
-    //return res
     return res.status(200).json({ success: true, message: "Payment Verified" });
   }
   return res.status(200).json({ success: "false", message: "Payment Failed" });
@@ -112,7 +111,7 @@ const enrollStudents = async (courses, userId, res) => {
 
   for (const courseId of courses) {
     try {
-      //find the course and enroll the student in it
+      // find the course and enroll the student in it
       const enrolledCourse = await Course.findOneAndUpdate(
         { _id: courseId },
         { $push: { studentsEnrolled: userId } },
@@ -131,7 +130,7 @@ const enrollStudents = async (courses, userId, res) => {
         completedVideos: [],
       });
 
-      //find the student and add the course to their list of enrolledCOurses
+      // find the student and add the course to their list of enrolled courses
       const enrolledStudent = await User.findByIdAndUpdate(
         userId,
         {
@@ -143,7 +142,7 @@ const enrollStudents = async (courses, userId, res) => {
         { new: true }
       );
 
-      ///bachhe ko mail send kardo
+      // send email to the student
       const emailResponse = await mailSender(
         enrollStudents.email,
         `Successfully Enrolled into ${enrolledCourse.courseName}`,
@@ -152,7 +151,6 @@ const enrollStudents = async (courses, userId, res) => {
           `${enrolledStudent.firstName}`
         )
       );
-      //console.log("Email Sent Successfully", emailResponse.response);
     } catch (error) {
       console.log(error);
       return res.status(500).json({ success: false, message: error.message });
@@ -172,11 +170,11 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
   }
 
   try {
-    //student ko dhundo
+    // find the student
     const enrolledStudent = await User.findById(userId);
     await mailSender(
       enrolledStudent.email,
-      `Payment Recieved`,
+      `Payment Received`,
       paymentSuccessEmail(
         `${enrolledStudent.firstName}`,
         amount / 100,
@@ -204,16 +202,6 @@ exports.createOrder = async (req, res) => {
       totalAmount,
       details,
     });
-
-    try {
-      fetch(`https://api.razorpay.com/v1/payments/${details}/capture`, {
-        method: "POST",
-        body: JSON.stringify({
-          amount: totalAmount * 1000,
-          currency: "INR",
-        }),
-      });
-    } catch (error) {}
 
     await orderCreated.save();
 
