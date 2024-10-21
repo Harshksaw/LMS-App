@@ -1,96 +1,4 @@
 const express = require("express");
-const router = express.Router();
-const crypto = require("crypto");
-const Order = require("../models/order");
-const Course = require("../models/Course");
-const User = require("../models/User");
-const CourseProgress = require("../models/CourseProgress");
-const mailSender = require("../utils/mailSender");
-const { courseEnrollmentEmail } = require("../mail/templates/courseEnrollmentEmail");
-
-// Webhook endpoint for Razorpay
-router.post("/webhook/razorpay", async (req, res) => {
-  // Since secret is not being used, skip signature validation
-
-  const event = req.body.event;
-
-  if (event === "order.paid") {
-    const { order_id } = req.body.payload.payment.entity;
-
-    try {
-      const order = await Order.findOne({ orderId: order_id });
-
-      if (!order) {
-        return res.status(404).json({ success: false, message: "Order not found" });
-      }
-
-      console.log("Order found:", order);
-
-      // Enroll the user in the courses
-      await enrollStudents(order.items, order.user);
-
-      return res.status(200).json({ success: true, message: "Payment Verified and Enrollment Successful" });
-    } catch (error) {
-      console.error("Error enrolling students:", error);
-      return res.status(500).json({ success: false, message: "Enrollment Failed" });
-    }
-  }
-
-  res.status(200).json({ success: true });
-});
-
-const enrollStudents = async (courses, userId) => {
-  if (!courses || !userId) {
-    throw new Error("Please Provide data for Courses or UserId");
-  }
-
-  for (const courseId of courses) {
-    try {
-      const enrolledCourse = await Course.findOneAndUpdate(
-        { _id: courseId },
-        { $push: { studentsEnrolled: userId } },
-        { new: true }
-      );
-
-      if (!enrolledCourse) {
-        throw new Error("Course not Found");
-      }
-
-      const courseProgress = await CourseProgress.create({
-        courseID: courseId,
-        userId: userId,
-        completedVideos: [],
-      });
-
-      await User.findByIdAndUpdate(
-        userId,
-        {
-          $push: {
-            courses: courseId,
-            courseProgress: courseProgress._id,
-          },
-        },
-        { new: true }
-      );
-
-      await mailSender(
-        enrolledCourse.email,
-        `Successfully Enrolled into ${enrolledCourse.courseName}`,
-        courseEnrollmentEmail(enrolledCourse.courseName, `${enrolledCourse.firstName}`)
-      );
-    } catch (error) {
-      console.log(error);
-      throw new Error(error.message);
-    }
-  }
-};
-
-// Export the router for your server to use
-module.exports = router;
-
-// index.js file update
-
-const express = require("express");
 const app = express();
 
 const userRoutes = require("./routes/User");
@@ -210,17 +118,19 @@ wss.on("error", (error) => {
   console.error("WebSocket server error:", error);
 });
 
-//database connect
+// database connect
 database.connect();
-//middlewares
 
+// middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "*",
+    origin: ["https://lms-app-opal-seven.vercel.app"], // Allow the specific frontend domain
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
 
@@ -230,17 +140,99 @@ app.get("/health", (req, res) => {
 
 // cloudinaryConnect();
 app.use("/api/v1/app", APPRoute);
-
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/coupon", coupon);
-
 app.use("/api/v1/quiz", quizRoutes);
 app.use("/api/v1/study", studymaterials);
 app.use("/api/v1/payment", paymentRoutes);
-
 app.use("/api/v1/bundle", CourseBundle);
 app.use("/api/v1/DailyUpdate", Dailyupdate);
+app.use("/api/v1/videocourse", videocourse);
+app.use("/api/webhook/razorpay", razorpayWebhook); // Add webhook route
 
-app.use("/
+// Video stream upload
+app.post("/api/v1/video", (req, res) => {
+  const clientId = req.query.clientId; // Assume clientId is passed as a query parameter
+  videoStreamController.uploadVideo(req, res, clientId);
+});
+
+app.get("/api/v1/checkStatus/:lessonId", (req, res) => {
+  videoStreamController.checkStatus(req, res);
+});
+
+// Backup function
+const { spawn } = require("child_process");
+
+async function runBackup() {
+  const sourceUri = process.env.MONGODB_URL;
+  const targetUri = process.env.MONGO_URI_BACKUP;
+
+  if (!sourceUri || !targetUri) {
+    console.error("Missing sourceUri or targetUri");
+    return;
+  }
+
+  // Step 1: Create a backup
+  const dumpProcess = spawn("mongodump", [
+    "--uri",
+    sourceUri,
+    "--archive=dump.gz",
+    "--gzip",
+  ]);
+  dumpProcess.stderr.on("data", (data) => {
+    console.error(`Error creating backup: ${data}`);
+  });
+
+  await new Promise((resolve, reject) => {
+    dumpProcess.on("close", (code) => {
+      if (code !== 0) {
+        reject(new Error(`Error creating backup: Exit code ${code}`));
+      } else {
+        resolve();
+      }
+    });
+  });
+
+  // Step 2: Restore the backup
+  const restoreProcess = spawn("mongorestore", [
+    "--uri",
+    targetUri,
+    "--archive=dump.gz",
+    "--gzip",
+  ]);
+  restoreProcess.stdout.on("data", (data) => {
+    console.log(data.toString());
+  });
+  restoreProcess.stderr.on("data", (data) => {
+    console.error(`Error restoring backup: ${data}`);
+  });
+
+  await new Promise((resolve, reject) => {
+    restoreProcess.on("close", (code) => {
+      if (code !== 0) {
+        reject(new Error(`Error restoring backup: Exit code ${code}`));
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+// Backup endpoint
+app.get("/backup", async (req, res) => {
+  await runBackup();
+  res.send("Backup process initiated");
+});
+
+app.get("/", (req, res) => {
+  return res.json({
+    success: true,
+    message: "Your server is up and running....",
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`App is running at http://127.0.0.1:${PORT}`);
+});
