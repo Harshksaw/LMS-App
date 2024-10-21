@@ -43,26 +43,23 @@ exports.capturePayment = async (req, res) => {
       return res.status(500).json({ success: false, message: error.message });
     }
   }
+
   const currency = "INR";
   const options = {
     amount: totalAmount * 100,
     currency,
     receipt: Math.random(Date.now()).toString(),
+    payment_capture: 1,  // Auto capture payment upon authorization
   };
 
   try {
     const paymentResponse = await instance.orders.create(options);
-    console.log("Order created:", paymentResponse);
-
-    // Explicitly capture the payment after order creation
-    const paymentId = paymentResponse.id;
-    const captureResponse = await instance.payments.capture(paymentId, totalAmount * 100, currency);
-    console.log("Payment captured:", captureResponse);
+    console.log("Order created with auto capture:", paymentResponse);
 
     res.json({
       success: true,
-      message: "Payment created and captured successfully",
-      paymentResponse: captureResponse,
+      message: "Payment created and auto captured successfully",
+      paymentResponse,
     });
   } catch (error) {
     console.log(error);
@@ -72,10 +69,10 @@ exports.capturePayment = async (req, res) => {
 
 // verify the payment
 exports.verifyPayment = async (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, courses, totalAmount } = req.body;
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, courses } = req.body;
   const userId = req.user.id;
 
-  if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !courses || !userId || !totalAmount) {
+  if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !courses || !userId) {
     return res.status(400).json({ success: false, message: "Payment Failed" });
   }
 
@@ -87,18 +84,14 @@ exports.verifyPayment = async (req, res) => {
 
   if (expectedSignature === razorpay_signature) {
     try {
-      console.log("Capturing payment...");
-      const captureResponse = await instance.payments.capture(razorpay_payment_id, totalAmount * 100, "INR");
-      console.log('Payment captured:', captureResponse);
-
       await enrollStudents(courses, userId);
       return res.status(200).json({ success: true, message: "Payment Verified and Captured" });
     } catch (error) {
-      console.error('Error in payment capture:', error);
-      return res.status(500).json({ success: false, message: "Payment Capture Failed" });
+      console.error('Error enrolling students:', error);
+      return res.status(500).json({ success: false, message: "Enrollment Failed" });
     }
   }
-  return res.status(400).json({ success: false, message: "Payment Failed" });
+  return res.status(400).json({ success: false, message: "Payment Verification Failed" });
 };
 
 const enrollStudents = async (courses, userId) => {
