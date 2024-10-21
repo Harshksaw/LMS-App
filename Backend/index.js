@@ -1,34 +1,118 @@
 const express = require("express");
+const router = express.Router();
+const crypto = require("crypto");
+const Order = require("../models/order");
+const Course = require("../models/Course");
+const User = require("../models/User");
+const CourseProgress = require("../models/CourseProgress");
+const mailSender = require("../utils/mailSender");
+const { courseEnrollmentEmail } = require("../mail/templates/courseEnrollmentEmail");
+
+// Webhook endpoint for Razorpay
+router.post("/webhook/razorpay", async (req, res) => {
+  // Since secret is not being used, skip signature validation
+
+  const event = req.body.event;
+
+  if (event === "order.paid") {
+    const { order_id } = req.body.payload.payment.entity;
+
+    try {
+      const order = await Order.findOne({ orderId: order_id });
+
+      if (!order) {
+        return res.status(404).json({ success: false, message: "Order not found" });
+      }
+
+      console.log("Order found:", order);
+
+      // Enroll the user in the courses
+      await enrollStudents(order.items, order.user);
+
+      return res.status(200).json({ success: true, message: "Payment Verified and Enrollment Successful" });
+    } catch (error) {
+      console.error("Error enrolling students:", error);
+      return res.status(500).json({ success: false, message: "Enrollment Failed" });
+    }
+  }
+
+  res.status(200).json({ success: true });
+});
+
+const enrollStudents = async (courses, userId) => {
+  if (!courses || !userId) {
+    throw new Error("Please Provide data for Courses or UserId");
+  }
+
+  for (const courseId of courses) {
+    try {
+      const enrolledCourse = await Course.findOneAndUpdate(
+        { _id: courseId },
+        { $push: { studentsEnrolled: userId } },
+        { new: true }
+      );
+
+      if (!enrolledCourse) {
+        throw new Error("Course not Found");
+      }
+
+      const courseProgress = await CourseProgress.create({
+        courseID: courseId,
+        userId: userId,
+        completedVideos: [],
+      });
+
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $push: {
+            courses: courseId,
+            courseProgress: courseProgress._id,
+          },
+        },
+        { new: true }
+      );
+
+      await mailSender(
+        enrolledCourse.email,
+        `Successfully Enrolled into ${enrolledCourse.courseName}`,
+        courseEnrollmentEmail(enrolledCourse.courseName, `${enrolledCourse.firstName}`)
+      );
+    } catch (error) {
+      console.log(error);
+      throw new Error(error.message);
+    }
+  }
+};
+
+// Export the router for your server to use
+module.exports = router;
+
+// index.js file update
+
+const express = require("express");
 const app = express();
 
 const userRoutes = require("./routes/User");
 const profileRoutes = require("./routes/Profile");
 const paymentRoutes = require("./routes/Payments");
 const courseRoutes = require("./routes/Course");
-
 const quizRoutes = require("./routes/Quiz");
 const studymaterials = require("./routes/studymaterial");
 const APPRoute = require("./routes/app");
 const CourseBundle = require("./routes/courseBundle");
 const Dailyupdate = require("./routes/Dailyupdate");
 const coupon = require("./routes/coupon");
-// const osUtils = require('os-utils');
-// const diskusage = require('diskusage');
+const videocourse = require("./routes/video");
+const razorpayWebhook = require("./routes/razorpayWebhook");
 
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-
-// const { v4: uuidv4 } = require('uuid');
-const WebSocket = require("ws");
 const dotenv = require("dotenv");
-const videoStreamController = require("./controllers/video-stream");
-// const http = require('http');
-const videocourse = require("./routes/video");
-const os = require("os");
+const WebSocket = require("ws");
 const { exec } = require("child_process");
-// const clients = new Map();
-// const server = http.createServer(app);
+const videoStreamController = require("./controllers/video-stream");
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -64,7 +148,7 @@ const getDiskUsage = (path) => {
 const getSystemInfo = async () => {
   const cpuUsage = await new Promise((resolve) => {
     exec(
-      "top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\\([0-9.]*\\)%* id.*/\\1/' | awk '{print 100 - $1}'",
+      "top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\\([0-9.]*\\)%* id.*/\1/' | awk '{print 100 - $1}'",
       (error, stdout) => {
         if (error) {
           resolve("0");
@@ -159,85 +243,4 @@ app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/bundle", CourseBundle);
 app.use("/api/v1/DailyUpdate", Dailyupdate);
 
-app.use("/api/v1/videocourse", videocourse);
-app.post("/api/v1/video", (req, res) => {
-  const clientId = req.query.clientId; // Assume clientId is passed as a query parameter
-  videoStreamController.uploadVideo(req, res, clientId);
-});
-app.get("/api/v1/checkStatus/:lessonId", (req, res) => {
-  videoStreamController.checkStatus(req, res);
-});
-
-// Backup function
-const { spawn } = require("child_process");
-
-async function runBackup() {
-  const sourceUri = process.env.MONGODB_URL;
-  const targetUri = process.env.MONGO_URI_BACKUP;
-
-  if (!sourceUri || !targetUri) {
-    console.error("Missing sourceUri or targetUri");
-    return;
-  }
-
-  // Step 1: Create a backup
-  const dumpProcess = spawn("mongodump", [
-    "--uri",
-    sourceUri,
-    "--archive=dump.gz",
-    "--gzip",
-  ]);
-  dumpProcess.stderr.on("data", (data) => {
-    console.error(`Error creating backup: ${data}`);
-  });
-
-  await new Promise((resolve, reject) => {
-    dumpProcess.on("close", (code) => {
-      if (code !== 0) {
-        reject(new Error(`Error creating backup: Exit code ${code}`));
-      } else {
-        resolve();
-      }
-    });
-  });
-
-  // Step 2: Restore the backup
-  const restoreProcess = spawn("mongorestore", [
-    "--uri",
-    targetUri,
-    "--archive=dump.gz",
-    "--gzip",
-  ]);
-  restoreProcess.stdout.on("data", (data) => {
-    console.log(data.toString());
-  });
-  restoreProcess.stderr.on("data", (data) => {
-    console.error(`Error restoring backup: ${data}`);
-  });
-
-  await new Promise((resolve, reject) => {
-    restoreProcess.on("close", (code) => {
-      if (code !== 0) {
-        reject(new Error(`Error restoring backup: Exit code ${code}`));
-      } else {
-        resolve();
-      }
-    });
-  });
-}
-
-// Backup endpoint
-app.get("/backup", async (req, res) => {
-  await runBackup();
-  res.send("Backup process initiated");
-});
-app.get("/", (req, res) => {
-  return res.json({
-    success: true,
-    message: "Your server is up and running....",
-  });
-});
-
-app.listen(PORT, () => {
-  console.log(`App is running at http://127.0.0.1:${PORT}`);
-});
+app.use("/
