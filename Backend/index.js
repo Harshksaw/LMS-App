@@ -99,7 +99,7 @@ wss.on("connection", (ws) => {
     }
   };
 
-  const interval = setInterval(sendSystemInfo, 10000);
+  const interval = setInterval(sendSystemInfo, 100000);
 
   ws.on("message", (message) => {
     console.log("Received message:", message);
