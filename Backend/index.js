@@ -47,7 +47,7 @@ app.use((req, res, next) => {
 const getDiskUsage = (path) => {
   return new Promise((resolve) => {
     exec(
-      df -h ${path} | tail -1 | awk '{print $2, $3, $4}',
+      `df -h ${path} | tail -1 | awk '{print $2, $3, $4}'`,
       (error, stdout) => {
         if (error) {
           resolve({ total: "0", used: "0", free: "0" });
@@ -188,13 +188,13 @@ async function runBackup() {
     "--gzip",
   ]);
   dumpProcess.stderr.on("data", (data) => {
-    console.error(Error creating backup: ${data});
+    console.error(`Error creating backup: ${data}`);
   });
 
   await new Promise((resolve, reject) => {
     dumpProcess.on("close", (code) => {
       if (code !== 0) {
-        reject(new Error(Error creating backup: Exit code ${code}));
+        reject(new Error(`Error creating backup: Exit code ${code}`));
       } else {
         resolve();
       }
@@ -212,13 +212,13 @@ async function runBackup() {
     console.log(data.toString());
   });
   restoreProcess.stderr.on("data", (data) => {
-    console.error(Error restoring backup: ${data});
+    console.error(`Error restoring backup: ${data}`);
   });
 
   await new Promise((resolve, reject) => {
     restoreProcess.on("close", (code) => {
       if (code !== 0) {
-        reject(new Error(Error restoring backup: Exit code ${code}));
+        reject(new Error(`Error restoring backup: Exit code ${code}`));
       } else {
         resolve();
       }
@@ -239,6 +239,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(App is running at http://127.0.0.1:${PORT});
+  console.log(`App is running at http://127.0.0.1:${PORT}`);
 });
-
