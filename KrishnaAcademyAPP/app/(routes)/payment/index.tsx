@@ -162,7 +162,8 @@ const PaymentPage = () => {
         name: `${isUser.name}`,
       },
       theme: { color: "rgb(247, 70, 70)" },
-      capture:true,
+
+
     };
 
     try {
