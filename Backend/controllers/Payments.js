@@ -12,7 +12,7 @@ const {
 const crypto = require("crypto");
 const CourseProgress = require("../models/CourseProgress");
 const Order = require("../models/order");
-const Razorpay = require('razorpay');
+
 //initiate the razorpay order
 exports.capturePayment = async (req, res) => {
   const { courses } = req.body;
@@ -193,7 +193,7 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
 };
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY,
-  key_secret: process.env.RAZORPAY_SECRET,
+  key_secret: process,
 });
 
 exports.createOrder = async (req, res) => {
@@ -211,8 +211,13 @@ exports.createOrder = async (req, res) => {
   
     try {
       // Capture the payment
-      const paymentCaptureResponse = await razorpay.payments.capture(details, totalAmount, 'INR');
-      console.log('Payment captured:', paymentCaptureResponse);
+      fetch(`https://api.razorpay.com/v1/payments/${details}/capture`, {
+        method: "POST",
+        body: JSON.stringify({
+          amount: totalAmount ,
+          currency: "INR",
+        }),
+      });
     } catch (error) {
       console.error('Error capturing payment:', error);
       return res.status(500).json({ error: 'Error capturing payment' });
