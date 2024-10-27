@@ -1,4 +1,5 @@
 const { instance } = require("../config/razorpay");
+
 const Course = require("../models/Course");
 const User = require("../models/User");
 const mailSender = require("../utils/mailSender");
@@ -18,7 +19,7 @@ const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY,
   key_secret: process.env.RAZORPAY_SECRET,
 });
-
+const axios = require('axios');
 exports.capturePayment = async (req, res) => {
   const { courses } = req.body;
   const userId = req.user.id;
@@ -229,7 +230,7 @@ exports.createOrder = async (req, res) => {
       );
 
 
-      
+
 
       await orderCreated.save();
 
