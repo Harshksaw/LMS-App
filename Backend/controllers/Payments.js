@@ -207,13 +207,15 @@ exports.createOrder = async (req, res) => {
   
     try {
       // Capture the payment
-      fetch(`https://api.razorpay.com/v1/payments/${details}/capture`, {
+      const response =  await fetch(`https://api.razorpay.com/v1/payments/${details}/capture`, {
         method: "POST",
         body: JSON.stringify({
           amount: totalAmount ,
           currency: "INR",
         }),
       });
+
+      console.log("🚀 ~ exports.createOrder= ~ response:", response.json())
     } catch (error) {
       console.error('Error capturing payment:', error);
       return res.status(500).json({ error: 'Error capturing payment' });
