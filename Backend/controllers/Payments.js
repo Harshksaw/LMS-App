@@ -210,14 +210,27 @@ exports.createOrder = async (req, res) => {
     });
 
     try {
-      fetch(`https://api.razorpay.com/v1/payments/${details}/capture`, {
-        method: "POST",
-        body: JSON.stringify({
-          amount: totalAmount * 1000,
-          currency: "INR",
-        }),
+      const response = await fetch(`https://api.razorpay.com/v1/payments/${details}/capture`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Basic ${Buffer.from(`${process.env.RAZORPAY_KEY}:${process.env.RAZORPAY_SECRET}`).toString('base64')}`
+      },
+      body: JSON.stringify({
+        amount: totalAmount * 100,
+        currency: "INR",
+      }),
       });
-    } catch (error) {}
+
+      if (!response.ok) {
+      throw new Error(`Failed to capture payment: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Payment captured successfully:", data);
+    } catch (error) {
+      console.log("Error capturing payment:", error);
+    }
 
     await orderCreated.save();
 
