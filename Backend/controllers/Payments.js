@@ -203,6 +203,7 @@ exports.createOrder = async (req, res) => {
       totalAmount,
       details,
     });
+      console.log("🚀 ~ exports.createOrder= ~ details:", details)
 
   
     try {
