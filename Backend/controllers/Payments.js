@@ -12,7 +12,12 @@ const {
 const crypto = require("crypto");
 const CourseProgress = require("../models/CourseProgress");
 const Order = require("../models/order");
-
+const { exec } = require('child_process');
+const Razorpay = require('razorpay');
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY,
+  key_secret: process.env.RAZORPAY_SECRET,
+});
 
 exports.capturePayment = async (req, res) => {
   const { courses } = req.body;
@@ -192,9 +197,9 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
   }
 };
 
-exports.createOrder = async (req, res) => {
+xports.createOrder = async (req, res) => {
   try {
-
+    console.log(req.body, "--->");
     const { user, items, totalAmount, details } = req.body;
 
     const orderCreated = new Order({
@@ -203,41 +208,16 @@ exports.createOrder = async (req, res) => {
       totalAmount,
       details,
     });
-      console.log("🚀 ~ exports.createOrder= ~    user",
 
-
-
-      items,
-      totalAmount,
-      details,)
-      console.log("🚀 ~ exports.createOrder= ~ details:", details)
-
-  
     try {
-      const response = await fetch(`https://api.razorpay.com/v1/payments/${details}/capture`, {
+      fetch(`https://api.razorpay.com/v1/payments/${details}/capture`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Basic ${Buffer.from(`${process.env.RAZORPAY_KEY}:${process.env.RAZORPAY_SECRET}`).toString('base64')}`
-        },
         body: JSON.stringify({
-          amount: totalAmount * 100, // Amount in paise
+          amount: totalAmount * 1000,
           currency: "INR",
         }),
       });
-
-      const paymentCaptureResponse = await response.json();
-
-      if (!response.ok) {
-        console.error('Error capturing payment:', paymentCaptureResponse);
-        return res.status(500).json({ error: 'Error capturing payment', details: paymentCaptureResponse });
-      }
-
-    } catch (error) {
-      console.error('Error capturing payment:', error);
-      return res.status(500).json({ error: 'Error capturing payment' });
-    }
-
+    } catch (error) {}
 
     await orderCreated.save();
 
