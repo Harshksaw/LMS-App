@@ -191,8 +191,11 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
       .json({ success: false, message: "Could not send email" });
   }
 };
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY,
+  key_secret: process.env.RAZORPAY_SECRET,
+});
 
-// Create a new order
 exports.createOrder = async (req, res) => {
   try {
     console.log(req.body, "--->");
@@ -208,7 +211,7 @@ exports.createOrder = async (req, res) => {
   
     try {
       // Capture the payment
-      const paymentCaptureResponse = await razorpay.payments.capture(details, totalAmount * 100, 'INR');
+      const paymentCaptureResponse = await razorpay.payments.capture(details, totalAmount, 'INR');
       console.log('Payment captured:', paymentCaptureResponse);
     } catch (error) {
       console.error('Error capturing payment:', error);
