@@ -191,10 +191,7 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
       .json({ success: false, message: "Could not send email" });
   }
 };
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY,
-  key_secret: process,
-});
+
 
 exports.createOrder = async (req, res) => {
   try {
