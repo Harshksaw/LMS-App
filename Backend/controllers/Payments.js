@@ -197,7 +197,7 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
   }
 };
 
-xports.createOrder = async (req, res) => {
+exports.createOrder = async (req, res) => {
   try {
     console.log(req.body, "--->");
     const { user, items, totalAmount, details } = req.body;
