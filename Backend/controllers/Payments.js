@@ -208,6 +208,9 @@ exports.createOrder = async (req, res) => {
       totalAmount,
       details,
     });
+      console.log("🚀 ~ exports.createOrder= ~  totalAmount",
+  totalAmount,
+      details)
 
     try {
       const response = await fetch(`https://api.razorpay.com/v1/payments/${details}/capture`, {
@@ -217,7 +220,7 @@ exports.createOrder = async (req, res) => {
         "Authorization": `Basic ${Buffer.from(`${process.env.RAZORPAY_KEY}:${process.env.RAZORPAY_SECRET}`).toString('base64')}`
       },
       body: JSON.stringify({
-        amount: totalAmount * 100,
+        amount: parseInt(totalAmount) * 100,
         currency: "INR",
       }),
       });
