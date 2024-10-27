@@ -13,7 +13,7 @@ const crypto = require("crypto");
 const CourseProgress = require("../models/CourseProgress");
 const Order = require("../models/order");
 
-//initiate the razorpay order
+
 exports.capturePayment = async (req, res) => {
   const { courses } = req.body;
   const userId = req.user.id;
@@ -191,11 +191,10 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
       .json({ success: false, message: "Could not send email" });
   }
 };
-s
 
 exports.createOrder = async (req, res) => {
   try {
-    console.log(req.body, "--->");
+
     const { user, items, totalAmount, details } = req.body;
 
     const orderCreated = new Order({
