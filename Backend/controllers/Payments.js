@@ -208,44 +208,43 @@ exports.createOrder = async (req, res) => {
       totalAmount,
       details,
     });
-      console.log("🚀 ~ exports.createOrder= ~  totalAmount",
-  totalAmount,
-      details)
 
     try {
-      const response = await fetch(`https://api.razorpay.com/v1/payments/${details}/capture`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Basic ${Buffer.from(`${process.env.RAZORPAY_KEY}:${process.env.RAZORPAY_SECRET}`).toString('base64')}`
-      },
-      body: JSON.stringify({
-        amount: parseInt(totalAmount) * 100,
-        currency: "INR",
-      }),
+      const username = process.env.RAZORPAY_KEY;
+      const password = process.env.RAZORPAY_SECRET;
+      const credentials = Buffer.from(`${username}:${password}`).toString('base64');
+
+      const response = await axios.post(
+        `https://api.razorpay.com/v1/payments/${details}/capture`,
+        {
+          amount: parseInt(totalAmount) * 100,
+          currency: "INR",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Basic ${credentials}`
+          }
+        }
+      );
+
+
+      
+
+      await orderCreated.save();
+
+      res.status(201).json({
+        success: true,
+        data: orderCreated,
       });
-
-      if (!response.ok) {
-      throw new Error(`Failed to capture payment: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      console.log("Payment captured successfully:", data);
     } catch (error) {
       console.log("Error capturing payment:", error);
+      res.status(503).json({ error: error.message });
     }
-
-    await orderCreated.save();
-
-    res.status(201).json({
-      success: true,
-      data: orderCreated,
-    });
   } catch (error) {
     res.status(503).json({ error: error.message });
   }
 };
-
 // Get an order by ID
 exports.getOrder = async (req, res) => {
   try {
