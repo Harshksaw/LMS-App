@@ -12,7 +12,7 @@ const {
 const crypto = require("crypto");
 const CourseProgress = require("../models/CourseProgress");
 const Order = require("../models/order");
-
+const Razorpay = require('razorpay');
 //initiate the razorpay order
 exports.capturePayment = async (req, res) => {
   const { courses } = req.body;
