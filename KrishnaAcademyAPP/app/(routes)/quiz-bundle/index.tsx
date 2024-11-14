@@ -24,6 +24,7 @@ import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import VideoScreen from "./ViewScreen";
+import StudyMaterialCard from "@/components/quiz/studymaterial";
 
 const { height, width } = Dimensions.get("window");
 
@@ -88,7 +89,7 @@ const ContentsScreen = ({ data, bundleId, userId, handleBought }) => {
       <ScrollView style={styles.tabContent}>
         <QuizCard quizzes={data.quizes} />
         {/* //TODO  */}
-        {/* <StudyMaterialCard studyMaterials={courseData[0].studyMaterials} /> */}
+        <StudyMaterialCard studyMaterials={data.studyMaterials} />
       </ScrollView>
       {!isBundleBought && (
         <View
@@ -132,6 +133,7 @@ export default function index() {
 
 
   const [isBought, setIsBought] = React.useState(false);
+
   const handleBought = () => {
     setIsBought(true);
   };
@@ -149,9 +151,16 @@ export default function index() {
       const response = await axios.get(
         `${SERVER_URI}/api/v1/bundle/course-bundle/${BundleId}`
       );
+        console.log("🚀 ~ fetchBundleData ~ BundleId:", BundleId)
+
+      // const resp = await axios.get(
+      //   `${SERVER_URI}/api/v1/bundle/`,
+      
+      // )
 
       if (response.status === 200 && response.data.success) {
         setBundleData(response.data.data);
+
         console.log("🚀 ~ fetchBundleData ~ response.data.data:", response.data.data)
       }
     } catch (error) {

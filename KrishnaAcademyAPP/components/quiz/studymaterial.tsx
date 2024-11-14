@@ -49,7 +49,7 @@ const StudyMaterialCard = ({ studyMaterials }) => {
             >
               <Image
                 style={{
-                  width: "70%",
+                  width: "80%",
                   height: "90%",
                   borderRadius: 5,
                   alignSelf: "center",

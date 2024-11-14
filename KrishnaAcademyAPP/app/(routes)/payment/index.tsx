@@ -127,10 +127,12 @@ const PaymentPage = () => {
       } else {
         Toast.show("Invalid coupon", { type: "danger" });
       }
-      setLoading(false);
+
     } catch (error) {
       setLoading(false);
       Toast.show("Invalid coupon*", { type: "danger" });
+    }finally {
+      setLoading(false);
     }
   };
 

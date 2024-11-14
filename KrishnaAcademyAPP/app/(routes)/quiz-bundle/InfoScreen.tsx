@@ -56,7 +56,7 @@ const InfoScreen = ({ data }: any) => (
             {data.studyMaterials.map((material, index) => (
               <View key={index} style={styles.itemContainer}>
                 <Ionicons name="book-outline" size={24} color="black" />
-                <Text style={styles.itemText}>{material.name}</Text>
+                <Text style={styles.itemText}>{material.title}</Text>
               </View>
             ))}
           </>

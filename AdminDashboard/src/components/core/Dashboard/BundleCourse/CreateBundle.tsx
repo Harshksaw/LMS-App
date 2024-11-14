@@ -232,8 +232,9 @@ export default function CourseBundleForm() {
         `${BASE_URL}/api/v1/bundle/course-bundle-materials/${courseBundleId}`,
         { studyMaterials: selectedMaterials }
       );
+        console.log("🚀 ~ handleStep2Submit ~ selectedMaterials:", selectedMaterials)
 
-      if (res.status != 200) {
+      if (res.status != 200 || resp.status != 200) {
         toast.dismiss();
         toast.error("Update failed");
         return;

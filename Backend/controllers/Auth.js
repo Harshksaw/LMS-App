@@ -46,14 +46,14 @@ exports.sendotp = async (req, res) => {
     }
 
     //creating... otpPayload
-    console.log(phoneNumber, otp);
+
     const otpPayload = { phoneNumber, otp };
     //creating... an entry in Database for OTP
     const otpBody = await OTP.create(otpPayload);
 
     //TODO
     await sendOtp(otp, phoneNumber);
-    console.log("otpBODY -> ", otpBody);
+
 
     //sending...final response
     res.status(200).json({
@@ -515,7 +515,7 @@ exports.changePassword = async (req, res) => {
   try {
     const response = await OTP.find({ phoneNumber })
       .sort({ createdAt: -1 })
-      .limit(1);
+
 
     if (response.length === 0 || otp != response[0].otp) {
       return res.status(400).json({
@@ -523,6 +523,14 @@ exports.changePassword = async (req, res) => {
         message: "The OTP is not valid",
       });
     }
+    // const otpCreatedAt = response[0].createdAt;
+    // const otpExpiryTime = 10 * 60 * 1000; // 10 minutes in milliseconds
+    // if (new Date() - new Date(otpCreatedAt) > otpExpiryTime) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "The OTP has expired",
+    //   });
+    // }
 
     const user = await User.findOne({ phoneNumber });
     if (!user) {
@@ -535,11 +543,10 @@ exports.changePassword = async (req, res) => {
     user.password = hashedPassword;
     await user.save();
 
-    res
-      .status(200)
-      .json({ success: true, message: "Password changed successfully" });
+    res.status(200).json({ success: true, message: "Password changed successfully" });
+
   } catch (error) {
-    console.error("Error changing password:", error);
+    // console.error("Error changing password:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
