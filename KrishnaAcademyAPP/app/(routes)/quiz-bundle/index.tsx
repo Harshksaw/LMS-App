@@ -49,7 +49,7 @@ const ContentsScreen = ({ data, bundleId, userId, handleBought }) => {
           setIsBundleBought(true);
         }
 
-        // setIsBundleBought(response.data.isPurchased);
+
       } catch (error) {
         if (error.response.status === 404) {
           setLoading(false);
@@ -84,11 +84,15 @@ const ContentsScreen = ({ data, bundleId, userId, handleBought }) => {
     );
   }
 
+  console.log("----,",data.studyMaterials)
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.tabContent}>
         <QuizCard quizzes={data.quizes} />
         {/* //TODO  */}
+
+       
         <StudyMaterialCard studyMaterials={data.studyMaterials} />
       </ScrollView>
       {!isBundleBought && (

@@ -9,107 +9,105 @@ import {
 } from "react-native";
 
 import { usePreventScreenCapture } from "expo-screen-capture";
+import { router } from "expo-router";
 
 const StudyMaterialCard = ({ studyMaterials }) => {
+  console.log("🚀 ~ StudyMaterialCard ~ studyMaterials:", studyMaterials);
   usePreventScreenCapture();
-  return (
-    <View style={styles.card}>
-      <Text style={styles.cardTitle}>Study Materials</Text>
 
-      <FlatList
-        data={studyMaterials}
-        numColumns={2}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              marginBottom: 16,
-              flexDirection: "column",
-              justifyContent: "space-between",
-              alignItems: "center",
+  const handlePress = (item) => {
+    router.push({
+      pathname: "(routes)/pdfviewer",
+      params: { pdfUri: item.fileUrl },
+    });
+  };
 
-              height: 150,
-              maxWidth: "50%",
-              gap: 10,
-              padding: 10,
-              margin: 10,
-
-              backgroundColor: "#f0e5e5",
-              borderRadius: 8,
-            }}
-          >
-            <View
+  const renderItem = ({ item }) => (
+    <TouchableOpacity style={styles.card} onPress={() => handlePress(item)}>
+      <View style={styles.cardContent}>
+      <Image
               style={{
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 5,
-                height: 100,
+                width: "30%",
+                height: "90%",
+                borderRadius: 5,
+                alignSelf: "center",
+                objectFit: "cover",
               }}
-            >
-              <Image
-                style={{
-                  width: "80%",
-                  height: "90%",
-                  borderRadius: 5,
-                  alignSelf: "center",
-                  objectFit: "cover",
-                }}
-                source={{
-                  uri: "https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png",
-                }}
-              />
+              source={{
+                uri: "https://poainc.org/wp-content/uploads/2018/06/pdf-placeholder.png"
+              }}
+            />
+            <View
+            style={{
+              flexDirection:'column',
+              justifyContent: "center",
+              marginTop: 15,
+              width: "50%",
+              height: "100%",
 
-              <Text
-                style={{
-                  fontSize: 14,
-                  textAlign: "left",
-                  fontWeight: "400",
-                }}
-              >
-                {item.title.slice(0, 10)}
-              </Text>
+            }}
+            >
+
+        <Text style={styles.title}>{item?.title?.slice(0, 10)}</Text>
+        <Text style={styles.title}>{item?.description?.slice(0, 20)}</Text>
             </View>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+      </View>
+    </TouchableOpacity>
+  );
+
+  return (
+    <FlatList
+      data={studyMaterials}
+      renderItem={renderItem}
+      keyExtractor={(item) => item._id}
+
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  container: {
+    padding: 10,
   },
   card: {
-    // backgroundColor: '#fff',
-    padding: 15,
-    marginVertical: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowRadius: 8,
-    // elevation: 5,
+    flex: 1,
+    width: "95%",
+    marginBottom: 16,
+    flexDirection: "row",
+    marginHorizontal: 10,
+    paddingBottom :20,
+
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    height: 120,
+    maxWidth: "95%",
+    gap: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    marginTop: 20,
+
+    backgroundColor: "rgb(235, 229, 229)",
+    borderRadius: 8,
   },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
+  cardContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingBottom : 10,
+
+    gap: 15,
+    height: 100,
   },
-  item: {
-    marginBottom: 10,
+  image: {
+    // width: "90%",
+    // height: "90%",
+    borderRadius: 5,
+    alignSelf: "center",
+    objectFit: "cover",
   },
-  itemTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#1e90ff",
+  title: {
+    fontSize: 14,
+    textAlign: "left",
+    fontWeight: "400",
   },
 });
 
