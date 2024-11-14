@@ -207,22 +207,14 @@ exports.signup = async (req, res) => {
           "Phone number, OTP, and device data are required for non-Admin users",
       });
     }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid email format",
+      });
+    }
 
-    // Validate OTP for non-Admin users
-    // if (accountType !== "Admin") {
-    //   const response = await OTP.find({ phoneNumber })
-    //     .sort({ createdAt: -1 })
-    //     .limit(1);
-    //   if (response.length === 0 || otp != response[0].otp) {
-    //     return res.status(400).json({
-    //       success: false,
-    //       message: "The OTP is not valid",
-    //       OtpMessage: "Invalid Otp | Not matched",
-    //     });
-    //   }
-    // }
-
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
@@ -523,14 +515,7 @@ exports.changePassword = async (req, res) => {
         message: "The OTP is not valid",
       });
     }
-    // const otpCreatedAt = response[0].createdAt;
-    // const otpExpiryTime = 10 * 60 * 1000; // 10 minutes in milliseconds
-    // if (new Date() - new Date(otpCreatedAt) > otpExpiryTime) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "The OTP has expired",
-    //   });
-    // }
+ 
 
     const user = await User.findOne({ phoneNumber });
     if (!user) {
