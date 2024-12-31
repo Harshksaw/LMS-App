@@ -18,6 +18,8 @@ const {
   getAllUserCources,
   sendPasswordotp,
   logout,
+  getUsersRegisteredInLast30Days,
+  getUsersRegisteredInLast7Days,
 } = require("../controllers/Auth");
 const {
   resetPasswordToken,
@@ -71,6 +73,10 @@ router.get("/getAllUsers", findAllUsers);
 router.get("/getAllUserCourses/:id", getAllUserCources);
 
 // route for finding user by id
+
+// route for finding user registered in last 30 days and 7 days
+router.get("/getUsersRegisteredInLast30Days", getUsersRegisteredInLast30Days);
+router.get("/getUsersRegisteredInLast7Days", getUsersRegisteredInLast7Days);
 
 // Export the router for use in the main application
 module.exports = router;

@@ -54,7 +54,6 @@ exports.sendotp = async (req, res) => {
     //TODO
     await sendOtp(otp, phoneNumber);
 
-
     //sending...final response
     res.status(200).json({
       success: true,
@@ -505,9 +504,7 @@ exports.changePassword = async (req, res) => {
   const { phoneNumber, otp, newPassword } = req.body;
 
   try {
-    const response = await OTP.find({ phoneNumber })
-      .sort({ createdAt: -1 })
-
+    const response = await OTP.find({ phoneNumber }).sort({ createdAt: -1 });
 
     if (response.length === 0 || otp != response[0].otp) {
       return res.status(400).json({
@@ -515,7 +512,6 @@ exports.changePassword = async (req, res) => {
         message: "The OTP is not valid",
       });
     }
- 
 
     const user = await User.findOne({ phoneNumber });
     if (!user) {
@@ -528,8 +524,9 @@ exports.changePassword = async (req, res) => {
     user.password = hashedPassword;
     await user.save();
 
-    res.status(200).json({ success: true, message: "Password changed successfully" });
-
+    res
+      .status(200)
+      .json({ success: true, message: "Password changed successfully" });
   } catch (error) {
     // console.error("Error changing password:", error);
     res.status(500).json({ success: false, message: "Server error" });
@@ -587,7 +584,7 @@ exports.getAllUserCources = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const users = await User.findById(id).populate("courses")
+    const users = await User.findById(id).populate("courses");
     users.courses.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.status(200).json({
       success: true,
@@ -622,5 +619,47 @@ exports.logout = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "user not found" });
+  }
+};
+// function to get all users registered in last 7 days--
+exports.getUsersRegisteredInLast7Days = async (req, res) => {
+  try {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const users = await User.find({ createdAt: { $gte: sevenDaysAgo } });
+    return res.status(200).json({
+      success: true,
+      data: users,
+      message: " Feteched Users registered in last 7 days",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message:
+        "An error occurred while fetching users registered in last 7 days",
+      error: error.message,
+    });
+  }
+};
+
+// function to get all users registered in last 30 days--
+exports.getUsersRegisteredInLast30Days = async (req, res) => {
+  try {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const users = await User.find({ createdAt: { $gte: thirtyDaysAgo } });
+    return res.status(200).json({
+      success: true,
+      data: users,
+      message: " Feteched Users registered in last 30 days",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message:
+        "An error occurred while fetching users registered in last 30 days",
+      error: error.message,
+    });
   }
 };

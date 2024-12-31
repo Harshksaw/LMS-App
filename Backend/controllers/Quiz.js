@@ -125,6 +125,11 @@ exports.UpdateQuiz = async (req, res) => {
         en: question.correctAnswer.en,
         hin: question.correctAnswer.hin,
       },
+      //  adding description of each question that will shown only after submitting the answer
+      description: {
+        en: question.description.en,
+        hin: question.description.hin,
+      },
     }));
 
     const createdQuestions = await Questions.insertMany(questionData);
@@ -618,5 +623,36 @@ exports.getAllSavedQuestions = async (req, res) => {
   } catch (error) {
     console.error("Error fetching saved questions:", error);
     res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// function to update the question description
+exports.updateQuestionDescription = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { description } = req.body;
+    const updatedQuestion = await Questions.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          "description.en": description.en,
+          "description.hin": description.hin,
+        },
+      },
+      { new: true }
+    );
+    return res.status(200).json({
+      success: true,
+      message: "Question description updated successfully",
+      question: updatedQuestion,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({
+        success: false,
+        message: "Internal Server Error",
+        error: error.message,
+      });
   }
 };

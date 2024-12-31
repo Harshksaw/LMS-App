@@ -103,7 +103,10 @@ exports.deleteStudyMaterial = async (req, res) => {
 };
 exports.getAllStudyMaterials = async (req, res) => {
   try {
-    const studyMaterials = await StudyMaterial.find({ isListed: true }).sort({ createdAt : -1 });  
+    const studyMaterials = await StudyMaterial.find({ isListed: true }).sort({
+      // createdAt: -1,
+      createdAt: 1, //sort by ascending order
+    });
     if (studyMaterials.length === 0) {
       return res.status(200).json({
         success: false,
@@ -125,7 +128,7 @@ exports.getAllStudyMaterials = async (req, res) => {
 };
 exports.getAllAdminStudyMaterials = async (req, res) => {
   try {
-    const studyMaterials = await StudyMaterial.find().sort({ createdAt: -1 });
+    const studyMaterials = await StudyMaterial.find().sort({ createdAt: 1 }); //sort by ascending order
     if (studyMaterials.length === 0) {
       return res.status(200).json({
         success: false,
@@ -231,9 +234,9 @@ exports.getAllBoughtStudyMaterials = async (req, res) => {
   try {
     const { userId } = req.body;
 
-    const user = await User.findById({ _id: userId }).populate(
-      "studyMaterials"
-    ).sort({ createdAt: -1 });
+    const user = await User.findById({ _id: userId })
+      .populate("studyMaterials")
+      .sort({ createdAt: -1 });
     if (!user) {
       return res.status(403).json({
         success: false,
@@ -315,7 +318,10 @@ exports.getAttemptById = async (req, res) => {
     console.log("🚀 ~ exports.getAttemptById= ~ id:", id);
 
     // Find the attempt by user and quiz
-    const attempt = await Attempt.findById(id).populate("questions.question");
+
+    const attempt = await Attempt.findById(id)
+      .populate("questions.question")
+      .select("+description");
     console.log("🚀 ~ exports.getAttemptById= ~ attempt:", attempt);
 
     if (!attempt) {
@@ -331,7 +337,7 @@ exports.getAttemptById = async (req, res) => {
   }
 };
 
-//TODO be reviewed
+// TODO be reviewed
 exports.getQuizAndMarkAttempt = async (req, res) => {
   try {
     const { quizId, attemptId } = req.params;
@@ -406,7 +412,10 @@ exports.getAllAttempById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const attempts = await Attempt.find({ user: id }).populate("quiz").sort({ createdAt: -1 });
+    const attempts = await Attempt.find({ user: id })
+      .populate("quiz")
+      .select("+description")
+      .sort({ createdAt: 1 });
 
     if (!attempts) {
       return res.status(404).json({ message: "Attempt not found" });
